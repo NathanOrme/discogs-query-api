@@ -1,4 +1,4 @@
-package org.personal.details;
+package org.discogs.query;
 
 /**
  * Hello world!

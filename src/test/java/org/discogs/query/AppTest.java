@@ -1,4 +1,4 @@
-package org.personal.details;
+package org.discogs.query;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

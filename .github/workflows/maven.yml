@@ -48,8 +48,8 @@ jobs:
       - name: Set Version With Maven
         run: mvn versions:set -DnewVersion=${{ steps.removev.outputs.ref_name }}
 
-      - name: Build with Maven
-        run: mvn clean install
+      - name: Build with Maven and buildpacks
+        run: mvn clean install spring-boot:build-image
 
       - name: Create Release
         if: github.ref == 'refs/heads/main'

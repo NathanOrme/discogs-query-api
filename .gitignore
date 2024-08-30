@@ -35,5 +35,6 @@ build/
 .DS_Store
 
 ### NPM ###
-**/webapp/frontend/node_modules
-**/webapp/frontend/build
+**/webapp/frontend/node_modules/
+**/webapp/frontend/build/
+**/webapp/frontend/node/

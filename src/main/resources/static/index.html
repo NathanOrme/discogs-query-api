@@ -40,6 +40,7 @@
                 method: 'GET', // Your endpoint is using GET, but POST might be more appropriate for a body
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': 'Basic dXNlcm5hbWU6cGFzc3dvcmQ=',
                 },
                 body: JSON.stringify(queries) // Attach the queries in the body
             });

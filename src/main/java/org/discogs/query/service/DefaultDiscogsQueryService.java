@@ -2,18 +2,16 @@ package org.discogs.query.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.discogs.query.client.DiscogsAPIClient;
+import org.discogs.query.domain.DiscogsEntry;
+import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.enums.DiscogFormats;
 import org.discogs.query.enums.DiscogQueryParams;
 import org.discogs.query.enums.DiscogsTypes;
-import org.discogs.query.exceptions.DiscogsAPIException;
-import org.discogs.query.model.DiscogsEntryDTO;
+import org.discogs.query.mapper.DiscogsResultMapper;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -21,7 +19,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -42,9 +39,6 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
     @Value("${discogs.search}")
     private String discogsSearchEndpoint;
 
-    @Value("${discogs.agent}")
-    private String discogsAgent;
-
     @Value("${discogs.page-size}")
     private int pageSize;
 
@@ -52,6 +46,8 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
     private String token;
 
     private final RestTemplate restTemplate;
+    private final DiscogsResultMapper discogsResultMapper;
+    private final DiscogsAPIClient discogsAPIClient;
 
     /**
      * Searches the Discogs database based on the provided query.
@@ -62,26 +58,17 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
     @Override
     public DiscogsResultDTO searchBasedOnQuery(final DiscogsQueryDTO discogsQueryDTO) {
         String searchUrl = buildSearchUrl(discogsQueryDTO);
-        HttpHeaders headers = buildHeaders();
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        var stringResult = discogsAPIClient.getStringResultForQuery(searchUrl);
+        var results = discogsAPIClient.getResultsForQuery(searchUrl);
+        correctUriForResultEntries(results);
+        return discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
+    }
 
-        try {
-            var response = restTemplate.exchange(searchUrl, HttpMethod.GET, entity, DiscogsResultDTO.class);
-            logApiResponse(response);
-
-            DiscogsResultDTO result = Optional.ofNullable(response.getBody())
-                    .orElse(new DiscogsResultDTO());
-
-            if (result.getResults() != null) {
-                List<DiscogsEntryDTO> uniqueEntries = filterUniqueEntriesByMasterUrl(result.getResults());
-                uniqueEntries.forEach(entry -> entry.setUri(discogsWebsiteBaseUrl.concat(entry.getUri())));
-                result.setResults(uniqueEntries);
-            }
-
-            return result;
-        } catch (final Exception e) {
-            log.error("Error occurred while fetching data from Discogs API", e);
-            throw new DiscogsAPIException("Failed to fetch data from Discogs API", e);
+    private void correctUriForResultEntries(final DiscogsResult results) {
+        if (results.getResults() != null) {
+            List<DiscogsEntry> uniqueEntries = filterUniqueEntriesByMasterUrl(results.getResults());
+            uniqueEntries.forEach(entry -> entry.setUri(discogsWebsiteBaseUrl.concat(entry.getUri())));
+            results.setResults(uniqueEntries);
         }
     }
 
@@ -131,7 +118,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
      *
      * @param response the API response to log
      */
-    private void logApiResponse(final ResponseEntity<DiscogsResultDTO> response) {
+    private void logApiResponse(final ResponseEntity<DiscogsResult> response) {
         if (response.getBody() != null) {
             log.info("Discogs API response: {}", response.getBody());
         } else {
@@ -145,27 +132,14 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
      * @param entries the list of entries to filter
      * @return a list of unique entries
      */
-    private List<DiscogsEntryDTO> filterUniqueEntriesByMasterUrl(final List<DiscogsEntryDTO> entries) {
+    private List<DiscogsEntry> filterUniqueEntriesByMasterUrl(final List<DiscogsEntry> entries) {
         return new ArrayList<>(entries.stream()
                 .filter(entry -> entry.getUrl() != null)
                 .collect(Collectors.toMap(
-                        DiscogsEntryDTO::getUrl,
+                        DiscogsEntry::getUrl,
                         entry -> entry,
                         (existing, replacement) -> existing
                 ))
                 .values());
-    }
-
-    /**
-     * Builds the HTTP headers required for making requests to the Discogs API.
-     *
-     * @return the constructed {@link HttpHeaders} object containing necessary headers
-     */
-    private HttpHeaders buildHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("User-Agent", discogsAgent);
-        return headers;
     }
 }

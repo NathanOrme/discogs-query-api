@@ -14,6 +14,8 @@ Swagger and handles exceptions related to Discogs API interactions.
         * [Installation](#installation)
         * [Configuration](#configuration)
         * [Endpoints](#endpoints)
+            * [**Search Records**](#search-records)
+                * [Example Response](#example-response)
         * [API Documentation](#api-documentation)
     * [Exception Handling](#exception-handling)
     * [Development](#development)
@@ -76,18 +78,35 @@ discogs.token=YourAccessToken
 
 ### Endpoints
 
-- **Search Records**
+#### **Search Records**
+
     - **URL**: `/discogs-query/search`
     - **Method**: `GET`
-    - **Request Body**:
-      ```json
-      {
-        "artist": "Artist Name",
-        "track": "Track Title",
-        "format": "Format Type"
-      }
-      ```
+        - **Request Body**:
+          ```json
+          [
+            {
+            "track": "Love Train",
+            "artist": "The O'Jays",
+            "format": "Compilation Vinyl"
+            },
+            {
+            "track": "A fifth of beethoven",
+            "artist": "Walter Murphy",
+            "format": "Compilation Vinyl"
+            },
+            {
+            "track": "In the summertime",
+            "artist": "Mungo Jerry",
+            "format": "Compilation Vinyl"
+            }
+          ]
+          ```
     - **Response**: A JSON object containing the search results.
+
+##### Example Response
+
+An example response can be found [here](readme-resources/example-response.json)
 
 ### API Documentation
 

@@ -22,6 +22,11 @@ import java.util.List;
 public class DiscogsResultDTO {
 
     /**
+     * The {@link DiscogsQueryDTO} query used to obtain the results
+     */
+    private DiscogsQueryDTO searchQuery;
+
+    /**
      * A list of {@link DiscogsEntryDTO} objects that represent the search results.
      */
     private List<DiscogsEntryDTO> results;

@@ -1,4 +1,4 @@
-package org.discogs.query.model;
+package org.discogs.query.domain;
 
 import org.junit.jupiter.api.Test;
 
@@ -8,13 +8,12 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class DiscogsEntryDTOTest {
-
+class DiscogsEntryTest {
 
     @Test
     void testDtoCreation() {
         // Arrange
-        DiscogsEntryDTO dto = DiscogsEntryDTO.builder()
+        DiscogsEntry dto = DiscogsEntry.builder()
                 .id(1)
                 .title("Sample Title")
                 .format(Arrays.asList("vinyl", "CD"))
@@ -34,7 +33,7 @@ class DiscogsEntryDTOTest {
     @Test
     void testDtoToString() {
         // Arrange
-        DiscogsEntryDTO dto = DiscogsEntryDTO.builder()
+        DiscogsEntry dto = DiscogsEntry.builder()
                 .id(1)
                 .title("Sample Title")
                 .format(Collections.singletonList("vinyl"))
@@ -47,7 +46,7 @@ class DiscogsEntryDTOTest {
 
         // Assert
         assertNotNull(dtoString);
-        assertEquals("DiscogsEntryDTO(id=1, title=Sample Title, format=[vinyl], url=http://example.com/master, uri=http://example.com/entry)", dtoString);
+        assertEquals("DiscogsEntry(id=1, title=Sample Title, format=[vinyl], url=http://example.com/master, uri=http://example.com/entry)", dtoString);
     }
 
 }

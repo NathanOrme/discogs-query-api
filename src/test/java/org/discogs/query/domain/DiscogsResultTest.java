@@ -1,4 +1,4 @@
-package org.discogs.query.model;
+package org.discogs.query.domain;
 
 import org.junit.jupiter.api.Test;
 
@@ -7,12 +7,13 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class DiscogsResultDTOTest {
+class DiscogsResultTest {
+
 
     @Test
     void testDtoCreation() {
         // Arrange
-        DiscogsEntryDTO entry = DiscogsEntryDTO.builder()
+        DiscogsEntry entry = DiscogsEntry.builder()
                 .id(1)
                 .title("Sample Title")
                 .format(Collections.singletonList("vinyl"))
@@ -20,7 +21,7 @@ class DiscogsResultDTOTest {
                 .uri("http://example.com/entry")
                 .build();
 
-        DiscogsResultDTO resultDTO = DiscogsResultDTO.builder()
+        DiscogsResult resultDTO = DiscogsResult.builder()
                 .results(Collections.singletonList(entry))
                 .build();
 
@@ -34,7 +35,7 @@ class DiscogsResultDTOTest {
     @Test
     void testDtoToString() {
         // Arrange
-        DiscogsEntryDTO entry = DiscogsEntryDTO.builder()
+        DiscogsEntry entry = DiscogsEntry.builder()
                 .id(1)
                 .title("Sample Title")
                 .format(Collections.singletonList("vinyl"))
@@ -42,7 +43,7 @@ class DiscogsResultDTOTest {
                 .uri("http://example.com/entry")
                 .build();
 
-        DiscogsResultDTO resultDTO = DiscogsResultDTO.builder()
+        DiscogsResult resultDTO = DiscogsResult.builder()
                 .results(Collections.singletonList(entry))
                 .build();
 
@@ -51,7 +52,7 @@ class DiscogsResultDTOTest {
 
         // Assert
         assertNotNull(dtoString);
-        assertEquals("DiscogsResultDTO(searchQuery=null, results=[DiscogsEntryDTO(id=1, title=Sample Title, format=[vinyl], url=http://example.com/master, uri=http://example.com/entry)])", dtoString);
+        assertEquals("DiscogsResult(results=[DiscogsEntry(id=1, title=Sample Title, format=[vinyl], url=http://example.com/master, uri=http://example.com/entry)])", dtoString);
     }
 
 }

@@ -1,0 +1,322 @@
+[
+  {
+    "searchQuery": {
+      "artist": "The O'Jays",
+      "track": "Love Train",
+      "format": "Compilation Vinyl"
+    },
+    "results": [
+      {
+        "id": 816446,
+        "title": "Womack & Womack / The O'Jays / SOS Band* / Kleeer - The Artists Volume III",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation"
+        ],
+        "uri": "https://www.discogs.com/Womack-Womack-The-OJays-SOS-Band-Kleeer-The-Artists-Volume-III/master/816446",
+        "master_url": "https://api.discogs.com/masters/816446"
+      },
+      {
+        "id": 939255,
+        "title": "Harold Melvin & The Blue Notes* - The O'Jays - The Three Degrees - MFSB - Intruders* - Philadelphia Classics",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation",
+          "Reissue"
+        ],
+        "uri": "https://www.discogs.com/release/939255-Harold-Melvin-The-Blue-Notes-The-OJays-The-Three-Degrees-MFSB-Intruders-Philadelphia-Classics",
+        "master_url": "https://api.discogs.com/masters/163128"
+      },
+      {
+        "id": 2615622,
+        "title": "The O'Jays - The Very Best Of The O'Jays",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation"
+        ],
+        "uri": "https://www.discogs.com/The-OJays-The-Very-Best-Of-The-OJays/release/2615622",
+        "master_url": "https://api.discogs.com/masters/539065"
+      },
+      {
+        "id": 3192624,
+        "title": "The O'Jays - Soul Greatest Hits Series",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation"
+        ],
+        "uri": "https://www.discogs.com/master/3192624-The-OJays-Soul-Greatest-Hits-Series",
+        "master_url": "https://api.discogs.com/masters/3192624"
+      },
+      {
+        "id": 3444209,
+        "title": "The O'Jays - The O'Jays",
+        "format": [
+          "Vinyl",
+          "7\"",
+          "LP",
+          "Album",
+          "Compilation"
+        ],
+        "uri": "https://www.discogs.com/master/3444209-The-OJays-The-OJays",
+        "master_url": "https://api.discogs.com/masters/3444209"
+      },
+      {
+        "id": 19504741,
+        "title": "The O'Jays - The Best Of The O'Jays",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation"
+        ],
+        "uri": "https://www.discogs.com/release/19504741-The-OJays-The-Best-Of-The-OJays",
+        "master_url": "https://api.discogs.com/masters/2221117"
+      },
+      {
+        "id": 166894,
+        "title": "The O'Jays - Collectors' Items - Greatest Hits",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation"
+        ],
+        "uri": "https://www.discogs.com/master/166894-The-OJays-Collectors-Items-Greatest-Hits",
+        "master_url": "https://api.discogs.com/masters/166894"
+      },
+      {
+        "id": 23985593,
+        "title": "The O'Jays - Collectors' Items",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation",
+          "Stereo"
+        ],
+        "uri": "https://www.discogs.com/release/23985593-The-OJays-Collectors-Items",
+        "master_url": "https://api.discogs.com/masters/166895"
+      },
+      {
+        "id": 219250,
+        "title": "The O'Jays - The O'Jays Greatest Hits",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation"
+        ],
+        "uri": "https://www.discogs.com/master/219250-The-OJays-The-OJays-Greatest-Hits",
+        "master_url": "https://api.discogs.com/masters/219250"
+      }
+    ]
+  },
+  {
+    "searchQuery": {
+      "artist": "Walter Murphy",
+      "track": "A fifth of beethoven",
+      "format": "Compilation Vinyl"
+    },
+    "results": [
+      {
+        "id": 1497862,
+        "title": "Walter Murphy - Switched On Classics",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation"
+        ],
+        "uri": "https://www.discogs.com/Walter-Murphy-Switched-On-Classics/master/1497862",
+        "master_url": "https://api.discogs.com/masters/1497862"
+      }
+    ]
+  },
+  {
+    "searchQuery": {
+      "artist": "Mungo Jerry",
+      "track": "In the summertime",
+      "format": "Compilation Vinyl"
+    },
+    "results": [
+      {
+        "id": 2883825,
+        "title": "Mungo Jerry - Mungo Jerry",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation"
+        ],
+        "uri": "https://www.discogs.com/release/2883825-Mungo-Jerry-Mungo-Jerry",
+        "master_url": "https://api.discogs.com/masters/2689544"
+      },
+      {
+        "id": 14097659,
+        "title": "Mungo Jerry - Gold",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation"
+        ],
+        "uri": "https://www.discogs.com/Mungo-Jerry-Gold/release/14097659",
+        "master_url": "https://api.discogs.com/masters/1602837"
+      },
+      {
+        "id": 3010076,
+        "title": "Mungo Jerry - Mungo Jerry",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation",
+          "Repress"
+        ],
+        "uri": "https://www.discogs.com/master/3010076-Mungo-Jerry-Mungo-Jerry",
+        "master_url": "https://api.discogs.com/masters/3010076"
+      },
+      {
+        "id": 10277189,
+        "title": "Mungo Jerry - The Mungo Jerry File",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation"
+        ],
+        "uri": "https://www.discogs.com/release/10277189-Mungo-Jerry-The-Mungo-Jerry-File",
+        "master_url": "https://api.discogs.com/masters/857400"
+      },
+      {
+        "id": 5350567,
+        "title": "Mungo Jerry - Too Fast To Live & Too Young To Die",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation"
+        ],
+        "uri": "https://www.discogs.com/release/5350567-Mungo-Jerry-Too-Fast-To-Live-Too-Young-To-Die",
+        "master_url": "https://api.discogs.com/masters/600383"
+      },
+      {
+        "id": 1790120,
+        "title": "Mungo Jerry - In The Summertime. Greatest Hits",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation"
+        ],
+        "uri": "https://www.discogs.com/master/1790120-Mungo-Jerry-In-The-Summertime-Greatest-Hits",
+        "master_url": "https://api.discogs.com/masters/1790120"
+      },
+      {
+        "id": 12813945,
+        "title": "Mungo Jerry - In The Summertime ( Best Of)",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation"
+        ],
+        "uri": "https://www.discogs.com/release/12813945-Mungo-Jerry-In-The-Summertime-Best-Of",
+        "master_url": "https://api.discogs.com/masters/2853853"
+      },
+      {
+        "id": 11099272,
+        "title": "Mungo Jerry / Johnny And The Hurricanes / Danny & The Juniors / Bill Deal & the Rondells / Adam Wade (2) - Las Grandes Estrellas Del Rock ",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation"
+        ],
+        "uri": "https://www.discogs.com/release/11099272-Mungo-Jerry-Johnny-And-The-Hurricanes-Danny-The-Juniors-Bill-Deal-the-Rondells-Adam-Wade-Las-Grandes",
+        "master_url": "https://api.discogs.com/masters/3027599"
+      },
+      {
+        "id": 1438153,
+        "title": "Mungo Jerry - Greatest Hits",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation"
+        ],
+        "uri": "https://www.discogs.com/master/1438153-Mungo-Jerry-Greatest-Hits",
+        "master_url": "https://api.discogs.com/masters/1438153"
+      },
+      {
+        "id": 4885702,
+        "title": "Mungo Jerry - In The Summertime",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation"
+        ],
+        "uri": "https://www.discogs.com/release/4885702-Mungo-Jerry-In-The-Summertime",
+        "master_url": "https://api.discogs.com/masters/653348"
+      },
+      {
+        "id": 11751358,
+        "title": "Mungo Jerry - All The Hits Plus More",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation",
+          "Stereo"
+        ],
+        "uri": "https://www.discogs.com/release/11751358-Mungo-Jerry-All-The-Hits-Plus-More",
+        "master_url": "https://api.discogs.com/masters/1335004"
+      },
+      {
+        "id": 1483443,
+        "title": "Mungo Jerry - The Best Of Mungo Jerry",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation"
+        ],
+        "uri": "https://www.discogs.com/Mungo-Jerry-The-Best-Of-Mungo-Jerry/master/1483443",
+        "master_url": "https://api.discogs.com/masters/1483443"
+      },
+      {
+        "id": 8349124,
+        "title": "Mungo Jerry - Six Aside",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation"
+        ],
+        "uri": "https://www.discogs.com/release/8349124-Mungo-Jerry-Six-Aside",
+        "master_url": "https://api.discogs.com/masters/917246"
+      },
+      {
+        "id": 5429081,
+        "title": "Mungo Jerry - In The Summertime",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation",
+          "Club Edition"
+        ],
+        "uri": "https://www.discogs.com/release/5429081-Mungo-Jerry-In-The-Summertime",
+        "master_url": "https://api.discogs.com/masters/3399193"
+      },
+      {
+        "id": 1597671,
+        "title": "Mungo Jerry - Hit-Station",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation"
+        ],
+        "uri": "https://www.discogs.com/Mungo-Jerry-Hit-Station/master/1597671",
+        "master_url": "https://api.discogs.com/masters/1597671"
+      },
+      {
+        "id": 4229974,
+        "title": "Mungo Jerry - Mungo Jerry's Greatest Hits",
+        "format": [
+          "Vinyl",
+          "LP",
+          "Compilation"
+        ],
+        "uri": "https://www.discogs.com/release/4229974-Mungo-Jerry-Mungo-Jerrys-Greatest-Hits",
+        "master_url": "https://api.discogs.com/masters/523890"
+      }
+    ]
+  }
+]

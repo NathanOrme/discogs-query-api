@@ -40,7 +40,7 @@ class DiscogsQueryControllerTest {
         mockMvc.perform(get("/discogs-query/search")
                         .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"artist\":\"The Beatles\", \"track\":\"Hey Jude\"}"))
+                        .content("[{\"artist\":\"The Beatles\", \"track\":\"Hey Jude\"}]"))
                 .andExpect(status().isOk());
     }
 

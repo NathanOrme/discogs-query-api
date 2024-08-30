@@ -33,6 +33,9 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
     @Value("${discogs.url}")
     private String discogsBaseUrl;
 
+    @Value("${discogs.baseUrl}")
+    private String discogsResultBaseUrl;
+
     @Value("${discogs.search}")
     private String discogsSearchEndpoint;
 
@@ -63,8 +66,12 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         try {
             var response = restTemplate.exchange(searchUrl, HttpMethod.GET, entity, DiscogsResultDTO.class);
             log.info("Discogs API response: {}", response.getBody());
+            if (response.getBody() == null || response.getBody().getResults() == null || response.getBody().getResults().isEmpty()) {
+                return DiscogsResultDTO.builder().build();
+            }
             var responseBody = response.getBody();
             List<DiscogsEntryDTO> uniqueEntries = filterUniqueEntriesByMasterUrl(responseBody.getResults());
+            uniqueEntries.forEach(discogsEntryDTO -> discogsEntryDTO.setUri(discogsResultBaseUrl.concat(discogsEntryDTO.getUri())));
             responseBody.setResults(uniqueEntries);  // Set the filtered entries back
             return responseBody;
         } catch (final Exception e) {

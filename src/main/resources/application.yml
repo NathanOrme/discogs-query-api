@@ -20,6 +20,7 @@ spring:
 
 discogs:
   url: https://api.discogs.com/
+  baseUrl: https://www.discogs.com
   search: database/search
   agent: DiscogsQueryApplication/1.0 +https://github.com/NathanOrme/discogs-query-api
   page-size: 5000

@@ -11,3 +11,9 @@ springdoc:
   api-docs:
     path: /api-docs
   show-actuator: true
+
+discogs:
+  url: https://api.discogs.com/
+  search: search
+  agent: DiscogsQueryApplication/1.0 +https://github.com/NathanOrme/discogs-query-api
+  page-size: 50

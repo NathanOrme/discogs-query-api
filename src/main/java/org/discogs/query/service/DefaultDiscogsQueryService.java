@@ -14,6 +14,10 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+/**
+ * Default implementation of the {@link DiscogsQueryService}.
+ * This service handles the communication with the Discogs API to search for records based on the provided query.
+ */
 @Slf4j
 @Service
 public class DefaultDiscogsQueryService implements DiscogsQueryService {
@@ -33,6 +37,13 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
     @Value("${discogs.token}")
     private String token;
 
+    /**
+     * Searches the Discogs database based on the provided query.
+     *
+     * @param discogsQueryDTO the search query data transfer object
+     *                        containing artist, track, and optional format information
+     * @return a {@link DiscogsResultDTO} object containing the search results
+     */
     @Override
     public DiscogsResultDTO searchBasedOnQuery(final DiscogsQueryDTO discogsQueryDTO) {
         var searchUrl = buildSearchUrl(discogsBaseUrl.concat(discogsSearchEndpoint), discogsQueryDTO);
@@ -44,13 +55,18 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         return response.getBody();
     }
 
+    /**
+     * Builds the search URL based on the base URL and query parameters.
+     *
+     * @param searchUrl       the base URL for the search endpoint
+     * @param discogsQueryDTO the search query data transfer object
+     * @return the fully constructed search URL with query parameters
+     */
     private String buildSearchUrl(final String searchUrl, final DiscogsQueryDTO discogsQueryDTO) {
         var urlBuilder = searchUrl;
-        var artist = discogsQueryDTO.getArtist();
-        artist = artist.replace(" ", "+");
+        var artist = discogsQueryDTO.getArtist().replace(" ", "+");
         urlBuilder = urlBuilder.concat("?artist=".concat(artist));
-        var track = discogsQueryDTO.getTrack();
-        track = track.replace(" ", "+");
+        var track = discogsQueryDTO.getTrack().replace(" ", "+");
         urlBuilder = appendUrlAsAppropriate(urlBuilder, "track", track);
         if (discogsQueryDTO.getFormat() != null && !discogsQueryDTO.getFormat().isBlank()) {
             urlBuilder = appendUrlAsAppropriate(urlBuilder, "format", discogsQueryDTO.getFormat());
@@ -60,9 +76,13 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         urlBuilder = urlBuilder.concat("&per_page=").concat(String.valueOf(pageSize)).concat("&page=1");
         urlBuilder = urlBuilder.concat("&token=").concat(token);
         return urlBuilder;
-
     }
 
+    /**
+     * Builds the HTTP headers required for making a request to the Discogs API.
+     *
+     * @return the constructed {@link HttpHeaders} object containing necessary headers
+     */
     private HttpHeaders buildHeaders() {
         var headers = new HttpHeaders();
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
@@ -71,13 +91,19 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         return headers;
     }
 
-    private String appendUrlAsAppropriate(final String urlBuilder, final String field, final String stirngToAppend) {
-        String builtString;
+    /**
+     * Appends a query parameter to the URL based on the field name and value.
+     *
+     * @param urlBuilder     the current URL being constructed
+     * @param field          the query parameter field name
+     * @param stringToAppend the value to append for the field
+     * @return the updated URL with the appended query parameter
+     */
+    private String appendUrlAsAppropriate(final String urlBuilder, final String field, final String stringToAppend) {
         if (urlBuilder.contains("?")) {
-            builtString = urlBuilder.concat("&".concat(field).concat("=").concat(stirngToAppend));
+            return urlBuilder.concat("&".concat(field).concat("=").concat(stringToAppend));
         } else {
-            builtString = urlBuilder.concat("?".concat(field).concat("=").concat(stirngToAppend));
+            return urlBuilder.concat("?".concat(field).concat("=").concat(stringToAppend));
         }
-        return builtString;
     }
 }

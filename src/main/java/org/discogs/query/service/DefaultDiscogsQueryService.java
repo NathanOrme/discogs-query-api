@@ -40,7 +40,8 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
     /**
      * Searches the Discogs database based on the provided query.
      *
-     * @param discogsQueryDTO the search query data transfer object containing artist, track, and optional format information
+     * @param discogsQueryDTO the search query data transfer object
+     *                        containing artist, track, and optional format information
      * @return a {@link DiscogsResultDTO} object containing the search results
      */
     @Override

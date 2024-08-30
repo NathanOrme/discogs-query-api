@@ -12,6 +12,12 @@ springdoc:
     path: /api-docs
   show-actuator: true
 
+spring:
+  security:
+    user:
+      name: username
+      password: password
+
 discogs:
   url: https://api.discogs.com/
   search: database/search

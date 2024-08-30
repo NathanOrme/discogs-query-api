@@ -1,5 +1,10 @@
 [
   {
+    "searchQuery": {
+      "artist": "The O'Jays",
+      "track": "Love Train",
+      "format": "Compilation Vinyl"
+    },
     "results": [
       {
         "id": 816446,
@@ -107,6 +112,11 @@
     ]
   },
   {
+    "searchQuery": {
+      "artist": "Walter Murphy",
+      "track": "A fifth of beethoven",
+      "format": "Compilation Vinyl"
+    },
     "results": [
       {
         "id": 1497862,
@@ -122,6 +132,11 @@
     ]
   },
   {
+    "searchQuery": {
+      "artist": "Mungo Jerry",
+      "track": "In the summertime",
+      "format": "Compilation Vinyl"
+    },
     "results": [
       {
         "id": 2883825,

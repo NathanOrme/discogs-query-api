@@ -1,6 +1,7 @@
 package org.discogs.query.mapper;
 
 import org.discogs.query.domain.DiscogsResult;
+import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -17,12 +18,15 @@ public class DiscogsResultMapper {
     /**
      * Maps a {@link DiscogsResult} object to a {@link DiscogsResultDTO} object.
      *
-     * @param discogsResult the {@link DiscogsResult} object to be mapped
+     * @param discogsResult   the {@link DiscogsResult} object to be mapped
+     * @param discogsQueryDTO
      * @return a {@link DiscogsResultDTO} object that corresponds to the provided {@link DiscogsResult}
      */
-    public DiscogsResultDTO mapObjectToDTO(final DiscogsResult discogsResult) {
+    public DiscogsResultDTO mapObjectToDTO(final DiscogsResult discogsResult, final DiscogsQueryDTO discogsQueryDTO) {
         ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(discogsResult, DiscogsResultDTO.class);
+        var result = modelMapper.map(discogsResult, DiscogsResultDTO.class);
+        result.setSearchQuery(discogsQueryDTO);
+        return result;
     }
 
 }

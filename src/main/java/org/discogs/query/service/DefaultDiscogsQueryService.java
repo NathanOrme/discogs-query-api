@@ -69,7 +69,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         var results = getDiscogsResult(searchUrl, entity);
-        return discogsResultMapper.mapObjectToDTO(results);
+        return discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
     }
 
     private DiscogsResult getDiscogsResult(final String searchUrl, final HttpEntity<Void> entity) {

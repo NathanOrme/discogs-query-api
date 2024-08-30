@@ -30,8 +30,11 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
     @Value("${discogs.page-size}")
     private int pageSize;
 
+    @Value("${discogs.token}")
+    private String token;
+
     @Override
-    public DiscogsResultDTO searchBasedOnQuery(DiscogsQueryDTO discogsQueryDTO) {
+    public DiscogsResultDTO searchBasedOnQuery(final DiscogsQueryDTO discogsQueryDTO) {
         String searchUrl = buildSearchUrl(discogsBaseUrl.concat(discogsSearchEndpoint), discogsQueryDTO);
         HttpHeaders headers = buildHeaders();
         HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -42,26 +45,24 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         return null;
     }
 
-    private String buildSearchUrl(String searchUrl, DiscogsQueryDTO discogsQueryDTO) {
+    private String buildSearchUrl(final String searchUrl, final DiscogsQueryDTO discogsQueryDTO) {
         String urlBuilder = searchUrl;
         String artist = discogsQueryDTO.getArtist();
-        if(artist != null && !discogsQueryDTO.getArtist().isBlank()){
-            artist = artist.replace(" ", "+");
-            urlBuilder = urlBuilder.concat("?artist=".concat(artist));
-        }
+        artist = artist.replace(" ", "+");
+        urlBuilder = urlBuilder.concat("?artist=".concat(artist));
         String track = discogsQueryDTO.getTrack();
-        if(track != null &&!track.isBlank()){
-            track = track.replace(" ", "+");
-            urlBuilder = appendUrlAsAppropriate(urlBuilder, "track", track);
-        }
-        if(discogsQueryDTO.getFormat() != null && !discogsQueryDTO.getFormat().isBlank()){
+        track = track.replace(" ", "+");
+        urlBuilder = appendUrlAsAppropriate(urlBuilder, "track", track);
+        if (discogsQueryDTO.getFormat() != null && !discogsQueryDTO.getFormat().isBlank()) {
             urlBuilder = appendUrlAsAppropriate(urlBuilder, "format", discogsQueryDTO.getFormat());
         }
+        urlBuilder = urlBuilder.concat("&per_page=").concat(String.valueOf(pageSize)).concat("&page=1");
+        urlBuilder = urlBuilder.concat("&token=").concat(token);
         return urlBuilder;
 
     }
 
-    private HttpHeaders buildHeaders(){
+    private HttpHeaders buildHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -69,14 +70,13 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         return headers;
     }
 
-    private String appendUrlAsAppropriate(String urlBuilder, String field, String stirngToAppend) {
+    private String appendUrlAsAppropriate(final String urlBuilder, final String field, final String stirngToAppend) {
         String builtString;
-        if(urlBuilder.contains("?")){
+        if (urlBuilder.contains("?")) {
             builtString = urlBuilder.concat("&".concat(field).concat("=").concat(stirngToAppend));
         } else {
             builtString = urlBuilder.concat("?".concat(field).concat("=").concat(stirngToAppend));
         }
-        builtString = builtString.concat("&per_page=").concat(String.valueOf(pageSize)).concat("&page=1");
         return builtString;
     }
 }

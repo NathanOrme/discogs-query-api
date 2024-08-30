@@ -1,0 +1,13 @@
+server:
+  port: 9090
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: mappings
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  show-actuator: true

@@ -8,7 +8,8 @@ import lombok.Getter;
 public enum DiscogFormats {
 
     VINYL("vinyl"),
-    COMP("compilation");
+    COMP("compilation"),
+    VINYL_COMPILATION("compilation vinyl");
 
     private final String format;
 }

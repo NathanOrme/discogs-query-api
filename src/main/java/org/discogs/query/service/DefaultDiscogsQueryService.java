@@ -85,7 +85,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
             uriBuilder.queryParam("format", discogsQueryDTO.getFormat());
         } else {
             // Default format if not provided
-            uriBuilder.queryParam("format", DiscogFormats.COMP.getFormat());
+            uriBuilder.queryParam("format", DiscogFormats.VINYL_COMPILATION.getFormat());
         }
 
 

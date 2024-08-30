@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discogs Query</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .result-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Search Discogs</h1>
+    <textarea id="queryInput" rows="4" cols="50" placeholder="Enter your query here..."></textarea><br><br>
+    <button onclick="search()">Search</button>
+    <h2>Results:</h2>
+    <div id="results"></div>
+</div>
+
+<script>
+    async function search() {
+        const queryInput = document.getElementById('queryInput').value;
+        const queries = queryInput.split('\n').map(query => ({ query }));
+
+        try {
+            const response = await fetch('http://localhost:9090/discogs-query/search', {
+                method: 'GET', // Your endpoint is using GET, but POST might be more appropriate for a body
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(queries) // Attach the queries in the body
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const results = await response.json();
+            displayResults(results);
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        }
+    }
+
+    function displayResults(results) {
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '';
+
+        results.forEach(result => {
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'result-item';
+            resultDiv.textContent = JSON.stringify(result, null, 2);
+            resultsDiv.appendChild(resultDiv);
+        });
+    }
+</script>
+</body>
+</html>

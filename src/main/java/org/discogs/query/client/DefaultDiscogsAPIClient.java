@@ -2,6 +2,7 @@ package org.discogs.query.client;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.discogs.query.domain.DiscogsMarketplaceResult;
 import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.exceptions.DiscogsAPIException;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +29,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
 
+    public static final String ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_API = "Error occurred while fetching data from Discogs API";
+    public static final String FAILED_TO_FETCH_DATA_FROM_DISCOGS_API = "Failed to fetch data from Discogs API";
     @Value("${discogs.agent}")
     private String discogsAgent;
 
@@ -60,12 +63,11 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
         try {
             var response = restTemplate.exchange(searchUrl, HttpMethod.GET, entity, DiscogsResult.class);
             logApiResponse(response);
-
             return Optional.ofNullable(response.getBody())
                     .orElse(new DiscogsResult());
         } catch (final Exception e) {
-            log.error("Error occurred while fetching data from Discogs API", e);
-            throw new DiscogsAPIException("Failed to fetch data from Discogs API", e);
+            log.error(ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_API, e);
+            throw new DiscogsAPIException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API, e);
         }
     }
 
@@ -85,8 +87,23 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
             logApiResponse(response);
             return response.getBody();
         } catch (final Exception e) {
-            log.error("Error occurred while fetching data from Discogs API", e);
-            throw new DiscogsAPIException("Failed to fetch data from Discogs API", e);
+            log.error(ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_API, e);
+            throw new DiscogsAPIException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API, e);
+        }
+    }
+
+    @Override
+    public DiscogsMarketplaceResult checkIsOnMarketplace(final String url) {
+        HttpHeaders headers = buildHeaders();
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        try {
+            Thread.sleep(2000);
+            var response = restTemplate.exchange(url, HttpMethod.GET, entity, DiscogsMarketplaceResult.class);
+            logApiResponse(response);
+            return response.getBody();
+        } catch (final Exception e) {
+            log.error(ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_API, e);
+            throw new DiscogsAPIException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API, e);
         }
     }
 

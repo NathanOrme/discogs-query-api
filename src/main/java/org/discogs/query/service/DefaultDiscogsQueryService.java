@@ -8,6 +8,7 @@ import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.enums.DiscogFormats;
 import org.discogs.query.enums.DiscogQueryParams;
 import org.discogs.query.enums.DiscogsTypes;
+import org.discogs.query.exceptions.DiscogsAPIException;
 import org.discogs.query.mapper.DiscogsResultMapper;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
@@ -39,6 +40,9 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
     @Value("${discogs.search}")
     private String discogsSearchEndpoint;
 
+    @Value("${discogs.marketplaceCheck}")
+    private String marketplaceCheck;
+
     @Value("${discogs.page-size}")
     private int pageSize;
 
@@ -57,11 +61,26 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
      */
     @Override
     public DiscogsResultDTO searchBasedOnQuery(final DiscogsQueryDTO discogsQueryDTO) {
-        String searchUrl = buildSearchUrl(discogsQueryDTO);
-        var stringResult = discogsAPIClient.getStringResultForQuery(searchUrl);
-        var results = discogsAPIClient.getResultsForQuery(searchUrl);
-        correctUriForResultEntries(results);
-        return discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
+        try {
+            String searchUrl = buildSearchUrl(discogsQueryDTO);
+            var results = discogsAPIClient.getResultsForQuery(searchUrl);
+            correctUriForResultEntries(results);
+            results.getResults().forEach(discogsEntry -> {
+                var marketplaceUrl = buildMarketplaceUrl(discogsEntry);
+                var marketplaceResults = discogsAPIClient.checkIsOnMarketplace(marketplaceUrl);
+                discogsEntry.setOnMarketplace(marketplaceResults.getNumberForSale() != null);
+                discogsEntry.setLowestPrice(marketplaceResults.getResult().getValue());
+            });
+            return discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
+        } catch (final Exception e) {
+            throw new DiscogsAPIException("Unexpected issue occurred", e);
+        }
+    }
+
+    private String buildMarketplaceUrl(final DiscogsEntry discogsEntry) {
+        var baseUrl = discogsBaseUrl.concat(marketplaceCheck).concat(String.valueOf(discogsEntry.getId()));
+        baseUrl = baseUrl.concat("?token=").concat(token);
+        return baseUrl;
     }
 
     private void correctUriForResultEntries(final DiscogsResult results) {

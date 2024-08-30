@@ -50,4 +50,14 @@ public class DiscogsEntryDTO {
      * The URI of the Discogs entry.
      */
     private String uri;
+
+    /**
+     * Marks if on marketplace
+     */
+    private boolean isOnMarketplace;
+
+    /**
+     * Lowest price of item
+     */
+    private Float lowestPrice;
 }

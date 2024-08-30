@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.discogs.query.enums.DiscogsTypes;
 
 /**
  * Data Transfer Object (DTO) representing a query to search Discogs.
@@ -36,5 +37,11 @@ public class DiscogsQueryDTO {
      * The format of the track (e.g., vinyl, CD, etc.). This field is optional.
      */
     private String format;
+
+    /**
+     * Type of results we want to filter by.
+     * Refer to {@link DiscogsTypes}
+     */
+    private DiscogsTypes types;
 
 }

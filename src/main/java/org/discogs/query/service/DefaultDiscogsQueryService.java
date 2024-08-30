@@ -98,6 +98,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         if (discogsQueryDTO.getArtist() != null && !discogsQueryDTO.getArtist().isBlank()) {
             uriBuilder.queryParam(DiscogQueryParams.ARTIST.getQueryType(), discogsQueryDTO.getArtist());
         }
+
         if (discogsQueryDTO.getTrack() != null && !discogsQueryDTO.getTrack().isBlank()) {
             uriBuilder.queryParam(DiscogQueryParams.TRACK.getQueryType(), discogsQueryDTO.getTrack());
         }

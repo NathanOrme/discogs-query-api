@@ -78,8 +78,8 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         if (discogsQueryDTO.getArtist() != null && !discogsQueryDTO.getArtist().isBlank()) {
             uriBuilder.queryParam("artist", discogsQueryDTO.getArtist());
         }
-        if (discogsQueryDTO.getTrack() != null && !discogsQueryDTO.getTrack().isBlank()) {
-            uriBuilder.queryParam("track", discogsQueryDTO.getTrack());
+        if (discogsQueryDTO.getTitle() != null && !discogsQueryDTO.getTitle().isBlank()) {
+            uriBuilder.queryParam("track", discogsQueryDTO.getTitle());
         }
         if (discogsQueryDTO.getFormat() != null && !discogsQueryDTO.getFormat().isBlank()) {
             uriBuilder.queryParam("format", discogsQueryDTO.getFormat());

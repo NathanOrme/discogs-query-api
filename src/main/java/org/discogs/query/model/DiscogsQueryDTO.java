@@ -27,10 +27,10 @@ public class DiscogsQueryDTO {
     private String artist;
 
     /**
-     * The name of the track to search for. This field is required and cannot be blank.
+     * The name of the title to search for. This field is required and cannot be blank.
      */
     @NotBlank
-    private String track;
+    private String title;
 
     /**
      * The format of the track (e.g., vinyl, CD, etc.). This field is optional.

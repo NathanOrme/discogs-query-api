@@ -17,7 +17,7 @@ class DefaultDiscogsQueryServiceIT {
     void search_WithKnownQuery_ReturnsResult() {
         DiscogsQueryDTO discogsQueryDTO = DiscogsQueryDTO.builder()
                 .artist("Jimi Hendrix")
-                .track("All Along The Watchtower")
+                .title("All Along The Watchtower")
                 .build();
         var result = discogsQueryService.searchBasedOnQuery(discogsQueryDTO);
         assertNotNull(result);

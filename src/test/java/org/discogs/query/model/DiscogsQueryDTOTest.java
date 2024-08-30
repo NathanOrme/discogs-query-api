@@ -28,7 +28,7 @@ class DiscogsQueryDTOTest {
         // Arrange
         DiscogsQueryDTO queryDTO = DiscogsQueryDTO.builder()
                 .artist("The Beatles")
-                .title("Hey Jude")
+                .track("Hey Jude")
                 .format("Vinyl")
                 .build();
 
@@ -44,7 +44,7 @@ class DiscogsQueryDTOTest {
         // Arrange
         DiscogsQueryDTO queryDTO = DiscogsQueryDTO.builder()
                 .artist("")
-                .title("Hey Jude")
+                .track("Hey Jude")
                 .format("Vinyl")
                 .build();
 
@@ -63,7 +63,7 @@ class DiscogsQueryDTOTest {
         // Arrange
         DiscogsQueryDTO queryDTO = DiscogsQueryDTO.builder()
                 .artist("The Beatles")
-                .title("")
+                .track("")
                 .format("Vinyl")
                 .build();
 
@@ -82,7 +82,7 @@ class DiscogsQueryDTOTest {
         // Arrange
         DiscogsQueryDTO queryDTO = DiscogsQueryDTO.builder()
                 .artist("The Beatles")
-                .title("Hey Jude")
+                .track("Hey Jude")
                 .build();
 
         // Act

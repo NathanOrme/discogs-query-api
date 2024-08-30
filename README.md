@@ -14,6 +14,8 @@ Swagger and handles exceptions related to Discogs API interactions.
         * [Installation](#installation)
         * [Configuration](#configuration)
         * [Endpoints](#endpoints)
+            * [**Search Records**](#search-records)
+                * [Example Response](#example-response)
         * [API Documentation](#api-documentation)
     * [Exception Handling](#exception-handling)
     * [Development](#development)
@@ -76,7 +78,8 @@ discogs.token=YourAccessToken
 
 ### Endpoints
 
-- **Search Records**
+#### **Search Records**
+
     - **URL**: `/discogs-query/search`
     - **Method**: `GET`
         - **Request Body**:
@@ -100,6 +103,10 @@ discogs.token=YourAccessToken
           ]
           ```
     - **Response**: A JSON object containing the search results.
+
+##### Example Response
+
+An example response can be found [here](readme-resources/example-response.json)
 
 ### API Documentation
 

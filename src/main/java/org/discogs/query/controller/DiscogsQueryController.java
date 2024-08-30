@@ -35,7 +35,7 @@ public class DiscogsQueryController {
      */
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DiscogsResultDTO> getCustomerFromReference(
+    public ResponseEntity<DiscogsResultDTO> searchBasedOnQuery(
             @RequestBody final DiscogsQueryDTO discogsQueryDTO) {
         var personalDetailsDTO = discogsQueryService.searchBasedOnQuery(discogsQueryDTO);
         return ResponseEntity.status(HttpStatus.OK).body(personalDetailsDTO);

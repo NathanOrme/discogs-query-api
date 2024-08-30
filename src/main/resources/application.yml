@@ -1,0 +1,20 @@
+server:
+  port: 9090
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: mappings
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  show-actuator: true
+
+discogs:
+  url: https://api.discogs.com/
+  search: database/search
+  agent: DiscogsQueryApplication/1.0 +https://github.com/NathanOrme/discogs-query-api
+  page-size: 50
+  token: fXZuXsfLTsbwhcTYzgiPrjpzLPNPUXoGpSseGEXV

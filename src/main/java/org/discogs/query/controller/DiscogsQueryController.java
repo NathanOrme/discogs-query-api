@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * Controller for handling Discogs query-related operations.
  * This controller provides an API endpoint for searching Discogs based on user queries.
@@ -35,10 +37,13 @@ public class DiscogsQueryController {
      */
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DiscogsResultDTO> searchBasedOnQuery(
-            @RequestBody final DiscogsQueryDTO discogsQueryDTO) {
-        var personalDetailsDTO = discogsQueryService.searchBasedOnQuery(discogsQueryDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(personalDetailsDTO);
+    public ResponseEntity<List<DiscogsResultDTO>> searchBasedOnQuery(
+            @RequestBody final List<DiscogsQueryDTO> discogsQueryDTO) {
+        List<DiscogsResultDTO> resultDTOList = discogsQueryDTO.parallelStream()
+                .map(discogsQueryService::searchBasedOnQuery)
+                .toList();
+
+        return ResponseEntity.status(HttpStatus.OK).body(resultDTOList);
     }
 
 }

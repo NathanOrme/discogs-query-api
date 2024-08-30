@@ -25,13 +25,12 @@ public class DiscogsQueryController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DiscogsResultDTO> getCustomerFromReference(@RequestBody DiscogsQueryDTO discogsQueryDTO) {
+    public ResponseEntity<DiscogsResultDTO> getCustomerFromReference(@RequestBody final DiscogsQueryDTO discogsQueryDTO) {
         log.info("Received request, attempting to retrieve customer");
         var personalDetailsDTO = discogsQueryService.searchBasedOnQuery(discogsQueryDTO);
         log.info("Customer received");
         return ResponseEntity.status(HttpStatus.OK).body(personalDetailsDTO);
     }
-
 
 
 }

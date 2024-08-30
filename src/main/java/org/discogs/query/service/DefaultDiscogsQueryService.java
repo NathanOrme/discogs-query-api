@@ -9,7 +9,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -36,22 +35,21 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
 
     @Override
     public DiscogsResultDTO searchBasedOnQuery(final DiscogsQueryDTO discogsQueryDTO) {
-        String searchUrl = buildSearchUrl(discogsBaseUrl.concat(discogsSearchEndpoint), discogsQueryDTO);
-        HttpHeaders headers = buildHeaders();
+        var searchUrl = buildSearchUrl(discogsBaseUrl.concat(discogsSearchEndpoint), discogsQueryDTO);
+        var headers = buildHeaders();
         HttpEntity<String> entity = new HttpEntity<>(headers);
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.exchange(searchUrl, HttpMethod.GET, entity, String.class);
-        log.info(response.getBody());
-
-        return null;
+        var restTemplate = new RestTemplate();
+        var response = restTemplate.exchange(searchUrl, HttpMethod.GET, entity, DiscogsResultDTO.class);
+        log.info(String.valueOf(response.getBody()));
+        return response.getBody();
     }
 
     private String buildSearchUrl(final String searchUrl, final DiscogsQueryDTO discogsQueryDTO) {
-        String urlBuilder = searchUrl;
-        String artist = discogsQueryDTO.getArtist();
+        var urlBuilder = searchUrl;
+        var artist = discogsQueryDTO.getArtist();
         artist = artist.replace(" ", "+");
         urlBuilder = urlBuilder.concat("?artist=".concat(artist));
-        String track = discogsQueryDTO.getTrack();
+        var track = discogsQueryDTO.getTrack();
         track = track.replace(" ", "+");
         urlBuilder = appendUrlAsAppropriate(urlBuilder, "track", track);
         if (discogsQueryDTO.getFormat() != null && !discogsQueryDTO.getFormat().isBlank()) {
@@ -66,7 +64,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
     }
 
     private HttpHeaders buildHeaders() {
-        HttpHeaders headers = new HttpHeaders();
+        var headers = new HttpHeaders();
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("User-Agent", discogsAgent);

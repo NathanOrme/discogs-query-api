@@ -3,7 +3,6 @@ package org.discogs.query.controller;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.discogs.query.service.DiscogsQueryService;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -43,17 +42,6 @@ class DiscogsQueryControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"artist\":\"The Beatles\", \"track\":\"Hey Jude\"}"))
                 .andExpect(status().isOk());
-    }
-
-    @Test
-    @Disabled
-    void testSearchDiscogs_InvalidRequest() throws Exception {
-        // Here you can simulate invalid input and expect a 400 status, etc.
-        mockMvc.perform(get("/discogs-query/search")
-                        .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"artist\":\"\", \"track\":\"\"}"))  // Invalid input
-                .andExpect(status().isBadRequest());
     }
 
 }

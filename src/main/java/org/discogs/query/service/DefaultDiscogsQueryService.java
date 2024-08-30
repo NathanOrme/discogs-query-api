@@ -1,5 +1,6 @@
 package org.discogs.query.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.enums.DiscogFormats;
 import org.discogs.query.model.DiscogsQueryDTO;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -20,6 +22,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class DefaultDiscogsQueryService implements DiscogsQueryService {
 
     @Value("${discogs.url}")
@@ -37,6 +40,8 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
     @Value("${discogs.token}")
     private String token;
 
+    private final RestTemplate restTemplate;
+
     /**
      * Searches the Discogs database based on the provided query.
      *
@@ -46,36 +51,52 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
      */
     @Override
     public DiscogsResultDTO searchBasedOnQuery(final DiscogsQueryDTO discogsQueryDTO) {
-        var searchUrl = buildSearchUrl(discogsBaseUrl.concat(discogsSearchEndpoint), discogsQueryDTO);
-        var headers = buildHeaders();
+        String searchUrl = buildSearchUrl(discogsQueryDTO);
+        HttpHeaders headers = buildHeaders();
         HttpEntity<String> entity = new HttpEntity<>(headers);
-        var restTemplate = new RestTemplate();
-        var response = restTemplate.exchange(searchUrl, HttpMethod.GET, entity, DiscogsResultDTO.class);
-        log.info(String.valueOf(response.getBody()));
-        return response.getBody();
+
+        try {
+            var response = restTemplate.exchange(searchUrl, HttpMethod.GET, entity, DiscogsResultDTO.class);
+            log.info("Discogs API response: {}", response.getBody());
+            return response.getBody();
+        } catch (final Exception e) {
+            log.error("Failed to fetch data from Discogs API", e);
+            throw e;
+        }
     }
 
     /**
      * Builds the search URL based on the base URL and query parameters.
      *
-     * @param searchUrl       the base URL for the search endpoint
      * @param discogsQueryDTO the search query data transfer object
      * @return the fully constructed search URL with query parameters
      */
-    private String buildSearchUrl(final String searchUrl, final DiscogsQueryDTO discogsQueryDTO) {
-        var urlBuilder = searchUrl;
-        var artist = discogsQueryDTO.getArtist().replace(" ", "+");
-        urlBuilder = urlBuilder.concat("?artist=".concat(artist));
-        var track = discogsQueryDTO.getTrack().replace(" ", "+");
-        urlBuilder = appendUrlAsAppropriate(urlBuilder, "track", track);
-        if (discogsQueryDTO.getFormat() != null && !discogsQueryDTO.getFormat().isBlank()) {
-            urlBuilder = appendUrlAsAppropriate(urlBuilder, "format", discogsQueryDTO.getFormat());
-        } else {
-            urlBuilder = appendUrlAsAppropriate(urlBuilder, "format", DiscogFormats.COMP.getFormat());
+    private String buildSearchUrl(final DiscogsQueryDTO discogsQueryDTO) {
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(discogsBaseUrl + discogsSearchEndpoint);
+
+        // Add parameters only if they are not null or empty
+        if (discogsQueryDTO.getArtist() != null && !discogsQueryDTO.getArtist().isBlank()) {
+            uriBuilder.queryParam("artist", discogsQueryDTO.getArtist());
         }
-        urlBuilder = urlBuilder.concat("&per_page=").concat(String.valueOf(pageSize)).concat("&page=1");
-        urlBuilder = urlBuilder.concat("&token=").concat(token);
-        return urlBuilder;
+        if (discogsQueryDTO.getTrack() != null && !discogsQueryDTO.getTrack().isBlank()) {
+            uriBuilder.queryParam("track", discogsQueryDTO.getTrack());
+        }
+        if (discogsQueryDTO.getFormat() != null && !discogsQueryDTO.getFormat().isBlank()) {
+            uriBuilder.queryParam("format", discogsQueryDTO.getFormat());
+        } else {
+            // Default format if not provided
+            uriBuilder.queryParam("format", DiscogFormats.COMP.getFormat());
+        }
+
+
+        uriBuilder.queryParam("per_page", pageSize);
+        uriBuilder.queryParam("page", 1);
+        uriBuilder.queryParam("token", token);
+
+        // Build the URL and replace %20 with +
+        String url = uriBuilder.toUriString();
+        url = url.replace("%20", "+");
+        return url;
     }
 
     /**
@@ -84,26 +105,10 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
      * @return the constructed {@link HttpHeaders} object containing necessary headers
      */
     private HttpHeaders buildHeaders() {
-        var headers = new HttpHeaders();
+        HttpHeaders headers = new HttpHeaders();
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("User-Agent", discogsAgent);
         return headers;
-    }
-
-    /**
-     * Appends a query parameter to the URL based on the field name and value.
-     *
-     * @param urlBuilder     the current URL being constructed
-     * @param field          the query parameter field name
-     * @param stringToAppend the value to append for the field
-     * @return the updated URL with the appended query parameter
-     */
-    private String appendUrlAsAppropriate(final String urlBuilder, final String field, final String stringToAppend) {
-        if (urlBuilder.contains("?")) {
-            return urlBuilder.concat("&".concat(field).concat("=").concat(stringToAppend));
-        } else {
-            return urlBuilder.concat("?".concat(field).concat("=").concat(stringToAppend));
-        }
     }
 }

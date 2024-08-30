@@ -79,14 +79,26 @@ discogs.token=YourAccessToken
 - **Search Records**
     - **URL**: `/discogs-query/search`
     - **Method**: `GET`
-    - **Request Body**:
-      ```json
-      {
-        "artist": "Artist Name",
-        "track": "Track Title",
-        "format": "Format Type"
-      }
-      ```
+        - **Request Body**:
+          ```json
+          [
+            {
+            "track": "Love Train",
+            "artist": "The O'Jays",
+            "format": "Compilation Vinyl"
+            },
+            {
+            "track": "A fifth of beethoven",
+            "artist": "Walter Murphy",
+            "format": "Compilation Vinyl"
+            },
+            {
+            "track": "In the summertime",
+            "artist": "Mungo Jerry",
+            "format": "Compilation Vinyl"
+            }
+          ]
+          ```
     - **Response**: A JSON object containing the search results.
 
 ### API Documentation

@@ -1,6 +1,5 @@
-package org.discogs.query.model;
+package org.discogs.query.domain;
 
-import org.discogs.query.domain.DiscogsEntry;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -9,8 +8,7 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class DiscogsEntryDTOTest {
-
+class DiscogsEntryTest {
 
     @Test
     void testDtoCreation() {

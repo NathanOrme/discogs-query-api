@@ -2,6 +2,7 @@ package org.discogs.query.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.discogs.query.service.DiscogsQueryService;
@@ -33,12 +34,13 @@ public class DiscogsQueryController {
      * Searches Discogs using the provided query data.
      *
      * @param discogsQueryDTO the data transfer object containing the search query details
-     * @return a {@link ResponseEntity} containing the search results wrapped in {@link DiscogsResultDTO}
+     * @return a {@link ResponseEntity} containing the search results wrapped in {@link DiscogsResult}
      */
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<DiscogsResultDTO>> searchBasedOnQuery(
             @RequestBody final List<DiscogsQueryDTO> discogsQueryDTO) {
+        
         List<DiscogsResultDTO> resultDTOList = discogsQueryDTO.parallelStream()
                 .map(discogsQueryService::searchBasedOnQuery)
                 .toList();

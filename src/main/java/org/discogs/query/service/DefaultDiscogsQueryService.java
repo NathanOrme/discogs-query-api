@@ -2,11 +2,13 @@ package org.discogs.query.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.discogs.query.domain.DiscogsEntry;
+import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.enums.DiscogFormats;
 import org.discogs.query.enums.DiscogQueryParams;
 import org.discogs.query.enums.DiscogsTypes;
 import org.discogs.query.exceptions.DiscogsAPIException;
-import org.discogs.query.model.DiscogsEntryDTO;
+import org.discogs.query.mapper.DiscogsResultMapper;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,6 +54,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
     private String token;
 
     private final RestTemplate restTemplate;
+    private final DiscogsResultMapper discogsResultMapper;
 
     /**
      * Searches the Discogs database based on the provided query.
@@ -65,15 +68,20 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         HttpHeaders headers = buildHeaders();
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
+        var results = getDiscogsResult(searchUrl, entity);
+        return discogsResultMapper.mapObjectToDTO(results);
+    }
+
+    private DiscogsResult getDiscogsResult(final String searchUrl, final HttpEntity<Void> entity) {
         try {
-            var response = restTemplate.exchange(searchUrl, HttpMethod.GET, entity, DiscogsResultDTO.class);
+            var response = restTemplate.exchange(searchUrl, HttpMethod.GET, entity, DiscogsResult.class);
             logApiResponse(response);
 
-            DiscogsResultDTO result = Optional.ofNullable(response.getBody())
-                    .orElse(new DiscogsResultDTO());
+            DiscogsResult result = Optional.ofNullable(response.getBody())
+                    .orElse(new DiscogsResult());
 
             if (result.getResults() != null) {
-                List<DiscogsEntryDTO> uniqueEntries = filterUniqueEntriesByMasterUrl(result.getResults());
+                List<DiscogsEntry> uniqueEntries = filterUniqueEntriesByMasterUrl(result.getResults());
                 uniqueEntries.forEach(entry -> entry.setUri(discogsWebsiteBaseUrl.concat(entry.getUri())));
                 result.setResults(uniqueEntries);
             }
@@ -131,7 +139,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
      *
      * @param response the API response to log
      */
-    private void logApiResponse(final ResponseEntity<DiscogsResultDTO> response) {
+    private void logApiResponse(final ResponseEntity<DiscogsResult> response) {
         if (response.getBody() != null) {
             log.info("Discogs API response: {}", response.getBody());
         } else {
@@ -145,11 +153,11 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
      * @param entries the list of entries to filter
      * @return a list of unique entries
      */
-    private List<DiscogsEntryDTO> filterUniqueEntriesByMasterUrl(final List<DiscogsEntryDTO> entries) {
+    private List<DiscogsEntry> filterUniqueEntriesByMasterUrl(final List<DiscogsEntry> entries) {
         return new ArrayList<>(entries.stream()
                 .filter(entry -> entry.getUrl() != null)
                 .collect(Collectors.toMap(
-                        DiscogsEntryDTO::getUrl,
+                        DiscogsEntry::getUrl,
                         entry -> entry,
                         (existing, replacement) -> existing
                 ))

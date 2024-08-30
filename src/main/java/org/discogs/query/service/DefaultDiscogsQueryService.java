@@ -3,6 +3,8 @@ package org.discogs.query.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.enums.DiscogFormats;
+import org.discogs.query.enums.DiscogQueryParams;
+import org.discogs.query.enums.DiscogsTypes;
 import org.discogs.query.exceptions.DiscogsAPIException;
 import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
@@ -94,22 +96,22 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
 
         // Add parameters only if they are not null or empty
         if (discogsQueryDTO.getArtist() != null && !discogsQueryDTO.getArtist().isBlank()) {
-            uriBuilder.queryParam("artist", discogsQueryDTO.getArtist());
+            uriBuilder.queryParam(DiscogQueryParams.ARTIST.getQueryType(), discogsQueryDTO.getArtist());
         }
         if (discogsQueryDTO.getTrack() != null && !discogsQueryDTO.getTrack().isBlank()) {
-            uriBuilder.queryParam("track", discogsQueryDTO.getTrack());
+            uriBuilder.queryParam(DiscogQueryParams.TRACK.getQueryType(), discogsQueryDTO.getTrack());
         }
         if (discogsQueryDTO.getFormat() != null && !discogsQueryDTO.getFormat().isBlank()) {
-            uriBuilder.queryParam("format", discogsQueryDTO.getFormat());
+            uriBuilder.queryParam(DiscogQueryParams.FORMAT.getQueryType(), discogsQueryDTO.getFormat());
         } else {
             // Default format if not provided
-            uriBuilder.queryParam("format", DiscogFormats.VINYL_COMPILATION.getFormat());
+            uriBuilder.queryParam(DiscogQueryParams.FORMAT.getQueryType(), DiscogFormats.VINYL_COMPILATION.getFormat());
         }
         if (discogsQueryDTO.getFormat() != null && !discogsQueryDTO.getFormat().isBlank()) {
-            uriBuilder.queryParam("format", discogsQueryDTO.getFormat());
+            uriBuilder.queryParam(DiscogQueryParams.TYPE.getQueryType(), discogsQueryDTO.getFormat());
         } else {
             // Default format if not provided
-            uriBuilder.queryParam("format", DiscogFormats.VINYL_COMPILATION.getFormat());
+            uriBuilder.queryParam(DiscogQueryParams.TYPE.getQueryType(), DiscogsTypes.RELEASE.getType());
         }
 
 

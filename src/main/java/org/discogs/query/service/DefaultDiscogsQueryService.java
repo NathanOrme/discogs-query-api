@@ -3,6 +3,7 @@ package org.discogs.query.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.enums.DiscogFormats;
+import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Default implementation of the {@link DiscogsQueryService}.
@@ -58,11 +63,28 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         try {
             var response = restTemplate.exchange(searchUrl, HttpMethod.GET, entity, DiscogsResultDTO.class);
             log.info("Discogs API response: {}", response.getBody());
-            return response.getBody();
+            var responseBody = response.getBody();
+            List<DiscogsEntryDTO> uniqueEntries = filterUniqueEntriesByMasterUrl(responseBody.getResults());
+            responseBody.setResults(uniqueEntries);  // Set the filtered entries back
+            return responseBody;
         } catch (final Exception e) {
             log.error("Failed to fetch data from Discogs API", e);
             throw e;
         }
+    }
+
+    private List<DiscogsEntryDTO> filterUniqueEntriesByMasterUrl(final List<DiscogsEntryDTO> entries) {
+        // Use a map to store the unique entries by masterUrl
+        Map<String, DiscogsEntryDTO> uniqueEntriesMap = entries.stream()
+                .filter(entry -> entry.getUrl() != null)  // Ensure masterUrl is not null
+                .collect(Collectors.toMap(
+                        DiscogsEntryDTO::getUrl,  // Key is the masterUrl
+                        Function.identity(),  // Value is the DTO itself
+                        (existing, replacement) -> existing  // If duplicate, keep the existing entry
+                ));
+
+        // Return the values of the map as a list
+        return new ArrayList<>(uniqueEntriesMap.values());
     }
 
     /**

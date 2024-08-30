@@ -22,5 +22,5 @@ discogs:
   url: https://api.discogs.com/
   search: database/search
   agent: DiscogsQueryApplication/1.0 +https://github.com/NathanOrme/discogs-query-api
-  page-size: 50
+  page-size: 5000
   token: fXZuXsfLTsbwhcTYzgiPrjpzLPNPUXoGpSseGEXV

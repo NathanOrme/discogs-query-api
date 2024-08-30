@@ -1,6 +1,7 @@
 package org.discogs.query.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.discogs.query.enums.DiscogFormats;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,6 +56,8 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         urlBuilder = appendUrlAsAppropriate(urlBuilder, "track", track);
         if (discogsQueryDTO.getFormat() != null && !discogsQueryDTO.getFormat().isBlank()) {
             urlBuilder = appendUrlAsAppropriate(urlBuilder, "format", discogsQueryDTO.getFormat());
+        } else {
+            urlBuilder = appendUrlAsAppropriate(urlBuilder, "format", DiscogFormats.COMP.getFormat());
         }
         urlBuilder = urlBuilder.concat("&per_page=").concat(String.valueOf(pageSize)).concat("&page=1");
         urlBuilder = urlBuilder.concat("&token=").concat(token);

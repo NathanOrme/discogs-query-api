@@ -52,7 +52,7 @@ class DiscogsResultTest {
 
         // Assert
         assertNotNull(dtoString);
-        assertEquals("DiscogsResultDTO(results=[DiscogsEntryDTO(id=1, title=Sample Title, format=[vinyl], url=http://example.com/master, uri=http://example.com/entry)])", dtoString);
+        assertEquals("DiscogsResult(results=[DiscogsEntry(id=1, title=Sample Title, format=[vinyl], url=http://example.com/master, uri=http://example.com/entry)])", dtoString);
     }
 
 }

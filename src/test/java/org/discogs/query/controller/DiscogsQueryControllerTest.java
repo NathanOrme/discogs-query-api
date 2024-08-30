@@ -1,7 +1,7 @@
 package org.discogs.query.controller;
 
-import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.model.DiscogsQueryDTO;
+import org.discogs.query.model.DiscogsResultDTO;
 import org.discogs.query.service.DiscogsQueryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ class DiscogsQueryControllerTest {
     @Test
     void testSearchDiscogs_Success() throws Exception {
         // Arrange
-        DiscogsResult resultDTO = new DiscogsResult();  // You would populate this with the actual expected result data
+        DiscogsResultDTO resultDTO = new DiscogsResultDTO();  // You would populate this with the actual expected result data
 
         // Mock the service to return the resultDTO when called
         when(discogsQueryService.searchBasedOnQuery(any(DiscogsQueryDTO.class)))
@@ -40,7 +40,7 @@ class DiscogsQueryControllerTest {
         mockMvc.perform(get("/discogs-query/search")
                         .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"artist\":\"The Beatles\", \"track\":\"Hey Jude\"}"))
+                        .content("[{\"artist\":\"The Beatles\", \"track\":\"Hey Jude\"}]"))
                 .andExpect(status().isOk());
     }
 

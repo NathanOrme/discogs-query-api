@@ -1,7 +1,5 @@
 package org.discogs.query.model;
 
-import org.discogs.query.domain.DiscogsEntry;
-import org.discogs.query.domain.DiscogsResult;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -14,7 +12,7 @@ class DiscogsResultDTOTest {
     @Test
     void testDtoCreation() {
         // Arrange
-        DiscogsEntry entry = DiscogsEntry.builder()
+        DiscogsEntryDTO entry = DiscogsEntryDTO.builder()
                 .id(1)
                 .title("Sample Title")
                 .format(Collections.singletonList("vinyl"))
@@ -22,7 +20,7 @@ class DiscogsResultDTOTest {
                 .uri("http://example.com/entry")
                 .build();
 
-        DiscogsResult resultDTO = DiscogsResult.builder()
+        DiscogsResultDTO resultDTO = DiscogsResultDTO.builder()
                 .results(Collections.singletonList(entry))
                 .build();
 
@@ -36,7 +34,7 @@ class DiscogsResultDTOTest {
     @Test
     void testDtoToString() {
         // Arrange
-        DiscogsEntry entry = DiscogsEntry.builder()
+        DiscogsEntryDTO entry = DiscogsEntryDTO.builder()
                 .id(1)
                 .title("Sample Title")
                 .format(Collections.singletonList("vinyl"))
@@ -44,7 +42,7 @@ class DiscogsResultDTOTest {
                 .uri("http://example.com/entry")
                 .build();
 
-        DiscogsResult resultDTO = DiscogsResult.builder()
+        DiscogsResultDTO resultDTO = DiscogsResultDTO.builder()
                 .results(Collections.singletonList(entry))
                 .build();
 
@@ -53,7 +51,7 @@ class DiscogsResultDTOTest {
 
         // Assert
         assertNotNull(dtoString);
-        assertEquals("DiscogsResultDTO(results=[DiscogsEntryDTO(id=1, title=Sample Title, format=[vinyl], url=http://example.com/master, uri=http://example.com/entry)])", dtoString);
+        assertEquals("DiscogsResultDTO(searchQuery=null, results=[DiscogsEntryDTO(id=1, title=Sample Title, format=[vinyl], url=http://example.com/master, uri=http://example.com/entry)])", dtoString);
     }
 
 }

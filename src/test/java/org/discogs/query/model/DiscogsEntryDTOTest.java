@@ -1,6 +1,5 @@
 package org.discogs.query.model;
 
-import org.discogs.query.domain.DiscogsEntry;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -15,7 +14,7 @@ class DiscogsEntryDTOTest {
     @Test
     void testDtoCreation() {
         // Arrange
-        DiscogsEntry dto = DiscogsEntry.builder()
+        DiscogsEntryDTO dto = DiscogsEntryDTO.builder()
                 .id(1)
                 .title("Sample Title")
                 .format(Arrays.asList("vinyl", "CD"))
@@ -35,7 +34,7 @@ class DiscogsEntryDTOTest {
     @Test
     void testDtoToString() {
         // Arrange
-        DiscogsEntry dto = DiscogsEntry.builder()
+        DiscogsEntryDTO dto = DiscogsEntryDTO.builder()
                 .id(1)
                 .title("Sample Title")
                 .format(Collections.singletonList("vinyl"))

@@ -1,0 +1,50 @@
+name: Close Stale Pull Requests
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs daily at midnight UTC
+
+jobs:
+  close-stale-prs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up GitHub CLI
+        uses: cli/cli-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Close stale PRs
+        run: |
+          # Get the current date in epoch seconds
+          CURRENT_DATE=$(date +%s)
+          
+          # Set the number of days to consider a PR stale
+          STALE_DAYS=30
+          
+          # Convert days to seconds
+          STALE_SECONDS=$((STALE_DAYS * 86400))
+          
+          # List all open pull requests
+          prs=$(gh pr list --state open --json number,updatedAt --jq '.[] | {number: .number, updatedAt: .updatedAt}')
+          
+          for pr in $(echo "$prs" | jq -c '.'); do
+            PR_NUMBER=$(echo $pr | jq -r '.number')
+            LAST_UPDATED=$(echo $pr | jq -r '.updatedAt')
+          
+            # Convert last updated date to epoch seconds
+            LAST_UPDATED_EPOCH=$(date -d "$LAST_UPDATED" +%s)
+          
+            # Calculate the PR age
+            PR_AGE=$((CURRENT_DATE - LAST_UPDATED_EPOCH))
+          
+            # If the PR is older than the threshold, close it
+            if [ $PR_AGE -gt $STALE_SECONDS ]; then
+              echo "Closing stale PR #$PR_NUMBER"
+              gh pr close $PR_NUMBER
+            fi
+          done
+        shell: bash

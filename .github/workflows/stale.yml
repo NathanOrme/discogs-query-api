@@ -1,0 +1,73 @@
+name: Delete Stale Branches
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs daily at midnight UTC
+
+jobs:
+  delete-stale-branches:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up GitHub CLI
+        uses: cli/cli-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Fetch all branches
+        run: git fetch --all
+
+      - name: Delete stale branches
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Get the current date
+          CURRENT_DATE=$(date +%s)
+          
+          # Set the number of days to consider a branch stale
+          STALE_DAYS=7
+          
+          # Convert days to seconds
+          STALE_SECONDS=$((STALE_DAYS * 86400))
+          
+          # List all remote branches
+          BRANCHES=$(git branch -r | grep -v '\->')
+          
+          for BRANCH in $BRANCHES; do
+            # Remove 'origin/' prefix from branch name
+            BRANCH_NAME=$(echo $BRANCH | sed 's/origin\///')
+          
+            # Skip if the branch is the default branch or if it's the current branch
+            if [ "$BRANCH_NAME" = "main" ] || [ "$BRANCH_NAME" = "master" ] || [ "$BRANCH_NAME" = $(git symbolic-ref --short HEAD) ]; then
+              continue
+            fi
+          
+            # Check for open pull requests
+            OPEN_PR_COUNT=$(gh pr list --base main --head $BRANCH_NAME --state open --json number --jq 'length')
+          
+            if [ "$OPEN_PR_COUNT" -gt 0 ]; then
+              echo "Skipping branch $BRANCH_NAME as it has open pull requests."
+              continue
+            fi
+          
+            # Get the last commit date on the branch
+            LAST_COMMIT_DATE=$(git log -1 --format="%at" origin/$BRANCH_NAME)
+          
+            # Calculate the age of the branch
+            BRANCH_AGE=$((CURRENT_DATE - LAST_COMMIT_DATE))
+          
+            # If the branch is older than the threshold, delete it
+            if [ $BRANCH_AGE -gt $STALE_SECONDS ]; then
+              echo "Deleting stale branch: $BRANCH_NAME"
+              git push origin --delete $BRANCH_NAME
+            fi
+          done
+        shell: bash

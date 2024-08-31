@@ -180,6 +180,12 @@ function displayResults(response) {
             const lowestPrice = entry.lowestPrice ? '£' + entry.lowestPrice.toFixed(2) : 'N/A';
             const onMarketplace = entry.isOnMarketplace ? 'Yes' : 'No';
 
+            // Only display "On Marketplace" and "Lowest Price" if `isOnMarketplace` is true
+            const marketplaceDetails = entry.isOnMarketplace ? `
+                <p><strong>On Marketplace:</strong> ${onMarketplace}</p>
+                <p><strong>Lowest Price:</strong> ${lowestPrice}</p>
+            ` : '';
+
             const resultItem = document.createElement('div');
             resultItem.className = 'result-item';
 
@@ -191,8 +197,7 @@ function displayResults(response) {
                     <p><strong>Country:</strong> ${country}</p>
                     <p><strong>Year:</strong> ${year}</p>
                     <p><strong>URL:</strong> <a href="${uri}" target="_blank">${uri}</a></p>
-                    <p><strong>Lowest Price:</strong> ${lowestPrice}</p>
-                    <p><strong>On Marketplace:</strong> ${onMarketplace}</p>
+                    ${marketplaceDetails}
                 </div>
             `;
 

@@ -22,19 +22,32 @@ import java.util.Optional;
  * <p>
  * This class uses {@link RestTemplate} to send HTTP requests to the Discogs API and handle responses.
  * It provides methods to fetch data from the API and process responses, including error handling and logging.
- * </p>
  */
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
 
-    public static final String ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_API
+    /**
+     * Error message for logging when an error occurs while fetching data from the Discogs API.
+     */
+    private static final String ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_API
             = "Error occurred while fetching data from Discogs API";
-    public static final String FAILED_TO_FETCH_DATA_FROM_DISCOGS_API = "Failed to fetch data from Discogs API";
+
+    /**
+     * Exception message thrown when data fetching from the Discogs API fails.
+     */
+    private static final String FAILED_TO_FETCH_DATA_FROM_DISCOGS_API = "Failed to fetch data from Discogs API";
+
+    /**
+     * The user agent to be included in the HTTP headers when making requests to the Discogs API.
+     */
     @Value("${discogs.agent}")
     private String discogsAgent;
 
+    /**
+     * The {@link RestTemplate} used for making HTTP requests to the Discogs API.
+     */
     private final RestTemplate restTemplate;
 
     /**

@@ -96,10 +96,14 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
         HttpHeaders headers = buildHeaders();
         HttpEntity<Void> entity = new HttpEntity<>(headers);
         try {
+            Thread.sleep(2000);
             var response = restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
             logApiResponse(response);
             return Optional.ofNullable(response.getBody())
                     .orElseThrow(() -> new DiscogsAPIException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API));
+        } catch (final InterruptedException e) {
+            log.error(ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_API, e);
+            throw new DiscogsAPIException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API, e);
         } catch (final Exception e) {
             log.error(ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_API, e);
             throw new DiscogsAPIException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API, e);

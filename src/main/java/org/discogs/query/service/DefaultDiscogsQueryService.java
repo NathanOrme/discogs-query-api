@@ -63,6 +63,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
             log.info("Processing query: {}", discogsQueryDTO);
             String searchUrl = buildSearchUrl(discogsQueryDTO);
             var results = discogsAPIClient.getResultsForQuery(searchUrl);
+            log.info("Received {} results from search API", results.getResults().size());
             correctUriForResultEntries(results);
             discogsResultDTO = discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
             results.getResults().forEach(this::processOnMarketplace);

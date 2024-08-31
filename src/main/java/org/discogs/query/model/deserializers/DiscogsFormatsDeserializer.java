@@ -1,51 +1,51 @@
-package org.discogs.query.deserializers;
+package org.discogs.query.model.deserializers;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import org.discogs.query.enums.DiscogsTypes;
+import org.discogs.query.enums.DiscogsFormats;
 
 import java.io.IOException;
 
 /**
- * Custom deserializer for {@link DiscogsTypes} enum using Jackson.
+ * Custom deserializer for {@link DiscogsFormats} enum using Jackson.
  * <p>
- * This class is responsible for deserializing JSON representation of {@link DiscogsTypes} enum values
- * during the deserialization process. It converts a JSON string into the corresponding {@link DiscogsTypes}
+ * This class is responsible for deserializing JSON representation of {@link DiscogsFormats} enum values
+ * during the deserialization process. It converts a JSON string into the corresponding {@link DiscogsFormats}
  * enum constant.
  * <p>
  * The deserializer handles cases where the JSON string may be null,
  * empty, or does not match any known enum constants.
  */
-public class DiscogsTypesDeserializer extends JsonDeserializer<DiscogsTypes> {
+public class DiscogsFormatsDeserializer extends JsonDeserializer<DiscogsFormats> {
 
     /**
-     * Deserializes a JSON string into a {@link DiscogsTypes} enum constant.
+     * Deserializes a JSON string into a {@link DiscogsFormats} enum constant.
      * <p>
      * This method reads the JSON string value from the parser,
      * converts it to uppercase, and attempts to
-     * match it with one of the {@link DiscogsTypes} enum
-     * constants using the {@link DiscogsTypes#valueOf(String)}
+     * match it with one of the {@link DiscogsFormats} enum
+     * constants using the {@link DiscogsFormats#valueOf(String)}
      * method. If the JSON string is null, empty, or does
      * not match any known enum constants, the method will return
      * {@code null}. This behavior can be adjusted based on application needs,
-     * for example by returning a default value like {@link DiscogsTypes#UNKNOWN}.
+     * for example by returning a default value like {@link DiscogsFormats#UNKNOWN}.
      *
      * @param jp   the JSON parser used to read the JSON content
      * @param ctxt the deserialization context
-     * @return the corresponding {@link DiscogsTypes} enum constant,
+     * @return the corresponding {@link DiscogsFormats} enum constant,
      * or {@code null} if no match is found
      * @throws IOException if there is an error reading the JSON content
      */
     @Override
-    public DiscogsTypes deserialize(final JsonParser jp, final DeserializationContext ctxt)
+    public DiscogsFormats deserialize(final JsonParser jp, final DeserializationContext ctxt)
             throws IOException {
         String value = jp.getText();
         if (value == null || value.isEmpty()) {
-            return null; // Or handle the default case, e.g., DiscogsTypes.UNKNOWN
+            return null; // Or handle the default case, e.g., DiscogFormats.UNKNOWN
         }
         try {
-            return DiscogsTypes.valueOf(value.toUpperCase());
+            return DiscogsFormats.valueOf(value.toUpperCase());
         } catch (final IllegalArgumentException e) {
             return null; // Or handle unknown values
         }

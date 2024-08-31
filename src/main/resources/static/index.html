@@ -14,13 +14,25 @@
         h1 {
             text-align: center;
         }
-        .form-container {
-            max-width: 600px;
-            margin: 0 auto;
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .form-container,
+        .results-container {
             background: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            min-width: 300px;
+        }
+        .form-container {
+            max-width: 400px;
+        }
+        .results-container {
+            flex: 2;
         }
         .form-container label {
             display: block;
@@ -83,30 +95,42 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .form-container,
+            .results-container {
+                max-width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
-<div class="form-container">
-    <h1>Discogs Search</h1>
-    <form id="searchForm">
-        <label for="artist">Artist:</label>
-        <input type="text" id="artist" name="artist" required>
+<h1>Discogs Search</h1>
+<div class="container">
+    <div class="form-container">
+        <form id="searchForm">
+            <label for="artist">Artist:</label>
+            <input type="text" id="artist" name="artist" required>
 
-        <label for="track">Track:</label>
-        <input type="text" id="track" name="track" required>
+            <label for="track">Track:</label>
+            <input type="text" id="track" name="track" required>
 
-        <label for="format">Format (optional):</label>
-        <input type="text" id="format" name="format">
+            <label for="format">Format (optional):</label>
+            <input type="text" id="format" name="format">
 
-        <label for="types">Types (optional):</label>
-        <select id="types" name="types">
-            <!-- Options will be populated by JavaScript -->
-        </select>
+            <label for="types">Types (optional):</label>
+            <select id="types" name="types">
+                <!-- Options will be populated by JavaScript -->
+            </select>
 
-        <button type="submit" id="searchButton">Search</button>
-    </form>
-    <div id="loading" class="spinner"></div>
-    <div id="results" class="results"></div>
+            <button type="submit" id="searchButton">Search</button>
+        </form>
+        <div id="loading" class="spinner"></div>
+    </div>
+    <div id="results" class="results-container results"></div>
 </div>
 
 <script>
@@ -198,7 +222,7 @@
                     <p><strong>ID:</strong> ${entry.id}</p>
                     <p><strong>Formats:</strong> ${entry.format.join(', ')}</p>
                     <p><strong>URL:</strong> <a href="${entry.uri}" target="_blank">${entry.uri}</a></p>
-                    <p><strong>Lowest Price:</strong> ${entry.lowestPrice ? '$' + entry.lowestPrice.toFixed(2) : 'N/A'}</p>
+                    <p><strong>Lowest Price:</strong> ${entry.lowestPrice ? '£' + entry.lowestPrice.toFixed(2) : 'N/A'}</p>
                     <p><strong>On Marketplace:</strong> ${entry.onMarketplace ? 'Yes' : 'No'}</p>
                 </div>
             `;

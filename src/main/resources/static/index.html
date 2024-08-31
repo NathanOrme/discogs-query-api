@@ -112,20 +112,10 @@
 <div class="container">
     <div class="form-container">
         <form id="searchForm">
-            <label for="artist">Artist:</label>
-            <input type="text" id="artist" name="artist" required>
-
-            <label for="track">Track:</label>
-            <input type="text" id="track" name="track" required>
-
-            <label for="format">Format (optional):</label>
-            <input type="text" id="format" name="format">
-
-            <label for="types">Types (optional):</label>
-            <select id="types" name="types">
-                <!-- Options will be populated by JavaScript -->
-            </select>
-
+            <div id="queriesContainer">
+                <!-- Query fields will be added here -->
+            </div>
+            <button type="button" id="addQueryButton">Add Another Query</button>
             <button type="submit" id="searchButton">Search</button>
         </form>
         <div id="loading" class="spinner"></div>
@@ -138,35 +128,69 @@
     const discogsTypes = [
         { value: 'RELEASE', text: 'Release' },
         { value: 'MASTER', text: 'Master' },
-        { value: '', text: 'Select a type' } // Default option
+        { value: '', text: 'Select a type' }
     ];
 
-    // Populate the types select element
-    const typesSelect = document.getElementById('types');
-    discogsTypes.forEach(type => {
-        const option = document.createElement('option');
-        option.value = type.value;
-        option.textContent = type.text;
-        typesSelect.appendChild(option);
-    });
+    // Enum values for DiscogFormats
+    const discogFormats = [
+        { value: '', text: 'Any Format' },
+        { value: 'vinyl', text: 'Vinyl' },
+        { value: 'compilation', text: 'Compilation' },
+        { value: 'compilation vinyl', text: 'Compilation Vinyl' }
+    ];
 
-    const loadingSpinner = document.getElementById('loading');
-    const searchButton = document.getElementById('searchButton');
+    const queriesContainer = document.getElementById('queriesContainer');
+    const addQueryButton = document.getElementById('addQueryButton');
+
+    function createQueryFields() {
+        const queryDiv = document.createElement('div');
+        queryDiv.className = 'query';
+
+        queryDiv.innerHTML = `
+            <label for="artist">Artist:</label>
+            <input type="text" class="artist" name="artist" required>
+
+            <label for="track">Track:</label>
+            <input type="text" class="track" name="track" required>
+
+            <label for="format">Format (optional):</label>
+            <select class="format" name="format">
+                ${discogFormats.map(format => `<option value="${format.value}">${format.text}</option>`).join('')}
+            </select>
+
+            <label for="types">Types (optional):</label>
+            <select class="types" name="types">
+                ${discogsTypes.map(type => `<option value="${type.value}">${type.text}</option>`).join('')}
+            </select>
+        `;
+
+        queriesContainer.appendChild(queryDiv);
+    }
+
+    // Add the initial query fields
+    createQueryFields();
+
+    addQueryButton.addEventListener('click', createQueryFields);
 
     document.getElementById('searchForm').addEventListener('submit', function(event) {
         event.preventDefault();
 
-        const artist = document.getElementById('artist').value;
-        const track = document.getElementById('track').value;
-        const format = document.getElementById('format').value;
-        const types = document.getElementById('types').value;
+        const queries = Array.from(document.querySelectorAll('.query')).map(queryDiv => {
+            const artist = queryDiv.querySelector('.artist').value;
+            const track = queryDiv.querySelector('.track').value;
+            const format = queryDiv.querySelector('.format').value;
+            const types = queryDiv.querySelector('.types').value;
 
-        const query = {
-            artist: artist,
-            track: track,
-            format: format || null, // Send null if format is empty
-            types: types || null   // Send null if types is empty
-        };
+            return {
+                artist: artist,
+                track: track,
+                format: format || null,
+                types: types || null
+            };
+        });
+
+        const loadingSpinner = document.getElementById('loading');
+        const searchButton = document.getElementById('searchButton');
 
         // Disable the search button and show the spinner
         searchButton.disabled = true;
@@ -178,7 +202,7 @@
                 'Content-Type': 'application/json',
                 'Authorization': 'Basic dXNlcm5hbWU6cGFzc3dvcmQ='
             },
-            body: JSON.stringify([query]) // Sending an array of queries
+            body: JSON.stringify(queries) // Sending a list of queries
         })
         .then(response => {
             if (!response.ok) {
@@ -187,9 +211,8 @@
             return response.json();
         })
         .then(data => {
-            console.log('API Response:', data); // Log entire API response for debugging
-            // Update the displayResults function call
-            displayResults(data[0].results); // Adjusted to access the correct part of the response
+            console.log('API Response:', data);
+            displayResults(data);
         })
         .catch(error => {
             console.error('Error:', error);

@@ -32,12 +32,33 @@ public enum DiscogFormats {
     VINYL_COMPILATION("compilation vinyl"),
 
     /**
-     * Represents the DEFAULT format.
+     * Represents an unknown or unspecified type.
+     * <p>
+     * This type is used when the input type string does not match any defined types.
      */
-    DEFAULT("");
+    UNKNOWN("");
 
     /**
      * The format string associated with the enum constant.
      */
     private final String format;
+
+    /**
+     * Returns the {@link DiscogFormats} constant associated with the given format string.
+     * <p>
+     * If the format string does not match any defined constant, {@link #UNKNOWN} is returned.
+     *
+     * @param format the format string to match
+     * @return the {@link DiscogFormats} constant corresponding to the format string,
+     * or {@link #UNKNOWN} if no match is found
+     */
+    public static DiscogFormats fromString(final String format) {
+        for (final DiscogFormats t : DiscogFormats.values()) {
+            if (t.getFormat().equalsIgnoreCase(format)) {
+                return t;
+            }
+        }
+        return UNKNOWN;
+    }
+
 }

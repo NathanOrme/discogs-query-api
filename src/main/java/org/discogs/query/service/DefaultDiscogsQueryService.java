@@ -67,10 +67,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
             discogsResultDTO = discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
             results.getResults()
                     .forEach(this::processOnMarketplace);
-            results.setResults(results.getResults().stream()
-                    .filter(entry -> entry.getLowestPrice() != null) // Filter entries with non-null lowestPrice
-                    .sorted(Comparator.comparing(DiscogsEntry::getLowestPrice)) // Sort based on lowestPrice
-                    .toList());
+            orderResults(results);
             log.info("Finished all http requests for: {}", discogsQueryDTO);
             return discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
         } catch (final DiscogsMarketplaceException | DiscogsSearchException e) {
@@ -80,6 +77,13 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
             log.error(UNEXPECTED_ISSUE_OCCURRED, e);
             throw new DiscogsSearchException(UNEXPECTED_ISSUE_OCCURRED, e);
         }
+    }
+
+    private static void orderResults(final DiscogsResult results) {
+        results.setResults(results.getResults().stream()
+                .filter(entry -> entry.getLowestPrice() != null) // Filter entries with non-null lowestPrice
+                .sorted(Comparator.comparing(DiscogsEntry::getLowestPrice)) // Sort based on lowestPrice
+                .toList());
     }
 
     private void processOnMarketplace(final DiscogsEntry discogsEntry) {

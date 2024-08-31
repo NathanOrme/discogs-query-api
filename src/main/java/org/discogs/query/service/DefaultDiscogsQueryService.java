@@ -78,7 +78,6 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
 
     private void processOnMarketplace(final DiscogsEntry discogsEntry) {
         try {
-            Thread.sleep(2000);
             var marketplaceUrl = buildMarketplaceUrl(discogsEntry);
             var marketplaceResults = discogsAPIClient.checkIsOnMarketplace(marketplaceUrl);
             discogsEntry.setOnMarketplace(marketplaceResults.getNumberForSale() != null);

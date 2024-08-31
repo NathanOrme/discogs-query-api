@@ -178,7 +178,7 @@ function displayResults(response) {
             const year = entry.year || 'N/A';
             const uri = entry.uri || '#';
             const lowestPrice = entry.lowestPrice ? '£' + entry.lowestPrice.toFixed(2) : 'N/A';
-            const onMarketplace = entry.onMarketplace ? 'Yes' : 'No';
+            const onMarketplace = entry.isOnMarketplace ? 'Yes' : 'No';
 
             const resultItem = document.createElement('div');
             resultItem.className = 'result-item';

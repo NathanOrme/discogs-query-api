@@ -64,7 +64,7 @@ public class DiscogsEntryDTO {
     /**
      * Marks if on marketplace
      */
-    private boolean isOnMarketplace;
+    private Boolean isOnMarketplace;
 
     /**
      * Lowest price of item

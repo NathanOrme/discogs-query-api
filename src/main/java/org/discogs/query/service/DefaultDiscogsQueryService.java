@@ -95,7 +95,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
             log.info("Checking marketplace for entry {}", discogsEntry);
             var marketplaceUrl = buildMarketplaceUrl(discogsEntry);
             var marketplaceResults = discogsAPIClient.checkIsOnMarketplace(marketplaceUrl);
-            discogsEntry.setOnMarketplace(marketplaceResults.getNumberForSale() != null);
+            discogsEntry.setIsOnMarketplace(marketplaceResults.getNumberForSale() != null);
             discogsEntry.setLowestPrice(marketplaceResults.getResult() != null
                     ? marketplaceResults.getResult().getValue()
                     : Float.parseFloat("0"));
@@ -135,7 +135,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         uriBuilderHelper.addIfNotNullOrBlank(uriBuilder, DiscogQueryParams.FORMAT.getQueryType(), discogsQueryDTO.getFormat());
 
         DiscogsTypes types = discogsQueryDTO.getTypes();
-        if (DiscogsTypes.UNKNOWN == types) {
+        if (types == null || DiscogsTypes.UNKNOWN == types) {
             types = DiscogsTypes.RELEASE;
         }
         uriBuilderHelper.addIfNotNull(uriBuilder, DiscogQueryParams.TYPE.getQueryType(), types.getType());

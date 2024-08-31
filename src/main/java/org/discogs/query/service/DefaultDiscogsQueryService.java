@@ -8,7 +8,6 @@ import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.enums.DiscogQueryParams;
 import org.discogs.query.enums.DiscogsFormats;
 import org.discogs.query.enums.DiscogsTypes;
-import org.discogs.query.exceptions.DiscogsAPIException;
 import org.discogs.query.mapper.DiscogsResultMapper;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
@@ -83,7 +82,6 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
                     : Float.parseFloat("0"));
         } catch (final Exception e) {
             log.error(UNEXPECTED_ISSUE_OCCURRED, e);
-            throw new DiscogsAPIException(UNEXPECTED_ISSUE_OCCURRED, e);
         }
     }
 

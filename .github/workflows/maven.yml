@@ -53,7 +53,14 @@ jobs:
         run: mvn versions:set -DnewVersion=${{ steps.removev.outputs.ref_name }}
 
       - name: Build with Maven and buildpacks
-        run: mvn clean install spring-boot:build-image
+        run: mvn clean install package javadoc:javadoc spring-boot:build-image
+
+
+      - name: Zip Javadoc
+        uses: vimtor/action-zip@v1.2
+        with:
+          files: target/site/apidocs
+          dest: apidocs.zip
 
       - name: Create Release
         if: github.ref == 'refs/heads/main'
@@ -63,4 +70,5 @@ jobs:
           tag_name: ${{ steps.get_semver.outputs.next_version }}
           token: ${{secrets.GITHUB_TOKEN}}
           generate_release_notes: true
+          files: apidocs.zip
       

@@ -40,7 +40,7 @@ public class DiscogsQueryController {
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<DiscogsResultDTO>> searchBasedOnQuery(
             @RequestBody final List<DiscogsQueryDTO> discogsQueryDTO) {
-        
+
         List<DiscogsResultDTO> resultDTOList = discogsQueryDTO.parallelStream()
                 .map(discogsQueryService::searchBasedOnQuery)
                 .toList();

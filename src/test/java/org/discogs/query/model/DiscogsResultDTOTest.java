@@ -51,7 +51,8 @@ class DiscogsResultDTOTest {
 
         // Assert
         assertNotNull(dtoString);
-        assertEquals("DiscogsResultDTO(searchQuery=null, results=[DiscogsEntryDTO(id=1, title=Sample Title, format=[vinyl], url=http://example.com/master, uri=http://example.com/entry)])", dtoString);
+        assertEquals("DiscogsResultDTO(searchQuery=null, results=[DiscogsEntryDTO(id=1, title=Sample Title, format=[vinyl], " +
+                "url=http://example.com/master, uri=http://example.com/entry, isOnMarketplace=false, lowestPrice=null)])", dtoString);
     }
 
 }

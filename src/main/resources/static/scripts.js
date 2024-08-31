@@ -101,7 +101,7 @@ document.getElementById('searchForm').addEventListener('submit', function(event)
     searchButton.disabled = true;
     loadingSpinner.style.display = 'block';
 
-    fetch('https://discogs-query-api.onrender.com/discogs-query/search', {
+    fetch('http://localhost:9090/discogs-query/search', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -116,7 +116,7 @@ document.getElementById('searchForm').addEventListener('submit', function(event)
         return response.json();
     })
     .then(data => {
-        console.log('API Response:', data);
+        console.log('API Response:', data); // Check if this is an array
         displayResults(data);
     })
     .catch(error => {
@@ -129,27 +129,38 @@ document.getElementById('searchForm').addEventListener('submit', function(event)
     });
 });
 
-function displayResults(results) {
+function displayResults(response) {
     const resultsContainer = document.getElementById('results');
-    resultsContainer.innerHTML = '';
+    resultsContainer.innerHTML = ''; // Clear previous results
 
-    if (!results || results.length === 0) {
+    // Extract the results array from the response
+    const results = response[0].results;
+
+    if (!Array.isArray(results) || results.length === 0) {
         resultsContainer.innerHTML = '<p>No results found.</p>';
         return;
     }
 
     results.forEach(entry => {
+        // Ensure each entry has the expected properties
+        const title = entry.title || 'No Title';
+        const id = entry.id || 'N/A';
+        const format = entry.format ? entry.format.join(', ') : 'N/A';
+        const uri = entry.uri || '#';
+        const lowestPrice = entry.lowestPrice ? '£' + entry.lowestPrice.toFixed(2) : 'N/A';
+        const onMarketplace = entry.onMarketplace ? 'Yes' : 'No';
+
         const resultItem = document.createElement('div');
         resultItem.className = 'result-item';
 
         resultItem.innerHTML = `
-            <h3>${entry.title}</h3>
+            <h3>${title}</h3>
             <div class="details">
-                <p><strong>ID:</strong> ${entry.id}</p>
-                <p><strong>Formats:</strong> ${entry.format.join(', ')}</p>
-                <p><strong>URL:</strong> <a href="${entry.uri}" target="_blank">${entry.uri}</a></p>
-                <p><strong>Lowest Price:</strong> ${entry.lowestPrice ? '£' + entry.lowestPrice.toFixed(2) : 'N/A'}</p>
-                <p><strong>On Marketplace:</strong> ${entry.onMarketplace ? 'Yes' : 'No'}</p>
+                <p><strong>ID:</strong> ${id}</p>
+                <p><strong>Formats:</strong> ${format}</p>
+                <p><strong>URL:</strong> <a href="${uri}" target="_blank">${uri}</a></p>
+                <p><strong>Lowest Price:</strong> ${lowestPrice}</p>
+                <p><strong>On Marketplace:</strong> ${onMarketplace}</p>
             </div>
         `;
 

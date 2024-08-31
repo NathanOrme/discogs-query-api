@@ -2,7 +2,6 @@ package org.discogs.query.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.discogs.query.UriBuilderHelper;
 import org.discogs.query.client.DiscogsAPIClient;
 import org.discogs.query.domain.DiscogsEntry;
 import org.discogs.query.domain.DiscogsResult;
@@ -10,6 +9,7 @@ import org.discogs.query.enums.DiscogQueryParams;
 import org.discogs.query.enums.DiscogsTypes;
 import org.discogs.query.exceptions.DiscogsMarketplaceException;
 import org.discogs.query.exceptions.DiscogsSearchException;
+import org.discogs.query.helpers.UriBuilderHelper;
 import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.mapper.DiscogsResultMapper;
 import org.discogs.query.model.DiscogsQueryDTO;
@@ -129,10 +129,14 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         log.info("Generating URL for query: {}", discogsQueryDTO);
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(discogsBaseUrl + discogsSearchEndpoint);
 
-        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder, DiscogQueryParams.ARTIST.getQueryType(), discogsQueryDTO.getArtist());
-        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder, DiscogQueryParams.ALBUM.getQueryType(), discogsQueryDTO.getAlbum());
-        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder, DiscogQueryParams.TRACK.getQueryType(), discogsQueryDTO.getTrack());
-        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder, DiscogQueryParams.FORMAT.getQueryType(), discogsQueryDTO.getFormat());
+        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
+                DiscogQueryParams.ARTIST.getQueryType(), discogsQueryDTO.getArtist());
+        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
+                DiscogQueryParams.ALBUM.getQueryType(), discogsQueryDTO.getAlbum());
+        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
+                DiscogQueryParams.TRACK.getQueryType(), discogsQueryDTO.getTrack());
+        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
+                DiscogQueryParams.FORMAT.getQueryType(), discogsQueryDTO.getFormat());
 
         DiscogsTypes types = discogsQueryDTO.getTypes();
         if (types == null || DiscogsTypes.UNKNOWN == types) {

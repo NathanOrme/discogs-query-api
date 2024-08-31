@@ -133,37 +133,50 @@ function displayResults(response) {
     const resultsContainer = document.getElementById('results');
     resultsContainer.innerHTML = ''; // Clear previous results
 
-    // Extract the results array from the response
-    const results = response[0].results;
-
-    if (!Array.isArray(results) || results.length === 0) {
+    // Check if the response is an array and has at least one element
+    if (!Array.isArray(response) || response.length === 0) {
         resultsContainer.innerHTML = '<p>No results found.</p>';
         return;
     }
 
-    results.forEach(entry => {
-        // Ensure each entry has the expected properties
-        const title = entry.title || 'No Title';
-        const id = entry.id || 'N/A';
-        const format = entry.format ? entry.format.join(', ') : 'N/A';
-        const uri = entry.uri || '#';
-        const lowestPrice = entry.lowestPrice ? '£' + entry.lowestPrice.toFixed(2) : 'N/A';
-        const onMarketplace = entry.onMarketplace ? 'Yes' : 'No';
+    // Iterate through each query's results in the response
+    response.forEach((queryResult, index) => {
+        const results = queryResult.results;
 
-        const resultItem = document.createElement('div');
-        resultItem.className = 'result-item';
+        // If no results for this query, skip it
+        if (!Array.isArray(results) || results.length === 0) {
+            return;
+        }
 
-        resultItem.innerHTML = `
-            <h3>${title}</h3>
-            <div class="details">
-                <p><strong>ID:</strong> ${id}</p>
-                <p><strong>Formats:</strong> ${format}</p>
-                <p><strong>URL:</strong> <a href="${uri}" target="_blank">${uri}</a></p>
-                <p><strong>Lowest Price:</strong> ${lowestPrice}</p>
-                <p><strong>On Marketplace:</strong> ${onMarketplace}</p>
-            </div>
-        `;
+        // Create a header for each query's results
+        const queryHeader = document.createElement('h2');
+        queryHeader.textContent = `Results for Query ${index + 1}`;
+        resultsContainer.appendChild(queryHeader);
 
-        resultsContainer.appendChild(resultItem);
+        results.forEach(entry => {
+            // Ensure each entry has the expected properties
+            const title = entry.title || 'No Title';
+            const id = entry.id || 'N/A';
+            const format = entry.format ? entry.format.join(', ') : 'N/A';
+            const uri = entry.uri || '#';
+            const lowestPrice = entry.lowestPrice ? '£' + entry.lowestPrice.toFixed(2) : 'N/A';
+            const onMarketplace = entry.onMarketplace ? 'Yes' : 'No';
+
+            const resultItem = document.createElement('div');
+            resultItem.className = 'result-item';
+
+            resultItem.innerHTML = `
+                <h3>${title}</h3>
+                <div class="details">
+                    <p><strong>ID:</strong> ${id}</p>
+                    <p><strong>Formats:</strong> ${format}</p>
+                    <p><strong>URL:</strong> <a href="${uri}" target="_blank">${uri}</a></p>
+                    <p><strong>Lowest Price:</strong> ${lowestPrice}</p>
+                    <p><strong>On Marketplace:</strong> ${onMarketplace}</p>
+                </div>
+            `;
+
+            resultsContainer.appendChild(resultItem);
+        });
     });
 }

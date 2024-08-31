@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.domain.DiscogsMarketplaceResult;
 import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.exceptions.DiscogsAPIException;
+import org.discogs.query.limits.RateLimiter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,39 +17,31 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A client component for interacting with the Discogs API.
  * <p>
  * This class uses {@link RestTemplate} to send HTTP requests to the Discogs API and handle responses.
  * It provides methods to fetch data from the API and process responses, including error handling and logging.
+ * </p>
  */
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
 
-    /**
-     * Error message for logging when an error occurs while fetching data from the Discogs API.
-     */
     private static final String ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_API
             = "Error occurred while fetching data from Discogs API";
 
-    /**
-     * Exception message thrown when data fetching from the Discogs API fails.
-     */
     private static final String FAILED_TO_FETCH_DATA_FROM_DISCOGS_API = "Failed to fetch data from Discogs API";
 
-    /**
-     * The user agent to be included in the HTTP headers when making requests to the Discogs API.
-     */
     @Value("${discogs.agent}")
     private String discogsAgent;
 
-    /**
-     * The {@link RestTemplate} used for making HTTP requests to the Discogs API.
-     */
     private final RestTemplate restTemplate;
+
+    private final RateLimiter rateLimiter; // Set to desired rate limit
 
     /**
      * Retrieves results from the Discogs API for a given search URL.
@@ -59,17 +52,8 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
      */
     @Override
     public DiscogsResult getResultsForQuery(final String searchUrl) {
-        HttpHeaders headers = buildHeaders();
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-        try {
-            var response = restTemplate.exchange(searchUrl, HttpMethod.GET, entity, DiscogsResult.class);
-            logApiResponse(response);
-            return Optional.ofNullable(response.getBody())
-                    .orElse(new DiscogsResult());
-        } catch (final Exception e) {
-            log.error(ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_API, e);
-            throw new DiscogsAPIException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API, e);
-        }
+        waitForRateLimit();
+        return executeRequest(searchUrl, DiscogsResult.class);
     }
 
     /**
@@ -81,16 +65,8 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
      */
     @Override
     public String getStringResultForQuery(final String searchUrl) {
-        HttpHeaders headers = buildHeaders();
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-        try {
-            var response = restTemplate.exchange(searchUrl, HttpMethod.GET, entity, String.class);
-            logApiResponse(response);
-            return response.getBody();
-        } catch (final Exception e) {
-            log.error(ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_API, e);
-            throw new DiscogsAPIException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API, e);
-        }
+        waitForRateLimit();
+        return executeRequest(searchUrl, String.class);
     }
 
     /**
@@ -98,22 +74,50 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
      * This method sends an HTTP GET request to the provided URL and returns the marketplace details.
      *
      * @param url the URL pointing to the item on the Discogs Marketplace.
-     * @return a {@link DiscogsMarketplaceResult} object containing
-     * the details of the item on the marketplace.
+     * @return a {@link DiscogsMarketplaceResult} object containing the details of the item on the marketplace.
      * @throws DiscogsAPIException if an error occurs while fetching data from the Discogs API.
      */
     @Override
     public DiscogsMarketplaceResult checkIsOnMarketplace(final String url) {
+        waitForRateLimit();
+        return executeRequest(url, DiscogsMarketplaceResult.class);
+    }
+
+    /**
+     * Executes an HTTP GET request to the given URL and returns the response as an instance of the specified type.
+     *
+     * @param url          the URL to query the Discogs API
+     * @param responseType the class type of the response
+     * @param <T>          the type of the response
+     * @return an instance of the response type containing the API response data
+     * @throws DiscogsAPIException if an error occurs while fetching data from the Discogs API
+     */
+    private <T> T executeRequest(final String url, final Class<T> responseType) {
         HttpHeaders headers = buildHeaders();
         HttpEntity<Void> entity = new HttpEntity<>(headers);
         try {
-            Thread.sleep(2000);
-            var response = restTemplate.exchange(url, HttpMethod.GET, entity, DiscogsMarketplaceResult.class);
+            var response = restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
             logApiResponse(response);
-            return response.getBody();
+            return Optional.ofNullable(response.getBody())
+                    .orElseThrow(() -> new DiscogsAPIException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API));
         } catch (final Exception e) {
             log.error(ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_API, e);
             throw new DiscogsAPIException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API, e);
+        }
+    }
+
+    /**
+     * Waits for the rate limiter to allow a request to proceed.
+     * This method blocks until the rate limiter permits a request.
+     */
+    private void waitForRateLimit() {
+        while (!rateLimiter.tryAcquire()) {
+            try {
+                TimeUnit.MILLISECONDS.sleep(100); // Adjust sleep time if needed
+            } catch (final InterruptedException e) {
+                Thread.currentThread().interrupt();
+                log.error("Interrupted while waiting for rate limit", e);
+            }
         }
     }
 

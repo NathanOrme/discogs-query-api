@@ -9,10 +9,10 @@ const discogsTypes = [
 const discogFormats = [
     { value: '', text: 'Any Format' },
     { value: 'vinyl', text: 'Vinyl' },
-    { value: 'album', text: 'album' },
-    { value: 'lp', text: 'lp' },
+    { value: 'album', text: 'Album' },
+    { value: 'lp', text: 'LP' },
     { value: 'compilation', text: 'Compilation' },
-    { value: 'album vinyl', text: 'album vinyl' },
+    { value: 'album vinyl', text: 'Album Vinyl' },
     { value: 'compilation vinyl', text: 'Compilation Vinyl' }
 ];
 
@@ -119,16 +119,19 @@ document.getElementById('searchForm').addEventListener('submit', function(event)
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            return response.text().then(errorMessage => {
+                throw new Error(`Server responded with status ${response.status}: ${errorMessage}`);
+            });
         }
         return response.json();
     })
     .then(data => {
-        console.log('API Response:', data); // Check if this is an array
+        console.log('API Response:', data);
         displayResults(data);
     })
     .catch(error => {
         console.error('Error:', error);
+        displayError('There was an issue with your request. Please try again later.');
     })
     .finally(() => {
         // Re-enable the search button and hide the spinner
@@ -187,4 +190,9 @@ function displayResults(response) {
             resultsContainer.appendChild(resultItem);
         });
     });
+}
+
+function displayError(message) {
+    const resultsContainer = document.getElementById('results');
+    resultsContainer.innerHTML = `<p class="error-message">${message}</p>`;
 }

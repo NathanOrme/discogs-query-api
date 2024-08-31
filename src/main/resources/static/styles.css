@@ -157,6 +157,17 @@ h1 {
     box-sizing: border-box; /* Ensure padding and border are included in width calculation */
 }
 
+/* Error Message Styles */
+.error-message {
+    color: #d9534f; /* Red color for error messages */
+    background-color: #f2dede; /* Light red background */
+    border: 1px solid #ebccd1; /* Light red border */
+    padding: 15px;
+    border-radius: 4px;
+    margin-top: 20px;
+    text-align: center;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {

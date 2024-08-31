@@ -4,17 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Discogs Search</title>
-    <link rel="stylesheet" href="styles.css"> <!-- External CSS -->
+    <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS -->
 </head>
 <body>
 <h1>Discogs Search</h1>
 <div class="container">
     <div class="instructions">
         <h2>How to Use This Search Tool</h2>
-        <p>
-            This tool allows you to search for music releases from the Discogs database. Follow these steps to get
-            started:
-        </p>
+        <p>This tool allows you to search for music releases from the Discogs database. Follow these steps to get
+            started:</p>
         <ol>
             <li><strong>Artist:</strong> Enter the name of the artist you are searching for.</li>
             <li><strong>Track:</strong> Enter the name of the track. This is optional, so you can leave it blank if not
@@ -39,17 +37,17 @@
         <div class="form-container">
             <form id="searchForm">
                 <div id="queriesContainer">
-                    <!-- Query fields will be added here -->
+                    <!-- Query fields will be dynamically added here -->
                 </div>
                 <button type="button" id="addQueryButton">Add Another Query</button>
                 <button type="submit" id="searchButton">Search</button>
             </form>
-            <div id="loading" class="spinner"></div>
+            <div id="loading" class="spinner"></div> <!-- Loading spinner -->
         </div>
-        <div id="results" class="results-container"></div>
+        <div id="results" class="results-container"></div> <!-- Results container -->
     </div>
 </div>
 
-<script src="scripts.js"></script> <!-- External JavaScript -->
+<script src="scripts.js"></script> <!-- Link to external JavaScript -->
 </body>
 </html>

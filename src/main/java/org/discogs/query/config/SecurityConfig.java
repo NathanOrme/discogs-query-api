@@ -8,8 +8,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
-import java.util.List;
-
 /**
  * Security configuration class for the application.
  * <p>
@@ -22,24 +20,23 @@ import java.util.List;
 public class SecurityConfig {
 
     /**
-     * List of HTTP Methods as Strings
-     */
-    private static final List<String> ALL_METHODS = List.of("GET", "POST", "PUT", "DELETE", "OPTIONS");
-
-    /**
      * Configures the security filter chain for the application.
      * <p>
      * This method sets up security configurations, including:
      * <ul>
      *     <li>Disabling CSRF (Cross-Site Request Forgery) protection, which is typically used
      *     to prevent CSRF attacks. This is often disabled for stateless APIs.</li>
-     *     <li>Requiring authentication for all incoming requests to ensure that only authenticated
+     *     <li>Requiring authentication for all
+     *     incoming requests to ensure that only authenticated
      *     users can access any part of the application.</li>
-     *     <li>Using basic HTTP authentication, which involves a simple authentication mechanism
+     *     <li>Using basic HTTP authentication,
+     *     which involves a simple authentication mechanism
      *     using a username and password sent in HTTP headers.</li>
-     *     <li>Configuring session management to be stateless, meaning the server will not maintain
+     *     <li>Configuring session management to be stateless,
+     *     meaning the server will not maintain
      *     any session state between requests, which is common for REST APIs.</li>
-     *     <li>Setting up CORS (Cross-Origin Resource Sharing) to allow requests from specified origins
+     *     <li>Setting up CORS (Cross-Origin Resource Sharing)
+     *     to allow requests from specified origins
      *     and methods, which is necessary for enabling front-end applications running on different
      *     origins to interact with this backend service.</li>
      * </ul>

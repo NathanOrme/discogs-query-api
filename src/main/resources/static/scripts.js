@@ -109,7 +109,7 @@ document.getElementById('searchForm').addEventListener('submit', function(event)
     searchButton.disabled = true;
     loadingSpinner.style.display = 'block';
 
-    fetch('https://discogs-query-api.onrender.com/discogs-query/search', {
+    fetch('http://localhost:9090/discogs-query/search', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

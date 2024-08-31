@@ -16,10 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Implementation of {@link DiscogsQueryService} that interacts with the Discogs API.
@@ -98,9 +95,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
 
     private void correctUriForResultEntries(final DiscogsResult results) {
         if (results.getResults() != null) {
-            List<DiscogsEntry> uniqueEntries = filterUniqueEntriesByMasterUrl(results.getResults());
-            uniqueEntries.forEach(entry -> entry.setUri(discogsWebsiteBaseUrl.concat(entry.getUri())));
-            results.setResults(uniqueEntries);
+            results.getResults().forEach(entry -> entry.setUri(discogsWebsiteBaseUrl.concat(entry.getUri())));
         }
     }
 
@@ -151,20 +146,4 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         return url;
     }
 
-    /**
-     * Filters entries to ensure that each master URL is unique.
-     *
-     * @param entries the list of entries to filter
-     * @return a list of unique entries
-     */
-    private List<DiscogsEntry> filterUniqueEntriesByMasterUrl(final List<DiscogsEntry> entries) {
-        return new ArrayList<>(entries.stream()
-                .filter(entry -> entry.getUrl() != null)
-                .collect(Collectors.toMap(
-                        DiscogsEntry::getUrl,
-                        entry -> entry,
-                        (existing, replacement) -> existing
-                ))
-                .values());
-    }
 }

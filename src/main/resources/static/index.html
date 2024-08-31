@@ -200,22 +200,22 @@
         queryDiv.appendChild(queryHeader);
         queryDiv.appendChild(queryContent);
 
-        // Append the queryDiv to the container
-        queriesContainer.appendChild(queryDiv);
+        // Ensure all other query contents are hidden except for the new one
+        const allQueryContents = document.querySelectorAll('.query-content');
+        allQueryContents.forEach(content => {
+            content.classList.add('hidden');
+        });
 
-        // If it's not the first query, make previous queries hidden
-        if (!isFirstQuery) {
-            document.querySelectorAll('.query-content').forEach(content => {
-                content.classList.add('hidden');
-            });
-        }
+        // Append the queryDiv to the container and ensure the new query is open
+        queriesContainer.appendChild(queryDiv);
+        queryContent.classList.remove('hidden'); // Keep the new query open
     }
 
     // Add the initial query fields and keep it visible
     createQueryFields(true);
 
     addQueryButton.addEventListener('click', () => {
-        createQueryFields();
+        createQueryFields(); // Create a new query field set that remains open
     });
 
     document.getElementById('searchForm').addEventListener('submit', function(event) {

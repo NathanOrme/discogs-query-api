@@ -1,4 +1,4 @@
-package org.discogs.query.deserializers;
+package org.discogs.query.model.deserializers;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;

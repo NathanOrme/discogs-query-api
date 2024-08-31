@@ -1,4 +1,4 @@
-package org.discogs.query.limits;
+package org.discogs.query.client.limits;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

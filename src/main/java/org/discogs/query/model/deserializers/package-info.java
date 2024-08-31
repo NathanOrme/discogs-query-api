@@ -8,10 +8,10 @@
  * <p>
  * Classes in this package include:
  * <ul>
- *     <li>{@link org.discogs.query.deserializers.DiscogsFormatsDeserializer} -
+ *     <li>{@link org.discogs.query.model.deserializers.DiscogsFormatsDeserializer} -
  *     Custom deserializer for {@link org.discogs.query.enums.DiscogsFormats}.</li>
- *     <li>{@link org.discogs.query.deserializers.DiscogsTypesDeserializer} -
+ *     <li>{@link org.discogs.query.model.deserializers.DiscogsTypesDeserializer} -
  *     Custom deserializer for {@link org.discogs.query.enums.DiscogsTypes}.</li>
  * </ul>
  */
-package org.discogs.query.deserializers;
+package org.discogs.query.model.deserializers;

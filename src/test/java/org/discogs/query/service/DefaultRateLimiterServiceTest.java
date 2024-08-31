@@ -1,7 +1,7 @@
 package org.discogs.query.service;
 
+import org.discogs.query.client.limits.RateLimiter;
 import org.discogs.query.interfaces.RateLimiterService;
-import org.discogs.query.limits.RateLimiter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -2,8 +2,8 @@ package org.discogs.query.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.discogs.query.client.limits.RateLimiter;
 import org.discogs.query.interfaces.RateLimiterService;
-import org.discogs.query.limits.RateLimiter;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;

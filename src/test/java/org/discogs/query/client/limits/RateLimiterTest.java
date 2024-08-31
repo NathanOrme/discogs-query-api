@@ -1,4 +1,4 @@
-package org.discogs.query.limits;
+package org.discogs.query.client.limits;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

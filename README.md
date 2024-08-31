@@ -15,7 +15,6 @@ Swagger and handles exceptions related to Discogs API interactions.
         * [Configuration](#configuration)
         * [Endpoints](#endpoints)
             * [**Search Records**](#search-records)
-                * [Example Response](#example-response)
         * [API Documentation](#api-documentation)
     * [Exception Handling](#exception-handling)
     * [Development](#development)
@@ -80,38 +79,36 @@ discogs.token=YourAccessToken
 
 #### **Search Records**
 
-    - **URL**: `/discogs-query/search`
-    - **Method**: `GET`
-        - **Request Body**:
-          ```json
-          [
-            {
-            "track": "Love Train",
-            "artist": "The O'Jays",
-            "format": "Compilation Vinyl"
-            },
-            {
-            "track": "A fifth of beethoven",
-            "artist": "Walter Murphy",
-            "format": "Compilation Vinyl"
-            },
-            {
-            "track": "In the summertime",
-            "artist": "Mungo Jerry",
-            "format": "Compilation Vinyl"
-            }
-          ]
-          ```
-    - **Response**: A JSON object containing the search results.
+**URL**: `/discogs-query/search`
 
-##### Example Response
+- **Method**: `GET`
+- **Request Body**:
 
-An example response can be found [here](readme-resources/example-response.json)
+  ```json
+  [
+    {
+    "track": "Love Train",
+    "artist": "The O'Jays",
+    "format": "Compilation Vinyl"
+    },
+    {
+    "track": "A fifth of beethoven",
+    "artist": "Walter Murphy",
+    "format": "Compilation Vinyl"
+    },
+    {
+    "track": "In the summertime",
+    "artist": "Mungo Jerry",
+    "format": "Compilation Vinyl"
+    }
+  ]
+  ```
+- **Response**: An example response can be found [here](readme-resources/example-response.json)
 
 ### API Documentation
 
 The API documentation is available via Swagger at:
-http://localhost:8080/swagger-ui.html
+http://localhost:9090/swagger-ui.html
 
 ## Exception Handling
 

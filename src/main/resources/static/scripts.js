@@ -169,6 +169,8 @@ function displayResults(response) {
             const title = entry.title || 'No Title';
             const id = entry.id || 'N/A';
             const format = entry.format ? entry.format.join(', ') : 'N/A';
+            const country = entry.country || 'N/A';
+            const year = entry.year || 'N/A';
             const uri = entry.uri || '#';
             const lowestPrice = entry.lowestPrice ? '£' + entry.lowestPrice.toFixed(2) : 'N/A';
             const onMarketplace = entry.onMarketplace ? 'Yes' : 'No';
@@ -181,6 +183,8 @@ function displayResults(response) {
                 <div class="details">
                     <p><strong>ID:</strong> ${id}</p>
                     <p><strong>Formats:</strong> ${format}</p>
+                    <p><strong>Country:</strong> ${country}</p>
+                    <p><strong>Year:</strong> ${year}</p>
                     <p><strong>URL:</strong> <a href="${uri}" target="_blank">${uri}</a></p>
                     <p><strong>Lowest Price:</strong> ${lowestPrice}</p>
                     <p><strong>On Marketplace:</strong> ${onMarketplace}</p>

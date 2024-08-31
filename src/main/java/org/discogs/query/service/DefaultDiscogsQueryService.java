@@ -57,6 +57,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
     @Override
     public DiscogsResultDTO searchBasedOnQuery(final DiscogsQueryDTO discogsQueryDTO) {
         try {
+            log.info("Processing query: {}", discogsQueryDTO);
             String searchUrl = buildSearchUrl(discogsQueryDTO);
             var results = discogsAPIClient.getResultsForQuery(searchUrl);
             correctUriForResultEntries(results);
@@ -65,6 +66,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
             results.setResults(results.getResults().stream()
                     .sorted(Comparator.comparing(DiscogsEntry::getLowestPrice))
                     .toList());
+            log.info("Finished all http requests for: {}", discogsQueryDTO);
             return discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
         } catch (final Exception e) {
             log.error(UNEXPECTED_ISSUE_OCCURRED, e);
@@ -74,12 +76,14 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
 
     private void processOnMarketplace(final DiscogsEntry discogsEntry) {
         try {
+            log.info("Checking marketplace for entry {}", discogsEntry);
             var marketplaceUrl = buildMarketplaceUrl(discogsEntry);
             var marketplaceResults = discogsAPIClient.checkIsOnMarketplace(marketplaceUrl);
             discogsEntry.setOnMarketplace(marketplaceResults.getNumberForSale() != null);
             discogsEntry.setLowestPrice(marketplaceResults.getResult() != null
                     ? marketplaceResults.getResult().getValue()
                     : Float.parseFloat("0"));
+            log.info("Finished checking marketplace for {}", discogsEntry);
         } catch (final Exception e) {
             log.error(UNEXPECTED_ISSUE_OCCURRED, e);
         }
@@ -104,6 +108,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
      * @return the fully constructed search URL with query parameters
      */
     private String buildSearchUrl(final DiscogsQueryDTO discogsQueryDTO) {
+        log.info("Generating URL for query: {}", discogsQueryDTO);
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(discogsBaseUrl + discogsSearchEndpoint);
 
         String artist = discogsQueryDTO.getArtist();
@@ -141,6 +146,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         // Build the URL and replace %20 with +
         String url = uriBuilder.toUriString();
         url = url.replace("%20", "+");
+        log.info("Generated URL {} for Query {}", url, discogsQueryDTO);
         return url;
     }
 

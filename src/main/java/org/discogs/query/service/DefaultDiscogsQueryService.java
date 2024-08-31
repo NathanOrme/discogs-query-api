@@ -62,7 +62,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
             var results = discogsAPIClient.getResultsForQuery(searchUrl);
             correctUriForResultEntries(results);
             results.getResults()
-                    .parallelStream()
+                    .stream()
                     .forEach(this::processOnMarketplace);
             results.setResults(results.getResults().stream()
                     .sorted(Comparator.comparing(DiscogsEntry::getLowestPrice))

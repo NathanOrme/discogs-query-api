@@ -88,28 +88,59 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
 
     /**
      * Executes an HTTP GET request to the given URL and returns the response as an instance of the specified type.
+     * <p>
+     * This method attempts to perform the request up to 3 times if an exception occurs, with a 2-second delay between retries.
+     * Each retry attempt respects the rate limit defined by the {@link RateLimiter}.
      *
      * @param url          the URL to query the Discogs API
      * @param responseType the class type of the response
      * @param <T>          the type of the response
      * @return an instance of the response type containing the API response data
-     * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API
+     * @throws DiscogsSearchException      if an error occurs while fetching data from the Discogs API after all retry attempts
+     * @throws DiscogsMarketplaceException if an error occurs while fetching data from the Discogs Marketplace API after all retry attempts
      */
     private <T> T executeRequest(final String url, final Class<T> responseType) {
         HttpHeaders headers = buildHeaders();
         HttpEntity<Void> entity = new HttpEntity<>(headers);
-        try {
-            var response = restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
-            logApiResponse(response);
-            return Optional.ofNullable(response.getBody())
-                    .orElseThrow(() -> new DiscogsSearchException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API));
-        } catch (final Exception e) {
-            log.error(ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_SEARCH_API, e);
-            if (DiscogsMarketplaceResult.class.isAssignableFrom(responseType)) {
-                throw new DiscogsMarketplaceException(ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_MARKETPLACE_API, e);
+
+        int retryCount = 3;  // Number of retries
+        for (int attempt = 1; attempt <= retryCount; attempt++) {
+            try {
+                log.info("Attempting to fetch data from Discogs API. Attempt {} of {}", attempt, retryCount);
+                waitForRateLimit();  // Ensure rate limit before each request
+
+                log.debug("Sending request to URL: {}", url);
+                var response = restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
+                logApiResponse(response);
+
+                return Optional.ofNullable(response.getBody())
+                        .orElseThrow(() -> new DiscogsSearchException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API));
+            } catch (final Exception e) {
+                log.error("Error occurred while fetching data from Discogs API on attempt {} of {}. URL: {}. Exception: {}", attempt, retryCount, url, e, e);
+
+                // If this was the last attempt, throw the exception
+                if (attempt == retryCount) {
+                    if (DiscogsMarketplaceResult.class.isAssignableFrom(responseType)) {
+                        log.error("All retry attempts failed for marketplace API request.");
+                        throw new DiscogsMarketplaceException(ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_MARKETPLACE_API, e);
+                    }
+                    log.error("All retry attempts failed for search API request.");
+                    throw new DiscogsSearchException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API, e);
+                }
+
+                // Log retry attempt and delay
+                log.warn("Retrying request after a 2-second delay. Attempt {} of {}", attempt + 1, retryCount);
+                try {
+                    TimeUnit.SECONDS.sleep(2);  // Wait for 2 seconds before retrying
+                } catch (final InterruptedException interruptedException) {
+                    Thread.currentThread().interrupt();
+                    log.error("Interrupted during retry sleep", interruptedException);
+                }
             }
-            throw new DiscogsSearchException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API, e);
         }
+
+        // This line should never be reached due to the throw statement above, but it satisfies the method's return type.
+        throw new DiscogsSearchException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API);
     }
 
     /**

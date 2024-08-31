@@ -8,15 +8,22 @@ body {
 
 h1 {
     text-align: center;
+    color: #333;
 }
 
-/* Instructions Styles */
+/* Container for overall layout */
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Instructions Section */
 .instructions {
     background: #fff;
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
 }
 
 .instructions h2 {
@@ -32,102 +39,101 @@ h1 {
     padding-left: 20px;
 }
 
-/* Main content area */
+/* Main content area for queries and results */
 .main-content {
     display: flex;
-    flex-wrap: wrap;
     gap: 20px;
+    flex-wrap: wrap;
 }
 
+/* Form Container Styles */
 .form-container {
     background: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     flex: 1;
-    min-width: 400px; /* Increased min-width for better spacing */
-    max-width: 600px; /* Sets a max-width for better layout control */
+    min-width: 400px; /* Ensures form doesn't shrink too much on smaller screens */
+    max-width: 600px; /* Maximum width for form */
 }
 
-.results-container {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    flex: 2;
-    min-width: 300px;
-    max-width: 800px; /* Optional: adjust based on design needs */
+form {
+    margin: 0;
 }
 
-#searchButton, #addQueryButton {
-    padding: 10px 15px;
+label {
+    display: block;
+    margin: 10px 0 5px;
+    color: #333;
+    font-weight: bold;
+}
+
+input[type="text"],
+select {
+    width: calc(100% - 22px);
+    padding: 12px;
+    margin: 5px 0 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+input[type="checkbox"] {
+    margin: 10px 0;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
     border: none;
     border-radius: 4px;
-    color: #fff;
-    background-color: #007bff;
     cursor: pointer;
     font-size: 16px;
     margin-top: 10px;
+    transition: background-color 0.3s ease;
 }
 
-#searchButton:disabled, #addQueryButton:disabled {
+button:hover {
+    background-color: #0056b3;
+}
+
+button:disabled {
     background-color: #6c757d;
     cursor: not-allowed;
 }
 
-#searchButton:hover:not(:disabled), #addQueryButton:hover:not(:disabled) {
-    background-color: #0056b3;
+#loading {
+    display: none;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 16px;
+    color: #007bff;
 }
 
-.spinner {
-    border: 4px solid rgba(0, 0, 0, 0.1);
-    border-left: 4px solid #007bff;
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    animation: spin 1s linear infinite;
-    margin: 20px auto;
-    display: none; /* Hidden by default */
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.results-container {
-    margin-top: 20px;
-}
-
-.result-item {
-    background: #fff;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-}
-
-.result-item h3 {
-    margin: 0 0 10px;
-}
-
-.result-item .details {
-    font-size: 14px;
-    color: #555;
-}
-
-/* Query Styles */
+/* Query Section Styles */
 .query {
     margin-bottom: 20px;
-    box-sizing: border-box; /* Ensure padding and border are included in width calculation */
+    padding: 15px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .query-header {
+    font-weight: bold;
     cursor: pointer;
-    padding: 10px;
     background-color: #007bff;
     color: white;
+    padding: 10px;
     border-radius: 4px;
+}
+
+.query-header:hover {
+    background-color: #0056b3;
 }
 
 .query-content {
@@ -135,33 +141,81 @@ h1 {
     border-radius: 4px;
     padding: 10px;
     background-color: #f9f9f9;
-    box-sizing: border-box; /* Ensure padding and border are included in width calculation */
 }
 
 .query-content.hidden {
     display: none;
 }
 
-.query-content label {
-    display: block;
-    margin: 10px 0 5px;
+/* Results Section Styles */
+.results-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    flex: 2;
+    min-width: 300px; /* Ensures results container doesn't shrink too much on smaller screens */
+    max-width: 800px; /* Maximum width for results */
 }
 
-.query-content input,
-.query-content select {
-    width: calc(100% - 16px); /* Subtracting padding and border for fitting */
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
+.results-toggle-header {
+    cursor: pointer;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
     border-radius: 4px;
-    box-sizing: border-box; /* Ensure padding and border are included in width calculation */
+    font-weight: bold;
 }
 
-/* Error Message Styles */
+.results-toggle-header:hover {
+    background-color: #0056b3;
+}
+
+.results-content {
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+}
+
+.results-content.hidden {
+    display: none;
+}
+
+.result-item {
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.result-item h3 {
+    margin: 0 0 10px;
+    color: #333;
+}
+
+.details {
+    font-size: 14px;
+    color: #555;
+}
+
+.details p {
+    margin: 5px 0;
+}
+
+.details a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.details a:hover {
+    text-decoration: underline;
+}
+
 .error-message {
-    color: #d9534f; /* Red color for error messages */
-    background-color: #f2dede; /* Light red background */
-    border: 1px solid #ebccd1; /* Light red border */
+    color: #d9534f;
+    background-color: #f2dede;
+    border: 1px solid #ebccd1;
     padding: 15px;
     border-radius: 4px;
     margin-top: 20px;
@@ -170,10 +224,6 @@ h1 {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-    }
-
     .main-content {
         flex-direction: column;
     }

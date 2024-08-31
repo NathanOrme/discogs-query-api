@@ -169,6 +169,13 @@ function displayResults(response) {
         queryHeader.textContent = `Results for Query ${index + 1}`;
         resultsContainer.appendChild(queryHeader);
 
+        // Create a collapsible section for each query's results
+        const resultsSection = document.createElement('div');
+        resultsSection.className = 'results-section';
+
+        const resultsContent = document.createElement('div');
+        resultsContent.className = 'results-content hidden';
+
         results.forEach(entry => {
             // Ensure each entry has the expected properties
             const title = entry.title || 'No Title';
@@ -201,8 +208,23 @@ function displayResults(response) {
                 </div>
             `;
 
-            resultsContainer.appendChild(resultItem);
+            resultsContent.appendChild(resultItem);
         });
+
+        resultsSection.appendChild(resultsContent);
+
+        // Add a clickable header to toggle the visibility of the results
+        const toggleHeader = document.createElement('div');
+        toggleHeader.className = 'results-toggle-header';
+        toggleHeader.textContent = 'Show Results';
+        toggleHeader.addEventListener('click', () => {
+            resultsContent.classList.toggle('hidden');
+            toggleHeader.textContent = resultsContent.classList.contains('hidden') ? 'Show Results' : 'Hide Results';
+        });
+
+        resultsSection.insertBefore(toggleHeader, resultsContent);
+
+        resultsContainer.appendChild(resultsSection);
     });
 }
 

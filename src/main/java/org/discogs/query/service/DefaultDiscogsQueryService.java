@@ -6,10 +6,10 @@ import org.discogs.query.client.DiscogsAPIClient;
 import org.discogs.query.domain.DiscogsEntry;
 import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.enums.DiscogQueryParams;
-import org.discogs.query.enums.DiscogsFormats;
 import org.discogs.query.enums.DiscogsTypes;
 import org.discogs.query.exceptions.DiscogsMarketplaceException;
 import org.discogs.query.exceptions.DiscogsSearchException;
+import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.mapper.DiscogsResultMapper;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
@@ -135,9 +135,6 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         }
         if (format != null && !format.isBlank()) {
             uriBuilder.queryParam(DiscogQueryParams.FORMAT.getQueryType(), format);
-        } else {
-            // Default format if not provided
-            uriBuilder.queryParam(DiscogQueryParams.FORMAT.getQueryType(), DiscogsFormats.LP.getFormat());
         }
         if (discogsQueryDTO.getTypes() != null) {
             uriBuilder.queryParam(DiscogQueryParams.TYPE.getQueryType(), discogsQueryDTO.getTypes());

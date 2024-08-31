@@ -2,6 +2,7 @@ package org.discogs.query.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.enums.DiscogsFormats;
+import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

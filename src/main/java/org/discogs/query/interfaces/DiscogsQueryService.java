@@ -1,4 +1,4 @@
-package org.discogs.query.service;
+package org.discogs.query.interfaces;
 
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;

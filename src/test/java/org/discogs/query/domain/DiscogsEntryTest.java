@@ -47,7 +47,7 @@ class DiscogsEntryTest {
         // Assert
         assertNotNull(dtoString);
         assertEquals("DiscogsEntry(id=1, title=Sample Title, format=[vinyl], url=http://example.com/master, " +
-                "uri=http://example.com/entry, country=null, year=null, isOnMarketplace=false, lowestPrice=null)", dtoString);
+                "uri=http://example.com/entry, country=null, year=null, isOnMarketplace=null, lowestPrice=null)", dtoString);
     }
 
 }

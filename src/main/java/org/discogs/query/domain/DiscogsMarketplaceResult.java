@@ -11,7 +11,8 @@ import lombok.ToString;
 /**
  * Represents the result of a query to the Discogs Marketplace API.
  * <p>
- * This class encapsulates information about the lowest price and the number of items for sale in the Discogs Marketplace.
+ * This class encapsulates information about the lowest price and the
+ * number of items for sale in the Discogs Marketplace.
  * It uses Jackson annotations to map JSON properties to the fields of the class.
  * </p>
  */

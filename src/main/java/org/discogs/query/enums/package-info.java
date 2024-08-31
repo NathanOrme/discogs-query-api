@@ -1,7 +1,8 @@
 /**
  * Contains enumeration types used throughout the Discogs Query application.
  * <p>
- * This package includes enums that define fixed sets of constants used for various purposes within the application.
+ * This package includes enums that define fixed sets of
+ * constants used for various purposes within the application.
  * It includes:
  * <ul>
  *     <li>Enumerations for different query parameters and their values when interacting with the Discogs API.</li>

@@ -27,9 +27,12 @@ public class SecurityConfig {
      * Configures the security filter chain for the application.
      * <p>
      * - Disables CSRF protection, which is typically used to prevent cross-site request forgery attacks.
-     * - Requires authentication for all requests to ensure that only authenticated users can access any part of the application.
-     * - Uses basic HTTP authentication, which is a simple authentication mechanism using username and password.
-     * - Configures session management to be stateless, meaning the server will not maintain any session state between requests.
+     * - Requires authentication for all requests to ensure that only
+     * authenticated users can access any part of the application.
+     * - Uses basic HTTP authentication, which is a simple authentication
+     * mechanism using username and password.
+     * - Configures session management to be stateless,
+     * meaning the server will not maintain any session state between requests.
      * </p>
      *
      * @param http The {@link HttpSecurity} object to modify for configuring security settings.

@@ -6,8 +6,10 @@ import lombok.Getter;
 /**
  * Enum representing different formats available in the Discogs API.
  * <p>
- * This enum provides predefined constants for different music formats, such as Vinyl, Compilation, and Vinyl Compilation.
- * Each constant is associated with a format string that represents its name in the Discogs API.
+ * This enum provides predefined constants for different music formats,
+ * such as Vinyl, Compilation, and Vinyl Compilation.
+ * Each constant is associated with a format string
+ * that represents its name in the Discogs API.
  * </p>
  */
 @Getter

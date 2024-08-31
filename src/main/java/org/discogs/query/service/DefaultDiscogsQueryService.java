@@ -13,9 +13,7 @@ import org.discogs.query.mapper.DiscogsResultMapper;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
@@ -50,7 +48,6 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
     @Value("${discogs.token}")
     private String token;
 
-    private final RestTemplate restTemplate;
     private final DiscogsResultMapper discogsResultMapper;
     private final DiscogsAPIClient discogsAPIClient;
 
@@ -137,19 +134,6 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         String url = uriBuilder.toUriString();
         url = url.replace("%20", "+");
         return url;
-    }
-
-    /**
-     * Logs the API response for debugging purposes.
-     *
-     * @param response the API response to log
-     */
-    private void logApiResponse(final ResponseEntity<DiscogsResult> response) {
-        if (response.getBody() != null) {
-            log.info("Discogs API response: {}", response.getBody());
-        } else {
-            log.warn("Discogs API response is empty.");
-        }
     }
 
     /**

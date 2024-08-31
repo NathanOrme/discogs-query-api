@@ -105,6 +105,28 @@
                 max-width: 100%;
             }
         }
+        /* Collapsible Query Form */
+        .query {
+            margin-bottom: 10px;
+        }
+        .query-header {
+            cursor: pointer;
+            font-weight: bold;
+            padding: 10px;
+            background: #f1f1f1;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        .query-content {
+            display: none; /* Hidden by default */
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #fff;
+        }
+        .query-content.visible {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -128,7 +150,7 @@
     const discogsTypes = [
         { value: 'RELEASE', text: 'Release' },
         { value: 'MASTER', text: 'Master' },
-        { value: '', text: 'Select a type' }
+        { value: '', text: 'Any Type' }
     ];
 
     // Enum values for DiscogFormats
@@ -146,12 +168,23 @@
         const queryDiv = document.createElement('div');
         queryDiv.className = 'query';
 
-        queryDiv.innerHTML = `
+        const queryHeader = document.createElement('div');
+        queryHeader.className = 'query-header';
+        queryHeader.textContent = 'Query';
+        queryHeader.addEventListener('click', () => {
+            const content = queryDiv.querySelector('.query-content');
+            content.classList.toggle('visible');
+        });
+
+        const queryContent = document.createElement('div');
+        queryContent.className = 'query-content';
+
+        queryContent.innerHTML = `
             <label for="artist">Artist:</label>
             <input type="text" class="artist" name="artist" required>
 
-            <label for="track">Track:</label>
-            <input type="text" class="track" name="track" required>
+            <label for="track">Track (optional):</label>
+            <input type="text" class="track" name="track">
 
             <label for="format">Format (optional):</label>
             <select class="format" name="format">
@@ -164,28 +197,38 @@
             </select>
         `;
 
+        queryDiv.appendChild(queryHeader);
+        queryDiv.appendChild(queryContent);
+
         queriesContainer.appendChild(queryDiv);
     }
 
     // Add the initial query fields
     createQueryFields();
 
-    addQueryButton.addEventListener('click', createQueryFields);
+    addQueryButton.addEventListener('click', () => {
+        // Collapse all existing queries before adding a new one
+        document.querySelectorAll('.query-content').forEach(content => {
+            content.classList.remove('visible');
+        });
+
+        createQueryFields();
+    });
 
     document.getElementById('searchForm').addEventListener('submit', function(event) {
         event.preventDefault();
 
         const queries = Array.from(document.querySelectorAll('.query')).map(queryDiv => {
             const artist = queryDiv.querySelector('.artist').value;
-            const track = queryDiv.querySelector('.track').value;
-            const format = queryDiv.querySelector('.format').value;
-            const types = queryDiv.querySelector('.types').value;
+            const track = queryDiv.querySelector('.track').value || null; // Make track optional
+            const format = queryDiv.querySelector('.format').value || null;
+            const types = queryDiv.querySelector('.types').value || null;
 
             return {
                 artist: artist,
                 track: track,
-                format: format || null,
-                types: types || null
+                format: format,
+                types: types
             };
         });
 

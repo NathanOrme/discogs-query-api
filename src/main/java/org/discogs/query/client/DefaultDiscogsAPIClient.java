@@ -40,8 +40,7 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
     private String discogsAgent;
 
     private final RestTemplate restTemplate;
-
-    private final RateLimiter rateLimiter; // Set to desired rate limit
+    private final RateLimiter rateLimiter;
 
     /**
      * Retrieves results from the Discogs API for a given search URL.
@@ -96,7 +95,6 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
         HttpHeaders headers = buildHeaders();
         HttpEntity<Void> entity = new HttpEntity<>(headers);
         try {
-            Thread.sleep(2000);
             var response = restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
             logApiResponse(response);
             return Optional.ofNullable(response.getBody())
@@ -114,7 +112,7 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
     private void waitForRateLimit() {
         while (!rateLimiter.tryAcquire()) {
             try {
-                TimeUnit.MILLISECONDS.sleep(100); // Adjust sleep time if needed
+                TimeUnit.MILLISECONDS.sleep(100); // Wait until rate limiter allows request
             } catch (final InterruptedException e) {
                 Thread.currentThread().interrupt();
                 log.error("Interrupted while waiting for rate limit", e);

@@ -2,14 +2,11 @@ package org.discogs.query.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.List;
 
@@ -60,16 +57,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated() // Require authentication for all requests
                 )
                 .httpBasic(Customizer.withDefaults()) // Use basic HTTP authentication
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless session management
-                .cors(cors -> cors
-                        .configurationSource(request -> {
-                            CorsConfiguration corsConfiguration = new CorsConfiguration();
-                            corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000")); // Allow requests from React app
-                            corsConfiguration.setAllowedMethods(ALL_METHODS); // Allow specific HTTP methods
-                            corsConfiguration.setAllowedHeaders(List.of("*")); // Allow all headers
-                            return corsConfiguration;
-                        })
-                );
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // Stateless session management
         return http.build();
     }
 }

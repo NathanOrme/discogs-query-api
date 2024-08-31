@@ -18,7 +18,8 @@ import lombok.Getter;
  *     <li>{@link #UNKNOWN} - Represents an unknown or unspecified type.</li>
  * </ul>
  * <p>
- * The {@link #UNKNOWN} type is used as a default when the provided type string does not match any of the defined constants.
+ * The {@link #UNKNOWN} type is used as a default when
+ * the provided type string does not match any of the defined constants.
  */
 @Getter
 @AllArgsConstructor
@@ -64,7 +65,8 @@ public enum DiscogsTypes {
      * If the type string does not match any defined constant, {@link #UNKNOWN} is returned.
      *
      * @param type the type string to match
-     * @return the {@link DiscogsTypes} constant corresponding to the type string, or {@link #UNKNOWN} if no match is found
+     * @return the {@link DiscogsTypes} constant corresponding to the type string,
+     * or {@link #UNKNOWN} if no match is found
      */
     public static DiscogsTypes fromString(final String type) {
         for (final DiscogsTypes t : DiscogsTypes.values()) {

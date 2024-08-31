@@ -3,157 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discogs Query</title>
+    <title>Discogs Search</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
             margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            background-color: #fff;
             padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #f4f4f4;
         }
-        h1, h2 {
+        h1 {
             text-align: center;
         }
-        form {
-            display: flex;
-            flex-direction: column;
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        label {
-            margin-top: 15px;
-            margin-bottom: 5px;
-            font-weight: bold;
+        .form-container label {
+            display: block;
+            margin: 10px 0 5px;
         }
-        input[type="text"], select {
-            padding: 8px;
-            font-size: 16px;
+        .form-container input,
+        .form-container select {
             width: 100%;
-            box-sizing: border-box;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
-        button {
-            margin-top: 20px;
-            padding: 10px;
-            font-size: 16px;
-            background-color: #007bff;
-            color: white;
+        .form-container button {
+            padding: 10px 15px;
             border: none;
+            border-radius: 4px;
+            color: #fff;
+            background-color: #007bff;
             cursor: pointer;
+            font-size: 16px;
         }
-        button:hover {
+        .form-container button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .form-container button:hover:not(:disabled) {
             background-color: #0056b3;
         }
-        .query-block {
-            margin-bottom: 20px;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 10px;
-        }
         .results {
-            margin-top: 30px;
+            margin-top: 20px;
+        }
+        .result-item {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .result-item h3 {
+            margin: 0 0 10px;
+        }
+        .result-item .details {
+            font-size: 14px;
+            color: #555;
+        }
+        /* Spinner Styles */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #007bff;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none; /* Hidden by default */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-<div class="container">
+<div class="form-container">
     <h1>Discogs Search</h1>
-    <form id="discogsQueryForm">
-        <div id="queryContainer">
-            <div class="query-block">
-                <label for="artist">Artist:</label>
-                <input type="text" class="artist" name="artist" required>
+    <form id="searchForm">
+        <label for="artist">Artist:</label>
+        <input type="text" id="artist" name="artist" required>
 
-                <label for="track">Track:</label>
-                <input type="text" class="track" name="track" required>
+        <label for="track">Track:</label>
+        <input type="text" id="track" name="track" required>
 
-                <label for="format">Format (optional):</label>
-                <input type="text" class="format" name="format">
+        <label for="format">Format (optional):</label>
+        <input type="text" id="format" name="format">
 
-                <label for="types">Types (optional):</label>
-                <select class="types" name="types">
-                    <option value="">Select a type</option>
-                    <option value="ALBUM">Album</option>
-                    <option value="SINGLE">Single</option>
-                    <option value="EP">EP</option>
-                    <!-- Add more options based on your DiscogsTypes enum -->
-                </select>
-            </div>
-        </div>
-        <button type="button" onclick="addQuery()">Add Another Query</button>
-        <button type="submit">Search</button>
+        <label for="types">Types (optional):</label>
+        <select id="types" name="types">
+            <!-- Options will be populated by JavaScript -->
+        </select>
+
+        <button type="submit" id="searchButton">Search</button>
     </form>
-
-    <div class="results">
-        <h2>Results</h2>
-        <ul id="resultsList"></ul>
-    </div>
+    <div id="loading" class="spinner"></div>
+    <div id="results" class="results"></div>
 </div>
 
 <script>
-    function addQuery() {
-        const queryContainer = document.getElementById('queryContainer');
-        const queryBlock = document.createElement('div');
-        queryBlock.className = 'query-block';
+    // Enum values for DiscogsTypes
+    const discogsTypes = [
+        { value: 'RELEASE', text: 'Release' },
+        { value: 'MASTER', text: 'Master' },
+        { value: 'ARTIST', text: 'Artist' },
+        { value: 'LABEL', text: 'Label' },
+        { value: '', text: 'Select a type' } // Default option
+    ];
 
-        queryBlock.innerHTML = `
-            <label for="artist">Artist:</label>
-            <input type="text" class="artist" name="artist" required>
+    // Populate the types select element
+    const typesSelect = document.getElementById('types');
+    discogsTypes.forEach(type => {
+        const option = document.createElement('option');
+        option.value = type.value;
+        option.textContent = type.text;
+        typesSelect.appendChild(option);
+    });
 
-            <label for="track">Track:</label>
-            <input type="text" class="track" name="track" required>
+    const loadingSpinner = document.getElementById('loading');
+    const searchButton = document.getElementById('searchButton');
 
-            <label for="format">Format (optional):</label>
-            <input type="text" class="format" name="format">
+    document.getElementById('searchForm').addEventListener('submit', function(event) {
+        event.preventDefault();
 
-            <label for="types">Types (optional):</label>
-            <select class="types" name="types">
-                <option value="">Select a type</option>
-                <option value="ALBUM">Album</option>
-                <option value="SINGLE">Single</option>
-                <option value="EP">EP</option>
-            </select>
-        `;
+        const artist = document.getElementById('artist').value;
+        const track = document.getElementById('track').value;
+        const format = document.getElementById('format').value;
+        const types = document.getElementById('types').value;
 
-        queryContainer.appendChild(queryBlock);
-    }
+        const query = {
+            artist: artist,
+            track: track,
+            format: format || null, // Send null if format is empty
+            types: types || null   // Send null if types is empty
+        };
 
-    document.getElementById('discogsQueryForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent the form from submitting the traditional way
-
-        const queries = Array.from(document.querySelectorAll('.query-block')).map(block => ({
-            artist: block.querySelector('.artist').value,
-            track: block.querySelector('.track').value,
-            format: block.querySelector('.format').value,
-            types: block.querySelector('.types').value
-        }));
+        // Disable the search button and show the spinner
+        searchButton.disabled = true;
+        loadingSpinner.style.display = 'block';
 
         fetch('http://localhost:9090/discogs-query/search', {
-            method: 'GET',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Basic dXNlcm5hbWU6cGFzc3dvcmQ='
             },
-            body: JSON.stringify(queries)  // Send the list of DTOs
+            body: JSON.stringify([query]) // Sending an array of queries
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
-            const resultsList = document.getElementById('resultsList');
-            resultsList.innerHTML = ''; // Clear previous results
-
-            data.forEach(result => {
-                const li = document.createElement('li');
-                li.textContent = `Result: ${result.someField}`; // Adjust based on DiscogsResultDTO fields
-                resultsList.appendChild(li);
-            });
+            console.log('API Response:', data); // Log entire API response for debugging
+            // Update the displayResults function call
+            displayResults(data[0].results); // Adjusted to access the correct part of the response
         })
         .catch(error => {
             console.error('Error:', error);
+        })
+        .finally(() => {
+            // Re-enable the search button and hide the spinner
+            searchButton.disabled = false;
+            loadingSpinner.style.display = 'none';
         });
     });
+
+    function displayResults(results) {
+        const resultsContainer = document.getElementById('results');
+        resultsContainer.innerHTML = '';
+
+        if (!results || results.length === 0) {
+            resultsContainer.innerHTML = '<p>No results found.</p>';
+            return;
+        }
+
+        results.forEach(entry => {
+            const resultItem = document.createElement('div');
+            resultItem.className = 'result-item';
+
+            resultItem.innerHTML = `
+                <h3>${entry.title}</h3>
+                <div class="details">
+                    <p><strong>ID:</strong> ${entry.id}</p>
+                    <p><strong>Formats:</strong> ${entry.format.join(', ')}</p>
+                    <p><strong>URL:</strong> <a href="${entry.uri}" target="_blank">${entry.uri}</a></p>
+                    <p><strong>Lowest Price:</strong> ${entry.lowestPrice ? '$' + entry.lowestPrice.toFixed(2) : 'N/A'}</p>
+                    <p><strong>On Marketplace:</strong> ${entry.onMarketplace ? 'Yes' : 'No'}</p>
+                </div>
+            `;
+
+            resultsContainer.appendChild(resultItem);
+        });
+    }
 </script>
 </body>
 </html>

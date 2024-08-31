@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Controller for handling Discogs query-related operations.
@@ -44,6 +45,7 @@ public class DiscogsQueryController {
 
         List<DiscogsResultDTO> resultDTOList = discogsQueryDTO.parallelStream()
                 .map(discogsQueryService::searchBasedOnQuery)
+                .filter(Objects::nonNull)
                 .toList();
 
         return ResponseEntity.status(HttpStatus.OK).body(resultDTOList);

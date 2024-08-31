@@ -62,7 +62,6 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
             var results = discogsAPIClient.getResultsForQuery(searchUrl);
             correctUriForResultEntries(results);
             results.getResults()
-                    .stream()
                     .forEach(this::processOnMarketplace);
             results.setResults(results.getResults().stream()
                     .sorted(Comparator.comparing(DiscogsEntry::getLowestPrice))
@@ -70,7 +69,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
             return discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
         } catch (final Exception e) {
             log.error(UNEXPECTED_ISSUE_OCCURRED, e);
-            throw new DiscogsAPIException(UNEXPECTED_ISSUE_OCCURRED, e);
+            return null;
         }
     }
 

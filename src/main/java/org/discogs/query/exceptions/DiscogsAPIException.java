@@ -9,6 +9,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 public class DiscogsAPIException extends RuntimeException {
+    /**
+     * Constructs a new {@link DiscogsAPIException} with the specified detail message.
+     *
+     * @param message the detail message for this exception
+     */
+    public DiscogsAPIException(final String message) {
+        super(message);
+    }
 
     /**
      * Constructs a new {@link DiscogsAPIException} with the specified detail message and cause.

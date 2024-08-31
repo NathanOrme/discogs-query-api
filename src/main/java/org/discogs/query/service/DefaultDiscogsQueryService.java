@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -63,18 +63,28 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
             String searchUrl = buildSearchUrl(discogsQueryDTO);
             var results = discogsAPIClient.getResultsForQuery(searchUrl);
             correctUriForResultEntries(results);
-            results.getResults().forEach(discogsEntry -> {
-                var marketplaceUrl = buildMarketplaceUrl(discogsEntry);
-                var marketplaceResults = discogsAPIClient.checkIsOnMarketplace(marketplaceUrl);
-                discogsEntry.setOnMarketplace(marketplaceResults.getNumberForSale() != null);
-                discogsEntry.setLowestPrice(marketplaceResults.getResult() != null
-                        ? marketplaceResults.getResult().getValue()
-                        : Float.valueOf("0"));
-            });
+            results.getResults()
+                    .parallelStream()
+                    .forEach(this::processOnMarketplace);
             results.setResults(results.getResults().stream()
                     .sorted(Comparator.comparing(DiscogsEntry::getLowestPrice))
                     .toList());
             return discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
+        } catch (final Exception e) {
+            log.error("Unexpected issue occurred", e);
+            throw new DiscogsAPIException("Unexpected issue occurred", e);
+        }
+    }
+
+    private void processOnMarketplace(final DiscogsEntry discogsEntry) {
+        try {
+            Thread.sleep(2000);
+            var marketplaceUrl = buildMarketplaceUrl(discogsEntry);
+            var marketplaceResults = discogsAPIClient.checkIsOnMarketplace(marketplaceUrl);
+            discogsEntry.setOnMarketplace(marketplaceResults.getNumberForSale() != null);
+            discogsEntry.setLowestPrice(marketplaceResults.getResult() != null
+                    ? marketplaceResults.getResult().getValue()
+                    : Float.parseFloat("0"));
         } catch (final Exception e) {
             log.error("Unexpected issue occurred", e);
             throw new DiscogsAPIException("Unexpected issue occurred", e);

@@ -50,4 +50,9 @@ public class DiscogsQueryDTO {
      */
     private DiscogsTypes types;
 
+    /**
+     * Check for if we want to search marketplace for prices or not.
+     */
+    private Boolean checkMarketplace;
+
 }

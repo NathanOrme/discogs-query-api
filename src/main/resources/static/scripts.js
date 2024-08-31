@@ -55,6 +55,9 @@ function createQueryFields(isFirstQuery = false) {
         <select class="types" name="types">
             ${discogsTypes.map(type => `<option value="${type.value}">${type.text}</option>`).join('')}
         </select>
+
+        <label for="checkMarketplace">Check Marketplace:</label>
+        <input type="checkbox" class="checkMarketplace" name="checkMarketplace">
     `;
 
     // Append elements to the queryDiv
@@ -90,13 +93,15 @@ document.getElementById('searchForm').addEventListener('submit', function(event)
         const track = queryDiv.querySelector('.track').value || null;
         const format = queryDiv.querySelector('.format').value || null;
         const types = queryDiv.querySelector('.types').value || null;
+        const checkMarketplace = queryDiv.querySelector('.checkMarketplace').checked;
 
         return {
             artist: artist,
             album: album,
             track: track,
             format: format,
-            types: types
+            types: types,
+            checkMarketplace: checkMarketplace
         };
     });
 
@@ -173,7 +178,13 @@ function displayResults(response) {
             const year = entry.year || 'N/A';
             const uri = entry.uri || '#';
             const lowestPrice = entry.lowestPrice ? '£' + entry.lowestPrice.toFixed(2) : 'N/A';
-            const onMarketplace = entry.onMarketplace ? 'Yes' : 'No';
+            const onMarketplace = entry.isOnMarketplace ? 'Yes' : 'No';
+
+            // Only display "On Marketplace" and "Lowest Price" if `isOnMarketplace` is true
+            const marketplaceDetails = entry.isOnMarketplace ? `
+                <p><strong>On Marketplace:</strong> ${onMarketplace}</p>
+                <p><strong>Lowest Price:</strong> ${lowestPrice}</p>
+            ` : '';
 
             const resultItem = document.createElement('div');
             resultItem.className = 'result-item';
@@ -186,8 +197,7 @@ function displayResults(response) {
                     <p><strong>Country:</strong> ${country}</p>
                     <p><strong>Year:</strong> ${year}</p>
                     <p><strong>URL:</strong> <a href="${uri}" target="_blank">${uri}</a></p>
-                    <p><strong>Lowest Price:</strong> ${lowestPrice}</p>
-                    <p><strong>On Marketplace:</strong> ${onMarketplace}</p>
+                    ${marketplaceDetails}
                 </div>
             `;
 

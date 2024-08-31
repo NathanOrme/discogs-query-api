@@ -37,7 +37,8 @@ public class DiscogsQueryController {
      * @return a {@link ResponseEntity} containing the search results wrapped in {@link DiscogsResult}
      */
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<DiscogsResultDTO>> searchBasedOnQuery(
             @RequestBody final List<DiscogsQueryDTO> discogsQueryDTO) {
 

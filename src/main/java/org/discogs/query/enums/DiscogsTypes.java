@@ -8,6 +8,17 @@ import lombok.Getter;
  * <p>
  * This enum provides predefined constants for various resource types, such as releases, masters, artists, and labels.
  * Each constant is associated with a type string that represents its name in the Discogs API.
+ * <p>
+ * The available types are:
+ * <ul>
+ *     <li>{@link #RELEASE} - Represents a "release" resource type.</li>
+ *     <li>{@link #MASTER} - Represents a "master" resource type.</li>
+ *     <li>{@link #ARTIST} - Represents an "artist" resource type.</li>
+ *     <li>{@link #LABEL} - Represents a "label" resource type.</li>
+ *     <li>{@link #UNKNOWN} - Represents an unknown or unspecified type.</li>
+ * </ul>
+ * <p>
+ * The {@link #UNKNOWN} type is used as a default when the provided type string does not match any of the defined constants.
  */
 @Getter
 @AllArgsConstructor
@@ -15,7 +26,8 @@ public enum DiscogsTypes {
 
     /**
      * Represents a "release" resource type in the Discogs API.
-     * Note that this is the default.
+     * <p>
+     * This is the default type used if no specific type is provided.
      */
     RELEASE("release"),
 
@@ -35,7 +47,9 @@ public enum DiscogsTypes {
     LABEL("label"),
 
     /**
-     * Represents the DEFAULT type.
+     * Represents an unknown or unspecified type.
+     * <p>
+     * This type is used when the input type string does not match any defined types.
      */
     UNKNOWN("");
 
@@ -44,9 +58,17 @@ public enum DiscogsTypes {
      */
     private final String type;
 
+    /**
+     * Returns the {@link DiscogsTypes} constant associated with the given type string.
+     * <p>
+     * If the type string does not match any defined constant, {@link #UNKNOWN} is returned.
+     *
+     * @param type the type string to match
+     * @return the {@link DiscogsTypes} constant corresponding to the type string, or {@link #UNKNOWN} if no match is found
+     */
     public static DiscogsTypes fromString(final String type) {
         for (final DiscogsTypes t : DiscogsTypes.values()) {
-            if (t.name().equalsIgnoreCase(type)) {
+            if (t.getType().equalsIgnoreCase(type)) {
                 return t;
             }
         }

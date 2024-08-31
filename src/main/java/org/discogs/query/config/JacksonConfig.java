@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.discogs.query.deserializers.DiscogsFormatsDeserializer;
 import org.discogs.query.deserializers.DiscogsTypesDeserializer;
-import org.discogs.query.enums.DiscogFormats;
+import org.discogs.query.enums.DiscogsFormats;
 import org.discogs.query.enums.DiscogsTypes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  * customize the default behavior of Jackson's
  * {@link ObjectMapper}. Specifically, it registers
  * custom deserializers for the {@link DiscogsTypes}
- * and {@link DiscogFormats} enums, allowing proper
+ * and {@link DiscogsFormats} enums, allowing proper
  * deserialization of enum values from JSON strings.
  *
  * <p>The custom deserializers, {@link DiscogsTypesDeserializer}
@@ -24,7 +24,7 @@ import org.springframework.context.annotation.Configuration;
  * are added to a {@link SimpleModule}, which is then
  * registered with the {@link ObjectMapper}.
  * This setup ensures that any JSON processing
- * involving {@link DiscogsTypes} and {@link DiscogFormats}
+ * involving {@link DiscogsTypes} and {@link DiscogsFormats}
  * will use the specified deserializers to convert JSON strings into enum constants.
  */
 @Configuration
@@ -35,7 +35,7 @@ public class JacksonConfig {
      *
      * <p>This method initializes an {@link ObjectMapper} and
      * configures it with a {@link SimpleModule} that includes
-     * custom deserializers for {@link DiscogsTypes} and {@link DiscogFormats}. The deserializers,
+     * custom deserializers for {@link DiscogsTypes} and {@link DiscogsFormats}. The deserializers,
      * {@link DiscogsTypesDeserializer} and {@link DiscogsFormatsDeserializer}, handle the conversion
      * of JSON strings to their respective enum values.
      *
@@ -46,7 +46,7 @@ public class JacksonConfig {
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
         module.addDeserializer(DiscogsTypes.class, new DiscogsTypesDeserializer());
-        module.addDeserializer(DiscogFormats.class, new DiscogsFormatsDeserializer());
+        module.addDeserializer(DiscogsFormats.class, new DiscogsFormatsDeserializer());
         mapper.registerModule(module);
         return mapper;
     }

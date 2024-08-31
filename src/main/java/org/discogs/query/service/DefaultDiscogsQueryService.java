@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.client.DiscogsAPIClient;
 import org.discogs.query.domain.DiscogsEntry;
 import org.discogs.query.domain.DiscogsResult;
-import org.discogs.query.enums.DiscogFormats;
 import org.discogs.query.enums.DiscogQueryParams;
+import org.discogs.query.enums.DiscogsFormats;
 import org.discogs.query.enums.DiscogsTypes;
 import org.discogs.query.exceptions.DiscogsAPIException;
 import org.discogs.query.mapper.DiscogsResultMapper;
@@ -131,7 +131,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
             uriBuilder.queryParam(DiscogQueryParams.FORMAT.getQueryType(), format);
         } else {
             // Default format if not provided
-            uriBuilder.queryParam(DiscogQueryParams.FORMAT.getQueryType(), DiscogFormats.VINYL_COMPILATION.getFormat());
+            uriBuilder.queryParam(DiscogQueryParams.FORMAT.getQueryType(), DiscogsFormats.VINYL_COMPILATION.getFormat());
         }
         if (discogsQueryDTO.getTypes() != null) {
             uriBuilder.queryParam(DiscogQueryParams.TYPE.getQueryType(), discogsQueryDTO.getTypes());

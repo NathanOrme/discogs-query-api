@@ -14,7 +14,17 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum DiscogFormats {
+public enum DiscogsFormats {
+
+    /**
+     * Represents the "lp" format.
+     */
+    LP("lp"),
+
+    /**
+     * Represents the "album" format.
+     */
+    ALBUM("album"),
 
     /**
      * Represents the "vinyl" format.
@@ -32,6 +42,11 @@ public enum DiscogFormats {
     VINYL_COMPILATION("compilation vinyl"),
 
     /**
+     * Represents the "compilation vinyl" format.
+     */
+    VINYL_ALBUM("album vinyl"),
+
+    /**
      * Represents an unknown or unspecified type.
      * <p>
      * This type is used when the input type string does not match any defined types.
@@ -44,16 +59,16 @@ public enum DiscogFormats {
     private final String format;
 
     /**
-     * Returns the {@link DiscogFormats} constant associated with the given format string.
+     * Returns the {@link DiscogsFormats} constant associated with the given format string.
      * <p>
      * If the format string does not match any defined constant, {@link #UNKNOWN} is returned.
      *
      * @param format the format string to match
-     * @return the {@link DiscogFormats} constant corresponding to the format string,
+     * @return the {@link DiscogsFormats} constant corresponding to the format string,
      * or {@link #UNKNOWN} if no match is found
      */
-    public static DiscogFormats fromString(final String format) {
-        for (final DiscogFormats t : DiscogFormats.values()) {
+    public static DiscogsFormats fromString(final String format) {
+        for (final DiscogsFormats t : DiscogsFormats.values()) {
             if (t.getFormat().equalsIgnoreCase(format)) {
                 return t;
             }

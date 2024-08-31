@@ -9,7 +9,10 @@ const discogsTypes = [
 const discogFormats = [
     { value: '', text: 'Any Format' },
     { value: 'vinyl', text: 'Vinyl' },
+    { value: 'album', text: 'album' },
+    { value: 'lp', text: 'lp' },
     { value: 'compilation', text: 'Compilation' },
+    { value: 'album vinyl', text: 'album vinyl' },
     { value: 'compilation vinyl', text: 'Compilation Vinyl' }
 ];
 

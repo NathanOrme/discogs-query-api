@@ -9,7 +9,8 @@
  * <p>
  * Classes and interfaces in this package include:
  * <ul>
- *     <li>{@link org.discogs.query.client.limits.RateLimiter} - An interface for implementing rate limiting strategies.</li>
+ *     <li>{@link org.discogs.query.client.limits.RateLimiter} -
+ *     An interface for implementing rate limiting strategies.</li>
  * </ul>
  */
 package org.discogs.query.client.limits;

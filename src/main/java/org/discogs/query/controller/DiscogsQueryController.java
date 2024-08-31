@@ -41,7 +41,7 @@ public class DiscogsQueryController {
     public ResponseEntity<List<DiscogsResultDTO>> searchBasedOnQuery(
             @RequestBody final List<DiscogsQueryDTO> discogsQueryDTO) {
 
-        List<DiscogsResultDTO> resultDTOList = discogsQueryDTO.stream()
+        List<DiscogsResultDTO> resultDTOList = discogsQueryDTO.parallelStream()
                 .map(discogsQueryService::searchBasedOnQuery)
                 .toList();
 

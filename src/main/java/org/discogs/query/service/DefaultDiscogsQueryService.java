@@ -69,10 +69,14 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
                 var marketplaceUrl = buildMarketplaceUrl(discogsEntry);
                 var marketplaceResults = discogsAPIClient.checkIsOnMarketplace(marketplaceUrl);
                 discogsEntry.setOnMarketplace(marketplaceResults.getNumberForSale() != null);
-                discogsEntry.setLowestPrice(marketplaceResults.getResult().getValue());
+                discogsEntry.setLowestPrice(marketplaceResults.getResult() != null
+                        ? marketplaceResults.getResult().getValue()
+                        : null);
             });
+
             return discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
         } catch (final Exception e) {
+            log.error("Unexpected issue occurred", e);
             throw new DiscogsAPIException("Unexpected issue occurred", e);
         }
     }

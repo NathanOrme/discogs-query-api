@@ -2,6 +2,7 @@ package org.discogs.query.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.discogs.query.UriBuilderHelper;
 import org.discogs.query.client.DiscogsAPIClient;
 import org.discogs.query.domain.DiscogsEntry;
 import org.discogs.query.domain.DiscogsResult;
@@ -49,6 +50,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
 
     private final DiscogsResultMapper discogsResultMapper;
     private final DiscogsAPIClient discogsAPIClient;
+    private final UriBuilderHelper uriBuilderHelper;
 
     /**
      * Searches the Discogs database based on the provided query.
@@ -66,8 +68,10 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
             log.info("Received {} results from search API", results.getResults().size());
             correctUriForResultEntries(results);
             discogsResultDTO = discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
-            results.getResults().forEach(this::processOnMarketplace);
-            orderResults(results);
+            if (Boolean.TRUE.equals(discogsQueryDTO.getCheckMarketplace())) {
+                results.getResults().forEach(this::processOnMarketplace);
+                orderResults(results);
+            }
             log.info("Finished all http requests for: {}", discogsQueryDTO);
             return discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
         } catch (final DiscogsMarketplaceException | DiscogsSearchException e) {
@@ -125,29 +129,16 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         log.info("Generating URL for query: {}", discogsQueryDTO);
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(discogsBaseUrl + discogsSearchEndpoint);
 
-        String artist = discogsQueryDTO.getArtist();
-        String album = discogsQueryDTO.getAlbum();
-        String track = discogsQueryDTO.getTrack();
-        String format = discogsQueryDTO.getFormat();
-        // Add parameters only if they are not null or empty
-        if (artist != null && !artist.isBlank()) {
-            uriBuilder.queryParam(DiscogQueryParams.ARTIST.getQueryType(), artist);
+        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder, DiscogQueryParams.ARTIST.getQueryType(), discogsQueryDTO.getArtist());
+        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder, DiscogQueryParams.ALBUM.getQueryType(), discogsQueryDTO.getAlbum());
+        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder, DiscogQueryParams.TRACK.getQueryType(), discogsQueryDTO.getTrack());
+        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder, DiscogQueryParams.FORMAT.getQueryType(), discogsQueryDTO.getFormat());
+
+        DiscogsTypes types = discogsQueryDTO.getTypes();
+        if (DiscogsTypes.UNKNOWN == types) {
+            types = DiscogsTypes.RELEASE;
         }
-        if (album != null && !album.isBlank()) {
-            uriBuilder.queryParam(DiscogQueryParams.ALBUM.getQueryType(), album);
-        }
-        if (track != null && !track.isBlank()) {
-            uriBuilder.queryParam(DiscogQueryParams.TRACK.getQueryType(), track);
-        }
-        if (format != null && !format.isBlank()) {
-            uriBuilder.queryParam(DiscogQueryParams.FORMAT.getQueryType(), format);
-        }
-        if (discogsQueryDTO.getTypes() != null) {
-            uriBuilder.queryParam(DiscogQueryParams.TYPE.getQueryType(), discogsQueryDTO.getTypes());
-        } else {
-            // Default format if not provided
-            uriBuilder.queryParam(DiscogQueryParams.TYPE.getQueryType(), DiscogsTypes.RELEASE.getType());
-        }
+        uriBuilderHelper.addIfNotNull(uriBuilder, DiscogQueryParams.TYPE.getQueryType(), types.getType());
 
 
         uriBuilder.queryParam("per_page", pageSize);

@@ -55,6 +55,9 @@ function createQueryFields(isFirstQuery = false) {
         <select class="types" name="types">
             ${discogsTypes.map(type => `<option value="${type.value}">${type.text}</option>`).join('')}
         </select>
+
+        <label for="checkMarketplace">Check Marketplace:</label>
+        <input type="checkbox" class="checkMarketplace" name="checkMarketplace">
     `;
 
     // Append elements to the queryDiv
@@ -90,13 +93,15 @@ document.getElementById('searchForm').addEventListener('submit', function(event)
         const track = queryDiv.querySelector('.track').value || null;
         const format = queryDiv.querySelector('.format').value || null;
         const types = queryDiv.querySelector('.types').value || null;
+        const checkMarketplace = queryDiv.querySelector('.checkMarketplace').checked;
 
         return {
             artist: artist,
             album: album,
             track: track,
             format: format,
-            types: types
+            types: types,
+            checkMarketplace: checkMarketplace
         };
     });
 

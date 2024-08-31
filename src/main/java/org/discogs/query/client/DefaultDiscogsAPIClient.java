@@ -101,9 +101,6 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
             logApiResponse(response);
             return Optional.ofNullable(response.getBody())
                     .orElseThrow(() -> new DiscogsAPIException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API));
-        } catch (final InterruptedException e) {
-            log.error(ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_API, e);
-            throw new DiscogsAPIException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API, e);
         } catch (final Exception e) {
             log.error(ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_API, e);
             throw new DiscogsAPIException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API, e);

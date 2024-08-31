@@ -29,7 +29,12 @@ public enum DiscogFormats {
     /**
      * Represents the "compilation vinyl" format.
      */
-    VINYL_COMPILATION("compilation vinyl");
+    VINYL_COMPILATION("compilation vinyl"),
+
+    /**
+     * Represents the DEFAULT format.
+     */
+    DEFAULT("");
 
     /**
      * The format string associated with the enum constant.

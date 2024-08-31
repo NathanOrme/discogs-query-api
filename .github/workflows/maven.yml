@@ -44,17 +44,11 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Install NPM
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
       - name: Set Version With Maven
         run: mvn versions:set -DnewVersion=${{ steps.removev.outputs.ref_name }}
 
       - name: Build with Maven and buildpacks
         run: mvn clean install package javadoc:javadoc spring-boot:build-image
-
 
       - name: Zip Javadoc
         uses: vimtor/action-zip@v1.2

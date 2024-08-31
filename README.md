@@ -81,7 +81,7 @@ discogs.token=YourAccessToken
 
 **URL**: `/discogs-query/search`
 
-- **Method**: `GET`
+- **Method**: `POST`
 - **Request Body**:
 
   ```json

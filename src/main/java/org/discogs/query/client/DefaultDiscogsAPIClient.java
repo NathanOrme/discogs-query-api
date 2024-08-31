@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.domain.DiscogsMarketplaceResult;
 import org.discogs.query.domain.DiscogsResult;
-import org.discogs.query.exceptions.DiscogsAPIException;
+import org.discogs.query.exceptions.DiscogsMarketplaceException;
+import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.limits.RateLimiter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -31,8 +32,11 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
 
-    private static final String ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_API
-            = "Error occurred while fetching data from Discogs API";
+    private static final String ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_SEARCH_API
+            = "Error occurred while fetching data from Discogs Search API";
+
+    private static final String ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_MARKETPLACE_API
+            = "Error occurred while fetching data from Discogs Marketplace API";
 
     private static final String FAILED_TO_FETCH_DATA_FROM_DISCOGS_API = "Failed to fetch data from Discogs API";
 
@@ -47,7 +51,7 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
      *
      * @param searchUrl the URL to query the Discogs API
      * @return an instance of {@link DiscogsResult} containing the API response data
-     * @throws DiscogsAPIException if an error occurs while fetching data from the Discogs API
+     * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API
      */
     @Override
     public DiscogsResult getResultsForQuery(final String searchUrl) {
@@ -60,7 +64,7 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
      *
      * @param searchUrl the URL to query the Discogs API
      * @return a {@link String} containing the API response data
-     * @throws DiscogsAPIException if an error occurs while fetching data from the Discogs API
+     * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API
      */
     @Override
     public String getStringResultForQuery(final String searchUrl) {
@@ -74,7 +78,7 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
      *
      * @param url the URL pointing to the item on the Discogs Marketplace.
      * @return a {@link DiscogsMarketplaceResult} object containing the details of the item on the marketplace.
-     * @throws DiscogsAPIException if an error occurs while fetching data from the Discogs API.
+     * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API.
      */
     @Override
     public DiscogsMarketplaceResult checkIsOnMarketplace(final String url) {
@@ -89,7 +93,7 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
      * @param responseType the class type of the response
      * @param <T>          the type of the response
      * @return an instance of the response type containing the API response data
-     * @throws DiscogsAPIException if an error occurs while fetching data from the Discogs API
+     * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API
      */
     private <T> T executeRequest(final String url, final Class<T> responseType) {
         HttpHeaders headers = buildHeaders();
@@ -98,10 +102,13 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
             var response = restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
             logApiResponse(response);
             return Optional.ofNullable(response.getBody())
-                    .orElseThrow(() -> new DiscogsAPIException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API));
+                    .orElseThrow(() -> new DiscogsSearchException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API));
         } catch (final Exception e) {
-            log.error(ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_API, e);
-            throw new DiscogsAPIException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API, e);
+            log.error(ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_SEARCH_API, e);
+            if (DiscogsMarketplaceResult.class.isAssignableFrom(responseType)) {
+                throw new DiscogsMarketplaceException(ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_MARKETPLACE_API, e);
+            }
+            throw new DiscogsSearchException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API, e);
         }
     }
 

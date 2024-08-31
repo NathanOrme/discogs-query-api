@@ -8,6 +8,8 @@ import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.enums.DiscogQueryParams;
 import org.discogs.query.enums.DiscogsFormats;
 import org.discogs.query.enums.DiscogsTypes;
+import org.discogs.query.exceptions.DiscogsMarketplaceException;
+import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.mapper.DiscogsResultMapper;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
@@ -56,21 +58,27 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
      */
     @Override
     public DiscogsResultDTO searchBasedOnQuery(final DiscogsQueryDTO discogsQueryDTO) {
+        DiscogsResultDTO discogsResultDTO = null;
         try {
             log.info("Processing query: {}", discogsQueryDTO);
             String searchUrl = buildSearchUrl(discogsQueryDTO);
             var results = discogsAPIClient.getResultsForQuery(searchUrl);
             correctUriForResultEntries(results);
+            discogsResultDTO = discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
             results.getResults()
                     .forEach(this::processOnMarketplace);
             results.setResults(results.getResults().stream()
-                    .sorted(Comparator.comparing(DiscogsEntry::getLowestPrice))
+                    .filter(entry -> entry.getLowestPrice() != null) // Filter entries with non-null lowestPrice
+                    .sorted(Comparator.comparing(DiscogsEntry::getLowestPrice)) // Sort based on lowestPrice
                     .toList());
             log.info("Finished all http requests for: {}", discogsQueryDTO);
             return discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
+        } catch (final DiscogsMarketplaceException | DiscogsSearchException e) {
+            log.error(UNEXPECTED_ISSUE_OCCURRED, e);
+            return discogsResultDTO;
         } catch (final Exception e) {
             log.error(UNEXPECTED_ISSUE_OCCURRED, e);
-            return null;
+            throw new DiscogsSearchException(UNEXPECTED_ISSUE_OCCURRED, e);
         }
     }
 

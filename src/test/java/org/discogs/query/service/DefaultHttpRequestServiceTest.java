@@ -29,7 +29,7 @@ class DefaultHttpRequestServiceTest {
     }
 
     @Test
-    void testExecuteRequest() {
+    void testExecuteRequest() throws Exception {
         String url = "http://example.com";
         String expectedResponse = "response";
         ResponseEntity<String> responseEntity = ResponseEntity.ok(expectedResponse);

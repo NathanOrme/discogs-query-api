@@ -25,5 +25,5 @@ discogs:
   marketplaceCheck: marketplace/stats/
   agent: DiscogsQueryApplication/1.0 +https://github.com/NathanOrme/discogs-query-api
   page-size: 200
-  rate-limit: 30
+  rate-limit: 60
   token: fXZuXsfLTsbwhcTYzgiPrjpzLPNPUXoGpSseGEXV

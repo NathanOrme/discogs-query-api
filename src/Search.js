@@ -1,22 +1,30 @@
-// src/Search.js
 import React, { useState } from 'react';
 import axios from 'axios';
 
 function Search() {
-    const [query, setQuery] = useState('');
+    const [queries, setQueries] = useState([{ artist: '', track: '', format: '', types: '' }]);
     const [results, setResults] = useState([]);
 
-    const handleSearch = async () => {
-        const queries = query.split('\n').map(q => ({ query: q }));
+    const handleChange = (index, event) => {
+        const values = [...queries];
+        values[index][event.target.name] = event.target.value;
+        setQueries(values);
+    };
+
+    const handleAddQuery = () => {
+        setQueries([...queries, { artist: '', track: '', format: '', types: '' }]);
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
 
         try {
-            const response = await axios.get('http://localhost:8080/discogs-query/search', {
+            const response = await axios.post('http://localhost:9090/discogs-query/search', queries, {
                 headers: {
                     'Content-Type': 'application/json',
-                },
-                data: queries
+                    'Authorization': 'Basic dXNlcm5hbWU6cGFzc3dvcmQ=',
+                }
             });
-
             setResults(response.data);
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
@@ -26,17 +34,61 @@ function Search() {
     return (
         <div>
             <h1>Search Discogs</h1>
-            <textarea
-                rows="4"
-                cols="50"
-                value={query}
-                onChange={e => setQuery(e.target.value)}
-                placeholder="Enter your query here..."
-            />
-            <br />
-            <button onClick={handleSearch}>Search</button>
-            <h2>Results:</h2>
-            <div>
+            <form onSubmit={handleSubmit}>
+                {queries.map((query, index) => (
+                    <div key={index} className="query-block">
+                        <label>
+                            Artist:
+                            <input
+                                type="text"
+                                name="artist"
+                                value={query.artist}
+                                onChange={(event) => handleChange(index, event)}
+                                required
+                            />
+                        </label>
+                        <label>
+                            Track:
+                            <input
+                                type="text"
+                                name="track"
+                                value={query.track}
+                                onChange={(event) => handleChange(index, event)}
+                                required
+                            />
+                        </label>
+                        <label>
+                            Format (optional):
+                            <input
+                                type="text"
+                                name="format"
+                                value={query.format}
+                                onChange={(event) => handleChange(index, event)}
+                            />
+                        </label>
+                        <label>
+                            Types (optional):
+                            <select
+                                name="types"
+                                value={query.types}
+                                onChange={(event) => handleChange(index, event)}
+                            >
+                                <option value="">Select a type</option>
+                                <option value="ALBUM">Album</option>
+                                <option value="SINGLE">Single</option>
+                                <option value="EP">EP</option>
+                                {/* Add more options based on DiscogsTypes */}
+                            </select>
+                        </label>
+                    </div>
+                ))}
+                <button type="button" onClick={handleAddQuery}>
+                    Add Another Query
+                </button>
+                <button type="submit">Search</button>
+            </form>
+            <div className="results">
+                <h2>Results:</h2>
                 {results.map((result, index) => (
                     <pre key={index}>{JSON.stringify(result, null, 2)}</pre>
                 ))}

@@ -9,7 +9,7 @@ import org.discogs.query.service.DiscogsQueryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -37,7 +37,7 @@ public class DiscogsQueryController {
      * @return a {@link ResponseEntity} containing the search results wrapped in {@link DiscogsResult}
      */
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<DiscogsResultDTO>> searchBasedOnQuery(
             @RequestBody final List<DiscogsQueryDTO> discogsQueryDTO) {
 

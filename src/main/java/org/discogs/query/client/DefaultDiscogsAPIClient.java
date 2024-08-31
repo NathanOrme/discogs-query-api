@@ -29,25 +29,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
 
-    public static final String ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_API = "Error occurred while fetching data from Discogs API";
+    public static final String ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_API
+            = "Error occurred while fetching data from Discogs API";
     public static final String FAILED_TO_FETCH_DATA_FROM_DISCOGS_API = "Failed to fetch data from Discogs API";
     @Value("${discogs.agent}")
     private String discogsAgent;
 
     private final RestTemplate restTemplate;
-
-    /**
-     * Logs the API response for debugging purposes.
-     *
-     * @param response the {@link ResponseEntity} containing the API response to log
-     */
-    private void logApiResponse(final ResponseEntity<?> response) {
-        if (response.getBody() != null) {
-            log.info("Discogs API response: {}", response.getBody());
-        } else {
-            log.warn("Discogs API response is empty.");
-        }
-    }
 
     /**
      * Retrieves results from the Discogs API for a given search URL.
@@ -92,6 +80,15 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
         }
     }
 
+    /**
+     * Checks whether the given item is listed on the Discogs Marketplace.
+     * This method sends an HTTP GET request to the provided URL and returns the marketplace details.
+     *
+     * @param url the URL pointing to the item on the Discogs Marketplace.
+     * @return a {@link DiscogsMarketplaceResult} object containing
+     * the details of the item on the marketplace.
+     * @throws DiscogsAPIException if an error occurs while fetching data from the Discogs API.
+     */
     @Override
     public DiscogsMarketplaceResult checkIsOnMarketplace(final String url) {
         HttpHeaders headers = buildHeaders();
@@ -104,6 +101,19 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
         } catch (final Exception e) {
             log.error(ERROR_OCCURRED_WHILE_FETCHING_DATA_FROM_DISCOGS_API, e);
             throw new DiscogsAPIException(FAILED_TO_FETCH_DATA_FROM_DISCOGS_API, e);
+        }
+    }
+
+    /**
+     * Logs the API response for debugging purposes.
+     *
+     * @param response the {@link ResponseEntity} containing the API response to log
+     */
+    private void logApiResponse(final ResponseEntity<?> response) {
+        if (response.getBody() != null) {
+            log.info("Discogs API response: {}", response.getBody());
+        } else {
+            log.warn("Discogs API response is empty.");
         }
     }
 

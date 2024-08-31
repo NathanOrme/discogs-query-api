@@ -118,14 +118,13 @@
             margin-bottom: 5px;
         }
         .query-content {
-            display: none; /* Hidden by default */
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
             background: #fff;
         }
-        .query-content.visible {
-            display: block;
+        .query-content.hidden {
+            display: none;
         }
     </style>
 </head>
@@ -164,7 +163,7 @@
     const queriesContainer = document.getElementById('queriesContainer');
     const addQueryButton = document.getElementById('addQueryButton');
 
-    function createQueryFields() {
+    function createQueryFields(isFirstQuery = false) {
         const queryDiv = document.createElement('div');
         queryDiv.className = 'query';
 
@@ -173,7 +172,7 @@
         queryHeader.textContent = 'Query';
         queryHeader.addEventListener('click', () => {
             const content = queryDiv.querySelector('.query-content');
-            content.classList.toggle('visible');
+            content.classList.toggle('hidden');
         });
 
         const queryContent = document.createElement('div');
@@ -197,21 +196,25 @@
             </select>
         `;
 
+        // Append elements to the queryDiv
         queryDiv.appendChild(queryHeader);
         queryDiv.appendChild(queryContent);
 
+        // Append the queryDiv to the container
         queriesContainer.appendChild(queryDiv);
+
+        // If it's not the first query, make previous queries hidden
+        if (!isFirstQuery) {
+            document.querySelectorAll('.query-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+        }
     }
 
-    // Add the initial query fields
-    createQueryFields();
+    // Add the initial query fields and keep it visible
+    createQueryFields(true);
 
     addQueryButton.addEventListener('click', () => {
-        // Collapse all existing queries before adding a new one
-        document.querySelectorAll('.query-content').forEach(content => {
-            content.classList.remove('visible');
-        });
-
         createQueryFields();
     });
 

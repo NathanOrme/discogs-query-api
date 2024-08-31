@@ -20,6 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 /**
@@ -71,9 +72,11 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
                 discogsEntry.setOnMarketplace(marketplaceResults.getNumberForSale() != null);
                 discogsEntry.setLowestPrice(marketplaceResults.getResult() != null
                         ? marketplaceResults.getResult().getValue()
-                        : null);
+                        : Float.valueOf("0"));
             });
-
+            results.setResults(results.getResults().stream()
+                    .sorted(Comparator.comparing(DiscogsEntry::getLowestPrice))
+                    .toList());
             return discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
         } catch (final Exception e) {
             log.error("Unexpected issue occurred", e);

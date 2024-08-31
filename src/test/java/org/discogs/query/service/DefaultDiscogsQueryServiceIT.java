@@ -1,5 +1,6 @@
 package org.discogs.query.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@Slf4j
 @SpringBootTest
 class DefaultDiscogsQueryServiceIT {
 
@@ -21,5 +23,6 @@ class DefaultDiscogsQueryServiceIT {
                 .build();
         var result = discogsQueryService.searchBasedOnQuery(discogsQueryDTO);
         assertNotNull(result);
+        log.info(result.toString());
     }
 }

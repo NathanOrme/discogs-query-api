@@ -7,66 +7,153 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            padding: 20px;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
         }
         .container {
             max-width: 600px;
-            margin: auto;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        .result-item {
-            border: 1px solid #ddd;
+        h1, h2 {
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], select {
+            padding: 8px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 20px;
             padding: 10px;
-            margin: 5px 0;
-            border-radius: 4px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .query-block {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .results {
+            margin-top: 30px;
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>Search Discogs</h1>
-    <textarea id="queryInput" rows="4" cols="50" placeholder="Enter your query here..."></textarea><br><br>
-    <button onclick="search()">Search</button>
-    <h2>Results:</h2>
-    <div id="results"></div>
+    <h1>Discogs Search</h1>
+    <form id="discogsQueryForm">
+        <div id="queryContainer">
+            <div class="query-block">
+                <label for="artist">Artist:</label>
+                <input type="text" class="artist" name="artist" required>
+
+                <label for="track">Track:</label>
+                <input type="text" class="track" name="track" required>
+
+                <label for="format">Format (optional):</label>
+                <input type="text" class="format" name="format">
+
+                <label for="types">Types (optional):</label>
+                <select class="types" name="types">
+                    <option value="">Select a type</option>
+                    <option value="ALBUM">Album</option>
+                    <option value="SINGLE">Single</option>
+                    <option value="EP">EP</option>
+                    <!-- Add more options based on your DiscogsTypes enum -->
+                </select>
+            </div>
+        </div>
+        <button type="button" onclick="addQuery()">Add Another Query</button>
+        <button type="submit">Search</button>
+    </form>
+
+    <div class="results">
+        <h2>Results</h2>
+        <ul id="resultsList"></ul>
+    </div>
 </div>
 
 <script>
-    async function search() {
-        const queryInput = document.getElementById('queryInput').value;
-        const queries = queryInput.split('\n').map(query => ({ query }));
+    function addQuery() {
+        const queryContainer = document.getElementById('queryContainer');
+        const queryBlock = document.createElement('div');
+        queryBlock.className = 'query-block';
 
-        try {
-            const response = await fetch('http://localhost:9090/discogs-query/search', {
-                method: 'GET', // Your endpoint is using GET, but POST might be more appropriate for a body
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Basic dXNlcm5hbWU6cGFzc3dvcmQ=',
-                },
-                body: JSON.stringify(queries) // Attach the queries in the body
+        queryBlock.innerHTML = `
+            <label for="artist">Artist:</label>
+            <input type="text" class="artist" name="artist" required>
+
+            <label for="track">Track:</label>
+            <input type="text" class="track" name="track" required>
+
+            <label for="format">Format (optional):</label>
+            <input type="text" class="format" name="format">
+
+            <label for="types">Types (optional):</label>
+            <select class="types" name="types">
+                <option value="">Select a type</option>
+                <option value="ALBUM">Album</option>
+                <option value="SINGLE">Single</option>
+                <option value="EP">EP</option>
+            </select>
+        `;
+
+        queryContainer.appendChild(queryBlock);
+    }
+
+    document.getElementById('discogsQueryForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the form from submitting the traditional way
+
+        const queries = Array.from(document.querySelectorAll('.query-block')).map(block => ({
+            artist: block.querySelector('.artist').value,
+            track: block.querySelector('.track').value,
+            format: block.querySelector('.format').value,
+            types: block.querySelector('.types').value
+        }));
+
+        fetch('http://localhost:9090/discogs-query/search', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic dXNlcm5hbWU6cGFzc3dvcmQ='
+            },
+            body: JSON.stringify(queries)  // Send the list of DTOs
+        })
+        .then(response => response.json())
+        .then(data => {
+            const resultsList = document.getElementById('resultsList');
+            resultsList.innerHTML = ''; // Clear previous results
+
+            data.forEach(result => {
+                const li = document.createElement('li');
+                li.textContent = `Result: ${result.someField}`; // Adjust based on DiscogsResultDTO fields
+                resultsList.appendChild(li);
             });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const results = await response.json();
-            displayResults(results);
-        } catch (error) {
-            console.error('There was a problem with the fetch operation:', error);
-        }
-    }
-
-    function displayResults(results) {
-        const resultsDiv = document.getElementById('results');
-        resultsDiv.innerHTML = '';
-
-        results.forEach(result => {
-            const resultDiv = document.createElement('div');
-            resultDiv.className = 'result-item';
-            resultDiv.textContent = JSON.stringify(result, null, 2);
-            resultsDiv.appendChild(resultDiv);
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
-    }
+    });
 </script>
 </body>
 </html>

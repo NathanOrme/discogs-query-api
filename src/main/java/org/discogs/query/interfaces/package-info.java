@@ -10,10 +10,14 @@
  * Interfaces in this package include:
  *
  * <ul>
- *     <li>{@link org.discogs.query.interfaces.HttpRequestService} - Defines methods for executing HTTP requests and handling responses.</li>
- *     <li>{@link org.discogs.query.interfaces.RateLimiterService} - Defines methods for managing rate limits and ensuring compliance with API quotas.</li>
- *     <li>{@link org.discogs.query.interfaces.RetryService} - Defines methods for executing actions with retry logic in case of failure.</li>
- *     <li>{@link org.discogs.query.interfaces.DiscogsQueryService} - Defines methods for general queries for the Discogs API</li>
+ *     <li>{@link org.discogs.query.interfaces.HttpRequestService} -
+ *     Defines methods for executing HTTP requests and handling responses.</li>
+ *     <li>{@link org.discogs.query.interfaces.RateLimiterService} -
+ *     Defines methods for managing rate limits and ensuring compliance with API quotas.</li>
+ *     <li>{@link org.discogs.query.interfaces.RetryService} -
+ *     Defines methods for executing actions with retry logic in case of failure.</li>
+ *     <li>{@link org.discogs.query.interfaces.DiscogsQueryService} -
+ *     Defines methods for general queries for the Discogs API</li>
  * </ul>
  */
 package org.discogs.query.interfaces;

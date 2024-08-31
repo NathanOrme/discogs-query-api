@@ -8,23 +8,23 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * This exception is used to signify an internal server error (HTTP 500) in the application.
  */
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-public class DiscogsAPIException extends RuntimeException {
+public class DiscogsMarketplaceException extends RuntimeException {
     /**
-     * Constructs a new {@link DiscogsAPIException} with the specified detail message.
+     * Constructs a new {@link DiscogsMarketplaceException} with the specified detail message.
      *
      * @param message the detail message for this exception
      */
-    public DiscogsAPIException(final String message) {
+    public DiscogsMarketplaceException(final String message) {
         super(message);
     }
 
     /**
-     * Constructs a new {@link DiscogsAPIException} with the specified detail message and cause.
+     * Constructs a new {@link DiscogsMarketplaceException} with the specified detail message and cause.
      *
      * @param message the detail message for this exception
      * @param e       the cause of this exception (a {@link Exception} that triggered this exception)
      */
-    public DiscogsAPIException(final String message, final Exception e) {
+    public DiscogsMarketplaceException(final String message, final Exception e) {
         super(message, e);
     }
 }

@@ -52,6 +52,16 @@ public class DiscogsEntry {
     private String uri;
 
     /**
+     * The country for the Discogs entry
+     */
+    private String country;
+
+    /**
+     * The year for the Discogs entry
+     */
+    private String year;
+
+    /**
      * Marks if on marketplace
      */
     private boolean isOnMarketplace;

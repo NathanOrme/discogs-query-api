@@ -6,8 +6,10 @@ import org.discogs.query.client.DiscogsAPIClient;
 import org.discogs.query.domain.DiscogsEntry;
 import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.enums.DiscogQueryParams;
-import org.discogs.query.enums.DiscogsFormats;
 import org.discogs.query.enums.DiscogsTypes;
+import org.discogs.query.exceptions.DiscogsMarketplaceException;
+import org.discogs.query.exceptions.DiscogsSearchException;
+import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.mapper.DiscogsResultMapper;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
@@ -56,22 +58,32 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
      */
     @Override
     public DiscogsResultDTO searchBasedOnQuery(final DiscogsQueryDTO discogsQueryDTO) {
+        DiscogsResultDTO discogsResultDTO = null;
         try {
             log.info("Processing query: {}", discogsQueryDTO);
             String searchUrl = buildSearchUrl(discogsQueryDTO);
             var results = discogsAPIClient.getResultsForQuery(searchUrl);
+            log.info("Received {} results from search API", results.getResults().size());
             correctUriForResultEntries(results);
-            results.getResults()
-                    .forEach(this::processOnMarketplace);
-            results.setResults(results.getResults().stream()
-                    .sorted(Comparator.comparing(DiscogsEntry::getLowestPrice))
-                    .toList());
+            discogsResultDTO = discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
+            results.getResults().forEach(this::processOnMarketplace);
+            orderResults(results);
             log.info("Finished all http requests for: {}", discogsQueryDTO);
             return discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
+        } catch (final DiscogsMarketplaceException | DiscogsSearchException e) {
+            log.error(UNEXPECTED_ISSUE_OCCURRED, e);
+            return discogsResultDTO;
         } catch (final Exception e) {
             log.error(UNEXPECTED_ISSUE_OCCURRED, e);
-            return null;
+            throw new DiscogsSearchException(UNEXPECTED_ISSUE_OCCURRED, e);
         }
+    }
+
+    private static void orderResults(final DiscogsResult results) {
+        results.setResults(results.getResults().stream()
+                .filter(entry -> entry.getLowestPrice() != null) // Filter entries with non-null lowestPrice
+                .sorted(Comparator.comparing(DiscogsEntry::getLowestPrice)) // Sort based on lowestPrice
+                .toList());
     }
 
     private void processOnMarketplace(final DiscogsEntry discogsEntry) {
@@ -90,14 +102,16 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
     }
 
     private String buildMarketplaceUrl(final DiscogsEntry discogsEntry) {
-        var baseUrl = discogsBaseUrl.concat(marketplaceCheck).concat(String.valueOf(discogsEntry.getId()));
+        var baseUrl = discogsBaseUrl.concat(marketplaceCheck)
+                .concat(String.valueOf(discogsEntry.getId()));
         baseUrl = baseUrl.concat("?token=").concat(token);
         return baseUrl;
     }
 
     private void correctUriForResultEntries(final DiscogsResult results) {
         if (results.getResults() != null) {
-            results.getResults().forEach(entry -> entry.setUri(discogsWebsiteBaseUrl.concat(entry.getUri())));
+            results.getResults().forEach(entry ->
+                    entry.setUri(discogsWebsiteBaseUrl.concat(entry.getUri())));
         }
     }
 
@@ -127,9 +141,6 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         }
         if (format != null && !format.isBlank()) {
             uriBuilder.queryParam(DiscogQueryParams.FORMAT.getQueryType(), format);
-        } else {
-            // Default format if not provided
-            uriBuilder.queryParam(DiscogQueryParams.FORMAT.getQueryType(), DiscogsFormats.LP.getFormat());
         }
         if (discogsQueryDTO.getTypes() != null) {
             uriBuilder.queryParam(DiscogQueryParams.TYPE.getQueryType(), discogsQueryDTO.getTypes());

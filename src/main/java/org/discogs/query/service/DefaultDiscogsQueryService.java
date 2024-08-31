@@ -27,6 +27,7 @@ import java.util.Comparator;
 @RequiredArgsConstructor
 public class DefaultDiscogsQueryService implements DiscogsQueryService {
 
+    public static final String UNEXPECTED_ISSUE_OCCURRED = "Unexpected issue occurred";
     @Value("${discogs.url}")
     private String discogsBaseUrl;
 
@@ -68,8 +69,8 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
                     .toList());
             return discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
         } catch (final Exception e) {
-            log.error("Unexpected issue occurred", e);
-            throw new DiscogsAPIException("Unexpected issue occurred", e);
+            log.error(UNEXPECTED_ISSUE_OCCURRED, e);
+            throw new DiscogsAPIException(UNEXPECTED_ISSUE_OCCURRED, e);
         }
     }
 
@@ -82,8 +83,8 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
                     ? marketplaceResults.getResult().getValue()
                     : Float.parseFloat("0"));
         } catch (final Exception e) {
-            log.error("Unexpected issue occurred", e);
-            throw new DiscogsAPIException("Unexpected issue occurred", e);
+            log.error(UNEXPECTED_ISSUE_OCCURRED, e);
+            throw new DiscogsAPIException(UNEXPECTED_ISSUE_OCCURRED, e);
         }
     }
 
@@ -126,7 +127,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
             uriBuilder.queryParam(DiscogQueryParams.FORMAT.getQueryType(), format);
         } else {
             // Default format if not provided
-            uriBuilder.queryParam(DiscogQueryParams.FORMAT.getQueryType(), DiscogsFormats.VINYL_COMPILATION.getFormat());
+            uriBuilder.queryParam(DiscogQueryParams.FORMAT.getQueryType(), DiscogsFormats.LP.getFormat());
         }
         if (discogsQueryDTO.getTypes() != null) {
             uriBuilder.queryParam(DiscogQueryParams.TYPE.getQueryType(), discogsQueryDTO.getTypes());

@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.client.DiscogsAPIClient;
 import org.discogs.query.domain.DiscogsEntry;
 import org.discogs.query.domain.DiscogsResult;
-import org.discogs.query.enums.DiscogFormats;
 import org.discogs.query.enums.DiscogQueryParams;
+import org.discogs.query.enums.DiscogsFormats;
 import org.discogs.query.enums.DiscogsTypes;
 import org.discogs.query.exceptions.DiscogsAPIException;
 import org.discogs.query.mapper.DiscogsResultMapper;
@@ -16,10 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Implementation of {@link DiscogsQueryService} that interacts with the Discogs API.
@@ -30,6 +27,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DefaultDiscogsQueryService implements DiscogsQueryService {
 
+    public static final String UNEXPECTED_ISSUE_OCCURRED = "Unexpected issue occurred";
     @Value("${discogs.url}")
     private String discogsBaseUrl;
 
@@ -71,8 +69,8 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
                     .toList());
             return discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
         } catch (final Exception e) {
-            log.error("Unexpected issue occurred", e);
-            throw new DiscogsAPIException("Unexpected issue occurred", e);
+            log.error(UNEXPECTED_ISSUE_OCCURRED, e);
+            throw new DiscogsAPIException(UNEXPECTED_ISSUE_OCCURRED, e);
         }
     }
 
@@ -85,8 +83,8 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
                     ? marketplaceResults.getResult().getValue()
                     : Float.parseFloat("0"));
         } catch (final Exception e) {
-            log.error("Unexpected issue occurred", e);
-            throw new DiscogsAPIException("Unexpected issue occurred", e);
+            log.error(UNEXPECTED_ISSUE_OCCURRED, e);
+            throw new DiscogsAPIException(UNEXPECTED_ISSUE_OCCURRED, e);
         }
     }
 
@@ -98,9 +96,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
 
     private void correctUriForResultEntries(final DiscogsResult results) {
         if (results.getResults() != null) {
-            List<DiscogsEntry> uniqueEntries = filterUniqueEntriesByMasterUrl(results.getResults());
-            uniqueEntries.forEach(entry -> entry.setUri(discogsWebsiteBaseUrl.concat(entry.getUri())));
-            results.setResults(uniqueEntries);
+            results.getResults().forEach(entry -> entry.setUri(discogsWebsiteBaseUrl.concat(entry.getUri())));
         }
     }
 
@@ -113,22 +109,28 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
     private String buildSearchUrl(final DiscogsQueryDTO discogsQueryDTO) {
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(discogsBaseUrl + discogsSearchEndpoint);
 
+        String artist = discogsQueryDTO.getArtist();
+        String album = discogsQueryDTO.getAlbum();
+        String track = discogsQueryDTO.getTrack();
+        String format = discogsQueryDTO.getFormat();
         // Add parameters only if they are not null or empty
-        if (discogsQueryDTO.getArtist() != null && !discogsQueryDTO.getArtist().isBlank()) {
-            uriBuilder.queryParam(DiscogQueryParams.ARTIST.getQueryType(), discogsQueryDTO.getArtist());
+        if (artist != null && !artist.isBlank()) {
+            uriBuilder.queryParam(DiscogQueryParams.ARTIST.getQueryType(), artist);
         }
-
-        if (discogsQueryDTO.getTrack() != null && !discogsQueryDTO.getTrack().isBlank()) {
-            uriBuilder.queryParam(DiscogQueryParams.TRACK.getQueryType(), discogsQueryDTO.getTrack());
+        if (album != null && !album.isBlank()) {
+            uriBuilder.queryParam(DiscogQueryParams.ALBUM.getQueryType(), album);
         }
-        if (discogsQueryDTO.getFormat() != null && !discogsQueryDTO.getFormat().isBlank()) {
-            uriBuilder.queryParam(DiscogQueryParams.FORMAT.getQueryType(), discogsQueryDTO.getFormat());
+        if (track != null && !track.isBlank()) {
+            uriBuilder.queryParam(DiscogQueryParams.TRACK.getQueryType(), track);
+        }
+        if (format != null && !format.isBlank()) {
+            uriBuilder.queryParam(DiscogQueryParams.FORMAT.getQueryType(), format);
         } else {
             // Default format if not provided
-            uriBuilder.queryParam(DiscogQueryParams.FORMAT.getQueryType(), DiscogFormats.VINYL_COMPILATION.getFormat());
+            uriBuilder.queryParam(DiscogQueryParams.FORMAT.getQueryType(), DiscogsFormats.LP.getFormat());
         }
-        if (discogsQueryDTO.getFormat() != null && !discogsQueryDTO.getFormat().isBlank()) {
-            uriBuilder.queryParam(DiscogQueryParams.TYPE.getQueryType(), discogsQueryDTO.getFormat());
+        if (discogsQueryDTO.getTypes() != null) {
+            uriBuilder.queryParam(DiscogQueryParams.TYPE.getQueryType(), discogsQueryDTO.getTypes());
         } else {
             // Default format if not provided
             uriBuilder.queryParam(DiscogQueryParams.TYPE.getQueryType(), DiscogsTypes.RELEASE.getType());
@@ -145,20 +147,4 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         return url;
     }
 
-    /**
-     * Filters entries to ensure that each master URL is unique.
-     *
-     * @param entries the list of entries to filter
-     * @return a list of unique entries
-     */
-    private List<DiscogsEntry> filterUniqueEntriesByMasterUrl(final List<DiscogsEntry> entries) {
-        return new ArrayList<>(entries.stream()
-                .filter(entry -> entry.getUrl() != null)
-                .collect(Collectors.toMap(
-                        DiscogsEntry::getUrl,
-                        entry -> entry,
-                        (existing, replacement) -> existing
-                ))
-                .values());
-    }
 }

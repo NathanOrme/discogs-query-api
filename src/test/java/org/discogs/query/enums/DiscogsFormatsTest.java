@@ -4,14 +4,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class DiscogFormatsTest {
+class DiscogsFormatsTest {
 
     @Test
     void testEnumValues() {
         // Arrange
-        DiscogFormats vinyl = DiscogFormats.VINYL;
-        DiscogFormats comp = DiscogFormats.COMP;
-        DiscogFormats vinylCompilation = DiscogFormats.VINYL_COMPILATION;
+        DiscogsFormats vinyl = DiscogsFormats.VINYL;
+        DiscogsFormats comp = DiscogsFormats.COMP;
+        DiscogsFormats vinylCompilation = DiscogsFormats.VINYL_COMPILATION;
 
         // Act & Assert
         assertEquals("vinyl", vinyl.getFormat(), "The format for VINYL should be 'vinyl'");

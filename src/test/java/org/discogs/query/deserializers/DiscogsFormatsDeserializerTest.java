@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import org.discogs.query.enums.DiscogFormats;
+import org.discogs.query.enums.DiscogsFormats;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -27,7 +27,7 @@ class DiscogsFormatsDeserializerTest {
         deserializer = new DiscogsFormatsDeserializer();
         objectMapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
-        module.addDeserializer(DiscogFormats.class, deserializer);
+        module.addDeserializer(DiscogsFormats.class, deserializer);
         objectMapper.registerModule(module);
     }
 
@@ -38,9 +38,9 @@ class DiscogsFormatsDeserializerTest {
 
         Mockito.when(parser.getText()).thenReturn("VINYL");
 
-        DiscogFormats result = deserializer.deserialize(parser, context);
+        DiscogsFormats result = deserializer.deserialize(parser, context);
 
-        assertEquals(DiscogFormats.VINYL, result, "Deserialization should convert 'VINYL' to DiscogFormats.VINYL");
+        assertEquals(DiscogsFormats.VINYL, result, "Deserialization should convert 'VINYL' to DiscogFormats.VINYL");
     }
 
     @Test
@@ -50,7 +50,7 @@ class DiscogsFormatsDeserializerTest {
 
         Mockito.when(parser.getText()).thenReturn(null);
 
-        DiscogFormats result = deserializer.deserialize(parser, context);
+        DiscogsFormats result = deserializer.deserialize(parser, context);
 
         assertNull(result, "Deserialization of null should return null");
     }
@@ -62,7 +62,7 @@ class DiscogsFormatsDeserializerTest {
 
         Mockito.when(parser.getText()).thenReturn("");
 
-        DiscogFormats result = deserializer.deserialize(parser, context);
+        DiscogsFormats result = deserializer.deserialize(parser, context);
 
         assertNull(result, "Deserialization of an empty string should return null");
     }
@@ -74,7 +74,7 @@ class DiscogsFormatsDeserializerTest {
 
         Mockito.when(parser.getText()).thenReturn("UNKNOWN_FORMAT");
 
-        DiscogFormats result = deserializer.deserialize(parser, context);
+        DiscogsFormats result = deserializer.deserialize(parser, context);
 
         assertNull(result, "Deserialization of an invalid value should return null");
     }

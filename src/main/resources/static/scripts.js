@@ -9,7 +9,10 @@ const discogsTypes = [
 const discogFormats = [
     { value: '', text: 'Any Format' },
     { value: 'vinyl', text: 'Vinyl' },
+    { value: 'album', text: 'album' },
+    { value: 'lp', text: 'lp' },
     { value: 'compilation', text: 'Compilation' },
+    { value: 'album vinyl', text: 'album vinyl' },
     { value: 'compilation vinyl', text: 'Compilation Vinyl' }
 ];
 
@@ -36,6 +39,9 @@ function createQueryFields(isFirstQuery = false) {
     queryContent.innerHTML = `
         <label for="artist">Artist:</label>
         <input type="text" class="artist" name="artist" required>
+
+        <label for="album">Album:</label>
+        <input type="text" class="album" name="album" required>
 
         <label for="track">Track (optional):</label>
         <input type="text" class="track" name="track">
@@ -80,12 +86,14 @@ document.getElementById('searchForm').addEventListener('submit', function(event)
 
     const queries = Array.from(document.querySelectorAll('.query')).map(queryDiv => {
         const artist = queryDiv.querySelector('.artist').value;
-        const track = queryDiv.querySelector('.track').value || null; // Make track optional
+        const album = queryDiv.querySelector('.album').value || null;
+        const track = queryDiv.querySelector('.track').value || null;
         const format = queryDiv.querySelector('.format').value || null;
         const types = queryDiv.querySelector('.types').value || null;
 
         return {
             artist: artist,
+            album: album,
             track: track,
             format: format,
             types: types

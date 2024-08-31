@@ -96,6 +96,7 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
         HttpHeaders headers = buildHeaders();
         HttpEntity<Void> entity = new HttpEntity<>(headers);
         try {
+            Thread.sleep(2000);
             var response = restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
             logApiResponse(response);
             return Optional.ofNullable(response.getBody())

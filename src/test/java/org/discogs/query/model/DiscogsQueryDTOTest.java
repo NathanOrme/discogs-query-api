@@ -59,25 +59,6 @@ class DiscogsQueryDTOTest {
     }
 
     @Test
-    void testInvalidDiscogsQueryDTO_EmptyTrack() {
-        // Arrange
-        DiscogsQueryDTO queryDTO = DiscogsQueryDTO.builder()
-                .artist("The Beatles")
-                .track("")
-                .format("Vinyl")
-                .build();
-
-        // Act
-        Set<ConstraintViolation<DiscogsQueryDTO>> violations = validator.validate(queryDTO);
-
-        // Assert
-        assertEquals(1, violations.size(), "There should be one validation violation");
-        ConstraintViolation<DiscogsQueryDTO> violation = violations.iterator().next();
-        assertEquals("must not be blank", violation.getMessage(), "Track field should not be blank");
-        assertEquals("track", violation.getPropertyPath().toString(), "Violation should be on the track field");
-    }
-
-    @Test
     void testValidDiscogsQueryDTO_WithoutFormat() {
         // Arrange
         DiscogsQueryDTO queryDTO = DiscogsQueryDTO.builder()

@@ -11,9 +11,6 @@ COPY src ./src
 # Package the application (This will compile the code and build the JAR)
 RUN mvn clean package -DskipTests
 
-# Run the JAR file
-ENTRYPOINT ["java", "-jar", "/app/your-app.jar"]
-
 # Use a base image that won't interfere with buildpacks
 FROM openjdk:17-jdk-slim
 

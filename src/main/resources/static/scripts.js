@@ -92,6 +92,8 @@ document.getElementById('searchForm').addEventListener('submit', function(event)
         };
     });
 
+    console.log('Submitting Queries:', queries); // Debugging line
+
     const loadingSpinner = document.getElementById('loading');
     const searchButton = document.getElementById('searchButton');
 

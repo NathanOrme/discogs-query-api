@@ -40,8 +40,8 @@ function createQueryFields(isFirstQuery = false) {
         <label for="artist">Artist:</label>
         <input type="text" class="artist" name="artist" required>
 
-        <label for="album">Album:</label>
-        <input type="text" class="album" name="album" required>
+        <label for="album">Album (optional):</label>
+        <input type="text" class="album" name="album">
 
         <label for="track">Track (optional):</label>
         <input type="text" class="track" name="track">

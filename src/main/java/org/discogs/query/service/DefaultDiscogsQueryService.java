@@ -113,22 +113,28 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
     private String buildSearchUrl(final DiscogsQueryDTO discogsQueryDTO) {
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(discogsBaseUrl + discogsSearchEndpoint);
 
+        String artist = discogsQueryDTO.getArtist();
+        String album = discogsQueryDTO.getAlbum();
+        String track = discogsQueryDTO.getTrack();
+        String format = discogsQueryDTO.getFormat();
         // Add parameters only if they are not null or empty
-        if (discogsQueryDTO.getArtist() != null && !discogsQueryDTO.getArtist().isBlank()) {
-            uriBuilder.queryParam(DiscogQueryParams.ARTIST.getQueryType(), discogsQueryDTO.getArtist());
+        if (artist != null && !artist.isBlank()) {
+            uriBuilder.queryParam(DiscogQueryParams.ARTIST.getQueryType(), artist);
         }
-
-        if (discogsQueryDTO.getTrack() != null && !discogsQueryDTO.getTrack().isBlank()) {
-            uriBuilder.queryParam(DiscogQueryParams.TRACK.getQueryType(), discogsQueryDTO.getTrack());
+        if (album != null && !album.isBlank()) {
+            uriBuilder.queryParam(DiscogQueryParams.ALBUM.getQueryType(), album);
         }
-        if (discogsQueryDTO.getFormat() != null && !discogsQueryDTO.getFormat().isBlank()) {
-            uriBuilder.queryParam(DiscogQueryParams.FORMAT.getQueryType(), discogsQueryDTO.getFormat());
+        if (track != null && !track.isBlank()) {
+            uriBuilder.queryParam(DiscogQueryParams.TRACK.getQueryType(), track);
+        }
+        if (format != null && !format.isBlank()) {
+            uriBuilder.queryParam(DiscogQueryParams.FORMAT.getQueryType(), format);
         } else {
             // Default format if not provided
             uriBuilder.queryParam(DiscogQueryParams.FORMAT.getQueryType(), DiscogFormats.VINYL_COMPILATION.getFormat());
         }
-        if (discogsQueryDTO.getFormat() != null && !discogsQueryDTO.getFormat().isBlank()) {
-            uriBuilder.queryParam(DiscogQueryParams.TYPE.getQueryType(), discogsQueryDTO.getFormat());
+        if (discogsQueryDTO.getTypes() != null) {
+            uriBuilder.queryParam(DiscogQueryParams.TYPE.getQueryType(), discogsQueryDTO.getTypes());
         } else {
             // Default format if not provided
             uriBuilder.queryParam(DiscogQueryParams.TYPE.getQueryType(), DiscogsTypes.RELEASE.getType());

@@ -32,7 +32,12 @@ public enum DiscogQueryParams {
     /**
      * Represents the "type" query parameter.
      */
-    TYPE("type");
+    TYPE("type"),
+
+    /**
+     * Represents the "album" query parameter
+     */
+    ALBUM("release_title");
 
     /**
      * The query type string associated with the enum constant.

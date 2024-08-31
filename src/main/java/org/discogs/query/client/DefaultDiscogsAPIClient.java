@@ -57,7 +57,8 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
      */
     @Override
     public DiscogsMarketplaceResult checkIsOnMarketplace(final String url) {
-        return executeWithRateLimitAndRetry(() -> httpRequestService.executeRequest(url, DiscogsMarketplaceResult.class),
+        return executeWithRateLimitAndRetry(() ->
+                        httpRequestService.executeRequest(url, DiscogsMarketplaceResult.class),
                 "Discogs Marketplace API Request");
     }
 

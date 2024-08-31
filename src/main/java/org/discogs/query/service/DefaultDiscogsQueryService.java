@@ -65,8 +65,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
             var results = discogsAPIClient.getResultsForQuery(searchUrl);
             correctUriForResultEntries(results);
             discogsResultDTO = discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
-            results.getResults()
-                    .forEach(this::processOnMarketplace);
+            results.getResults().forEach(this::processOnMarketplace);
             orderResults(results);
             log.info("Finished all http requests for: {}", discogsQueryDTO);
             return discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
@@ -102,14 +101,16 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
     }
 
     private String buildMarketplaceUrl(final DiscogsEntry discogsEntry) {
-        var baseUrl = discogsBaseUrl.concat(marketplaceCheck).concat(String.valueOf(discogsEntry.getId()));
+        var baseUrl = discogsBaseUrl.concat(marketplaceCheck)
+                .concat(String.valueOf(discogsEntry.getId()));
         baseUrl = baseUrl.concat("?token=").concat(token);
         return baseUrl;
     }
 
     private void correctUriForResultEntries(final DiscogsResult results) {
         if (results.getResults() != null) {
-            results.getResults().forEach(entry -> entry.setUri(discogsWebsiteBaseUrl.concat(entry.getUri())));
+            results.getResults().forEach(entry ->
+                    entry.setUri(discogsWebsiteBaseUrl.concat(entry.getUri())));
         }
     }
 

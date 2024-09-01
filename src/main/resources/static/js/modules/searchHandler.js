@@ -34,7 +34,7 @@ function handleSearchFormSubmit(event) {
     searchButton.disabled = true;
     loadingSpinner.style.display = 'block';
 
-    fetch('http://localhost:9090/discogs-query/search', {
+    fetch('https://discogs-query-api.onrender.com/discogs-query/search', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

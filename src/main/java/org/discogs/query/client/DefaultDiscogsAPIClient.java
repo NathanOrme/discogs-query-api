@@ -9,8 +9,8 @@ import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.interfaces.HttpRequestService;
 import org.discogs.query.interfaces.RateLimiterService;
 import org.discogs.query.interfaces.RetryService;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
 
 import java.util.concurrent.Callable;
 
@@ -19,16 +19,14 @@ import java.util.concurrent.Callable;
  * <p>
  * This class uses {@link HttpRequestService} to send HTTP requests to the Discogs API,
  * handles responses, and manages retries and rate limits using {@link RetryService}
- * and {@link RateLimiterService}.
+ * and {@link RateLimiterService}. It leverages Spring's caching abstraction with Caffeine
+ * to cache API responses for improved performance.
  * </p>
  */
 @Slf4j
-@Component
+@Service
 @RequiredArgsConstructor
 public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
-
-    @Value("${discogs.agent}")
-    private String discogsAgent;
 
     private final HttpRequestService httpRequestService;
     private final RateLimiterService rateLimiterService;
@@ -36,11 +34,15 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
 
     /**
      * Retrieves results from the Discogs API for a given search URL.
+     * <p>
+     * This method is cached using Spring's caching abstraction with Caffeine.
+     * </p>
      *
      * @param searchUrl the URL to query the Discogs API
      * @return an instance of {@link DiscogsResult} containing the API response data
      * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API
      */
+    @Cacheable(value = "discogsResults", key = "#searchUrl")
     @Override
     public DiscogsResult getResultsForQuery(final String searchUrl) {
         return executeWithRateLimitAndRetry(() -> httpRequestService.executeRequest(searchUrl, DiscogsResult.class),
@@ -49,11 +51,15 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
 
     /**
      * Retrieves a string result from the Discogs API for a given search URL.
+     * <p>
+     * This method is cached using Spring's caching abstraction with Caffeine.
+     * </p>
      *
      * @param searchUrl the URL to query the Discogs API
      * @return a {@link String} containing the API response data
      * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API
      */
+    @Cacheable(value = "stringResults", key = "#searchUrl")
     @Override
     public String getStringResultForQuery(final String searchUrl) {
         return executeWithRateLimitAndRetry(() -> httpRequestService.executeRequest(searchUrl, String.class),
@@ -62,16 +68,18 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
 
     /**
      * Checks whether the given item is listed on the Discogs Marketplace.
-     * This method sends an HTTP GET request to the provided URL and returns the marketplace details.
+     * <p>
+     * This method is cached using Spring's caching abstraction with Caffeine.
+     * </p>
      *
      * @param url the URL pointing to the item on the Discogs Marketplace
      * @return a {@link DiscogsMarketplaceResult} object containing the details of the item on the marketplace
      * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API
      */
+    @Cacheable(value = "marketplaceResults", key = "#url")
     @Override
     public DiscogsMarketplaceResult checkIsOnMarketplace(final String url) {
-        return executeWithRateLimitAndRetry(() -> httpRequestService
-                        .executeRequest(url, DiscogsMarketplaceResult.class),
+        return executeWithRateLimitAndRetry(() -> httpRequestService.executeRequest(url, DiscogsMarketplaceResult.class),
                 "Discogs Marketplace API Request");
     }
 

@@ -60,14 +60,14 @@ public class DefaultScheduledTaskService implements ScheduledTaskService {
 
     /**
      * Sends an HTTP POST request to the {@link #URL} with the predefined {@link #payload}. The method is scheduled
-     * to run every 45 minutes, as specified by the {@link Scheduled} annotation.
+     * to run every 14 minutes, as specified by the {@link Scheduled} annotation.
      *
      * <p>This method sets the content type of the request to {@code application/json} and handles the response
      * by logging the status and body of the response. In case of an error during the request, the error message
      * is logged.
      */
     @Override
-    @Scheduled(fixedRate = 45, timeUnit = TimeUnit.MINUTES)
+    @Scheduled(fixedRate = 14, timeUnit = TimeUnit.MINUTES)
     public void sendRequest() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);

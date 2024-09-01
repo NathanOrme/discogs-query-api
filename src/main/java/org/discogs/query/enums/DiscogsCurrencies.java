@@ -8,7 +8,6 @@ import lombok.Getter;
  * <p>
  * This enum provides predefined constants for various currencies, such as GBP (British Pound) and USD (US Dollar).
  * Each constant is associated with a currency code string that represents its name in the Discogs API.
- * </p>
  */
 @Getter
 @AllArgsConstructor

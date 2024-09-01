@@ -14,7 +14,6 @@ import java.util.concurrent.TimeUnit;
  * This class is annotated with {@link Configuration},
  * indicating that it provides Spring configuration.
  * It defines a {@link CacheManager} bean that uses Caffeine for caching.
- * </p>
  */
 @Configuration
 public class CacheConfig {
@@ -27,7 +26,6 @@ public class CacheConfig {
      *     <li>Cache entries will expire 10 minutes after they are written.</li>
      *     <li>The cache will have a maximum size of 1000 entries.</li>
      * </ul>
-     * </p>
      *
      * @return a configured {@link CacheManager} instance
      */

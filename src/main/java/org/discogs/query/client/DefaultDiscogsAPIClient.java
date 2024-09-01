@@ -21,7 +21,6 @@ import java.util.concurrent.Callable;
  * handles responses, and manages retries and rate limits using {@link RetryService}
  * and {@link RateLimiterService}. It leverages Spring's caching abstraction with Caffeine
  * to cache API responses for improved performance.
- * </p>
  */
 @Slf4j
 @Service
@@ -38,7 +37,6 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
      * Retrieves results from the Discogs API for a given search URL.
      * <p>
      * This method is cached using Spring's caching abstraction with Caffeine.
-     * </p>
      *
      * @param searchUrl the URL to query the Discogs API
      * @return an instance of {@link DiscogsResult} containing the API response data
@@ -56,7 +54,6 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
      * Retrieves a string result from the Discogs API for a given search URL.
      * <p>
      * This method is cached using Spring's caching abstraction with Caffeine.
-     * </p>
      *
      * @param searchUrl the URL to query the Discogs API
      * @return a {@link String} containing the API response data
@@ -74,7 +71,6 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
      * Checks whether the given item is listed on the Discogs Marketplace.
      * <p>
      * This method is cached using Spring's caching abstraction with Caffeine.
-     * </p>
      *
      * @param url the URL pointing to the item on the Discogs Marketplace
      * @return a {@link DiscogsMarketplaceResult} object containing the details of the item on the marketplace
@@ -94,7 +90,6 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
      * <p>
      * This method ensures the rate limit is respected before executing the action and retries the action
      * in case of failure.
-     * </p>
      *
      * @param action            the callable action to be executed
      * @param actionDescription a description of the action being performed

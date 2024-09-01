@@ -8,7 +8,6 @@ import lombok.Getter;
  * <p>
  * This enum provides predefined constants for various query parameters, such as track, format, artist, and type.
  * Each constant is associated with a query type string that represents its name in the Discogs API.
- * </p>
  */
 @Getter
 @AllArgsConstructor

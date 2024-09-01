@@ -10,7 +10,6 @@ import lombok.Getter;
  * such as Vinyl, Compilation, and Vinyl Compilation.
  * Each constant is associated with a format string
  * that represents its name in the Discogs API.
- * </p>
  */
 @Getter
 @AllArgsConstructor

@@ -9,7 +9,6 @@ import org.discogs.query.domain.DiscogsResult;
  * This interface defines methods for querying the Discogs API and retrieving results in different formats.
  * Implementations of this interface should handle the specifics of making HTTP requests to the Discogs API
  * and processing the responses.
- * </p>
  */
 public interface DiscogsAPIClient {
 

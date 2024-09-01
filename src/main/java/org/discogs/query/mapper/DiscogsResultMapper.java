@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
  * <p>
  * This class uses {@link ModelMapper} to facilitate the transformation of
  * domain objects into their respective Data Transfer Objects (DTOs).
- * </p>
  */
 @Component
 public class DiscogsResultMapper {

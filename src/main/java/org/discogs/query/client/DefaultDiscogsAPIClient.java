@@ -9,8 +9,8 @@ import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.interfaces.HttpRequestService;
 import org.discogs.query.interfaces.RateLimiterService;
 import org.discogs.query.interfaces.RetryService;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
 
 import java.util.concurrent.Callable;
 
@@ -19,16 +19,15 @@ import java.util.concurrent.Callable;
  * <p>
  * This class uses {@link HttpRequestService} to send HTTP requests to the Discogs API,
  * handles responses, and manages retries and rate limits using {@link RetryService}
- * and {@link RateLimiterService}.
- * </p>
+ * and {@link RateLimiterService}. It leverages Spring's caching abstraction with Caffeine
+ * to cache API responses for improved performance.
  */
 @Slf4j
-@Component
+@Service
 @RequiredArgsConstructor
 public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
 
-    @Value("${discogs.agent}")
-    private String discogsAgent;
+    public static final String CACHE_MISS_FOR_SEARCH_URL = "Cache miss for searchUrl: {}";
 
     private final HttpRequestService httpRequestService;
     private final RateLimiterService rateLimiterService;
@@ -36,40 +35,51 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
 
     /**
      * Retrieves results from the Discogs API for a given search URL.
+     * <p>
+     * This method is cached using Spring's caching abstraction with Caffeine.
      *
      * @param searchUrl the URL to query the Discogs API
      * @return an instance of {@link DiscogsResult} containing the API response data
      * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API
      */
+    @Cacheable(value = "discogsResults", key = "#searchUrl")
     @Override
     public DiscogsResult getResultsForQuery(final String searchUrl) {
+        log.info(CACHE_MISS_FOR_SEARCH_URL, searchUrl);
         return executeWithRateLimitAndRetry(() -> httpRequestService.executeRequest(searchUrl, DiscogsResult.class),
                 "Discogs Search API Request");
     }
 
     /**
      * Retrieves a string result from the Discogs API for a given search URL.
+     * <p>
+     * This method is cached using Spring's caching abstraction with Caffeine.
      *
      * @param searchUrl the URL to query the Discogs API
      * @return a {@link String} containing the API response data
      * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API
      */
+    @Cacheable(value = "stringResults", key = "#searchUrl")
     @Override
     public String getStringResultForQuery(final String searchUrl) {
+        log.info(CACHE_MISS_FOR_SEARCH_URL, searchUrl);
         return executeWithRateLimitAndRetry(() -> httpRequestService.executeRequest(searchUrl, String.class),
                 "Discogs Search API Request");
     }
 
     /**
      * Checks whether the given item is listed on the Discogs Marketplace.
-     * This method sends an HTTP GET request to the provided URL and returns the marketplace details.
+     * <p>
+     * This method is cached using Spring's caching abstraction with Caffeine.
      *
      * @param url the URL pointing to the item on the Discogs Marketplace
      * @return a {@link DiscogsMarketplaceResult} object containing the details of the item on the marketplace
      * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API
      */
+    @Cacheable(value = "marketplaceResults", key = "#url")
     @Override
     public DiscogsMarketplaceResult checkIsOnMarketplace(final String url) {
+        log.info("Cache miss for url: {}", url);
         return executeWithRateLimitAndRetry(() -> httpRequestService
                         .executeRequest(url, DiscogsMarketplaceResult.class),
                 "Discogs Marketplace API Request");
@@ -80,7 +90,6 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
      * <p>
      * This method ensures the rate limit is respected before executing the action and retries the action
      * in case of failure.
-     * </p>
      *
      * @param action            the callable action to be executed
      * @param actionDescription a description of the action being performed

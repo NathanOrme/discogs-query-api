@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.discogs.query.enums.DiscogCountries;
 import org.discogs.query.enums.DiscogsTypes;
 
 /**
@@ -43,6 +44,11 @@ public class DiscogsQueryDTO {
      * The format of the track (e.g., vinyl, CD, etc.). This field is optional.
      */
     private String format;
+
+    /**
+     * The country for the Discogs entry
+     */
+    private DiscogCountries country;
 
     /**
      * Type of results we want to filter by.

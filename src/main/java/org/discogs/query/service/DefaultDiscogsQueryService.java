@@ -137,6 +137,8 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
                 DiscogQueryParams.TRACK.getQueryType(), discogsQueryDTO.getTrack());
         uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
                 DiscogQueryParams.FORMAT.getQueryType(), discogsQueryDTO.getFormat());
+        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
+                DiscogQueryParams.COUNTRY.getQueryType(), discogsQueryDTO.getCountry().getCountryName());
 
         DiscogsTypes types = discogsQueryDTO.getTypes();
         if (types == null || DiscogsTypes.UNKNOWN == types) {

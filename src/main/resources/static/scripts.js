@@ -16,6 +16,80 @@ const discogFormats = [
     { value: 'compilation vinyl', text: 'Compilation Vinyl' }
 ];
 
+// Enum values for DiscogCountries
+const discogCountries = [
+    { value: '', text: 'Any Country' },
+    { value: 'EUROPE', text: 'Europe' },
+    { value: 'UK', text: 'UK' },
+    { value: 'US', text: 'US' },
+    { value: 'COSTA_RICA', text: 'Costa Rica' },
+    { value: 'CUBA', text: 'Cuba' },
+    { value: 'ISRAEL', text: 'Israel' },
+    { value: 'BRAZIL', text: 'Brazil' },
+    { value: 'GREECE', text: 'Greece' },
+    { value: 'URUGUAY', text: 'Uruguay' },
+    { value: 'LATVIA', text: 'Latvia' },
+    { value: 'AUSTRIA', text: 'Austria' },
+    { value: 'ALBANIA', text: 'Albania' },
+    { value: 'AUSTRALIA', text: 'Australia' },
+    { value: 'NEW_ZEALAND', text: 'New Zealand' },
+    { value: 'PARAGUAY', text: 'Paraguay' },
+    { value: 'PERU', text: 'Peru' },
+    { value: 'HUNGARY', text: 'Hungary' },
+    { value: 'NETHERLANDS', text: 'Netherlands' },
+    { value: 'CANADA', text: 'Canada' },
+    { value: 'HONG_KONG', text: 'Hong Kong' },
+    { value: 'TRINIDAD', text: 'Trinidad' },
+    { value: 'TOBAGO', text: 'Tobago' },
+    { value: 'ESTONIA', text: 'Estonia' },
+    { value: 'FIJI', text: 'Fiji' },
+    { value: 'PHILIPPINES', text: 'Philippines' },
+    { value: 'GERMANY', text: 'Germany' },
+    { value: 'GEORGIA', text: 'Georgia' },
+    { value: 'NORWAY', text: 'Norway' },
+    { value: 'CROATIA', text: 'Croatia' },
+    { value: 'IRELAND', text: 'Ireland' },
+    { value: 'INDIA', text: 'India' },
+    { value: 'JAPAN', text: 'Japan' },
+    { value: 'INDONESIA', text: 'Indonesia' },
+    { value: 'DENMARK', text: 'Denmark' },
+    { value: 'SOUTH_KOREA', text: 'South Korea' },
+    { value: 'LITHUANIA', text: 'Lithuania' },
+    { value: 'MALAYSIA', text: 'Malaysia' },
+    { value: 'CHINA', text: 'China' },
+    { value: 'KENYA', text: 'Kenya' },
+    { value: 'TURKEY', text: 'Turkey' },
+    { value: 'BULGARIA', text: 'Bulgaria' },
+    { value: 'TAIWAN', text: 'Taiwan' },
+    { value: 'SWEDEN', text: 'Sweden' },
+    { value: 'FINLAND', text: 'Finland' },
+    { value: 'ICELAND', text: 'Iceland' },
+    { value: 'CZECH_REPUBLIC', text: 'Czech Republic' },
+    { value: 'RUSSIAN_FEDERATION', text: 'Russian Federation' },
+    { value: 'BELGIUM', text: 'Belgium' },
+    { value: 'FRANCE', text: 'France' },
+    { value: 'LUXEMBOURG', text: 'Luxembourg' },
+    { value: 'MEXICO', text: 'Mexico' },
+    { value: 'VENEZUELA', text: 'Venezuela' },
+    { value: 'ARGENTINA', text: 'Argentina' },
+    { value: 'SOUTH_AFRICA', text: 'South Africa' },
+    { value: 'COLOMBIA', text: 'Colombia' },
+    { value: 'SLOVENIA', text: 'Slovenia' },
+    { value: 'CHILE', text: 'Chile' },
+    { value: 'ITALY', text: 'Italy' },
+    { value: 'THE_VATICAN', text: 'The Vatican' },
+    { value: 'SAN_MARINO', text: 'San Marino' },
+    { value: 'SERBIA', text: 'Serbia' },
+    { value: 'MONTENEGRO', text: 'Montenegro' },
+    { value: 'SLOVAKIA', text: 'Slovakia' },
+    { value: 'PORTUGAL', text: 'Portugal' },
+    { value: 'SWITZERLAND', text: 'Switzerland' },
+    { value: 'LIECHTENSTEIN', text: 'Liechtenstein' },
+    { value: 'UKRAINE', text: 'Ukraine' },
+    { value: 'ROMANIA', text: 'Romania' },
+    { value: 'POLAND', text: 'Poland' }
+];
+
 const queriesContainer = document.getElementById('queriesContainer');
 const addQueryButton = document.getElementById('addQueryButton');
 
@@ -49,6 +123,11 @@ function createQueryFields(isFirstQuery = false) {
         <label for="format">Format (optional):</label>
         <select class="format" name="format">
             ${discogFormats.map(format => `<option value="${format.value}">${format.text}</option>`).join('')}
+        </select>
+
+        <label for="country">Country (optional):</label>
+        <select class="country" name="country">
+            ${discogCountries.map(country => `<option value="${country.value}">${country.text}</option>`).join('')}
         </select>
 
         <label for="types">Types (optional):</label>
@@ -92,6 +171,7 @@ document.getElementById('searchForm').addEventListener('submit', function(event)
         const album = queryDiv.querySelector('.album').value || null;
         const track = queryDiv.querySelector('.track').value || null;
         const format = queryDiv.querySelector('.format').value || null;
+        const country = queryDiv.querySelector('.country').value || null;
         const types = queryDiv.querySelector('.types').value || null;
         const checkMarketplace = queryDiv.querySelector('.checkMarketplace').checked;
 
@@ -100,6 +180,7 @@ document.getElementById('searchForm').addEventListener('submit', function(event)
             album: album,
             track: track,
             format: format,
+            country: country,
             types: types,
             checkMarketplace: checkMarketplace
         };
@@ -114,7 +195,7 @@ document.getElementById('searchForm').addEventListener('submit', function(event)
     searchButton.disabled = true;
     loadingSpinner.style.display = 'block';
 
-    fetch('https://discogs-query-api.onrender.com/discogs-query/search', {
+    fetch('http://localhost:9090/discogs-query/search', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

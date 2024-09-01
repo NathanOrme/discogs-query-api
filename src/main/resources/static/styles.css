@@ -121,6 +121,7 @@ button:disabled {
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative; /* Added for positioning the delete button */
 }
 
 .query-header {
@@ -130,10 +131,33 @@ button:disabled {
     color: white;
     padding: 10px;
     border-radius: 4px;
+    display: flex; /* Aligns items horizontally */
+    justify-content: space-between; /* Space between title and button */
+    align-items: center; /* Centers items vertically */
 }
 
 .query-header:hover {
     background-color: #0056b3;
+}
+
+.query-header .delete-button {
+    background-color: transparent; /* Transparent background for the button */
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none; /* Remove the default outline */
+}
+
+.query-header .delete-button svg {
+    width: 16px; /* Size of the cross icon */
+    height: 16px;
+    fill: red; /* Red color for the cross */
+    stroke: red;
+    margin-left: 10px; /* Space between the text and the icon */
 }
 
 .query-content {

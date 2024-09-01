@@ -7,7 +7,30 @@ export function createQueryFields(queriesContainer, queryCounter, isFirstQuery =
 
     const queryHeader = document.createElement('div');
     queryHeader.className = 'query-header';
-    queryHeader.textContent = `Query ${queryCounter}`; // Add the query number
+
+    // Create the Query Title
+    const queryTitle = document.createElement('span');
+    queryTitle.textContent = `Query ${queryCounter}`; // Add the query number
+    queryHeader.appendChild(queryTitle);
+
+    // Create the Delete button
+    const deleteButton = document.createElement('button');
+    deleteButton.className = 'delete-button';
+    deleteButton.setAttribute('aria-label', 'Delete Query');
+
+    // Add SVG for the delete button
+    deleteButton.innerHTML = `
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 18L18 6M6 6l12 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    `;
+
+    deleteButton.addEventListener('click', () => {
+        queryDiv.remove(); // Remove the entire query div
+    });
+    queryHeader.appendChild(deleteButton);
+
+    // Add event listener to toggle query content visibility
     queryHeader.addEventListener('click', () => {
         const content = queryDiv.querySelector('.query-content');
         content.classList.toggle('hidden');
@@ -45,16 +68,19 @@ export function createQueryFields(queriesContainer, queryCounter, isFirstQuery =
         <input type="checkbox" class="checkMarketplace" name="checkMarketplace">
     `;
 
+    // Append elements to the queryDiv
     queryDiv.appendChild(queryHeader);
     queryDiv.appendChild(queryContent);
 
+    // Ensure all other query contents are hidden except for the new one
     const allQueryContents = document.querySelectorAll('.query-content');
     allQueryContents.forEach(content => {
         content.classList.add('hidden');
     });
 
+    // Append the queryDiv to the container and ensure the new query is open
     queriesContainer.appendChild(queryDiv);
-    queryContent.classList.remove('hidden');
+    queryContent.classList.remove('hidden'); // Keep the new query open
 
     return queryCounter + 1;
 }

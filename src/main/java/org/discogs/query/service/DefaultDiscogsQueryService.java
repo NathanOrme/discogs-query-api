@@ -114,8 +114,11 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
 
     private void correctUriForResultEntries(final DiscogsResult results) {
         if (results.getResults() != null) {
-            results.getResults().forEach(entry ->
-                    entry.setUri(discogsWebsiteBaseUrl.concat(entry.getUri())));
+            results.getResults().stream()
+                .filter(entry -> !entry.getUri().contains(discogsWebsiteBaseUrl))
+                .forEach(entry ->
+                    entry.setUri(discogsWebsiteBaseUrl
+                                 .concat(entry.getUri())));
         }
     }
 

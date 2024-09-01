@@ -56,6 +56,12 @@ jobs:
           files: target/site/apidocs
           dest: apidocs.zip
 
+      - name: Generate Changelog
+        uses: Bullrich/generate-release-changelog@master
+        id: Changelog
+        env:
+          REPO: ${{ github.repository }}
+
       - name: Create Release
         if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
@@ -65,4 +71,5 @@ jobs:
           token: ${{secrets.GITHUB_TOKEN}}
           generate_release_notes: true
           files: apidocs.zip
+          body: ${{ steps.Changelog.outputs.changelog }}
       

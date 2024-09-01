@@ -12,11 +12,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up GitHub CLI
-        uses: cli/cli-action@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Close stale PRs
         run: |
           # Get the current date in epoch seconds

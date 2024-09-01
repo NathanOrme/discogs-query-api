@@ -41,7 +41,8 @@ public class CacheConfig {
      */
     @Bean
     public CacheManager cacheManager() {
-        return new CustomConcurrentMapCacheManager(cacheExpirationDuration, "discogsResults", "discogsMarketplaceResults");
+        return new CustomConcurrentMapCacheManager(
+                cacheExpirationDuration, "discogsResults", "discogsMarketplaceResults");
     }
 
     /**
@@ -87,7 +88,8 @@ public class CacheConfig {
     /**
      * Custom implementation of {@link ConcurrentMapCache} that supports expiration of cache entries.
      * <p>
-     * This class overrides the {@link ConcurrentMapCache#get(Object)} and {@link ConcurrentMapCache#put(Object, Object)}
+     * This class overrides the {@link ConcurrentMapCache#get(Object)}
+     * and {@link ConcurrentMapCache#put(Object, Object)}
      * methods to provide expiration functionality for cache entries.
      */
     static class ExpiringConcurrentMapCache extends ConcurrentMapCache {

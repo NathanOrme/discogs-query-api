@@ -78,9 +78,28 @@ public enum DiscogCountries {
     LIECHTENSTEIN("Liechtenstein"),
     UKRAINE("Ukraine"),
     ROMANIA("Romania"),
-    POLAND("Poland");
+    POLAND("Poland"),
+    UNKNOWN("");
 
     private final String countryName;
+
+    /**
+     * Returns the {@link DiscogCountries} constant associated with the given country string.
+     * <p>
+     * If the country string does not match any defined constant, {@link #UNKNOWN} is returned.
+     *
+     * @param country the country string to match
+     * @return the {@link DiscogCountries} constant corresponding to the country string,
+     * or {@link #UNKNOWN} if no match is found
+     */
+    public static DiscogCountries fromString(final String country) {
+        for (final DiscogCountries t : DiscogCountries.values()) {
+            if (t.getCountryName().equalsIgnoreCase(country)) {
+                return t;
+            }
+        }
+        return UNKNOWN;
+    }
 
 }
 

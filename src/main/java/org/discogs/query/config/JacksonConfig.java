@@ -2,8 +2,10 @@ package org.discogs.query.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.discogs.query.enums.DiscogCountries;
 import org.discogs.query.enums.DiscogsFormats;
 import org.discogs.query.enums.DiscogsTypes;
+import org.discogs.query.model.deserializers.DiscogsCountryDeserializer;
 import org.discogs.query.model.deserializers.DiscogsFormatsDeserializer;
 import org.discogs.query.model.deserializers.DiscogsTypesDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -35,8 +37,8 @@ public class JacksonConfig {
      *
      * <p>This method initializes an {@link ObjectMapper} and
      * configures it with a {@link SimpleModule} that includes
-     * custom deserializers for {@link DiscogsTypes} and {@link DiscogsFormats}. The deserializers,
-     * {@link DiscogsTypesDeserializer} and {@link DiscogsFormatsDeserializer}, handle the conversion
+     * custom deserializers for {@link DiscogsTypes} and {@link DiscogsFormats}.
+     * The deserializers handle the conversion
      * of JSON strings to their respective enum values.
      *
      * @return a configured {@link ObjectMapper} instance with the custom deserializers registered
@@ -47,6 +49,7 @@ public class JacksonConfig {
         SimpleModule module = new SimpleModule();
         module.addDeserializer(DiscogsTypes.class, new DiscogsTypesDeserializer());
         module.addDeserializer(DiscogsFormats.class, new DiscogsFormatsDeserializer());
+        module.addDeserializer(DiscogCountries.class, new DiscogsCountryDeserializer());
         mapper.registerModule(module);
         return mapper;
     }

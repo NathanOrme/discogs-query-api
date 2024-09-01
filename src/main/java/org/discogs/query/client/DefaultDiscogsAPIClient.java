@@ -20,7 +20,7 @@ import java.util.concurrent.Callable;
  * <p>
  * This class uses {@link HttpRequestService} to send HTTP requests to the Discogs API,
  * handles responses, and manages retries and rate limits using {@link RetryService}
- * and {@link RateLimiterService}. It also caches results to avoid redundant API calls.
+ * and {@link RateLimiterService}.
  */
 @Slf4j
 @Component
@@ -35,43 +35,43 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
     private final RetryService retryService;
 
     /**
-     * Retrieves results from the Discogs API for a given search URL, with caching.
+     * Retrieves results from the Discogs API for a given search URL.
      *
      * @param searchUrl the URL to query the Discogs API
      * @return an instance of {@link DiscogsResult} containing the API response data
      * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API
      */
+    @Cacheable(value = "discogsResults", key = "#searchUrl")
     @Override
-    @Cacheable(value = "discogsSearchCache", key = "#searchUrl")
     public DiscogsResult getResultsForQuery(final String searchUrl) {
         return executeWithRateLimitAndRetry(() -> httpRequestService.executeRequest(searchUrl, DiscogsResult.class),
                 "Discogs Search API Request");
     }
 
     /**
-     * Retrieves a string result from the Discogs API for a given search URL, with caching.
+     * Retrieves a string result from the Discogs API for a given search URL.
      *
      * @param searchUrl the URL to query the Discogs API
      * @return a {@link String} containing the API response data
      * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API
      */
+    @Cacheable(value = "discogsResults", key = "#searchUrl")
     @Override
-    @Cacheable(value = "discogsSearchCache", key = "#searchUrl")
     public String getStringResultForQuery(final String searchUrl) {
         return executeWithRateLimitAndRetry(() -> httpRequestService.executeRequest(searchUrl, String.class),
                 "Discogs Search API Request");
     }
 
     /**
-     * Checks whether the given item is listed on the Discogs Marketplace, with caching.
+     * Checks whether the given item is listed on the Discogs Marketplace.
      * This method sends an HTTP GET request to the provided URL and returns the marketplace details.
      *
      * @param url the URL pointing to the item on the Discogs Marketplace
      * @return a {@link DiscogsMarketplaceResult} object containing the details of the item on the marketplace
      * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API
      */
+    @Cacheable(value = "discogsMarketplaceResults", key = "#url")
     @Override
-    @Cacheable(value = "discogsMarketplaceCache", key = "#url")
     public DiscogsMarketplaceResult checkIsOnMarketplace(final String url) {
         return executeWithRateLimitAndRetry(() -> httpRequestService
                         .executeRequest(url, DiscogsMarketplaceResult.class),

@@ -1,5 +1,6 @@
 package org.discogs.query.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -18,6 +19,7 @@ import java.util.concurrent.TimeUnit;
  * The cache is managed by {@link CustomConcurrentMapCacheManager} which creates caches with expiration capabilities.
  * The expiration time can be configured via application properties.
  */
+@Slf4j
 @Configuration
 @EnableCaching
 public class CacheConfig {
@@ -80,6 +82,7 @@ public class CacheConfig {
          */
         @Override
         protected ConcurrentMapCache createConcurrentMapCache(final String name) {
+            log.info("Creating cache: {}", name);  // Debugging line
             return new ExpiringConcurrentMapCache(name, new ConcurrentHashMap<>(),
                     true, cacheExpirationDuration, TimeUnit.SECONDS);
         }
@@ -124,6 +127,7 @@ public class CacheConfig {
          */
         @Override
         public ValueWrapper get(final Object key) {
+            log.info("Getting value for key: {}", key);  // Debugging line
             ExpiringValueWrapper valueWrapper = (ExpiringValueWrapper) super.get(key);
             if (valueWrapper == null || valueWrapper.isExpired()) {
                 evict(key);  // Remove expired entry from cache
@@ -142,6 +146,7 @@ public class CacheConfig {
          */
         @Override
         public void put(final Object key, final Object value) {
+            log.info("Putting value for key: {}", key);  // Debugging line
             super.put(key, new ExpiringValueWrapper(value, expirationTimeMillis));
         }
 

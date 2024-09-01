@@ -28,6 +28,8 @@ import java.util.concurrent.Callable;
 @RequiredArgsConstructor
 public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
 
+    public static final String CACHE_MISS_FOR_SEARCH_URL = "Cache miss for searchUrl: {}";
+
     private final HttpRequestService httpRequestService;
     private final RateLimiterService rateLimiterService;
     private final RetryService retryService;
@@ -45,6 +47,7 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
     @Cacheable(value = "discogsResults", key = "#searchUrl")
     @Override
     public DiscogsResult getResultsForQuery(final String searchUrl) {
+        log.info(CACHE_MISS_FOR_SEARCH_URL, searchUrl);
         return executeWithRateLimitAndRetry(() -> httpRequestService.executeRequest(searchUrl, DiscogsResult.class),
                 "Discogs Search API Request");
     }
@@ -62,6 +65,7 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
     @Cacheable(value = "stringResults", key = "#searchUrl")
     @Override
     public String getStringResultForQuery(final String searchUrl) {
+        log.info(CACHE_MISS_FOR_SEARCH_URL, searchUrl);
         return executeWithRateLimitAndRetry(() -> httpRequestService.executeRequest(searchUrl, String.class),
                 "Discogs Search API Request");
     }
@@ -79,6 +83,7 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
     @Cacheable(value = "marketplaceResults", key = "#url")
     @Override
     public DiscogsMarketplaceResult checkIsOnMarketplace(final String url) {
+        log.info("Cache miss for url: {}", url);
         return executeWithRateLimitAndRetry(() -> httpRequestService.executeRequest(url, DiscogsMarketplaceResult.class),
                 "Discogs Marketplace API Request");
     }

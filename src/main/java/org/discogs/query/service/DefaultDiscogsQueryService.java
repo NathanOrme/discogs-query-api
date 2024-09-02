@@ -50,7 +50,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
             log.debug("Built search URL: {}", searchUrl);
 
             log.info("Sending search request to Discogs API...");
-            discogsAPIClient.getStringResultForQuery(searchUrl);
+            //discogsAPIClient.getStringResultForQuery(searchUrl);
             DiscogsResult results = discogsAPIClient.getResultsForQuery(searchUrl);
             log.info("Received {} results from Discogs API", results.getResults().size());
 

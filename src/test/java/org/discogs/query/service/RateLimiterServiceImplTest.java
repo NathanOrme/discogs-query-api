@@ -1,7 +1,7 @@
 package org.discogs.query.service;
 
-import org.discogs.query.client.limits.RateLimiter;
 import org.discogs.query.interfaces.RateLimiterService;
+import org.discogs.query.limits.RateLimiter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +10,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class DefaultRateLimiterServiceTest {
+class RateLimiterServiceImplTest {
 
     private RateLimiterService rateLimiterService;
     private RateLimiter rateLimiter;
@@ -18,7 +18,7 @@ class DefaultRateLimiterServiceTest {
     @BeforeEach
     public void setUp() {
         rateLimiter = mock(RateLimiter.class);
-        rateLimiterService = new DefaultRateLimiterService(rateLimiter);
+        rateLimiterService = new RateLimiterServiceImpl(rateLimiter);
     }
 
     @Test

@@ -1,9 +1,10 @@
-package org.discogs.query.model.deserializers;
+package deserializers;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.discogs.query.deserializers.DiscogsFormatsDeserializer;
 import org.discogs.query.enums.DiscogsFormats;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

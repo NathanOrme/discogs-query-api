@@ -1,10 +1,10 @@
 package org.discogs.query.service;
 
-import org.discogs.query.client.DiscogsAPIClient;
 import org.discogs.query.domain.DiscogsEntry;
 import org.discogs.query.domain.DiscogsRelease;
 import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.helpers.DiscogsUrlBuilder;
+import org.discogs.query.interfaces.DiscogsAPIClient;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,12 +20,12 @@ import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.when;
 
 /**
- * Unit tests for {@link DefaultDiscogsFilterService}.
+ * Unit tests for {@link DiscogsFilterServiceImpl}.
  */
-class DefaultDiscogsFilterServiceTest {
+class DiscogsFilterServiceImplTest {
 
     @InjectMocks
-    private DefaultDiscogsFilterService discogsFilterService;
+    private DiscogsFilterServiceImpl discogsFilterService;
 
     @Mock
     private DiscogsAPIClient discogsAPIClient;

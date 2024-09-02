@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Slf4j
 @SpringBootTest
-class DefaultDiscogsQueryServiceIT {
+class DiscogsQueryServiceImplIT {
 
     @Autowired
     private DiscogsQueryService discogsQueryService;

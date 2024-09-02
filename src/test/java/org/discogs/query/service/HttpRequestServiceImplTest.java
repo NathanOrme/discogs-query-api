@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class DefaultHttpRequestServiceTest {
+class HttpRequestServiceImplTest {
 
     private HttpRequestService httpRequestService;
     private RestTemplate restTemplate;
@@ -25,7 +25,7 @@ class DefaultHttpRequestServiceTest {
     @BeforeEach
     public void setUp() {
         restTemplate = mock(RestTemplate.class);
-        httpRequestService = new DefaultHttpRequestService(restTemplate);
+        httpRequestService = new HttpRequestServiceImpl(restTemplate);
     }
 
     @Test

@@ -19,7 +19,7 @@ class DefaultRetryServiceTest {
 
     @BeforeEach
     public void setUp() {
-        retryService = new DefaulRetryService();
+        retryService = new RetryServiceImpl();
     }
 
     @Test

@@ -2,12 +2,12 @@ package org.discogs.query.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.discogs.query.client.DiscogsAPIClient;
 import org.discogs.query.domain.DiscogsEntry;
 import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.enums.DiscogsFormats;
 import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.helpers.DiscogsUrlBuilder;
+import org.discogs.query.interfaces.DiscogsAPIClient;
 import org.discogs.query.interfaces.DiscogsFilterService;
 import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.mapper.DiscogsResultMapper;
@@ -26,7 +26,7 @@ import java.util.Set;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class DefaultDiscogsQueryService implements DiscogsQueryService {
+public class DiscogsQueryServiceImpl implements DiscogsQueryService {
 
     private static final String UNEXPECTED_ISSUE_OCCURRED = "Unexpected issue occurred";
 
@@ -34,6 +34,13 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
     private final DiscogsResultMapper discogsResultMapper;
     private final DiscogsUrlBuilder discogsUrlBuilder;
     private final DiscogsFilterService discogsFilterService;
+
+    static boolean isCompilationFormat(final DiscogsQueryDTO discogsQueryDTO) {
+        boolean isCompilation = DiscogsFormats.COMP.getFormat().equalsIgnoreCase(discogsQueryDTO.getFormat())
+                || DiscogsFormats.VINYL_COMPILATION.getFormat().equalsIgnoreCase(discogsQueryDTO.getFormat());
+        log.debug("Checking if format is compilation: {}. Result: {}", discogsQueryDTO.getFormat(), isCompilation);
+        return isCompilation;
+    }
 
     /**
      * Searches the Discogs database based on the provided query.
@@ -84,13 +91,6 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
                     discogsQueryDTO, e.getMessage(), e);
             throw new DiscogsSearchException(UNEXPECTED_ISSUE_OCCURRED, e);
         }
-    }
-
-    static boolean isCompilationFormat(final DiscogsQueryDTO discogsQueryDTO) {
-        boolean isCompilation = DiscogsFormats.COMP.getFormat().equalsIgnoreCase(discogsQueryDTO.getFormat())
-                || DiscogsFormats.VINYL_COMPILATION.getFormat().equalsIgnoreCase(discogsQueryDTO.getFormat());
-        log.debug("Checking if format is compilation: {}. Result: {}", discogsQueryDTO.getFormat(), isCompilation);
-        return isCompilation;
     }
 
     private void correctUriForResultEntries(final DiscogsResult results) {

@@ -55,7 +55,7 @@ public class DiscogsQueryController {
         if (resultDTOList.isEmpty()) {
             log.warn("No results found for the provided queries");
         } else {
-            log.info("Returning {} results", resultDTOList.size());
+            log.info("Returning {} results: {}", resultDTOList.size(), resultDTOList);
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(resultDTOList);

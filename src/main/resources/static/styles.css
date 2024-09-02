@@ -34,11 +34,7 @@ header h1 {
     cursor: pointer;
     font-size: 16px;
     margin-bottom: 20px;
-}
-
-h1 {
-    text-align: center;
-    color: #333;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 #toggleDarkMode:hover {
@@ -303,6 +299,15 @@ body.dark-mode {
 body.dark-mode header {
     background-color: #1e1e1e;
     color: #e0e0e0;
+}
+
+body.dark-mode #toggleDarkMode {
+    background-color: #333;
+    color: #e0e0e0;
+}
+
+body.dark-mode #toggleDarkMode:hover {
+    background-color: #444;
 }
 
 body.dark-mode .instructions,

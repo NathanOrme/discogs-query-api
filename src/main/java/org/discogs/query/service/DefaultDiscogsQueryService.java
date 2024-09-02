@@ -57,7 +57,8 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
             if (isCompilationFormat(discogsQueryDTO)) {
                 log.info("Query format is a compilation. Processing compilation search...");
                 processCompilationSearch(discogsQueryDTO, results);
-                log.info("After processing compilation search, {} total results available", results.getResults().size());
+                log.info("After processing compilation search, {} total results available",
+                        results.getResults().size());
             }
 
             correctUriForResultEntries(results);
@@ -74,10 +75,13 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
 
             return resultDTO;
         } catch (final DiscogsSearchException e) {
-            log.error("DiscogsSearchException occurred while processing query: {}. Error: {}", discogsQueryDTO, e.getMessage(), e);
+            log.error("DiscogsSearchException occurred while processing query: {}. Error: {}",
+                    discogsQueryDTO, e.getMessage(), e);
             return new DiscogsResultDTO(); // Return an empty DTO or handle as per your error strategy
         } catch (final Exception e) {
-            log.error(UNEXPECTED_ISSUE_OCCURRED + " while processing query: {}. Error: {}", discogsQueryDTO, e.getMessage(), e);
+            log.error(UNEXPECTED_ISSUE_OCCURRED +
+                            " while processing query: {}. Error: {}",
+                    discogsQueryDTO, e.getMessage(), e);
             throw new DiscogsSearchException(UNEXPECTED_ISSUE_OCCURRED, e);
         }
     }

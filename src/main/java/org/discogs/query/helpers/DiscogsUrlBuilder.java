@@ -69,12 +69,26 @@ public class DiscogsUrlBuilder {
     }
 
     private void addQueryParams(final UriComponentsBuilder uriBuilder, final DiscogsQueryDTO discogsQueryDTO) {
-        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder, DiscogQueryParams.ARTIST.getQueryType(), discogsQueryDTO.getArtist());
-        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder, DiscogQueryParams.ALBUM.getQueryType(), discogsQueryDTO.getAlbum());
-        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder, DiscogQueryParams.TRACK.getQueryType(), discogsQueryDTO.getTrack());
-        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder, DiscogQueryParams.FORMAT.getQueryType(), discogsQueryDTO.getFormat());
+        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
+                DiscogQueryParams.ARTIST.getQueryType(),
+                discogsQueryDTO.getArtist());
+        
+        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
+                DiscogQueryParams.ALBUM.getQueryType(),
+                discogsQueryDTO.getAlbum());
+
+        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
+                DiscogQueryParams.TRACK.getQueryType(),
+                discogsQueryDTO.getTrack());
+
+        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
+                DiscogQueryParams.FORMAT.getQueryType(),
+                discogsQueryDTO.getFormat());
+
         if (discogsQueryDTO.getCountry() != null) {
-            uriBuilderHelper.addIfNotNullOrBlank(uriBuilder, DiscogQueryParams.COUNTRY.getQueryType(), discogsQueryDTO.getCountry().getCountryName());
+            uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
+                    DiscogQueryParams.COUNTRY.getQueryType(),
+                    discogsQueryDTO.getCountry().getCountryName());
         }
 
         DiscogsTypes types = discogsQueryDTO.getTypes();

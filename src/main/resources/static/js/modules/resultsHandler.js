@@ -1,4 +1,3 @@
-// /js/modules/resultsHandler.js
 export function displayResults(response) {
     const resultsContainer = document.getElementById('results');
     resultsContainer.innerHTML = '';
@@ -32,17 +31,16 @@ export function displayResults(response) {
             const country = entry.country || 'N/A';
             const year = entry.year || 'N/A';
             const uri = entry.uri || '#';
-            const lowestPrice = entry.lowestPrice ? '£' + entry.lowestPrice.toFixed(2) : 'N/A';
-            const onMarketplace = entry.isOnMarketplace ? 'Yes' : 'No';
 
-            const marketplaceDetails = entry.isOnMarketplace ? `
-                <p><strong>On Marketplace:</strong> ${onMarketplace}</p>
-                <p><strong>Lowest Price:</strong> ${lowestPrice}</p>
-            ` : '';
+            // Update the logic for lowestPrice without checking isOnMarketplace
+            const lowestPrice = (entry.lowestPrice !== null && entry.lowestPrice !== undefined)
+                ? '£' + parseFloat(entry.lowestPrice).toFixed(2)
+                : 'N/A';
 
             const resultItem = document.createElement('div');
             resultItem.className = 'result-item';
 
+            // Always include Lowest Price
             resultItem.innerHTML = `
                 <h3>${title}</h3>
                 <div class="details">
@@ -51,7 +49,7 @@ export function displayResults(response) {
                     <p><strong>Country:</strong> ${country}</p>
                     <p><strong>Year:</strong> ${year}</p>
                     <p><strong>URL:</strong> <a href="${uri}" target="_blank">${uri}</a></p>
-                    ${marketplaceDetails}
+                    <p><strong>Lowest Price:</strong> ${lowestPrice}</p>
                 </div>
             `;
 

@@ -1,6 +1,7 @@
 package org.discogs.query.client;
 
 import org.discogs.query.domain.DiscogsMarketplaceResult;
+import org.discogs.query.domain.DiscogsRelease;
 import org.discogs.query.domain.DiscogsResult;
 
 /**
@@ -35,4 +36,12 @@ public interface DiscogsAPIClient {
      * @return Result to say if on marketplace
      */
     DiscogsMarketplaceResult checkIsOnMarketplace(final String url);
+
+    /**
+     * Searches the website to see if a release exists
+     *
+     * @param searchUrl URL to use
+     * @return a {@link DiscogsResult} result if found on the website.
+     */
+    DiscogsRelease getRelease(final String searchUrl);
 }

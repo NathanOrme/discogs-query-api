@@ -3,6 +3,7 @@ package org.discogs.query.client;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.domain.DiscogsMarketplaceResult;
+import org.discogs.query.domain.DiscogsRelease;
 import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.exceptions.DiscogsMarketplaceException;
 import org.discogs.query.exceptions.DiscogsSearchException;
@@ -83,6 +84,24 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
         return executeWithRateLimitAndRetry(() -> httpRequestService
                         .executeRequest(url, DiscogsMarketplaceResult.class),
                 "Discogs Marketplace API Request");
+    }
+
+    /**
+     * Checks whether the given item is listed on the Discogs Marketplace.
+     * <p>
+     * This method is cached using Spring's caching abstraction with Caffeine.
+     *
+     * @param url the URL pointing to the item on the Discogs Marketplace
+     * @return a {@link DiscogsRelease} object containing the details of the item on the marketplace
+     * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API
+     */
+    @Cacheable(value = "marketplaceResults", key = "#url")
+    @Override
+    public DiscogsRelease getRelease(final String url) {
+        log.info("Cache miss for url: {}", url);
+        return executeWithRateLimitAndRetry(() -> httpRequestService
+                        .executeRequest(url, DiscogsRelease.class),
+                "Discogs Release API Request");
     }
 
     /**

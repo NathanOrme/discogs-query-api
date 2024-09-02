@@ -24,7 +24,7 @@ class DefaultDiscogsQueryServiceIT {
                 .artist("Jimi Hendrix")
                 .track("All Along The Watchtower")
                 .format(DiscogsFormats.VINYL_COMPILATION.getFormat())
-                .country(DiscogCountries.UNKNOWN)
+                .country(DiscogCountries.UK)
                 .build();
         var result = discogsQueryService.searchBasedOnQuery(discogsQueryDTO);
         assertNotNull(result);

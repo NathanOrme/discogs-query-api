@@ -78,10 +78,17 @@ public class DefaultDiscogsFilterService implements DiscogsFilterService {
     }
 
     private boolean filterArtists(final DiscogsQueryDTO discogsQueryDTO, final DiscogsRelease release) {
-        return release.getArtists().stream()
-                .anyMatch(artist -> artist.getName().equalsIgnoreCase(discogsQueryDTO.getArtist())) ||
-                release.getExtraArtists().stream()
-                        .anyMatch(artist -> artist.getName().equalsIgnoreCase(discogsQueryDTO.getArtist()));
+        boolean isArtistMatch = release.getArtists().stream()
+                .anyMatch(artist -> isArtistNameMatching(discogsQueryDTO, artist.getName()));
+        if (!isArtistMatch && release.getExtraArtists() != null) {
+            isArtistMatch = release.getExtraArtists().stream()
+                    .anyMatch(artist -> isArtistNameMatching(discogsQueryDTO, artist.getName()));
+        }
+        return isArtistMatch;
+    }
+
+    private static boolean isArtistNameMatching(final DiscogsQueryDTO discogsQueryDTO, final String artistName) {
+        return artistName.equalsIgnoreCase(discogsQueryDTO.getArtist());
     }
 
     private boolean filterTracks(final DiscogsQueryDTO discogsQueryDTO, final DiscogsRelease release) {

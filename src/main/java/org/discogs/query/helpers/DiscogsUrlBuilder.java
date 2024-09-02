@@ -92,4 +92,28 @@ public class DiscogsUrlBuilder {
         uriBuilderHelper.addIfNotNull(uriBuilder, DiscogQueryParams.TYPE.getQueryType(), types.getType());
     }
 
+    /**
+     * Builds the search URL for a compilation album
+     * based on the provided query parameters.
+     *
+     * @param discogsQueryDTO the search query data transfer object containing the search criteria
+     * @return the fully constructed search URL with query parameters
+     */
+    public String generateCompilationSearchUrl(final DiscogsQueryDTO discogsQueryDTO) {
+        DiscogsQueryDTO dtoForUrl = DiscogsQueryDTO.builder()
+                .country(discogsQueryDTO.getCountry())
+                .format(discogsQueryDTO.getFormat())
+                .types(discogsQueryDTO.getTypes())
+                .album(discogsQueryDTO.getAlbum())
+                .track(discogsQueryDTO.getTrack())
+                .artist("Various")
+                .build();
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(discogsBaseUrl.concat(discogsSearchEndpoint))
+                .queryParam("per_page", pageSize)
+                .queryParam("page", 1)
+                .queryParam("token", token);
+
+        addQueryParams(uriBuilder, dtoForUrl);
+        return uriBuilder.toUriString().replace("%20", "+");
+    }
 }

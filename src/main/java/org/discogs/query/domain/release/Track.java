@@ -30,7 +30,8 @@ public class Track {
     private String title;
 
     /**
-     * The type of track (e.g., "track" for a standard track, "index" for a track that is part of a larger indexed track).
+     * The type of track (e.g., "track" for a standard track,
+     * "index" for a track that is part of a larger indexed track).
      */
     @JsonProperty("type_")
     private String type;

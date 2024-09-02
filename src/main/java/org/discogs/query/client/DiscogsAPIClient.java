@@ -1,6 +1,5 @@
 package org.discogs.query.client;
 
-import org.discogs.query.domain.DiscogsMarketplaceResult;
 import org.discogs.query.domain.DiscogsRelease;
 import org.discogs.query.domain.DiscogsResult;
 
@@ -28,14 +27,6 @@ public interface DiscogsAPIClient {
      * @return a {@link String} containing the API response data
      */
     String getStringResultForQuery(final String searchUrl);
-
-    /**
-     * Searches marketplace to see if release is on marketplace
-     *
-     * @param url URL to use for search
-     * @return Result to say if on marketplace
-     */
-    DiscogsMarketplaceResult checkIsOnMarketplace(final String url);
 
     /**
      * Searches the website to see if a release exists

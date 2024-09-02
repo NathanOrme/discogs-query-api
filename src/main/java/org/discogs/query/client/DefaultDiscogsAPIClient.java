@@ -74,24 +74,6 @@ public class DefaultDiscogsAPIClient implements DiscogsAPIClient {
      * This method is cached using Spring's caching abstraction with Caffeine.
      *
      * @param url the URL pointing to the item on the Discogs Marketplace
-     * @return a {@link DiscogsMarketplaceResult} object containing the details of the item on the marketplace
-     * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API
-     */
-    @Cacheable(value = "marketplaceResults", key = "#url")
-    @Override
-    public DiscogsMarketplaceResult checkIsOnMarketplace(final String url) {
-        log.info("Cache miss for url: {}", url);
-        return executeWithRateLimitAndRetry(() -> httpRequestService
-                        .executeRequest(url, DiscogsMarketplaceResult.class),
-                "Discogs Marketplace API Request");
-    }
-
-    /**
-     * Checks whether the given item is listed on the Discogs Marketplace.
-     * <p>
-     * This method is cached using Spring's caching abstraction with Caffeine.
-     *
-     * @param url the URL pointing to the item on the Discogs Marketplace
      * @return a {@link DiscogsRelease} object containing the details of the item on the marketplace
      * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API
      */

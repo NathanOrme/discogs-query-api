@@ -2,7 +2,9 @@ package org.discogs.query.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.interfaces.RetryService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
@@ -27,9 +29,23 @@ public class DefaulRetryService implements RetryService {
                     throw e; // rethrow after final attempt
                 }
                 attempt++;
-                TimeUnit.SECONDS.sleep(RETRY_DELAY);
+                if (is429StatusCodeException(e)) {
+                    log.info("429 Status Code Received - Sleeping for a minute");
+                    TimeUnit.MINUTES.sleep(1);
+                } else {
+                    log.info("Sleeping for {} seconds", RETRY_DELAY);
+                    TimeUnit.SECONDS.sleep(RETRY_DELAY);
+                }
             }
         }
         throw new IllegalStateException("Retry logic should never reach here.");
+    }
+
+    private boolean is429StatusCodeException(final Exception e) {
+        if (!(e.getCause() instanceof final HttpClientErrorException httpClientErrorException)) {
+            return false;
+        }
+
+        return httpClientErrorException.getStatusCode().equals(HttpStatus.TOO_MANY_REQUESTS);
     }
 }

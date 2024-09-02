@@ -34,7 +34,7 @@ public class DefaultDiscogsFilterService implements DiscogsFilterService {
     public void filterAndSortResults(final DiscogsQueryDTO discogsQueryDTO, final DiscogsResult results) {
         log.info("Filtering and sorting results for query: {}", discogsQueryDTO);
 
-        var filteredAndSortedResults = results.getResults().stream()
+        var filteredAndSortedResults = results.getResults().parallelStream()
                 .filter(entry -> filterIfTrackOnAlbum(entry, discogsQueryDTO))
                 .filter(entry -> {
                     boolean hasPrice = entry.getLowestPrice() != null;

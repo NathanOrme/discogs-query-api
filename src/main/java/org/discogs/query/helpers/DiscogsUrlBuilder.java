@@ -21,6 +21,9 @@ public class DiscogsUrlBuilder {
     @Value("${discogs.url}")
     String discogsBaseUrl;
 
+    @Value("${discogs.marketplaceCheck}")
+    private String marketplaceCheck;
+
     @Value("${discogs.search}")
     String discogsSearchEndpoint;
 
@@ -55,6 +58,19 @@ public class DiscogsUrlBuilder {
     }
 
     /**
+     * Builds URL for the marketplace url
+     *
+     * @param discogsEntry Entry to use for information
+     * @return URL for the search
+     */
+    private String buildMarketplaceUrl(final DiscogsEntry discogsEntry) {
+        var baseUrl = discogsBaseUrl.concat(marketplaceCheck)
+                .concat(String.valueOf(discogsEntry.getId()));
+        baseUrl = baseUrl.concat("?token=").concat(token);
+        return baseUrl;
+    }
+
+    /**
      * Builds the release URL for the given DiscogsEntry.
      *
      * @param discogsEntry the Discogs entry containing the release ID
@@ -72,7 +88,7 @@ public class DiscogsUrlBuilder {
         uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
                 DiscogQueryParams.ARTIST.getQueryType(),
                 discogsQueryDTO.getArtist());
-        
+
         uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
                 DiscogQueryParams.ALBUM.getQueryType(),
                 discogsQueryDTO.getAlbum());

@@ -2,6 +2,9 @@ package org.discogs.query.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.discogs.query.enums.DiscogCountries;
+import org.discogs.query.enums.DiscogsFormats;
+import org.discogs.query.enums.DiscogsTypes;
 import org.discogs.query.interfaces.ScheduledTaskService;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.springframework.http.HttpEntity;
@@ -49,6 +52,13 @@ public class DefaultScheduledTaskService implements ScheduledTaskService {
                     .build(),
             DiscogsQueryDTO.builder()
                     .artist("Enya")
+                    .build(),
+            DiscogsQueryDTO.builder()
+                    .artist("War")
+                    .track("Why can't we be friends")
+                    .types(DiscogsTypes.RELEASE)
+                    .format(DiscogsFormats.VINYL.getFormat())
+                    .country(DiscogCountries.UK)
                     .build()
     );
 
@@ -60,14 +70,14 @@ public class DefaultScheduledTaskService implements ScheduledTaskService {
 
     /**
      * Sends an HTTP POST request to the {@link #URL} with the predefined {@link #payload}. The method is scheduled
-     * to run every 45 minutes, as specified by the {@link Scheduled} annotation.
+     * to run every 14 minutes, as specified by the {@link Scheduled} annotation.
      *
      * <p>This method sets the content type of the request to {@code application/json} and handles the response
      * by logging the status and body of the response. In case of an error during the request, the error message
      * is logged.
      */
     @Override
-    @Scheduled(fixedRate = 45, timeUnit = TimeUnit.MINUTES)
+    @Scheduled(fixedRate = 14, timeUnit = TimeUnit.MINUTES)
     public void sendRequest() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);

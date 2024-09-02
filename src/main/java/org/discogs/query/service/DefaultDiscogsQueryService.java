@@ -107,7 +107,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         log.debug("Compilation search URL: {}", searchUrl);
 
         log.info("Sending compilation search request to Discogs API...");
-        discogsAPIClient.getStringResultForQuery(searchUrl);
+        //discogsAPIClient.getStringResultForQuery(searchUrl);
         DiscogsResult compResults = discogsAPIClient.getResultsForQuery(searchUrl);
         log.info("Received {} compilation results from Discogs API", compResults.getResults().size());
 

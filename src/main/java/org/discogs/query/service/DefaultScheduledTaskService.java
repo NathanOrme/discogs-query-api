@@ -28,8 +28,6 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class DefaultScheduledTaskService implements ScheduledTaskService {
 
-    private final RestTemplate restTemplate;
-
     /**
      * The payload to be sent in the POST request.
      * Each entry represents a {@link DiscogsQueryDTO} object with track, artist,
@@ -61,12 +59,12 @@ public class DefaultScheduledTaskService implements ScheduledTaskService {
                     .country(DiscogCountries.UK)
                     .build()
     );
-
     /**
      * The URL to which the POST request will be sent.
      */
     private static final String URL =
             "https://discogs-query-api.onrender.com/discogs-query/search";
+    private final RestTemplate restTemplate;
 
     /**
      * Sends an HTTP POST request to the {@link #URL} with the predefined {@link #payload}. The method is scheduled

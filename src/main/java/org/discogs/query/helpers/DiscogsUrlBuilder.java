@@ -18,25 +18,19 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class DiscogsUrlBuilder {
 
+    private final UriBuilderHelper uriBuilderHelper;
     @Value("${discogs.url}")
     String discogsBaseUrl;
-
     @Value("${discogs.search}")
     String discogsSearchEndpoint;
-
     @Value("${discogs.release}")
     String releaseEndpoint;
-
     @Value("${discogs.page-size}")
     int pageSize;
-
     @Value("${discogs.token}")
     String token;
-
     @Value("${discogs.baseUrl}")
     String discogsWebsiteBaseUrl;
-
-    private final UriBuilderHelper uriBuilderHelper;
 
     /**
      * Builds the search URL based on the provided query parameters.
@@ -53,7 +47,7 @@ public class DiscogsUrlBuilder {
         addQueryParams(uriBuilder, discogsQueryDTO);
         return uriBuilder.toUriString().replace("%20", "+");
     }
-    
+
     /**
      * Builds the release URL for the given DiscogsEntry.
      *

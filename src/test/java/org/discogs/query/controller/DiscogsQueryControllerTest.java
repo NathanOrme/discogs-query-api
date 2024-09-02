@@ -22,13 +22,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(DiscogsQueryController.class)
 class DiscogsQueryControllerTest {
 
+    private static final String BASIC_AUTH_HEADER = "Basic " + java.util.Base64.getEncoder().encodeToString("username:password".getBytes());
     @Autowired
     private MockMvc mockMvc;
-
     @MockBean
     private DiscogsQueryService discogsQueryService;
-    private static final String BASIC_AUTH_HEADER = "Basic " + java.util.Base64.getEncoder().encodeToString("username:password".getBytes());
-
 
     @Test
     void testSearchDiscogs_Success() throws Exception {

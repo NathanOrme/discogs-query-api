@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Discogs Search</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS -->
+    <link href="styles.css" rel="stylesheet"> <!-- Link to external CSS -->
 </head>
 <body>
 <header>
@@ -46,15 +46,15 @@
                 <div id="queriesContainer">
                     <!-- Query fields will be dynamically added here -->
                 </div>
-                <button type="button" id="addQueryButton">Add Another Query</button>
-                <button type="submit" id="searchButton">Search</button>
+                <button id="addQueryButton" type="button">Add Another Query</button>
+                <button id="searchButton" type="submit">Search</button>
             </form>
-            <div id="loading" class="spinner"></div> <!-- Loading spinner -->
+            <div class="spinner" id="loading"></div> <!-- Loading spinner -->
         </div>
-        <div id="results" class="results-container"></div> <!-- Results container -->
+        <div class="results-container" id="results"></div> <!-- Results container -->
     </div>
 </div>
 
-<script type="module" src="js/main.js"></script> <!-- Link to external JavaScript -->
+<script src="js/main.js" type="module"></script> <!-- Link to external JavaScript -->
 </body>
 </html>

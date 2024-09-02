@@ -8,6 +8,17 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
 h1 {
     text-align: center;
     color: #333;
@@ -74,7 +85,6 @@ label {
     margin: 10px 0 5px;
     color: #333;
     font-weight: bold;
-    transition: color 0.3s;
 }
 
 input[type="text"],
@@ -85,7 +95,7 @@ select {
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
-    transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+    transition: border-color 0.3s;
 }
 
 input[type="checkbox"] {
@@ -103,7 +113,7 @@ button {
     cursor: pointer;
     font-size: 16px;
     margin-top: 10px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 button:hover {
@@ -131,8 +141,8 @@ button:disabled {
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    position: relative; /* Added for positioning the delete button */
-    transition: background-color 0.3s, color 0.3s;
+    position: relative;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 .query-header {
@@ -142,10 +152,10 @@ button:disabled {
     color: white;
     padding: 10px;
     border-radius: 4px;
-    display: flex; /* Aligns items horizontally */
-    justify-content: space-between; /* Space between title and button */
-    align-items: center; /* Centers items vertically */
-    transition: background-color 0.3s, color 0.3s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s;
 }
 
 .query-header:hover {
@@ -153,7 +163,7 @@ button:disabled {
 }
 
 .query-header .delete-button {
-    background-color: transparent; /* Transparent background for the button */
+    background-color: transparent;
     border: none;
     cursor: pointer;
     padding: 0;
@@ -161,15 +171,15 @@ button:disabled {
     display: flex;
     align-items: center;
     justify-content: center;
-    outline: none; /* Remove the default outline */
+    outline: none;
 }
 
 .query-header .delete-button svg {
-    width: 16px; /* Size of the cross icon */
+    width: 16px;
     height: 16px;
-    fill: red; /* Red color for the cross */
+    fill: red;
     stroke: red;
-    margin-left: 10px; /* Space between the text and the icon */
+    margin-left: 10px;
 }
 
 .query-content {
@@ -191,8 +201,8 @@ button:disabled {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     flex: 2;
-    min-width: 300px; /* Ensures results container doesn't shrink too much on smaller screens */
-    max-width: 800px; /* Maximum width for results */
+    min-width: 300px;
+    max-width: 800px;
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -226,7 +236,7 @@ button:disabled {
     border-radius: 8px;
     background-color: white;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 .result-item h3 {
@@ -270,7 +280,8 @@ body.dark-mode {
     color: #e0e0e0;
 }
 
-body.dark-mode h1 {
+body.dark-mode header {
+    background-color: #1e1e1e;
     color: #e0e0e0;
 }
 
@@ -331,6 +342,14 @@ body.dark-mode #loading {
 body.dark-mode .query-content {
     background-color: #2c2c2c;
     border-color: #555;
+}
+
+body.dark-mode .details {
+    color: #e0e0e0;
+}
+
+body.dark-mode .details a {
+    color: #e0e0e0;
 }
 
 body.dark-mode .error-message {

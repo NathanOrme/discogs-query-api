@@ -5,6 +5,7 @@ body {
     padding: 20px;
     background-color: #f4f4f4;
     color: #333;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 h1 {
@@ -25,6 +26,7 @@ h1 {
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .instructions h2 {
@@ -38,6 +40,10 @@ h1 {
 .instructions ol {
     margin: 0;
     padding-left: 20px;
+}
+
+.instructions strong {
+    color: #333;
 }
 
 /* Main content area for queries and results */
@@ -56,6 +62,7 @@ h1 {
     flex: 1;
     min-width: 400px; /* Ensures form doesn't shrink too much on smaller screens */
     max-width: 600px; /* Maximum width for form */
+    transition: background-color 0.3s, color 0.3s;
 }
 
 form {
@@ -67,6 +74,7 @@ label {
     margin: 10px 0 5px;
     color: #333;
     font-weight: bold;
+    transition: color 0.3s;
 }
 
 input[type="text"],
@@ -77,6 +85,7 @@ select {
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
+    transition: border-color 0.3s, background-color 0.3s, color 0.3s;
 }
 
 input[type="checkbox"] {
@@ -123,6 +132,7 @@ button:disabled {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     position: relative; /* Added for positioning the delete button */
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .query-header {
@@ -135,6 +145,7 @@ button:disabled {
     display: flex; /* Aligns items horizontally */
     justify-content: space-between; /* Space between title and button */
     align-items: center; /* Centers items vertically */
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .query-header:hover {
@@ -166,6 +177,7 @@ button:disabled {
     border-radius: 4px;
     padding: 10px;
     background-color: #f9f9f9;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 .query-content.hidden {
@@ -181,6 +193,7 @@ button:disabled {
     flex: 2;
     min-width: 300px; /* Ensures results container doesn't shrink too much on smaller screens */
     max-width: 800px; /* Maximum width for results */
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .results-toggle-header {
@@ -190,6 +203,7 @@ button:disabled {
     color: white;
     border-radius: 4px;
     font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .results-toggle-header:hover {
@@ -212,6 +226,7 @@ button:disabled {
     border-radius: 8px;
     background-color: white;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .result-item h3 {
@@ -231,6 +246,7 @@ button:disabled {
 .details a {
     color: #007bff;
     text-decoration: none;
+    transition: color 0.3s;
 }
 
 .details a:hover {
@@ -245,11 +261,16 @@ button:disabled {
     border-radius: 4px;
     margin-top: 20px;
     text-align: center;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 /* Dark Mode Styles */
 body.dark-mode {
     background-color: #121212;
+    color: #e0e0e0;
+}
+
+body.dark-mode h1 {
     color: #e0e0e0;
 }
 
@@ -263,6 +284,10 @@ body.dark-mode .result-item {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
+body.dark-mode .instructions strong {
+    color: #e0e0e0;
+}
+
 body.dark-mode .query-header,
 body.dark-mode .results-toggle-header {
     background-color: #1e1e1e;
@@ -272,6 +297,22 @@ body.dark-mode .results-toggle-header {
 body.dark-mode .query-header:hover,
 body.dark-mode .results-toggle-header:hover {
     background-color: #333;
+}
+
+body.dark-mode label,
+body.dark-mode .details {
+    color: #e0e0e0;
+}
+
+body.dark-mode input[type="text"],
+body.dark-mode select {
+    background-color: #333;
+    border-color: #555;
+    color: #e0e0e0;
+}
+
+body.dark-mode input[type="checkbox"] {
+    accent-color: #e0e0e0; /* For modern browsers */
 }
 
 body.dark-mode button {

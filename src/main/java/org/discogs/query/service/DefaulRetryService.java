@@ -19,11 +19,10 @@ public class DefaulRetryService implements RetryService {
         int attempt = 1;
         while (attempt <= RETRY_COUNT) {
             try {
-                log.info(String.format("Attempting %s. Attempt %d of %d", actionDescription, attempt, RETRY_COUNT));
+                log.info("Attempting {}. Attempt {} of {}", actionDescription, attempt, RETRY_COUNT);
                 return action.call();
             } catch (final Exception e) {
-                log.warn(String.format("Error during %s on attempt %d of %d. Exception: %s",
-                        actionDescription, attempt, RETRY_COUNT, e.getMessage()));
+                log.warn("Error during {} on attempt {} of {}. Exception: {}", actionDescription, attempt, RETRY_COUNT, e.getMessage());
                 if (attempt == RETRY_COUNT) {
                     throw e; // rethrow after final attempt
                 }

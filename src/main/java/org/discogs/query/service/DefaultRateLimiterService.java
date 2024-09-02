@@ -17,14 +17,19 @@ public class DefaultRateLimiterService implements RateLimiterService {
 
     @Override
     public void waitForRateLimit() {
+        log.debug("Starting to check rate limiter status...");
+
         while (!rateLimiter.tryAcquire()) {
             try {
-                log.debug("Waiting for rate limiter to be open");
+                log.info("Rate limit reached. Waiting to acquire permit...");
                 TimeUnit.MILLISECONDS.sleep(100);
             } catch (final InterruptedException e) {
                 Thread.currentThread().interrupt();
-                log.error("Interrupted while waiting for rate limit", e);
+                log.error("Thread interrupted while waiting for rate limit to reset", e);
+                return;
             }
         }
+
+        log.debug("Acquired permit from rate limiter, proceeding with execution.");
     }
 }

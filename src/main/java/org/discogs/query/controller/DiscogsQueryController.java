@@ -2,7 +2,6 @@ package org.discogs.query.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
@@ -25,7 +24,6 @@ import java.util.Objects;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@SuppressWarnings("unused")
 @RequestMapping("discogs-query")
 public class DiscogsQueryController {
 
@@ -35,7 +33,7 @@ public class DiscogsQueryController {
      * Searches Discogs using the provided query data.
      *
      * @param discogsQueryDTO the data transfer object containing the search query details
-     * @return a {@link ResponseEntity} containing the search results wrapped in {@link DiscogsResult}
+     * @return a {@link ResponseEntity} containing the search results wrapped in {@link DiscogsResultDTO}
      */
     @ResponseStatus(HttpStatus.OK)
     @PostMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE,
@@ -43,10 +41,22 @@ public class DiscogsQueryController {
     public ResponseEntity<List<DiscogsResultDTO>> searchBasedOnQuery(
             @RequestBody final List<DiscogsQueryDTO> discogsQueryDTO) {
 
+        log.info("Received search request with {} queries", discogsQueryDTO.size());
+
         List<DiscogsResultDTO> resultDTOList = discogsQueryDTO.stream()
-                .map(discogsQueryService::searchBasedOnQuery)
+                .map(query -> {
+                    log.debug("Processing query: {}", query);
+                    return discogsQueryService.searchBasedOnQuery(query);
+                })
                 .filter(Objects::nonNull)
+                .peek(result -> log.debug("Received result: {}", result))
                 .toList();
+
+        if (resultDTOList.isEmpty()) {
+            log.warn("No results found for the provided queries");
+        } else {
+            log.info("Returning {} results", resultDTOList.size());
+        }
 
         return ResponseEntity.status(HttpStatus.OK).body(resultDTOList);
     }

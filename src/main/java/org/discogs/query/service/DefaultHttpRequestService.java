@@ -22,18 +22,31 @@ import java.util.Optional;
 public class DefaultHttpRequestService implements HttpRequestService {
 
     private final RestTemplate restTemplate;
+
     @Value("${discogs.agent}")
     private String userAgent;
 
-
     @Override
     public <T> T executeRequest(final String url, final Class<T> responseType) {
+        log.info("Executing HTTP request to URL: {}", url);
+
         HttpHeaders headers = buildHeaders();
+        log.debug("HTTP headers built: {}", headers);
+
         HttpEntity<Void> entity = new HttpEntity<>(headers);
-        ResponseEntity<T> response = restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
-        logApiResponse(response);
-        return Optional.ofNullable(response.getBody())
-                .orElseThrow(() -> new DiscogsSearchException("Failed to fetch data from Discogs API"));
+        log.debug("HTTP entity created with headers");
+
+        try {
+            ResponseEntity<T> response = restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
+            log.info("Received HTTP response with status code: {}", response.getStatusCode());
+            logApiResponse(response);
+
+            return Optional.ofNullable(response.getBody())
+                    .orElseThrow(() -> new DiscogsSearchException("Failed to fetch data from Discogs API"));
+        } catch (final Exception e) {
+            log.error("Error executing HTTP request to URL: {}", url, e);
+            throw new DiscogsSearchException("HTTP request failed", e);
+        }
     }
 
     private HttpHeaders buildHeaders() {
@@ -46,9 +59,10 @@ public class DefaultHttpRequestService implements HttpRequestService {
 
     private void logApiResponse(final ResponseEntity<?> response) {
         if (response.getBody() != null) {
-            log.info("Discogs API response: {}", response.getBody());
+            log.info("Discogs API response body: {}", response.getBody());
         } else {
-            log.warn("Discogs API response is empty.");
+            log.warn("Discogs API response body is empty.");
         }
+        log.info("Discogs API response status: {}", response.getStatusCode());
     }
 }

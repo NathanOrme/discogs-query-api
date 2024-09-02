@@ -64,12 +64,16 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         try {
             log.info("Processing query: {}", discogsQueryDTO);
             String searchUrl = buildSearchUrl(discogsQueryDTO);
+            var stringResults = discogsAPIClient.getStringResultForQuery(searchUrl);
+            log.info("String results: {}", stringResults);
             var results = discogsAPIClient.getResultsForQuery(searchUrl);
             log.info("Received {} results from search API", results.getResults().size());
             correctUriForResultEntries(results);
             discogsResultDTO = discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
             if (Boolean.TRUE.equals(discogsQueryDTO.getCheckMarketplace())) {
-                results.getResults().forEach(this::processOnMarketplace);
+                results.getResults()
+                        .parallelStream()
+                        .forEach(this::processOnMarketplace);
                 orderResults(results);
             }
             log.info("Finished all http requests for: {}", discogsQueryDTO);
@@ -84,7 +88,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
     }
 
     private static void orderResults(final DiscogsResult results) {
-        results.setResults(results.getResults().stream()
+        results.setResults(results.getResults().parallelStream()
                 .filter(entry -> entry.getLowestPrice() != null) // Filter entries with non-null lowestPrice
                 .sorted(Comparator.comparing(DiscogsEntry::getLowestPrice)) // Sort based on lowestPrice
                 .toList());
@@ -114,11 +118,10 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
 
     private void correctUriForResultEntries(final DiscogsResult results) {
         if (results.getResults() != null) {
-            results.getResults().stream()
-                .filter(entry -> !entry.getUri().contains(discogsWebsiteBaseUrl))
-                .forEach(entry ->
-                    entry.setUri(discogsWebsiteBaseUrl
-                                 .concat(entry.getUri())));
+            results.getResults().parallelStream()
+                    .filter(entry -> !entry.getUri().contains(discogsWebsiteBaseUrl))
+                    .forEach(entry ->
+                            entry.setUri(discogsWebsiteBaseUrl.concat(entry.getUri())));
         }
     }
 

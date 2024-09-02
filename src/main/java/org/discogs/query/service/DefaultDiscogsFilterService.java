@@ -59,6 +59,10 @@ public class DefaultDiscogsFilterService implements DiscogsFilterService {
     private boolean filterIfTrackOnAlbum(final DiscogsEntry discogsEntry, final DiscogsQueryDTO discogsQueryDTO) {
         try {
             DiscogsRelease release = getReleaseDetails(discogsEntry);
+            if (release == null) {
+                log.error("No result was found, returning false");
+                return false;
+            }
             boolean isOnAlbum = filterArtists(discogsQueryDTO, release);
             if (isOnAlbum) {
                 isOnAlbum = filterTracks(discogsQueryDTO, release);

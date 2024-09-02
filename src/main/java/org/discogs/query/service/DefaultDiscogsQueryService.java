@@ -4,7 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.client.DiscogsAPIClient;
 import org.discogs.query.domain.DiscogsEntry;
+import org.discogs.query.domain.DiscogsRelease;
 import org.discogs.query.domain.DiscogsResult;
+import org.discogs.query.domain.release.Artist;
+import org.discogs.query.domain.release.ExtraArtist;
+import org.discogs.query.domain.release.Track;
 import org.discogs.query.enums.DiscogQueryParams;
 import org.discogs.query.enums.DiscogsTypes;
 import org.discogs.query.exceptions.DiscogsMarketplaceException;
@@ -42,6 +46,9 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
     @Value("${discogs.marketplaceCheck}")
     private String marketplaceCheck;
 
+    @Value("${discogs.release}")
+    private String release;
+
     @Value("${discogs.page-size}")
     private int pageSize;
 
@@ -69,13 +76,10 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
             var results = discogsAPIClient.getResultsForQuery(searchUrl);
             log.info("Received {} results from search API", results.getResults().size());
             correctUriForResultEntries(results);
-            discogsResultDTO = discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
-            if (Boolean.TRUE.equals(discogsQueryDTO.getCheckMarketplace())) {
-                results.getResults()
-                        .parallelStream()
-                        .forEach(this::processOnMarketplace);
-                orderResults(results);
+            if (discogsQueryDTO.getTrack() != null && !discogsQueryDTO.getTrack().isBlank()) {
+                checkIfTracklistOnAlbum(discogsQueryDTO, results);
             }
+            discogsResultDTO = discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
             log.info("Finished all http requests for: {}", discogsQueryDTO);
             return discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
         } catch (final DiscogsMarketplaceException | DiscogsSearchException e) {
@@ -87,30 +91,64 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         }
     }
 
-    private static void orderResults(final DiscogsResult results) {
-        results.setResults(results.getResults().parallelStream()
+    private void checkIfTracklistOnAlbum(final DiscogsQueryDTO discogsQueryDTO, final DiscogsResult results) {
+        var listOfResults = results.getResults().stream()
+                .filter(discogsEntry -> filterIfTrackOnAlbum(discogsEntry, discogsQueryDTO))
                 .filter(entry -> entry.getLowestPrice() != null) // Filter entries with non-null lowestPrice
-                .sorted(Comparator.comparing(DiscogsEntry::getLowestPrice)) // Sort based on lowestPrice
-                .toList());
+                .sorted(Comparator.comparing(DiscogsEntry::getLowestPrice))
+                .toList();
+        results.setResults(listOfResults);
     }
 
-    private void processOnMarketplace(final DiscogsEntry discogsEntry) {
+    private boolean filterIfTrackOnAlbum(final DiscogsEntry discogsEntry, final DiscogsQueryDTO discogsQueryDTO) {
         try {
-            log.info("Checking marketplace for entry {}", discogsEntry);
-            var marketplaceUrl = buildMarketplaceUrl(discogsEntry);
-            var marketplaceResults = discogsAPIClient.checkIsOnMarketplace(marketplaceUrl);
-            discogsEntry.setIsOnMarketplace(marketplaceResults.getNumberForSale() != null);
-            discogsEntry.setLowestPrice(marketplaceResults.getResult() != null
-                    ? marketplaceResults.getResult().getValue()
-                    : Float.parseFloat("0"));
-            log.info("Finished checking marketplace for {}", discogsEntry);
-        } catch (final Exception e) {
-            log.error(UNEXPECTED_ISSUE_OCCURRED, e);
+            String searchUrl = buildReleaseUrl(discogsEntry);
+            var results = discogsAPIClient.getRelease(searchUrl);
+            boolean isOnAlbum;
+            isOnAlbum = filterArtists(discogsQueryDTO, results);
+            if (isOnAlbum) {
+                isOnAlbum = filterTracks(discogsQueryDTO, results);
+            }
+            if (isOnAlbum) {
+                discogsEntry.setLowestPrice((float) results.getLowestPrice());
+            }
+            return isOnAlbum;
+        } catch (final DiscogsSearchException e) {
+            log.error("Exception caught while searching releases", e);
+            return false;
         }
     }
 
-    private String buildMarketplaceUrl(final DiscogsEntry discogsEntry) {
-        var baseUrl = discogsBaseUrl.concat(marketplaceCheck)
+    private boolean filterArtists(final DiscogsQueryDTO discogsQueryDTO, final DiscogsRelease results) {
+        boolean isOnAlbum;
+        for (final Artist artist : results.getArtists()) {
+            isOnAlbum = artist.getName().equalsIgnoreCase(discogsQueryDTO.getArtist());
+            if (isOnAlbum) {
+                return true;
+            }
+        }
+        for (final ExtraArtist artist : results.getExtraArtists()) {
+            isOnAlbum = artist.getName().equalsIgnoreCase(discogsQueryDTO.getArtist());
+            if (isOnAlbum) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean filterTracks(final DiscogsQueryDTO discogsQueryDTO, final DiscogsRelease results) {
+        boolean isOnAlbum;
+        for (final Track track : results.getTracklist()) {
+            isOnAlbum = track.getTitle().equalsIgnoreCase(discogsQueryDTO.getTrack());
+            if (isOnAlbum) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String buildReleaseUrl(final DiscogsEntry discogsEntry) {
+        var baseUrl = discogsBaseUrl.concat(release)
                 .concat(String.valueOf(discogsEntry.getId()));
         baseUrl = baseUrl.concat("?token=").concat(token);
         return baseUrl;

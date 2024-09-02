@@ -1,6 +1,7 @@
 package org.discogs.query.client;
 
 import org.discogs.query.domain.DiscogsMarketplaceResult;
+import org.discogs.query.domain.DiscogsRelease;
 import org.discogs.query.domain.DiscogsResult;
 
 /**
@@ -35,4 +36,6 @@ public interface DiscogsAPIClient {
      * @return Result to say if on marketplace
      */
     DiscogsMarketplaceResult checkIsOnMarketplace(final String url);
+
+    DiscogsRelease getRelease(final String searchUrl);
 }

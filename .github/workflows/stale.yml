@@ -38,12 +38,9 @@ jobs:
           DEFAULT_BRANCH="main"
           
           # List all remote branches
-          BRANCHES=$(git branch -r | grep -v '\->')
+          BRANCHES=$(git branch -r | grep -v '\->' | sed 's/origin\///')
 
-          for BRANCH in $BRANCHES; do
-            # Remove 'origin/' prefix from branch name
-            BRANCH_NAME=$(echo $BRANCH | sed 's/origin\///')
-          
+          for BRANCH_NAME in $BRANCHES; do
             # Skip if the branch is the default branch or if it's the current branch
             if [ "$BRANCH_NAME" = "$DEFAULT_BRANCH" ] || [ "$BRANCH_NAME" = $(git symbolic-ref --short HEAD) ]; then
               continue
@@ -58,7 +55,6 @@ jobs:
             # Check if the branch has been merged into the default branch
             if git merge-base --is-ancestor origin/$DEFAULT_BRANCH origin/$BRANCH_NAME; then
               echo "Branch $BRANCH_NAME has been merged into $DEFAULT_BRANCH."
-              # Delete merged branches
               echo "Deleting merged branch: $BRANCH_NAME"
               git push origin --delete $BRANCH_NAME
             elif [ $BRANCH_AGE -gt $STALE_SECONDS ]; then

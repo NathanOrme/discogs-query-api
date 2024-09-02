@@ -3,9 +3,11 @@ export function displayResults(response) {
     resultsContainer.innerHTML = '';
 
     if (!Array.isArray(response) || response.length === 0) {
-        resultsContainer.innerHTML = '<p>No results found.</p>';
+        displayError('No results found.');
         return;
     }
+
+    let hasResults = false;
 
     response.forEach((queryResult, index) => {
         const results = queryResult.results;
@@ -13,6 +15,8 @@ export function displayResults(response) {
         if (!Array.isArray(results) || results.length === 0) {
             return;
         }
+
+        hasResults = true;  // Mark that we have valid results
 
         const queryHeader = document.createElement('h2');
         queryHeader.textContent = `Results for Query ${index + 1}`;
@@ -32,7 +36,6 @@ export function displayResults(response) {
             const year = entry.year || 'N/A';
             const uri = entry.uri || '#';
 
-            // Update the logic for lowestPrice without checking isOnMarketplace
             const lowestPrice = (entry.lowestPrice !== null && entry.lowestPrice !== undefined)
                 ? '£' + parseFloat(entry.lowestPrice).toFixed(2)
                 : 'N/A';
@@ -40,7 +43,6 @@ export function displayResults(response) {
             const resultItem = document.createElement('div');
             resultItem.className = 'result-item';
 
-            // Always include Lowest Price
             resultItem.innerHTML = `
                 <h3>${title}</h3>
                 <div class="details">
@@ -70,9 +72,14 @@ export function displayResults(response) {
 
         resultsContainer.appendChild(resultsSection);
     });
+
+    if (!hasResults) {
+        displayError('No results available for the provided query.');
+    }
 }
 
 export function displayError(message) {
     const resultsContainer = document.getElementById('results');
     resultsContainer.innerHTML = `<p class="error-message">${message}</p>`;
 }
+ 

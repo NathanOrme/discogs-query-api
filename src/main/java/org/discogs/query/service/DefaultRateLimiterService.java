@@ -19,6 +19,7 @@ public class DefaultRateLimiterService implements RateLimiterService {
     public void waitForRateLimit() {
         while (!rateLimiter.tryAcquire()) {
             try {
+                log.debug("Waiting for rate limiter to be open");
                 TimeUnit.MILLISECONDS.sleep(100);
             } catch (final InterruptedException e) {
                 Thread.currentThread().interrupt();

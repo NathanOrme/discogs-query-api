@@ -37,5 +37,11 @@ public interface DiscogsAPIClient {
      */
     DiscogsMarketplaceResult checkIsOnMarketplace(final String url);
 
+    /**
+     * Searches the website to see if a release exists
+     *
+     * @param searchUrl URL to use
+     * @return a {@link DiscogsResult} result if found on the website.
+     */
     DiscogsRelease getRelease(final String searchUrl);
 }

@@ -1,12 +1,11 @@
-name: Clean Up Branches
+name: Delete Stale Branches
 
 on:
   schedule:
     - cron: '0 0 * * *' # Runs daily at midnight UTC
-  workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
-  clean-up-branches:
+  delete-stale-branches:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,7 +20,12 @@ jobs:
       - name: Fetch all branches
         run: git fetch --all
 
-      - name: Clean up branches
+      - name: Delete Merged Branches
+        uses: imajeetyadav/delete-merged-branches@main
+        with:
+          branch: main
+
+      - name: Delete stale branches
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -34,15 +38,23 @@ jobs:
           # Convert days to seconds
           STALE_SECONDS=$((STALE_DAYS * 86400))
           
-          # Default branch name
-          DEFAULT_BRANCH="main"
-          
           # List all remote branches
-          BRANCHES=$(git branch -r | grep -v '\->' | sed 's/origin\///')
-
-          for BRANCH_NAME in $BRANCHES; do
+          BRANCHES=$(git branch -r | grep -v '\->')
+          
+          for BRANCH in $BRANCHES; do
+            # Remove 'origin/' prefix from branch name
+            BRANCH_NAME=$(echo $BRANCH | sed 's/origin\///')
+          
             # Skip if the branch is the default branch or if it's the current branch
-            if [ "$BRANCH_NAME" = "$DEFAULT_BRANCH" ] || [ "$BRANCH_NAME" = $(git symbolic-ref --short HEAD) ]; then
+            if [ "$BRANCH_NAME" = "main" ] || [ "$BRANCH_NAME" = "master" ] || [ "$BRANCH_NAME" = $(git symbolic-ref --short HEAD) ]; then
+              continue
+            fi
+          
+            # Check for open pull requests
+            OPEN_PR_COUNT=$(gh pr list --base main --head $BRANCH_NAME --state open --json number --jq 'length')
+          
+            if [ "$OPEN_PR_COUNT" -gt 0 ]; then
+              echo "Skipping branch $BRANCH_NAME as it has open pull requests."
               continue
             fi
           
@@ -52,17 +64,10 @@ jobs:
             # Calculate the age of the branch
             BRANCH_AGE=$((CURRENT_DATE - LAST_COMMIT_DATE))
           
-            # Check if the branch has been merged into the default branch
-            if git merge-base --is-ancestor origin/$DEFAULT_BRANCH origin/$BRANCH_NAME; then
-              echo "Branch $BRANCH_NAME has been merged into $DEFAULT_BRANCH."
-              echo "Deleting merged branch: $BRANCH_NAME"
-              git push origin --delete $BRANCH_NAME
-            elif [ $BRANCH_AGE -gt $STALE_SECONDS ]; then
-              # Delete stale branches that are not merged
+            # If the branch is older than the threshold, delete it
+            if [ $BRANCH_AGE -gt $STALE_SECONDS ]; then
               echo "Deleting stale branch: $BRANCH_NAME"
               git push origin --delete $BRANCH_NAME
-            else
-              echo "Skipping branch $BRANCH_NAME: Not merged and not stale."
             fi
           done
         shell: bash

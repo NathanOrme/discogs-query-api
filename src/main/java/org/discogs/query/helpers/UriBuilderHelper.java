@@ -33,7 +33,7 @@ public class UriBuilderHelper {
     public void addIfNotNullOrBlank(final UriComponentsBuilder uriBuilder,
                                     final String paramName, final String paramValue) {
         if (paramValue != null && !paramValue.isBlank()) {
-            uriBuilder.queryParam(paramName, paramValue.replace(" ", "%20").replace("'", "%27"));
+            uriBuilder.queryParam(paramName, paramValue);
             log.debug("Added query parameter: {}={}", paramName, paramValue);
         } else {
             log.debug("Skipped adding query parameter: {} (value is null or blank)", paramName);

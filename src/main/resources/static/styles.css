@@ -4,11 +4,41 @@ body {
     margin: 0;
     padding: 20px;
     background-color: #f4f4f4;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 h1 {
     text-align: center;
     color: #333;
+}
+
+/* Header Styles */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+}
+
+header h1 {
+    margin: 0;
+}
+
+#toggleDarkMode {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 20px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#toggleDarkMode:hover {
+    background-color: #0056b3;
 }
 
 /* Container for overall layout */
@@ -24,6 +54,7 @@ h1 {
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .instructions h2 {
@@ -37,6 +68,10 @@ h1 {
 .instructions ol {
     margin: 0;
     padding-left: 20px;
+}
+
+.instructions strong {
+    color: #333;
 }
 
 /* Main content area for queries and results */
@@ -55,6 +90,7 @@ h1 {
     flex: 1;
     min-width: 400px; /* Ensures form doesn't shrink too much on smaller screens */
     max-width: 600px; /* Maximum width for form */
+    transition: background-color 0.3s, color 0.3s;
 }
 
 form {
@@ -76,6 +112,7 @@ select {
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
+    transition: border-color 0.3s;
 }
 
 input[type="checkbox"] {
@@ -93,7 +130,7 @@ button {
     cursor: pointer;
     font-size: 16px;
     margin-top: 10px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s, color 0.3s ease;
 }
 
 button:hover {
@@ -121,7 +158,8 @@ button:disabled {
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    position: relative; /* Added for positioning the delete button */
+    position: relative;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 .query-header {
@@ -131,9 +169,10 @@ button:disabled {
     color: white;
     padding: 10px;
     border-radius: 4px;
-    display: flex; /* Aligns items horizontally */
-    justify-content: space-between; /* Space between title and button */
-    align-items: center; /* Centers items vertically */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s;
 }
 
 .query-header:hover {
@@ -141,7 +180,7 @@ button:disabled {
 }
 
 .query-header .delete-button {
-    background-color: transparent; /* Transparent background for the button */
+    background-color: transparent;
     border: none;
     cursor: pointer;
     padding: 0;
@@ -149,15 +188,15 @@ button:disabled {
     display: flex;
     align-items: center;
     justify-content: center;
-    outline: none; /* Remove the default outline */
+    outline: none;
 }
 
 .query-header .delete-button svg {
-    width: 16px; /* Size of the cross icon */
+    width: 16px;
     height: 16px;
-    fill: red; /* Red color for the cross */
+    fill: red;
     stroke: red;
-    margin-left: 10px; /* Space between the text and the icon */
+    margin-left: 10px;
 }
 
 .query-content {
@@ -165,6 +204,7 @@ button:disabled {
     border-radius: 4px;
     padding: 10px;
     background-color: #f9f9f9;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 .query-content.hidden {
@@ -178,8 +218,9 @@ button:disabled {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     flex: 2;
-    min-width: 300px; /* Ensures results container doesn't shrink too much on smaller screens */
-    max-width: 800px; /* Maximum width for results */
+    min-width: 300px;
+    max-width: 800px;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .results-toggle-header {
@@ -211,6 +252,8 @@ button:disabled {
     border-radius: 8px;
     background-color: white;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, border-color 0.3s;
+    color: #333; /* Default text color */
 }
 
 .result-item h3 {
@@ -244,6 +287,110 @@ button:disabled {
     border-radius: 4px;
     margin-top: 20px;
     text-align: center;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+body.dark-mode header {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+}
+
+body.dark-mode #toggleDarkMode {
+    background-color: #333;
+    color: #e0e0e0;
+}
+
+body.dark-mode #toggleDarkMode:hover {
+    background-color: #444;
+}
+
+body.dark-mode .instructions,
+body.dark-mode .form-container,
+body.dark-mode .query,
+body.dark-mode .results-container,
+body.dark-mode .result-item {
+    background-color: #1e1e1e;
+    border-color: #333;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .instructions strong {
+    color: #e0e0e0;
+}
+
+body.dark-mode .query-header,
+body.dark-mode .results-toggle-header {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+}
+
+body.dark-mode .query-header:hover,
+body.dark-mode .results-toggle-header:hover {
+    background-color: #333;
+}
+
+body.dark-mode label,
+body.dark-mode .details {
+    color: #e0e0e0;
+}
+
+body.dark-mode input[type="text"],
+body.dark-mode select {
+    background-color: #333;
+    border-color: #555;
+    color: #e0e0e0;
+}
+
+body.dark-mode input[type="checkbox"] {
+    accent-color: #e0e0e0; /* For modern browsers */
+}
+
+body.dark-mode button {
+    background-color: #444;
+    color: #e0e0e0;
+}
+
+body.dark-mode button:hover {
+    background-color: #666;
+}
+
+body.dark-mode #loading {
+    color: #e0e0e0;
+}
+
+body.dark-mode .query-content {
+    background-color: #2c2c2c;
+    border-color: #555;
+}
+
+body.dark-mode .details {
+    color: #e0e0e0;
+}
+
+body.dark-mode .details a {
+    color: #e0e0e0;
+}
+
+body.dark-mode .error-message {
+    color: #f5c6cb;
+    background-color: #721c24;
+    border-color: #f5c6cb;
+}
+
+body.dark-mode .result-item {
+    background-color: #1e1e1e;
+    border-color: #333;
+    color: #e0e0e0; /* Text color for dark mode */
+}
+
+body.dark-mode .result-item h3 {
+    color: #e0e0e0; /* Title color for dark mode */
 }
 
 /* Responsive Design */

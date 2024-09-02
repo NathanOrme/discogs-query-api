@@ -57,7 +57,6 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
             log.debug("Built search URL: {}", searchUrl);
 
             log.info("Sending search request to Discogs API...");
-            //discogsAPIClient.getStringResultForQuery(searchUrl);
             DiscogsResult results = discogsAPIClient.getResultsForQuery(searchUrl);
             log.info("Received {} results from Discogs API", results.getResults().size());
 
@@ -71,11 +70,9 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
             correctUriForResultEntries(results);
             log.debug("Corrected URIs for result entries");
 
-            if (discogsQueryDTO.getTrack() != null && !discogsQueryDTO.getTrack().isBlank()) {
-                log.info("Track specified in query. Applying filter and sorting results...");
-                discogsFilterService.filterAndSortResults(discogsQueryDTO, results);
-                log.info("Filtering and sorting completed");
-            }
+            log.info("Filtering and sorting results");
+            discogsFilterService.filterAndSortResults(discogsQueryDTO, results);
+            log.info("Filtering and sorting completed");
 
             DiscogsResultDTO resultDTO = discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
             log.info("Search processing completed successfully for query: {}", discogsQueryDTO);
@@ -107,7 +104,6 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
         log.debug("Compilation search URL: {}", searchUrl);
 
         log.info("Sending compilation search request to Discogs API...");
-        //discogsAPIClient.getStringResultForQuery(searchUrl);
         DiscogsResult compResults = discogsAPIClient.getResultsForQuery(searchUrl);
         log.info("Received {} compilation results from Discogs API", compResults.getResults().size());
 

@@ -90,9 +90,11 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
                 return false;
             }
             boolean isOnAlbum = filterArtists(discogsQueryDTO, release);
-            if (isOnAlbum) {
+            if (isTrackSupplied(discogsQueryDTO) && isOnAlbum) {
+                log.info("Track specified in query. Applying filter and sorting results...");
                 isOnAlbum = filterTracks(discogsQueryDTO, release);
             }
+
             if (isOnAlbum) {
                 log.debug("Entry ID {} is on the album and matches the filters", discogsEntry.getId());
                 discogsEntry.setLowestPrice((float) release.getLowestPrice());
@@ -104,6 +106,10 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
             log.error("Error filtering track on album for entry ID {}", discogsEntry.getId(), e);
             return false;
         }
+    }
+
+    private static boolean isTrackSupplied(final DiscogsQueryDTO discogsQueryDTO) {
+        return discogsQueryDTO.getTrack() != null && !discogsQueryDTO.getTrack().isBlank();
     }
 
     private boolean filterArtists(final DiscogsQueryDTO discogsQueryDTO, final DiscogsRelease release) {

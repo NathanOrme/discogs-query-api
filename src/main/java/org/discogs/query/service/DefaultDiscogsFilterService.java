@@ -6,6 +6,7 @@ import org.discogs.query.client.DiscogsAPIClient;
 import org.discogs.query.domain.DiscogsEntry;
 import org.discogs.query.domain.DiscogsRelease;
 import org.discogs.query.domain.DiscogsResult;
+import org.discogs.query.domain.release.Track;
 import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.helpers.DiscogsUrlBuilder;
 import org.discogs.query.interfaces.DiscogsFilterService;
@@ -93,6 +94,12 @@ public class DefaultDiscogsFilterService implements DiscogsFilterService {
 
     private boolean filterTracks(final DiscogsQueryDTO discogsQueryDTO, final DiscogsRelease release) {
         return release.getTracklist().stream()
-                .anyMatch(track -> track.getTitle().equalsIgnoreCase(discogsQueryDTO.getTrack()));
+                .anyMatch(track -> isTrackEqualToOrContains(discogsQueryDTO, track));
+    }
+
+    private static boolean isTrackEqualToOrContains(final DiscogsQueryDTO discogsQueryDTO, final Track track) {
+        String title = track.getTitle().toLowerCase();
+        return title.equalsIgnoreCase(discogsQueryDTO.getTrack())
+                || title.contains(discogsQueryDTO.getTrack().toLowerCase());
     }
 }

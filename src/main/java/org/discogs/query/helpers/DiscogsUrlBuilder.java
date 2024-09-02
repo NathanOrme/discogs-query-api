@@ -102,7 +102,7 @@ public class DiscogsUrlBuilder {
     public String generateCompilationSearchUrl(final DiscogsQueryDTO discogsQueryDTO) {
         DiscogsQueryDTO dtoForUrl = DiscogsQueryDTO.builder()
                 .country(discogsQueryDTO.getCountry())
-                .format(discogsQueryDTO.getFormat())
+                .format(discogsQueryDTO.getFormat().replace(" ", "+"))
                 .types(discogsQueryDTO.getTypes())
                 .album(discogsQueryDTO.getAlbum())
                 .track(discogsQueryDTO.getTrack())
@@ -114,6 +114,7 @@ public class DiscogsUrlBuilder {
                 .queryParam("token", token);
 
         addQueryParams(uriBuilder, dtoForUrl);
-        return uriBuilder.toUriString().replace("%20", "+");
+        return uriBuilder.toUriString()
+                .replace("%20", "+");
     }
 }

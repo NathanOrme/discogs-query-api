@@ -6,6 +6,7 @@ import org.discogs.query.domain.DiscogsEntry;
 import org.discogs.query.domain.DiscogsRelease;
 import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.domain.release.Track;
+import org.discogs.query.enums.DiscogsVarious;
 import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.helpers.DiscogsUrlBuilder;
 import org.discogs.query.interfaces.DiscogsAPIClient;
@@ -89,12 +90,14 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
                 log.error("No release details found for entry ID {}", discogsEntry.getId());
                 return false;
             }
-            boolean isOnAlbum = filterArtists(discogsQueryDTO, release);
+            boolean isOnAlbum = true;
+            if (isNotVariousArtist(discogsQueryDTO.getArtist())) {
+                isOnAlbum = filterArtists(discogsQueryDTO, release);
+            }
             if (isTrackSupplied(discogsQueryDTO) && isOnAlbum) {
                 log.info("Track specified in query. Applying filter and sorting results...");
                 isOnAlbum = filterTracks(discogsQueryDTO, release);
             }
-
             if (isOnAlbum) {
                 log.debug("Entry ID {} is on the album and matches the filters", discogsEntry.getId());
                 discogsEntry.setLowestPrice((float) release.getLowestPrice());
@@ -106,6 +109,11 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
             log.error("Error filtering track on album for entry ID {}", discogsEntry.getId(), e);
             return false;
         }
+    }
+
+    private boolean isNotVariousArtist(final String artist) {
+        return !DiscogsVarious.VARIOUS.getVariousName().equalsIgnoreCase(artist)
+                && !DiscogsVarious.VARIOUS_ARTIST.getVariousName().equalsIgnoreCase(artist);
     }
 
     private static boolean isTrackSupplied(final DiscogsQueryDTO discogsQueryDTO) {

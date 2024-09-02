@@ -49,7 +49,10 @@ public class DiscogsUrlBuilder {
                 .queryParam("token", token);
 
         addQueryParams(uriBuilder, discogsQueryDTO);
-        String searchUrl = uriBuilder.toUriString().replace("%20", "+");
+        String searchUrl = uriBuilder
+            .encode()
+            .toUriString()
+            .replace("%20", "+");
 
         log.debug("Generated search URL: {}", searchUrl);
         return searchUrl;
@@ -131,7 +134,10 @@ public class DiscogsUrlBuilder {
                 .queryParam("token", token);
 
         addQueryParams(uriBuilder, dtoForUrl);
-        String compilationSearchUrl = uriBuilder.toUriString().replace("%20", "+");
+        String compilationSearchUrl = uriBuilder
+            .encode()
+            .toUriString()
+            .replace("%20", "+");
 
         log.debug("Generated compilation search URL: {}", compilationSearchUrl);
         return compilationSearchUrl;

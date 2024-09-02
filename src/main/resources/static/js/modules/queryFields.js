@@ -63,9 +63,6 @@ export function createQueryFields(queriesContainer, queryCounter, isFirstQuery =
         <select class="types" name="types">
             ${discogsTypes.map(type => `<option value="${type.value}">${type.text}</option>`).join('')}
         </select>
-
-        <label for="checkMarketplace">Check Marketplace:</label>
-        <input type="checkbox" class="checkMarketplace" name="checkMarketplace">
     `;
 
     // Append elements to the queryDiv

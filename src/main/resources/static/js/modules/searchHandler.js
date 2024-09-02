@@ -13,7 +13,6 @@ function handleSearchFormSubmit(event) {
         const format = queryDiv.querySelector('.format').value || null;
         const country = queryDiv.querySelector('.country').value || null;
         const types = queryDiv.querySelector('.types').value || null;
-        const checkMarketplace = queryDiv.querySelector('.checkMarketplace').checked;
 
         return {
             artist: artist,
@@ -22,7 +21,6 @@ function handleSearchFormSubmit(event) {
             format: format,
             country: country,
             types: types,
-            checkMarketplace: checkMarketplace
         };
     });
 

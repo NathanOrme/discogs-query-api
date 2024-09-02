@@ -53,7 +53,7 @@ public class DiscogsUrlBuilder {
         addQueryParams(uriBuilder, discogsQueryDTO);
         return uriBuilder.toUriString().replace("%20", "+");
     }
-
+    
     /**
      * Builds the release URL for the given DiscogsEntry.
      *
@@ -72,7 +72,7 @@ public class DiscogsUrlBuilder {
         uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
                 DiscogQueryParams.ARTIST.getQueryType(),
                 discogsQueryDTO.getArtist());
-        
+
         uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
                 DiscogQueryParams.ALBUM.getQueryType(),
                 discogsQueryDTO.getAlbum());

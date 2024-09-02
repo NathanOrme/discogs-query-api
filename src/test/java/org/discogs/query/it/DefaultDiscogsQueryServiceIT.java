@@ -1,4 +1,4 @@
-package org.discogs.query.service;
+package org.discogs.query.it;
 
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.enums.DiscogCountries;
@@ -24,7 +24,7 @@ class DefaultDiscogsQueryServiceIT {
                 .artist("Jimi Hendrix")
                 .track("All Along The Watchtower")
                 .format(DiscogsFormats.VINYL_COMPILATION.getFormat())
-                .country(DiscogCountries.UK)
+                .country(DiscogCountries.UNKNOWN)
                 .build();
         var result = discogsQueryService.searchBasedOnQuery(discogsQueryDTO);
         assertNotNull(result);

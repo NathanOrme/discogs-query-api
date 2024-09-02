@@ -86,7 +86,7 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         }
     }
 
-    private static boolean isCompilationFormat(final DiscogsQueryDTO discogsQueryDTO) {
+    static boolean isCompilationFormat(final DiscogsQueryDTO discogsQueryDTO) {
         boolean isCompilation = DiscogsFormats.COMP.getFormat().equalsIgnoreCase(discogsQueryDTO.getFormat())
                 || DiscogsFormats.VINYL_COMPILATION.getFormat().equalsIgnoreCase(discogsQueryDTO.getFormat());
         log.debug("Checking if format is compilation: {}. Result: {}", discogsQueryDTO.getFormat(), isCompilation);

@@ -6,6 +6,7 @@ import org.discogs.query.domain.DiscogsEntry;
 import org.discogs.query.domain.DiscogsRelease;
 import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.domain.release.Track;
+import org.discogs.query.enums.DiscogsVarious;
 import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.helpers.DiscogsUrlBuilder;
 import org.discogs.query.interfaces.DiscogsAPIClient;
@@ -13,8 +14,12 @@ import org.discogs.query.interfaces.DiscogsFilterService;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 /**
  * Implementation of {@link DiscogsFilterService} for filtering and sorting Discogs search results.
+ * This service handles the logic for applying filters based on the artist and track name,
+ * as well as sorting results by price.
  */
 @Slf4j
 @Service
@@ -24,35 +29,21 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
     private final DiscogsAPIClient discogsAPIClient;
     private final DiscogsUrlBuilder discogsUrlBuilder;
 
-    private static boolean isArtistNameMatching(final DiscogsQueryDTO discogsQueryDTO, final String artistName) {
-        return artistName.equalsIgnoreCase(discogsQueryDTO.getArtist());
-    }
-
-    private static boolean isTrackEqualToOrContains(final DiscogsQueryDTO discogsQueryDTO, final Track track) {
-        String title = track.getTitle().toLowerCase();
-        return title.equalsIgnoreCase(discogsQueryDTO.getTrack())
-                || title.contains(discogsQueryDTO.getTrack().toLowerCase());
-    }
-
     /**
-     * Filters and sorts the search results based on the query DTO.
+     * Filters and sorts Discogs search results based on the provided query data.
+     * Filters out entries without a price and sorts the remaining entries by lowest price.
      *
-     * @param discogsQueryDTO the search query data transfer object
-     * @param results         the search results to be filtered and sorted
+     * @param discogsQueryDTO the search query data transfer object containing filter criteria.
+     * @param results         the Discogs search results to be filtered and sorted.
      */
     @Override
-    public void filterAndSortResults(final DiscogsQueryDTO discogsQueryDTO, final DiscogsResult results) {
+    public void filterAndSortResults(final DiscogsQueryDTO discogsQueryDTO,
+                                     final DiscogsResult results) {
         log.info("Filtering and sorting results for query: {}", discogsQueryDTO);
 
-        var filteredAndSortedResults = results.getResults().parallelStream()
+        var filteredAndSortedResults = results.getResults().stream()
                 .filter(entry -> filterIfTrackOnAlbum(entry, discogsQueryDTO))
-                .filter(entry -> {
-                    boolean hasPrice = entry.getLowestPrice() != null;
-                    if (!hasPrice) {
-                        log.debug("Entry ID {} has no price, filtering out", entry.getId());
-                    }
-                    return hasPrice;
-                })
+                .filter(entry -> Objects.nonNull(entry.getLowestPrice()))
                 .sorted((e1, e2) -> Float.compare(e1.getLowestPrice(), e2.getLowestPrice()))
                 .toList();
 
@@ -62,10 +53,12 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
     }
 
     /**
-     * Retrieves a {@link DiscogsRelease} object based on the provided {@link DiscogsEntry}.
+     * Retrieves detailed information about a Discogs release based on the provided Discogs entry.
+     * Constructs the release URL and calls the Discogs API to fetch the release details.
      *
-     * @param discogsEntry the Discogs entry containing the release ID
-     * @return the {@link DiscogsRelease} object
+     * @param discogsEntry the Discogs entry containing the release ID.
+     * @return the {@link DiscogsRelease} object containing detailed release information.
+     * @throws DiscogsSearchException if an error occurs while retrieving the release details.
      */
     @Override
     public DiscogsRelease getReleaseDetails(final DiscogsEntry discogsEntry) {
@@ -77,10 +70,20 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
             return release;
         } catch (final Exception e) {
             log.error("Error retrieving release details for entry ID {}", discogsEntry.getId(), e);
-            throw new DiscogsSearchException("Failed to retrieve release details", e);
+            throw new DiscogsSearchException("Failed to retrieve release details for entry ID " +
+                    discogsEntry.getId(), e);
         }
     }
 
+    /**
+     * Filters a Discogs entry based on whether it contains the specified track on the album.
+     * This method checks if the artist and track match the query criteria and whether the entry
+     * is not categorized as "Various Artists" unless explicitly allowed.
+     *
+     * @param discogsEntry    the Discogs entry to be filtered.
+     * @param discogsQueryDTO the search query data transfer object containing filter criteria.
+     * @return {@code true} if the entry matches the query criteria, otherwise {@code false}.
+     */
     private boolean filterIfTrackOnAlbum(final DiscogsEntry discogsEntry, final DiscogsQueryDTO discogsQueryDTO) {
         try {
             log.debug("Filtering track on album for entry ID {}", discogsEntry.getId());
@@ -89,7 +92,9 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
                 log.error("No release details found for entry ID {}", discogsEntry.getId());
                 return false;
             }
-            boolean isOnAlbum = filterArtists(discogsQueryDTO, release);
+            boolean isOnAlbum = !isNotVariousArtist(discogsQueryDTO.getArtist())
+                    || filterArtists(discogsQueryDTO, release);
+
             if (isTrackSupplied(discogsQueryDTO) && isOnAlbum) {
                 log.info("Track specified in query. Applying filter and sorting results...");
                 isOnAlbum = filterTracks(discogsQueryDTO, release);
@@ -108,14 +113,41 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
         }
     }
 
+    /**
+     * Checks if the artist is not categorized as a "Various Artists" entry.
+     *
+     * @param artist the artist name to check.
+     * @return {@code true} if the artist is not categorized as "Various Artists", otherwise {@code false}.
+     */
+    private boolean isNotVariousArtist(final String artist) {
+        return !DiscogsVarious.VARIOUS.getVariousName().equalsIgnoreCase(artist)
+                && !DiscogsVarious.VARIOUS_ARTIST.getVariousName().equalsIgnoreCase(artist);
+    }
+
+    /**
+     * Checks if a track is provided in the query DTO.
+     *
+     * @param discogsQueryDTO the search query data transfer object containing filter criteria.
+     * @return {@code true} if a track is provided, otherwise {@code false}.
+     */
     private static boolean isTrackSupplied(final DiscogsQueryDTO discogsQueryDTO) {
         return discogsQueryDTO.getTrack() != null && !discogsQueryDTO.getTrack().isBlank();
     }
 
-    private boolean filterArtists(final DiscogsQueryDTO discogsQueryDTO, final DiscogsRelease release) {
+    /**
+     * Filters a Discogs release based on the artist name provided in the query DTO.
+     * Checks both primary artists and extra artists for a match.
+     *
+     * @param discogsQueryDTO the search query data transfer object containing the artist name.
+     * @param release         the {@link DiscogsRelease} object containing the release details.
+     * @return {@code true} if the artist matches, otherwise {@code false}.
+     */
+    private boolean filterArtists(final DiscogsQueryDTO discogsQueryDTO,
+                                  final DiscogsRelease release) {
         log.debug("Filtering artists for release ID {}", release.getId());
         boolean isArtistMatch = release.getArtists().stream()
                 .anyMatch(artist -> isArtistNameMatching(discogsQueryDTO, artist.getName()));
+
         if (!isArtistMatch && release.getExtraArtists() != null) {
             log.debug("Checking extra artists for release ID {}", release.getId());
             isArtistMatch = release.getExtraArtists().stream()
@@ -125,11 +157,46 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
         return isArtistMatch;
     }
 
-    private boolean filterTracks(final DiscogsQueryDTO discogsQueryDTO, final DiscogsRelease release) {
+    /**
+     * Filters a Discogs release based on the track name provided in the query DTO.
+     * Checks if any track on the release matches or contains the provided track name.
+     *
+     * @param discogsQueryDTO the search query data transfer object containing the track name.
+     * @param release         the {@link DiscogsRelease} object containing the release details.
+     * @return {@code true} if the track matches, otherwise {@code false}.
+     */
+    private boolean filterTracks(final DiscogsQueryDTO discogsQueryDTO,
+                                 final DiscogsRelease release) {
         log.debug("Filtering tracks for release ID {}", release.getId());
         boolean trackMatch = release.getTracklist().stream()
                 .anyMatch(track -> isTrackEqualToOrContains(discogsQueryDTO, track));
         log.debug("Track match status for release ID {}: {}", release.getId(), trackMatch);
         return trackMatch;
+    }
+
+    /**
+     * Checks if the artist name from the query DTO matches the given artist name.
+     *
+     * @param discogsQueryDTO the search query data transfer object containing the artist name.
+     * @param artistName      the artist name to compare with.
+     * @return {@code true} if the artist names match, otherwise {@code false}.
+     */
+    private static boolean isArtistNameMatching(final DiscogsQueryDTO discogsQueryDTO,
+                                                final String artistName) {
+        return artistName.equalsIgnoreCase(discogsQueryDTO.getArtist());
+    }
+
+    /**
+     * Checks if the track title from the query DTO matches or is contained in the given track title.
+     *
+     * @param discogsQueryDTO the search query data transfer object containing the track title.
+     * @param track           the {@link Track} object containing the track title.
+     * @return {@code true} if the track titles match or if the track title
+     * contains the query track title, otherwise {@code false}.
+     */
+    private static boolean isTrackEqualToOrContains(final DiscogsQueryDTO discogsQueryDTO, final Track track) {
+        String title = track.getTitle().toLowerCase();
+        return title.equalsIgnoreCase(discogsQueryDTO.getTrack())
+                || title.contains(discogsQueryDTO.getTrack().toLowerCase());
     }
 }

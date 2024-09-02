@@ -2,13 +2,13 @@ package org.discogs.query.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.discogs.query.client.DiscogsAPIClient;
 import org.discogs.query.domain.DiscogsEntry;
 import org.discogs.query.domain.DiscogsRelease;
 import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.domain.release.Track;
 import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.helpers.DiscogsUrlBuilder;
+import org.discogs.query.interfaces.DiscogsAPIClient;
 import org.discogs.query.interfaces.DiscogsFilterService;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.springframework.stereotype.Service;
@@ -19,10 +19,20 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class DefaultDiscogsFilterService implements DiscogsFilterService {
+public class DiscogsFilterServiceImpl implements DiscogsFilterService {
 
     private final DiscogsAPIClient discogsAPIClient;
     private final DiscogsUrlBuilder discogsUrlBuilder;
+
+    private static boolean isArtistNameMatching(final DiscogsQueryDTO discogsQueryDTO, final String artistName) {
+        return artistName.equalsIgnoreCase(discogsQueryDTO.getArtist());
+    }
+
+    private static boolean isTrackEqualToOrContains(final DiscogsQueryDTO discogsQueryDTO, final Track track) {
+        String title = track.getTitle().toLowerCase();
+        return title.equalsIgnoreCase(discogsQueryDTO.getTrack())
+                || title.contains(discogsQueryDTO.getTrack().toLowerCase());
+    }
 
     /**
      * Filters and sorts the search results based on the query DTO.
@@ -46,7 +56,8 @@ public class DefaultDiscogsFilterService implements DiscogsFilterService {
                 .sorted((e1, e2) -> Float.compare(e1.getLowestPrice(), e2.getLowestPrice()))
                 .toList();
 
-        log.info("Filtered and sorted {} results out of {}", filteredAndSortedResults.size(), results.getResults().size());
+        log.info("Filtered and sorted {} results out of {}",
+                filteredAndSortedResults.size(), results.getResults().size());
         results.setResults(filteredAndSortedResults);
     }
 
@@ -79,9 +90,11 @@ public class DefaultDiscogsFilterService implements DiscogsFilterService {
                 return false;
             }
             boolean isOnAlbum = filterArtists(discogsQueryDTO, release);
-            if (isOnAlbum) {
+            if (isTrackSupplied(discogsQueryDTO) && isOnAlbum) {
+                log.info("Track specified in query. Applying filter and sorting results...");
                 isOnAlbum = filterTracks(discogsQueryDTO, release);
             }
+
             if (isOnAlbum) {
                 log.debug("Entry ID {} is on the album and matches the filters", discogsEntry.getId());
                 discogsEntry.setLowestPrice((float) release.getLowestPrice());
@@ -93,6 +106,10 @@ public class DefaultDiscogsFilterService implements DiscogsFilterService {
             log.error("Error filtering track on album for entry ID {}", discogsEntry.getId(), e);
             return false;
         }
+    }
+
+    private static boolean isTrackSupplied(final DiscogsQueryDTO discogsQueryDTO) {
+        return discogsQueryDTO.getTrack() != null && !discogsQueryDTO.getTrack().isBlank();
     }
 
     private boolean filterArtists(final DiscogsQueryDTO discogsQueryDTO, final DiscogsRelease release) {
@@ -108,21 +125,11 @@ public class DefaultDiscogsFilterService implements DiscogsFilterService {
         return isArtistMatch;
     }
 
-    private static boolean isArtistNameMatching(final DiscogsQueryDTO discogsQueryDTO, final String artistName) {
-        return artistName.equalsIgnoreCase(discogsQueryDTO.getArtist());
-    }
-
     private boolean filterTracks(final DiscogsQueryDTO discogsQueryDTO, final DiscogsRelease release) {
         log.debug("Filtering tracks for release ID {}", release.getId());
         boolean trackMatch = release.getTracklist().stream()
                 .anyMatch(track -> isTrackEqualToOrContains(discogsQueryDTO, track));
         log.debug("Track match status for release ID {}: {}", release.getId(), trackMatch);
         return trackMatch;
-    }
-
-    private static boolean isTrackEqualToOrContains(final DiscogsQueryDTO discogsQueryDTO, final Track track) {
-        String title = track.getTitle().toLowerCase();
-        return title.equalsIgnoreCase(discogsQueryDTO.getTrack())
-                || title.contains(discogsQueryDTO.getTrack().toLowerCase());
     }
 }

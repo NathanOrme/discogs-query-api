@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
-public class DefaulRetryService implements RetryService {
+public class RetryServiceImpl implements RetryService {
 
     private static final int RETRY_COUNT = 3;
     private static final long RETRY_DELAY = 2; // in seconds
@@ -24,7 +24,8 @@ public class DefaulRetryService implements RetryService {
                 log.info("Attempting {}. Attempt {} of {}", actionDescription, attempt, RETRY_COUNT);
                 return action.call();
             } catch (final Exception e) {
-                log.warn("Error during {} on attempt {} of {}. Exception: {}", actionDescription, attempt, RETRY_COUNT, e.getMessage());
+                log.warn("Error during {} on attempt {} of {}. Exception: {}",
+                        actionDescription, attempt, RETRY_COUNT, e.getMessage());
                 if (attempt == RETRY_COUNT) {
                     throw e; // rethrow after final attempt
                 }

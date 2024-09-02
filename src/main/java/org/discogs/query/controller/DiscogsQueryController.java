@@ -1,5 +1,6 @@
 package org.discogs.query.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.interfaces.DiscogsQueryService;
@@ -39,7 +40,7 @@ public class DiscogsQueryController {
     @PostMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<DiscogsResultDTO>> searchBasedOnQuery(
-            @RequestBody final List<DiscogsQueryDTO> discogsQueryDTO) {
+            @RequestBody @Valid final List<DiscogsQueryDTO> discogsQueryDTO) {
 
         log.info("Received search request with {} queries", discogsQueryDTO.size());
 

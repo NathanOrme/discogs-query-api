@@ -47,6 +47,12 @@ jobs:
       - name: Set Version With Maven
         run: mvn versions:set -DnewVersion=${{ steps.removev.outputs.ref_name }}
 
+      - name: Install dependencies
+        run: mvn clean install -DskipTests
+
+      - name: Run Checkstyle
+        run: mvn checkstyle:check -Dcheckstyle.config.location=lint/checkstyle.xml
+
       - name: Build with Maven and buildpacks
         run: mvn clean install package javadoc:javadoc spring-boot:build-image
 

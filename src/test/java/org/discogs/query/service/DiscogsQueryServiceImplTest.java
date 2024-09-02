@@ -1,11 +1,11 @@
 package org.discogs.query.service;
 
-import org.discogs.query.client.DiscogsAPIClient;
 import org.discogs.query.domain.DiscogsEntry;
 import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.enums.DiscogsFormats;
 import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.helpers.DiscogsUrlBuilder;
+import org.discogs.query.interfaces.DiscogsAPIClient;
 import org.discogs.query.interfaces.DiscogsFilterService;
 import org.discogs.query.mapper.DiscogsResultMapper;
 import org.discogs.query.model.DiscogsQueryDTO;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class DefaultDiscogsQueryServiceTest {
+class DiscogsQueryServiceImplTest {
 
     @Mock
     private DiscogsAPIClient discogsAPIClient;
@@ -44,7 +44,7 @@ class DefaultDiscogsQueryServiceTest {
     private DiscogsFilterService discogsFilterService;
 
     @InjectMocks
-    private DefaultDiscogsQueryService defaultDiscogsQueryService;
+    private DiscogsQueryServiceImpl discogsQueryServiceImpl;
 
     private DiscogsQueryDTO discogsQueryDTO;
     private DiscogsResult discogsResult;
@@ -73,7 +73,7 @@ class DefaultDiscogsQueryServiceTest {
         doThrow(new DiscogsSearchException("API error")).when(discogsAPIClient).getResultsForQuery(anyString());
 
         // Perform the search
-        DiscogsResultDTO result = defaultDiscogsQueryService.searchBasedOnQuery(discogsQueryDTO);
+        DiscogsResultDTO result = discogsQueryServiceImpl.searchBasedOnQuery(discogsQueryDTO);
 
         // Verify behaviors
         verify(discogsAPIClient, times(1)).getResultsForQuery(anyString());
@@ -90,7 +90,7 @@ class DefaultDiscogsQueryServiceTest {
 
         // Perform the search and expect exception
         assertThrows(DiscogsSearchException.class, () -> {
-            defaultDiscogsQueryService.searchBasedOnQuery(discogsQueryDTO);
+            discogsQueryServiceImpl.searchBasedOnQuery(discogsQueryDTO);
         });
 
         // Verify behaviors
@@ -103,7 +103,7 @@ class DefaultDiscogsQueryServiceTest {
         discogsQueryDTO.setFormat(DiscogsFormats.COMP.getFormat());
 
         // When
-        boolean isCompilation = DefaultDiscogsQueryService.isCompilationFormat(discogsQueryDTO);
+        boolean isCompilation = DiscogsQueryServiceImpl.isCompilationFormat(discogsQueryDTO);
 
         // Then
         assertTrue(isCompilation);

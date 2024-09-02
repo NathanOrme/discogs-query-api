@@ -37,7 +37,8 @@ public class DiscogsResultMapper {
             log.debug("Mapping completed successfully for query: {}", discogsQueryDTO);
             return resultDTO;
         } catch (final Exception e) {
-            log.error("Error occurred while mapping DiscogsResult to DiscogsResultDTO for query: {}", discogsQueryDTO, e);
+            log.error("Error occurred while mapping DiscogsResult to DiscogsResultDTO for query: {}",
+                    discogsQueryDTO, e);
             throw e;  // Re-throw the exception after logging
         }
     }

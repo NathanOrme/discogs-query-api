@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Slf4j
 @SpringBootTest
-class DefaultDiscogsQueryServiceIT {
+class DiscogsQueryServiceImplIT {
 
     @Autowired
     private DiscogsQueryService discogsQueryService;
@@ -23,8 +23,8 @@ class DefaultDiscogsQueryServiceIT {
         DiscogsQueryDTO discogsQueryDTO = DiscogsQueryDTO.builder()
                 .artist("Jimi Hendrix")
                 .track("All Along The Watchtower")
-                .format(DiscogsFormats.VINYL_COMPILATION.getFormat())
-                .country(DiscogCountries.UNKNOWN)
+                .format(DiscogsFormats.VINYL.getFormat())
+                .country(DiscogCountries.UK)
                 .build();
         var result = discogsQueryService.searchBasedOnQuery(discogsQueryDTO);
         assertNotNull(result);

@@ -1,4 +1,4 @@
-package org.discogs.query.client;
+package org.discogs.query.interfaces;
 
 import org.discogs.query.domain.DiscogsRelease;
 import org.discogs.query.domain.DiscogsResult;

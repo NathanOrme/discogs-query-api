@@ -2,12 +2,12 @@ package org.discogs.query.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.discogs.query.deserializers.DiscogsCountryDeserializer;
+import org.discogs.query.deserializers.DiscogsFormatsDeserializer;
+import org.discogs.query.deserializers.DiscogsTypesDeserializer;
 import org.discogs.query.enums.DiscogCountries;
 import org.discogs.query.enums.DiscogsFormats;
 import org.discogs.query.enums.DiscogsTypes;
-import org.discogs.query.model.deserializers.DiscogsCountryDeserializer;
-import org.discogs.query.model.deserializers.DiscogsFormatsDeserializer;
-import org.discogs.query.model.deserializers.DiscogsTypesDeserializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

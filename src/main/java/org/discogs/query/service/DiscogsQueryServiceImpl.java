@@ -2,12 +2,12 @@ package org.discogs.query.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.discogs.query.client.DiscogsAPIClient;
 import org.discogs.query.domain.DiscogsEntry;
 import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.enums.DiscogsFormats;
 import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.helpers.DiscogsUrlBuilder;
+import org.discogs.query.interfaces.DiscogsAPIClient;
 import org.discogs.query.interfaces.DiscogsFilterService;
 import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.mapper.DiscogsResultMapper;
@@ -26,7 +26,7 @@ import java.util.Set;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class DefaultDiscogsQueryService implements DiscogsQueryService {
+public class DiscogsQueryServiceImpl implements DiscogsQueryService {
 
     private static final String UNEXPECTED_ISSUE_OCCURRED = "Unexpected issue occurred";
 
@@ -34,6 +34,13 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
     private final DiscogsResultMapper discogsResultMapper;
     private final DiscogsUrlBuilder discogsUrlBuilder;
     private final DiscogsFilterService discogsFilterService;
+
+    static boolean isCompilationFormat(final DiscogsQueryDTO discogsQueryDTO) {
+        boolean isCompilation = DiscogsFormats.COMP.getFormat().equalsIgnoreCase(discogsQueryDTO.getFormat())
+                || DiscogsFormats.VINYL_COMPILATION.getFormat().equalsIgnoreCase(discogsQueryDTO.getFormat());
+        log.debug("Checking if format is compilation: {}. Result: {}", discogsQueryDTO.getFormat(), isCompilation);
+        return isCompilation;
+    }
 
     /**
      * Searches the Discogs database based on the provided query.
@@ -50,7 +57,6 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
             log.debug("Built search URL: {}", searchUrl);
 
             log.info("Sending search request to Discogs API...");
-            //discogsAPIClient.getStringResultForQuery(searchUrl);
             DiscogsResult results = discogsAPIClient.getResultsForQuery(searchUrl);
             log.info("Received {} results from Discogs API", results.getResults().size());
 
@@ -64,11 +70,9 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
             correctUriForResultEntries(results);
             log.debug("Corrected URIs for result entries");
 
-            if (discogsQueryDTO.getTrack() != null && !discogsQueryDTO.getTrack().isBlank()) {
-                log.info("Track specified in query. Applying filter and sorting results...");
-                discogsFilterService.filterAndSortResults(discogsQueryDTO, results);
-                log.info("Filtering and sorting completed");
-            }
+            log.info("Filtering and sorting results");
+            discogsFilterService.filterAndSortResults(discogsQueryDTO, results);
+            log.info("Filtering and sorting completed");
 
             DiscogsResultDTO resultDTO = discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
             log.info("Search processing completed successfully for query: {}", discogsQueryDTO);
@@ -86,13 +90,6 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         }
     }
 
-    static boolean isCompilationFormat(final DiscogsQueryDTO discogsQueryDTO) {
-        boolean isCompilation = DiscogsFormats.COMP.getFormat().equalsIgnoreCase(discogsQueryDTO.getFormat())
-                || DiscogsFormats.VINYL_COMPILATION.getFormat().equalsIgnoreCase(discogsQueryDTO.getFormat());
-        log.debug("Checking if format is compilation: {}. Result: {}", discogsQueryDTO.getFormat(), isCompilation);
-        return isCompilation;
-    }
-
     private void correctUriForResultEntries(final DiscogsResult results) {
         log.debug("Correcting URIs for result entries");
         results.getResults().stream()
@@ -107,7 +104,6 @@ public class DefaultDiscogsQueryService implements DiscogsQueryService {
         log.debug("Compilation search URL: {}", searchUrl);
 
         log.info("Sending compilation search request to Discogs API...");
-        //discogsAPIClient.getStringResultForQuery(searchUrl);
         DiscogsResult compResults = discogsAPIClient.getResultsForQuery(searchUrl);
         log.info("Received {} compilation results from Discogs API", compResults.getResults().size());
 

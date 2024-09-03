@@ -3,7 +3,6 @@ package org.discogs.query.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.domain.DiscogsEntry;
-import org.discogs.query.domain.DiscogsMarketplaceResult;
 import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.enums.DiscogsFormats;
 import org.discogs.query.exceptions.DiscogsSearchException;
@@ -102,9 +101,9 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
         results.getResults().forEach(entry -> {
             try {
                 log.info("Generating marketplace URL for query: {}", entry);
-                String marketplaceUrl = discogsUrlBuilder.builldMarketplaceUrl(entry);
+                var marketplaceUrl = discogsUrlBuilder.builldMarketplaceUrl(entry);
                 log.info("Getting marketplace result for the following entry: {}", entry);
-                DiscogsMarketplaceResult discogsMarketplaceResult = discogsAPIClient
+                var discogsMarketplaceResult = discogsAPIClient
                         .getMarketplaceResultForQuery(marketplaceUrl);
                 if (discogsMarketplaceResult != null) {
                     entry.setNumberForSale(discogsMarketplaceResult.getNumberForSale());

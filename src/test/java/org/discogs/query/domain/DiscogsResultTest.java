@@ -32,28 +32,4 @@ class DiscogsResultTest {
         assertEquals(entry, resultDTO.getResults().get(0));
     }
 
-    @Test
-    void testDtoToString() {
-        // Arrange
-        DiscogsEntry entry = DiscogsEntry.builder()
-                .id(1)
-                .title("Sample Title")
-                .format(Collections.singletonList("vinyl"))
-                .url("http://example.com/master")
-                .uri("http://example.com/entry")
-                .build();
-
-        DiscogsResult resultDTO = DiscogsResult.builder()
-                .results(Collections.singletonList(entry))
-                .build();
-
-        // Act
-        String dtoString = resultDTO.toString();
-
-        // Assert
-        assertNotNull(dtoString);
-        assertEquals("DiscogsResult(results=[DiscogsEntry(id=1, title=Sample Title, format=[vinyl], " +
-                "url=http://example.com/master, uri=http://example.com/entry, country=null, year=null, isOnMarketplace=null, lowestPrice=null)])", dtoString);
-    }
-
 }

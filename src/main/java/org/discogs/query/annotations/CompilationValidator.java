@@ -32,9 +32,11 @@ public class CompilationValidator
      * @return whether it matches the criteria or not
      */
     @Override
-    public boolean isValid(final DiscogsQueryDTO discogsQueryDTO, final ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(final DiscogsQueryDTO discogsQueryDTO,
+                           final ConstraintValidatorContext constraintValidatorContext) {
         if (!discogsQueryDTO.getFormat().equalsIgnoreCase(DiscogsFormats.COMP.getFormat())
-                && !discogsQueryDTO.getFormat().equalsIgnoreCase(DiscogsFormats.VINYL_COMPILATION.getFormat())) {
+                && !discogsQueryDTO.getFormat()
+                .equalsIgnoreCase(DiscogsFormats.VINYL_COMPILATION.getFormat())) {
             return true;
         }
         if (isNotBlankBlank(discogsQueryDTO.getTrack())) {

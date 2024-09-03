@@ -56,10 +56,18 @@ public class DiscogsQueryController {
         if (resultDTOList.isEmpty()) {
             log.warn("No results found for the provided queries");
         } else {
-            log.info("Returning {} results: {}", resultDTOList.size(), resultDTOList);
+            int size = calculateSizeOfResults(resultDTOList);
+            log.info("Returning {} results: {}", size, resultDTOList);
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(resultDTOList);
+    }
+
+    private int calculateSizeOfResults(final List<DiscogsResultDTO> resultDTOList) {
+        return resultDTOList.stream()
+                .filter(discogsResultDTO -> discogsResultDTO.getResults() != null)
+                .mapToInt(discogsResultDTO -> discogsResultDTO.getResults().size())
+                .sum();
     }
 
 }

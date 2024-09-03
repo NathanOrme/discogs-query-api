@@ -1,6 +1,5 @@
-package annotations;
+package org.discogs.query.annotations;
 
-import org.discogs.query.annotations.VariousArtistsValidator;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.junit.jupiter.api.Test;
 

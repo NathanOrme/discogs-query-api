@@ -70,4 +70,9 @@ public class DiscogsEntryDTO {
      * Lowest price of item
      */
     private Float lowestPrice;
+
+    /**
+     * Number of copies for sale
+     */
+    private Integer numberForSale;
 }

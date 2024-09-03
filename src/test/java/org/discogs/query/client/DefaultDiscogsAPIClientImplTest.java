@@ -21,7 +21,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class DefaultDiscogsAPIClientTest {
+class DefaultDiscogsAPIClientImplTest {
 
     @Mock
     private HttpRequestService httpRequestService;
@@ -33,7 +33,7 @@ class DefaultDiscogsAPIClientTest {
     private RetryService retryService;
 
     @InjectMocks
-    private DefaultDiscogsAPIClient client;
+    private DefaultDiscogsAPIClientImpl client;
 
     @BeforeEach
     public void setUp() {

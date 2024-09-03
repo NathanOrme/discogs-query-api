@@ -36,6 +36,10 @@ export function displayResults(response) {
             const year = entry.year || 'N/A';
             const uri = entry.uri || '#';
 
+            const numberForSale = (entry.numberForSale !== null && entry.numberForSale !== undefined)
+                            ? entry.numberForSale
+                            : 0;
+
             const lowestPrice = (entry.lowestPrice !== null && entry.lowestPrice !== undefined)
                 ? '£' + parseFloat(entry.lowestPrice).toFixed(2)
                 : 'N/A';
@@ -51,6 +55,7 @@ export function displayResults(response) {
                     <p><strong>Country:</strong> ${country}</p>
                     <p><strong>Year:</strong> ${year}</p>
                     <p><strong>URL:</strong> <a href="${uri}" target="_blank">${uri}</a></p>
+                    <p><strong>Number For Sale:</strong> ${numberForSale}</p>
                     <p><strong>Lowest Price:</strong> ${lowestPrice}</p>
                 </div>
             `;

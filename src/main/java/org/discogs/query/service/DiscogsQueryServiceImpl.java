@@ -74,6 +74,8 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
             discogsFilterService.filterAndSortResults(discogsQueryDTO, results);
             log.info("Filtering and sorting completed");
 
+            getLowestPriceOnMarketplace(results);
+
             DiscogsResultDTO resultDTO = discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
             log.info("Search processing completed successfully for query: {}", discogsQueryDTO);
 
@@ -88,6 +90,35 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
                     discogsQueryDTO, e.getMessage(), e);
             throw new DiscogsSearchException(UNEXPECTED_ISSUE_OCCURRED, e);
         }
+    }
+
+    private void getLowestPriceOnMarketplace(final DiscogsResult results) {
+        if (results == null || results.getResults().isEmpty()) {
+            log.warn("No results found in DiscogsResult.");
+            return;
+        }
+
+        results.getResults().forEach(entry -> {
+            try {
+                log.info("Generating marketplace URL for query: {}", entry);
+                var marketplaceUrl = discogsUrlBuilder.builldMarketplaceUrl(entry);
+                log.info("Getting marketplace result for the following entry: {}", entry);
+                var discogsMarketplaceResult = discogsAPIClient
+                        .getMarketplaceResultForQuery(marketplaceUrl);
+                if (discogsMarketplaceResult != null) {
+                    entry.setNumberForSale(discogsMarketplaceResult.getNumberForSale());
+                    var lowestPriceResult = discogsMarketplaceResult.getResult();
+                    if (lowestPriceResult != null) {
+                        entry.setLowestPrice(lowestPriceResult.getValue());
+                        log.info("Amended lowest price for the following entry: {}", entry);
+                    }
+                } else {
+                    log.warn("Marketplace result is null for entry: {}", entry);
+                }
+            } catch (final Exception e) {
+                log.error("Failed to process entry: {} due to {}", entry, e.getMessage(), e);
+            }
+        });
     }
 
     private void correctUriForResultEntries(final DiscogsResult results) {

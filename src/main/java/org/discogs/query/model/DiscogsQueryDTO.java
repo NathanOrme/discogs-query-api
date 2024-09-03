@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.discogs.query.annotations.CompilationValidation;
 import org.discogs.query.annotations.VariousArtistsValidation;
 import org.discogs.query.enums.DiscogCountries;
 import org.discogs.query.enums.DiscogsTypes;
@@ -23,6 +24,7 @@ import org.discogs.query.enums.DiscogsTypes;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@CompilationValidation
 @VariousArtistsValidation
 public class DiscogsQueryDTO {
 

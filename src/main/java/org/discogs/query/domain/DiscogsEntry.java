@@ -71,4 +71,9 @@ public class DiscogsEntry {
      */
     private Float lowestPrice;
 
+    /**
+     * Number of copies for sale
+     */
+    private Integer numberForSale;
+
 }

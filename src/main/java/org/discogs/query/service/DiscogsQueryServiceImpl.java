@@ -102,6 +102,7 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
                     discogsAPIClient.getMarketplaceResultForQuery(marketplaceUrl);
             log.info("Obtained marketplace result for the following entry: {}", entry);
             if (discogsMarketplaceResult != null) {
+                entry.setNumberForSale(discogsMarketplaceResult.getNumberForSale());
                 var lowestPriceResult = discogsMarketplaceResult.getResult();
                 if (lowestPriceResult != null) {
                     entry.setLowestPrice(lowestPriceResult.getValue());

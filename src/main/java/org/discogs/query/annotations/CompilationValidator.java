@@ -34,9 +34,7 @@ public class CompilationValidator
     @Override
     public boolean isValid(final DiscogsQueryDTO discogsQueryDTO,
                            final ConstraintValidatorContext constraintValidatorContext) {
-        if (!discogsQueryDTO.getFormat().equalsIgnoreCase(DiscogsFormats.COMP.getFormat())
-                && !discogsQueryDTO.getFormat()
-                .equalsIgnoreCase(DiscogsFormats.VINYL_COMPILATION.getFormat())) {
+        if (isFormatBlankOrNotCompilation(discogsQueryDTO)) {
             return true;
         }
         if (isNotBlankBlank(discogsQueryDTO.getTrack())) {
@@ -44,5 +42,14 @@ public class CompilationValidator
         }
         return isNotBlankBlank(discogsQueryDTO.getAlbum());
 
+    }
+
+    private static boolean isFormatBlankOrNotCompilation(final DiscogsQueryDTO discogsQueryDTO) {
+        if (discogsQueryDTO.getFormat() == null) {
+            return true;
+        }
+        return !discogsQueryDTO.getFormat().equalsIgnoreCase(DiscogsFormats.COMP.getFormat())
+                && !discogsQueryDTO.getFormat()
+                .equalsIgnoreCase(DiscogsFormats.VINYL_COMPILATION.getFormat());
     }
 }

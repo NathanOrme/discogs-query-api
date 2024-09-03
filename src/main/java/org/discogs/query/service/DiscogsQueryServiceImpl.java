@@ -94,22 +94,32 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
     }
 
     private void getLowestPriceOnMarketplace(final DiscogsResult results) {
-        for (final DiscogsEntry entry : results.getResults()) {
-            log.debug("Generating marketplace url for query: {}", entry);
-            String marketplaceUrl = discogsUrlBuilder.builldMarketplaceUrl(entry);
-            log.info("Getting marketplace result for the following entry: {}", entry);
-            DiscogsMarketplaceResult discogsMarketplaceResult =
-                    discogsAPIClient.getMarketplaceResultForQuery(marketplaceUrl);
-            log.info("Obtained marketplace result for the following entry: {}", entry);
-            if (discogsMarketplaceResult != null) {
-                entry.setNumberForSale(discogsMarketplaceResult.getNumberForSale());
-                var lowestPriceResult = discogsMarketplaceResult.getResult();
-                if (lowestPriceResult != null) {
-                    entry.setLowestPrice(lowestPriceResult.getValue());
-                    log.info("Amended lowest price for the following entry: {}", entry);
-                }
-            }
+        if (results == null || results.getResults().isEmpty()) {
+            log.warn("No results found in DiscogsResult.");
+            return;
         }
+
+        results.getResults().forEach(entry -> {
+            try {
+                log.info("Generating marketplace URL for query: {}", entry);
+                String marketplaceUrl = discogsUrlBuilder.builldMarketplaceUrl(entry);
+                log.info("Getting marketplace result for the following entry: {}", entry);
+                DiscogsMarketplaceResult discogsMarketplaceResult = discogsAPIClient
+                        .getMarketplaceResultForQuery(marketplaceUrl);
+                if (discogsMarketplaceResult != null) {
+                    entry.setNumberForSale(discogsMarketplaceResult.getNumberForSale());
+                    var lowestPriceResult = discogsMarketplaceResult.getResult();
+                    if (lowestPriceResult != null) {
+                        entry.setLowestPrice(lowestPriceResult.getValue());
+                        log.info("Amended lowest price for the following entry: {}", entry);
+                    }
+                } else {
+                    log.warn("Marketplace result is null for entry: {}", entry);
+                }
+            } catch (final Exception e) {
+                log.error("Failed to process entry: {} due to {}", entry, e.getMessage(), e);
+            }
+        });
     }
 
     private void correctUriForResultEntries(final DiscogsResult results) {

@@ -3,6 +3,7 @@ package org.discogs.query.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.domain.DiscogsEntry;
+import org.discogs.query.domain.DiscogsMarketplaceResult;
 import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.enums.DiscogsFormats;
 import org.discogs.query.exceptions.DiscogsSearchException;
@@ -74,6 +75,8 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
             discogsFilterService.filterAndSortResults(discogsQueryDTO, results);
             log.info("Filtering and sorting completed");
 
+            getLowestPriceOnMarketplace(results);
+
             DiscogsResultDTO resultDTO = discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
             log.info("Search processing completed successfully for query: {}", discogsQueryDTO);
 
@@ -87,6 +90,24 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
                             " while processing query: {}. Error: {}",
                     discogsQueryDTO, e.getMessage(), e);
             throw new DiscogsSearchException(UNEXPECTED_ISSUE_OCCURRED, e);
+        }
+    }
+
+    private void getLowestPriceOnMarketplace(final DiscogsResult results) {
+        for (final DiscogsEntry entry : results.getResults()) {
+            log.debug("Generating marketplace url for query: {}", entry);
+            String marketplaceUrl = discogsUrlBuilder.builldMarketplaceUrl(entry);
+            log.info("Getting marketplace result for the following entry: {}", entry);
+            DiscogsMarketplaceResult discogsMarketplaceResult =
+                    discogsAPIClient.getMarketplaceResultForQuery(marketplaceUrl);
+            log.info("Obtained marketplace result for the following entry: {}", entry);
+            if (discogsMarketplaceResult != null) {
+                var lowestPriceResult = discogsMarketplaceResult.getResult();
+                if (lowestPriceResult != null) {
+                    entry.setLowestPrice(lowestPriceResult.getValue());
+                    log.info("Amended lowest price for the following entry: {}", entry);
+                }
+            }
         }
     }
 

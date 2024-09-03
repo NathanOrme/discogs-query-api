@@ -33,6 +33,8 @@ public class DiscogsUrlBuilder {
     String token;
     @Value("${discogs.baseUrl}")
     String discogsWebsiteBaseUrl;
+    @Value("${discogs.marketplaceCheck}")
+    String marketplaceUrl;
 
     /**
      * Builds the search URL based on the provided query parameters.
@@ -50,9 +52,9 @@ public class DiscogsUrlBuilder {
 
         addQueryParams(uriBuilder, discogsQueryDTO);
         String searchUrl = uriBuilder
-            .encode()
-            .toUriString()
-            .replace("%20", "+");
+                .encode()
+                .toUriString()
+                .replace("%20", "+");
 
         log.debug("Generated search URL: {}", searchUrl);
         return searchUrl;
@@ -74,6 +76,25 @@ public class DiscogsUrlBuilder {
                 .toUriString();
 
         log.debug("Generated release URL: {}", releaseUrl);
+        return releaseUrl;
+    }
+
+    /**
+     * Builds the marketplace URL for the given DiscogsEntry.
+     *
+     * @param discogsEntry the Discogs entry containing the release ID
+     * @return the fully constructed release URL
+     */
+    public String builldMarketplaceUrl(final DiscogsEntry discogsEntry) {
+        log.debug("Building marketplace URL for DiscogsEntry ID: {}", discogsEntry.getId());
+
+        String releaseUrl = UriComponentsBuilder.fromHttpUrl(discogsBaseUrl.concat(marketplaceUrl)
+                        .concat(String.valueOf(discogsEntry.getId())))
+                .queryParam("token", token)
+                .queryParam("curr_abbr", "GBP")
+                .toUriString();
+
+        log.debug("Generated marketplace URL: {}", releaseUrl);
         return releaseUrl;
     }
 
@@ -135,9 +156,9 @@ public class DiscogsUrlBuilder {
 
         addQueryParams(uriBuilder, dtoForUrl);
         String compilationSearchUrl = uriBuilder
-            .encode()
-            .toUriString()
-            .replace("%20", "+");
+                .encode()
+                .toUriString()
+                .replace("%20", "+");
 
         log.debug("Generated compilation search URL: {}", compilationSearchUrl);
         return compilationSearchUrl;

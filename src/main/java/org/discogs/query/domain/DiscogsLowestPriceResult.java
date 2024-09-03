@@ -32,5 +32,5 @@ public class DiscogsLowestPriceResult {
      * <p>
      * This field holds the numerical value of the lowest price in the specified currency.
      */
-    private float value;
+    private Float value;
 }

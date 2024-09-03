@@ -1,5 +1,6 @@
 package org.discogs.query.interfaces;
 
+import org.discogs.query.domain.DiscogsMarketplaceResult;
 import org.discogs.query.domain.DiscogsRelease;
 import org.discogs.query.domain.DiscogsResult;
 
@@ -35,4 +36,13 @@ public interface DiscogsAPIClient {
      * @return a {@link DiscogsResult} result if found on the website.
      */
     DiscogsRelease getRelease(final String searchUrl);
+
+    /**
+     * Searches marketplace to see if release is on marketplace
+     *
+     * @param url URL to use for search
+     * @return Result to say if on marketplace
+     */
+    DiscogsMarketplaceResult getMarketplaceResultForQuery(final String url);
+
 }

@@ -37,7 +37,7 @@ export function displayResults(response) {
             const uri = entry.uri || '#';
 
             const numberForSale = (entry.numberForSale !== null && entry.numberForSale !== undefined)
-                            ? entry.numberForSale)
+                            ? entry.numberForSale
                             : 0;
 
             const lowestPrice = (entry.lowestPrice !== null && entry.lowestPrice !== undefined)

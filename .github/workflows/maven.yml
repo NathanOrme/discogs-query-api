@@ -52,6 +52,7 @@ jobs:
           FIX_YAML_PRETTIER: true
           FIX_CSS_PRETTIER: true
           FIX_JAVASCRIPT_PRETTIER: true
+          FILTER_REGEX_EXCLUDE: .*test/.*
 
       - name: Commit and push linting fixes
         if: >

@@ -1,22 +1,22 @@
 // /js/modules/queryFields.js
-import { discogsTypes, discogFormats, discogCountries } from './discogsData.js';
+import { discogsTypes, discogFormats, discogCountries } from "./discogsData.js";
 
 export function createQueryFields(queriesContainer, queryCounter, isFirstQuery = false) {
-    const queryDiv = document.createElement('div');
-    queryDiv.className = 'query';
+    const queryDiv = document.createElement("div");
+    queryDiv.className = "query";
 
-    const queryHeader = document.createElement('div');
-    queryHeader.className = 'query-header';
+    const queryHeader = document.createElement("div");
+    queryHeader.className = "query-header";
 
     // Create the Query Title
-    const queryTitle = document.createElement('span');
+    const queryTitle = document.createElement("span");
     queryTitle.textContent = `Query ${queryCounter}`; // Add the query number
     queryHeader.appendChild(queryTitle);
 
     // Create the Delete button
-    const deleteButton = document.createElement('button');
-    deleteButton.className = 'delete-button';
-    deleteButton.setAttribute('aria-label', 'Delete Query');
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "delete-button";
+    deleteButton.setAttribute("aria-label", "Delete Query");
 
     // Add SVG for the delete button
     deleteButton.innerHTML = `
@@ -25,19 +25,19 @@ export function createQueryFields(queriesContainer, queryCounter, isFirstQuery =
         </svg>
     `;
 
-    deleteButton.addEventListener('click', () => {
+    deleteButton.addEventListener("click", () => {
         queryDiv.remove(); // Remove the entire query div
     });
     queryHeader.appendChild(deleteButton);
 
     // Add event listener to toggle query content visibility
-    queryHeader.addEventListener('click', () => {
-        const content = queryDiv.querySelector('.query-content');
-        content.classList.toggle('hidden');
+    queryHeader.addEventListener("click", () => {
+        const content = queryDiv.querySelector(".query-content");
+        content.classList.toggle("hidden");
     });
 
-    const queryContent = document.createElement('div');
-    queryContent.className = 'query-content';
+    const queryContent = document.createElement("div");
+    queryContent.className = "query-content";
 
     queryContent.innerHTML = `
         <label for="artist">Artist:</label>
@@ -51,17 +51,17 @@ export function createQueryFields(queriesContainer, queryCounter, isFirstQuery =
 
         <label for="format">Format (optional):</label>
         <select class="format" name="format">
-            ${discogFormats.map(format => `<option value="${format.value}">${format.text}</option>`).join('')}
+            ${discogFormats.map(format => `<option value="${format.value}">${format.text}</option>`).join("")}
         </select>
 
         <label for="country">Country (optional):</label>
         <select class="country" name="country">
-            ${discogCountries.map(country => `<option value="${country.value}">${country.text}</option>`).join('')}
+            ${discogCountries.map(country => `<option value="${country.value}">${country.text}</option>`).join("")}
         </select>
 
         <label for="types">Types (optional):</label>
         <select class="types" name="types">
-            ${discogsTypes.map(type => `<option value="${type.value}">${type.text}</option>`).join('')}
+            ${discogsTypes.map(type => `<option value="${type.value}">${type.text}</option>`).join("")}
         </select>
     `;
 
@@ -70,14 +70,14 @@ export function createQueryFields(queriesContainer, queryCounter, isFirstQuery =
     queryDiv.appendChild(queryContent);
 
     // Ensure all other query contents are hidden except for the new one
-    const allQueryContents = document.querySelectorAll('.query-content');
+    const allQueryContents = document.querySelectorAll(".query-content");
     allQueryContents.forEach(content => {
-        content.classList.add('hidden');
+        content.classList.add("hidden");
     });
 
     // Append the queryDiv to the container and ensure the new query is open
     queriesContainer.appendChild(queryDiv);
-    queryContent.classList.remove('hidden'); // Keep the new query open
+    queryContent.classList.remove("hidden"); // Keep the new query open
 
     return queryCounter + 1;
 }

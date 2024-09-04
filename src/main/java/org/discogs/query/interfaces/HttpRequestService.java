@@ -3,12 +3,14 @@ package org.discogs.query.interfaces;
 /**
  * Service interface for handling HTTP requests.
  * <p>
- * This interface defines methods for executing HTTP requests and handling responses.
+ * This interface defines methods for executing HTTP requests and handling
+ * responses.
  */
 public interface HttpRequestService {
 
     /**
-     * Executes an HTTP request to the specified URL and returns the response as an instance of the specified type.
+     * Executes an HTTP request to the specified URL and returns the response
+     * as an instance of the specified type.
      *
      * @param url          the URL to query
      * @param responseType the class type of the response

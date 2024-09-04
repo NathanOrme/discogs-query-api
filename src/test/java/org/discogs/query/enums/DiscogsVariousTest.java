@@ -9,6 +9,7 @@ class DiscogsVariousTest {
     @Test
     void testVariousValues() {
         assertEquals("various", DiscogsVarious.VARIOUS.getVariousName());
-        assertEquals("various artists", DiscogsVarious.VARIOUS_ARTIST.getVariousName());
+        assertEquals("various artists",
+                DiscogsVarious.VARIOUS_ARTIST.getVariousName());
     }
 }

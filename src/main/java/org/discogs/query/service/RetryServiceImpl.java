@@ -17,21 +17,25 @@ public class RetryServiceImpl implements RetryService {
     private static final long RETRY_DELAY = 2; // in seconds
 
     @Override
-    public <T> T executeWithRetry(final Callable<T> action, final String actionDescription) throws Exception {
+    public <T> T executeWithRetry(final Callable<T> action,
+                                  final String actionDescription) throws Exception {
         int attempt = 1;
         while (attempt <= RETRY_COUNT) {
             try {
-                log.info("Attempting {}. Attempt {} of {}", actionDescription, attempt, RETRY_COUNT);
+                log.info("Attempting {}. Attempt {} of {}", actionDescription
+                        , attempt, RETRY_COUNT);
                 return action.call();
             } catch (final Exception e) {
                 log.warn("Error during {} on attempt {} of {}. Exception: {}",
-                        actionDescription, attempt, RETRY_COUNT, e.getMessage());
+                        actionDescription, attempt, RETRY_COUNT,
+                        e.getMessage());
                 if (attempt == RETRY_COUNT) {
                     throw e; // rethrow after final attempt
                 }
                 attempt++;
                 if (is429StatusCodeException(e)) {
-                    log.info("429 Status Code Received - Sleeping for a minute");
+                    log.info("429 Status Code Received - Sleeping for a " +
+                            "minute");
                     TimeUnit.MINUTES.sleep(1);
                 } else {
                     log.info("Sleeping for {} seconds", RETRY_DELAY);

@@ -48,7 +48,8 @@ public enum DiscogsFormats {
     /**
      * Represents an unknown or unspecified type.
      * <p>
-     * This type is used when the input type string does not match any defined types.
+     * This type is used when the input type string does not match any
+     * defined types.
      */
     UNKNOWN("");
 
@@ -58,12 +59,15 @@ public enum DiscogsFormats {
     private final String format;
 
     /**
-     * Returns the {@link DiscogsFormats} constant associated with the given format string.
+     * Returns the {@link DiscogsFormats} constant associated with the given
+     * format string.
      * <p>
-     * If the format string does not match any defined constant, {@link #UNKNOWN} is returned.
+     * If the format string does not match any defined constant,
+     * {@link #UNKNOWN} is returned.
      *
      * @param format the format string to match
-     * @return the {@link DiscogsFormats} constant corresponding to the format string,
+     * @return the {@link DiscogsFormats} constant corresponding to the
+     * format string,
      * or {@link #UNKNOWN} if no match is found
      */
     public static DiscogsFormats fromString(final String format) {

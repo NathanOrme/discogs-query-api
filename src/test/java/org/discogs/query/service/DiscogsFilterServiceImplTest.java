@@ -39,7 +39,8 @@ class DiscogsFilterServiceImplTest {
     }
 
     /**
-     * Tests retrieving a {@link DiscogsRelease} object based on the provided {@link DiscogsEntry}.
+     * Tests retrieving a {@link DiscogsRelease} object based on the provided
+     * {@link DiscogsEntry}.
      */
     @Test
     void testGetReleaseDetails() {
@@ -50,7 +51,8 @@ class DiscogsFilterServiceImplTest {
         when(discogsUrlBuilder.buildReleaseUrl(entry)).thenReturn("url");
         when(discogsAPIClient.getRelease("url")).thenReturn(release);
 
-        DiscogsRelease actualRelease = discogsFilterService.getReleaseDetails(entry);
+        DiscogsRelease actualRelease =
+                discogsFilterService.getReleaseDetails(entry);
         assertEquals(actualRelease, release);
     }
 

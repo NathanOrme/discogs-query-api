@@ -16,7 +16,8 @@ import java.util.List;
 public class Format {
 
     /**
-     * A list of descriptions associated with the format (e.g., "Limited Edition", "Remastered").
+     * A list of descriptions associated with the format
+     * (e.g., "Limited Edition", "Remastered").
      */
     private List<String> descriptions;
 

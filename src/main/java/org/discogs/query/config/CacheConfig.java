@@ -21,7 +21,8 @@ public class CacheConfig {
     /**
      * Creates and configures a {@link CacheManager} bean using Caffeine.
      * <p>
-     * This method sets up a {@link CaffeineCacheManager} with specific cache settings:
+     * This method sets up a {@link CaffeineCacheManager} with specific cache
+     * settings:
      * <ul>
      *     <li>Cache entries will expire 10 minutes after they are written.</li>
      *     <li>The cache will have a maximum size of 1000 entries.</li>
@@ -33,7 +34,8 @@ public class CacheConfig {
     public CacheManager cacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
         cacheManager.setCaffeine(Caffeine.newBuilder()
-                .expireAfterWrite(10, TimeUnit.MINUTES) // Configure cache expiration
+                .expireAfterWrite(10, TimeUnit.MINUTES) // Configure cache
+                // expiration
                 .maximumSize(1000)); // Configure maximum cache size
         return cacheManager;
     }

@@ -16,10 +16,12 @@ public interface DiscogsFilterService {
      * @param discogsQueryDTO the search query data transfer object
      * @param results         the search results to be filtered and sorted
      */
-    void filterAndSortResults(DiscogsQueryDTO discogsQueryDTO, DiscogsResult results);
+    void filterAndSortResults(DiscogsQueryDTO discogsQueryDTO,
+                              DiscogsResult results);
 
     /**
-     * Retrieves a {@link DiscogsRelease} object based on the provided {@link DiscogsEntry}.
+     * Retrieves a {@link DiscogsRelease} object based on the provided
+     * {@link DiscogsEntry}.
      *
      * @param discogsEntry the Discogs entry containing the release ID
      * @return the {@link DiscogsRelease} object

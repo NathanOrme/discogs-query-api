@@ -34,19 +34,22 @@ class DiscogsFormatsDeserializerTest {
     @Test
     void testDeserializeValidEnum() throws IOException {
         JsonParser parser = Mockito.mock(JsonParser.class);
-        DeserializationContext context = Mockito.mock(DeserializationContext.class);
+        DeserializationContext context =
+                Mockito.mock(DeserializationContext.class);
 
         Mockito.when(parser.getText()).thenReturn("VINYL");
 
         DiscogsFormats result = deserializer.deserialize(parser, context);
 
-        assertEquals(DiscogsFormats.VINYL, result, "Deserialization should convert 'VINYL' to DiscogFormats.VINYL");
+        assertEquals(DiscogsFormats.VINYL, result, "Deserialization should " +
+                "convert 'VINYL' to DiscogFormats.VINYL");
     }
 
     @Test
     void testDeserializeNull() throws IOException {
         JsonParser parser = Mockito.mock(JsonParser.class);
-        DeserializationContext context = Mockito.mock(DeserializationContext.class);
+        DeserializationContext context =
+                Mockito.mock(DeserializationContext.class);
 
         Mockito.when(parser.getText()).thenReturn(null);
 
@@ -58,24 +61,28 @@ class DiscogsFormatsDeserializerTest {
     @Test
     void testDeserializeEmptyString() throws IOException {
         JsonParser parser = Mockito.mock(JsonParser.class);
-        DeserializationContext context = Mockito.mock(DeserializationContext.class);
+        DeserializationContext context =
+                Mockito.mock(DeserializationContext.class);
 
         Mockito.when(parser.getText()).thenReturn("");
 
         DiscogsFormats result = deserializer.deserialize(parser, context);
 
-        assertNull(result, "Deserialization of an empty string should return null");
+        assertNull(result, "Deserialization of an empty string should return " +
+                "null");
     }
 
     @Test
     void testDeserializeInvalidValue() throws IOException {
         JsonParser parser = Mockito.mock(JsonParser.class);
-        DeserializationContext context = Mockito.mock(DeserializationContext.class);
+        DeserializationContext context =
+                Mockito.mock(DeserializationContext.class);
 
         Mockito.when(parser.getText()).thenReturn("UNKNOWN_FORMAT");
 
         DiscogsFormats result = deserializer.deserialize(parser, context);
 
-        assertNull(result, "Deserialization of an invalid value should return null");
+        assertNull(result, "Deserialization of an invalid value should return" +
+                " null");
     }
 }

@@ -22,7 +22,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(DiscogsQueryController.class)
 class DiscogsQueryControllerTest {
 
-    private static final String BASIC_AUTH_HEADER = "Basic " + java.util.Base64.getEncoder().encodeToString("username:password".getBytes());
+    private static final String BASIC_AUTH_HEADER =
+            "Basic " + java.util.Base64.getEncoder().encodeToString((
+                    "username" +
+                    ":password").getBytes());
     @Autowired
     private MockMvc mockMvc;
     @MockBean
@@ -31,7 +34,8 @@ class DiscogsQueryControllerTest {
     @Test
     void testSearchDiscogs_Success() throws Exception {
         // Arrange
-        DiscogsResultDTO resultDTO = new DiscogsResultDTO();  // You would populate this with the actual expected result data
+        DiscogsResultDTO resultDTO = new DiscogsResultDTO();  // You would
+        // populate this with the actual expected result data
 
         // Mock the service to return the resultDTO when called
         when(discogsQueryService.searchBasedOnQuery(any(DiscogsQueryDTO.class)))
@@ -41,7 +45,8 @@ class DiscogsQueryControllerTest {
         mockMvc.perform(post("/discogs-query/search")
                         .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("[{\"artist\":\"The Beatles\", \"track\":\"Hey Jude\"}]"))
+                        .content("[{\"artist\":\"The Beatles\", " +
+                                "\"track\":\"Hey Jude\"}]"))
                 .andExpect(status().isOk());
     }
 

@@ -49,7 +49,8 @@ class DefaultRetryServiceTest {
         Callable<String> action = mock(Callable.class);
         when(action.call()).thenThrow(new RuntimeException("Failure"));
 
-        assertThrows(Exception.class, () -> retryService.executeWithRetry(action, "Test Action"));
+        assertThrows(Exception.class,
+                () -> retryService.executeWithRetry(action, "Test Action"));
 
         verify(action, times(3)).call();
     }

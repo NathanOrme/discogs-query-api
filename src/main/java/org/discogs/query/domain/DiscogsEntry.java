@@ -54,27 +54,27 @@ public class DiscogsEntry {
     private String uri;
 
     /**
-     * The country for the Discogs entry
+     * The country for the Discogs entry.
      */
     private String country;
 
     /**
-     * The year for the Discogs entry
+     * The year for the Discogs entry.
      */
     private String year;
 
     /**
-     * Marks if on marketplace
+     * Marks if on marketplace.
      */
     private Boolean isOnMarketplace;
 
     /**
-     * Lowest price of item
+     * Lowest price of item.
      */
     private Float lowestPrice;
 
     /**
-     * Number of copies for sale
+     * Number of copies for sale.
      */
     private Integer numberForSale;
 

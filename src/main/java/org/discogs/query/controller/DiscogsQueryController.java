@@ -69,9 +69,17 @@ public class DiscogsQueryController {
 
     private int calculateSizeOfResults(final List<DiscogsResultDTO> resultDTOList) {
         return resultDTOList.stream()
-                .filter(discogsResultDTO -> discogsResultDTO.getResults() != null)
-                .mapToInt(discogsResultDTO -> discogsResultDTO.getResults().size())
+                .filter(DiscogsQueryController::isResultsNotNull)
+                .mapToInt(DiscogsQueryController::getResultsSize)
                 .sum();
+    }
+
+    private static int getResultsSize(final DiscogsResultDTO discogsResultDTO) {
+        return discogsResultDTO.getResults().size();
+    }
+
+    private static boolean isResultsNotNull(final DiscogsResultDTO discogsResultDTO) {
+        return discogsResultDTO.getResults() != null;
     }
 
 }

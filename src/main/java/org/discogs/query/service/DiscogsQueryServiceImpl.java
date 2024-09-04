@@ -21,15 +21,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Implementation of {@link DiscogsQueryService} that interacts with the
- * Discogs API.
- * This service handles search requests and processes the API responses.
+ * Implementation of the {@link DiscogsQueryService} interface for
+ * interacting with the Discogs API.
+ * This service handles search requests, processes the API responses, and
+ * includes methods for
+ * handling compilation searches and correcting URIs for results.
  */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class DiscogsQueryServiceImpl implements DiscogsQueryService {
 
+    /**
+     * Error message used for unexpected issues.
+     */
     private static final String UNEXPECTED_ISSUE_OCCURRED = "Unexpected issue" +
             " occurred";
 
@@ -39,25 +44,50 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
     private final DiscogsFilterService discogsFilterService;
     private final StringHelper stringHelper;
 
+    /**
+     * Checks if the format in the given {@link DiscogsQueryDTO} is a
+     * compilation format.
+     * <p>
+     * A format is considered a compilation if it matches the predefined
+     * compilation formats
+     * such as "COMP" or "VINYL_COMPILATION".
+     *
+     * @param discogsQueryDTO the query DTO containing format information
+     * @return {@code true} if the format is a compilation format, {@code
+     * false} otherwise
+     */
     static boolean isCompilationFormat(final DiscogsQueryDTO discogsQueryDTO) {
-        boolean isCompilation =
-                isCompilation(discogsQueryDTO);
+        boolean isCompilation = isCompilation(discogsQueryDTO);
         log.debug("Checking if format is compilation: {}. Result: {}",
                 discogsQueryDTO.getFormat(), isCompilation);
         return isCompilation;
     }
 
+    /**
+     * Determines if the format specified in the {@link DiscogsQueryDTO} is a
+     * compilation format.
+     * <p>
+     * This method compares the format against predefined compilation formats.
+     *
+     * @param discogsQueryDTO the query DTO containing format information
+     * @return {@code true} if the format is a compilation format, {@code
+     * false} otherwise
+     */
     private static boolean isCompilation(final DiscogsQueryDTO discogsQueryDTO) {
         String format = discogsQueryDTO.getFormat();
-        if (DiscogsFormats.COMP.getFormat().equalsIgnoreCase(format)) {
-            return true;
-        }
-        return DiscogsFormats.VINYL_COMPILATION.getFormat()
-                .equalsIgnoreCase(format);
+        return DiscogsFormats.COMP.getFormat().equalsIgnoreCase(format) ||
+                DiscogsFormats.VINYL_COMPILATION.getFormat().equalsIgnoreCase(format);
     }
 
     /**
      * Searches the Discogs database based on the provided query.
+     * <p>
+     * This method constructs the search URL, sends the request to the
+     * Discogs API, processes the
+     * results including handling compilation searches if applicable, and
+     * maps the results to a
+     * {@link DiscogsResultDTO} object. It also handles exceptions and logs
+     * relevant information.
      *
      * @param discogsQueryDTO the search query containing artist, track, and
      *                        optional format information
@@ -78,13 +108,12 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
             log.info("Received {} results from Discogs API",
                     results.getResults().size());
 
-            if (isCompilationFormat(discogsQueryDTO) && !stringHelper.isNotNullOrBlank(discogsQueryDTO.getAlbum())) {
-                log.info("Query format is a compilation. Processing " +
-                        "compilation search...");
+            if (isCompilationAndAlbumNotSupplied(discogsQueryDTO)) {
+                log.info("Query format is a compilation. Processing "
+                        + "compilation search...");
                 processCompilationSearch(discogsQueryDTO, results);
-                log.info("After processing compilation search, {} total " +
-                                "results available",
-                        results.getResults().size());
+                log.info("After processing compilation search, {} total "
+                        + "results available", results.getResults().size());
             }
 
             correctUriForResultEntries(results);
@@ -104,19 +133,33 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
 
             return resultDTO;
         } catch (final DiscogsSearchException e) {
-            log.error("DiscogsSearchException occurred while processing " +
-                            "query: {}. Error: {}",
+            log.error("DiscogsSearchException occurred while processing "
+                            + "query: {}. Error: {}",
                     discogsQueryDTO, e.getMessage(), e);
             return new DiscogsResultDTO(); // Return an empty DTO or handle
             // as per your error strategy
         } catch (final Exception e) {
-            log.error(UNEXPECTED_ISSUE_OCCURRED +
-                            " while processing query: {}. Error: {}",
-                    discogsQueryDTO, e.getMessage(), e);
+            log.error(UNEXPECTED_ISSUE_OCCURRED + " while processing query: " +
+                    "{}. Error: {}", discogsQueryDTO, e.getMessage(), e);
             throw new DiscogsSearchException(UNEXPECTED_ISSUE_OCCURRED, e);
         }
     }
 
+    private boolean isCompilationAndAlbumNotSupplied(final DiscogsQueryDTO discogsQueryDTO) {
+        return isCompilationFormat(discogsQueryDTO) &&
+                !stringHelper.isNotNullOrBlank(discogsQueryDTO.getAlbum());
+    }
+
+    /**
+     * Retrieves the lowest price for each entry in the results from the
+     * Discogs Marketplace.
+     * <p>
+     * This method generates marketplace URLs for each entry, retrieves
+     * marketplace results, and updates
+     * the entries with the number for sale and lowest price information.
+     *
+     * @param results the {@link DiscogsResult} containing the search results
+     */
     private void getLowestPriceOnMarketplace(final DiscogsResult results) {
         if (results == null || results.getResults().isEmpty()) {
             log.warn("No results found in DiscogsResult.");
@@ -128,18 +171,18 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
                 log.info("Generating marketplace URL for query: {}", entry);
                 var marketplaceUrl =
                         discogsUrlBuilder.builldMarketplaceUrl(entry);
-                log.info("Getting marketplace result for the following entry:" +
-                        " {}", entry);
-                var discogsMarketplaceResult = discogsAPIClient
-                        .getMarketplaceResultForQuery(marketplaceUrl);
+                log.info("Getting marketplace result for the following entry:"
+                        + " {}", entry);
+                var discogsMarketplaceResult =
+                        discogsAPIClient.getMarketplaceResultForQuery(marketplaceUrl);
                 if (discogsMarketplaceResult != null) {
                     entry.setNumberForSale(discogsMarketplaceResult.getNumberForSale());
                     var lowestPriceResult =
                             discogsMarketplaceResult.getResult();
                     if (lowestPriceResult != null) {
                         entry.setLowestPrice(lowestPriceResult.getValue());
-                        log.info("Amended lowest price for the following " +
-                                "entry: {}", entry);
+                        log.info("Amended lowest price for the following "
+                                + "entry: {}", entry);
                     }
                 } else {
                     log.warn("Marketplace result is null for entry: {}", entry);
@@ -151,6 +194,14 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
         });
     }
 
+    /**
+     * Corrects the URIs for result entries to ensure they are complete.
+     * <p>
+     * This method checks each entry's URI and updates it to include the base
+     * URL if necessary.
+     *
+     * @param results the {@link DiscogsResult} containing the search results
+     */
     private void correctUriForResultEntries(final DiscogsResult results) {
         log.debug("Correcting URIs for result entries");
         results.getResults().stream()
@@ -159,17 +210,46 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
         log.debug("URI correction completed");
     }
 
+    /**
+     * Checks if the URI of the given entry contains the base URL.
+     * <p>
+     * This method is used to determine if the URI is already complete or if
+     * it needs to be updated.
+     *
+     * @param entry the {@link DiscogsEntry} to check
+     * @return {@code true} if the URI contains the base URL, {@code false}
+     * otherwise
+     */
     private boolean isContainingBaseUrl(final DiscogsEntry entry) {
-        return entry.getUri()
-                .contains(discogsUrlBuilder.getDiscogsWebsiteBaseUrl());
+        return entry.getUri().contains(discogsUrlBuilder.getDiscogsWebsiteBaseUrl());
     }
 
+    /**
+     * Builds a complete URI for the given entry by concatenating the base
+     * URL with the entry's URI.
+     * <p>
+     * This method is used to ensure that all result entries have complete URIs.
+     *
+     * @param entry the {@link DiscogsEntry} for which to build the complete URI
+     * @return the complete URI as a {@link String}
+     */
     private String buildCorrectUri(final DiscogsEntry entry) {
         return discogsUrlBuilder.getDiscogsWebsiteBaseUrl().concat(entry.getUri());
     }
 
-    private void processCompilationSearch(final DiscogsQueryDTO discogsQueryDTO,
-                                          final DiscogsResult results) {
+    /**
+     * Processes a compilation search by combining the results of a
+     * compilation search with the original results.
+     * <p>
+     * This method generates a new search URL for compilations, retrieves the
+     * compilation results, and merges
+     * them with the original results.
+     *
+     * @param discogsQueryDTO the query DTO containing search parameters
+     * @param results         the original {@link DiscogsResult} containing
+     *                        search results
+     */
+    private void processCompilationSearch(final DiscogsQueryDTO discogsQueryDTO, final DiscogsResult results) {
         log.debug("Generating compilation search URL for query: {}",
                 discogsQueryDTO);
         String searchUrl =
@@ -186,8 +266,7 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
         entries.addAll(compResults.getResults());
         results.setResults(new ArrayList<>(entries));
 
-        log.debug("Merged original results with compilation results. Total " +
-                "results: {}", results.getResults().size());
+        log.debug("Merged original results with compilation results. Total "
+                + "results: {}", results.getResults().size());
     }
-
 }

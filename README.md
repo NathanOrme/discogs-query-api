@@ -7,22 +7,20 @@ configuration for API documentation using
 Swagger and handles exceptions related to Discogs API interactions.
 
 <!-- TOC -->
-
 * [Discogs Query](#discogs-query)
-    * [Features](#features)
-    * [Architecture](#architecture)
-    * [Getting Started](#getting-started)
-        * [Prerequisites](#prerequisites)
-        * [Installation](#installation)
-        * [Configuration](#configuration)
-        * [Endpoints](#endpoints)
-            * [**Search Records**](#search-records)
-        * [API Documentation](#api-documentation)
-    * [Exception Handling](#exception-handling)
-    * [Development](#development)
-        * [Code Style](#code-style)
-        * [Running Tests](#running-tests)
-
+  * [Features](#features)
+  * [Architecture](#architecture)
+  * [Getting Started](#getting-started)
+    * [Prerequisites](#prerequisites)
+    * [Installation](#installation)
+    * [Configuration](#configuration)
+    * [Endpoints](#endpoints)
+      * [**Search Records**](#search-records)
+    * [API Documentation](#api-documentation)
+  * [Exception Handling](#exception-handling)
+  * [Development](#development)
+    * [Code Style](#code-style)
+    * [Running Tests](#running-tests)
 <!-- TOC -->
 
 ## Features

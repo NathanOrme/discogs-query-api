@@ -38,10 +38,25 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
     private static final String UNEXPECTED_ISSUE_OCCURRED = "Unexpected issue" +
             " occurred";
 
+    /**
+     * API Client for Discogs.
+     */
     private final DiscogsAPIClient discogsAPIClient;
+    /**
+     * Mapper to convert domain to DTO.
+     */
     private final DiscogsResultMapper discogsResultMapper;
+    /**
+     * Builder for URLs for searches.
+     */
     private final DiscogsUrlBuilder discogsUrlBuilder;
+    /**
+     * Service used for filtering and sorting.
+     */
     private final DiscogsFilterService discogsFilterService;
+    /**
+     * String Helper object to help string-based functionality.
+     */
     private final StringHelper stringHelper;
 
     /**
@@ -75,8 +90,9 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
      */
     private static boolean isCompilation(final DiscogsQueryDTO discogsQueryDTO) {
         String format = discogsQueryDTO.getFormat();
-        return DiscogsFormats.COMP.getFormat().equalsIgnoreCase(format) ||
-                DiscogsFormats.VINYL_COMPILATION.getFormat().equalsIgnoreCase(format);
+        String comp = DiscogsFormats.COMP.getFormat();
+        String vinylComp = DiscogsFormats.VINYL_COMPILATION.getFormat();
+        return comp.equalsIgnoreCase(format) || vinylComp.equalsIgnoreCase(format);
     }
 
     /**
@@ -234,7 +250,8 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
      * @return the complete URI as a {@link String}
      */
     private String buildCorrectUri(final DiscogsEntry entry) {
-        return discogsUrlBuilder.getDiscogsWebsiteBaseUrl().concat(entry.getUri());
+        return discogsUrlBuilder.getDiscogsWebsiteBaseUrl()
+                .concat(entry.getUri());
     }
 
     /**
@@ -249,7 +266,8 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
      * @param results         the original {@link DiscogsResult} containing
      *                        search results
      */
-    private void processCompilationSearch(final DiscogsQueryDTO discogsQueryDTO, final DiscogsResult results) {
+    private void processCompilationSearch(final DiscogsQueryDTO discogsQueryDTO,
+                                          final DiscogsResult results) {
         log.debug("Generating compilation search URL for query: {}",
                 discogsQueryDTO);
         String searchUrl =

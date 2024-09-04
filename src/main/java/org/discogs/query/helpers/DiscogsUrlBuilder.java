@@ -12,12 +12,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
- * Utility class for constructing URLs for Discogs API requests.
+ * Utility class to build URLs for Discogs API requests.
  * <p>
- * This class provides methods to build URLs for searching Discogs entries,
- * retrieving release details, and accessing marketplace information. It uses
- * the base URL and endpoint configurations specified in application properties
- * and supports dynamic query parameter construction.
+ * This class constructs various URLs required for querying the Discogs API.
+ * It uses the
+ * {@link UriComponentsBuilder} to build the URLs based on the provided
+ * configuration values and
+ * query parameters. The configuration values are injected from application
+ * properties using
+ * Spring's {@link Value} annotation.
+ * </p>
  */
 @Getter
 @Slf4j
@@ -27,26 +31,75 @@ public class DiscogsUrlBuilder {
 
     private final UriBuilderHelper uriBuilderHelper;
 
+    /**
+     * The base URL for the Discogs API.
+     * <p>
+     * This value is injected from the application properties with the key
+     * "discogs.url".
+     * </p>
+     */
     @Value("${discogs.url}")
-    private String discogsBaseUrl;
+    String discogsBaseUrl;
 
+    /**
+     * The endpoint URL for searching within the Discogs API.
+     * <p>
+     * This value is injected from the application properties with the key
+     * "discogs.search".
+     * </p>
+     */
     @Value("${discogs.search}")
-    private String discogsSearchEndpoint;
+    String discogsSearchEndpoint;
 
+    /**
+     * The endpoint URL for retrieving release information from the Discogs API.
+     * <p>
+     * This value is injected from the application properties with the key
+     * "discogs.release".
+     * </p>
+     */
     @Value("${discogs.release}")
-    private String releaseEndpoint;
+    String releaseEndpoint;
 
+    /**
+     * The default page size for search results.
+     * <p>
+     * This value is injected from the application properties with the key
+     * "discogs.page-size".
+     * </p>
+     */
     @Value("${discogs.page-size}")
-    private int pageSize;
+    int pageSize;
 
+    /**
+     * The API token used for authenticating requests to the Discogs API.
+     * <p>
+     * This value is injected from the application properties with the key
+     * "discogs.token".
+     * </p>
+     */
     @Value("${discogs.token}")
-    private String token;
+    String token;
 
+    /**
+     * The base URL for the Discogs website.
+     * <p>
+     * This value is injected from the application properties with the key
+     * "discogs.baseUrl".
+     * </p>
+     */
     @Value("${discogs.baseUrl}")
-    private String discogsWebsiteBaseUrl;
+    String discogsWebsiteBaseUrl;
 
+    /**
+     * The URL for checking marketplace information on the Discogs API.
+     * <p>
+     * This value is injected from the application properties with the key
+     * "discogs.marketplaceCheck".
+     * </p>
+     */
     @Value("${discogs.marketplaceCheck}")
-    private String marketplaceUrl;
+    String marketplaceUrl;
 
     /**
      * Builds the search URL based on the provided query parameters.
@@ -59,7 +112,8 @@ public class DiscogsUrlBuilder {
         log.debug("Building search URL with parameters: {}", discogsQueryDTO);
 
         UriComponentsBuilder uriBuilder =
-                UriComponentsBuilder.fromHttpUrl(discogsBaseUrl.concat(discogsSearchEndpoint))
+                UriComponentsBuilder.fromHttpUrl(
+                                discogsBaseUrl.concat(discogsSearchEndpoint))
                         .queryParam("per_page", pageSize)
                         .queryParam("page", 1)
                         .queryParam("token", token);
@@ -85,8 +139,9 @@ public class DiscogsUrlBuilder {
                 discogsEntry.getId());
 
         String releaseUrl =
-                UriComponentsBuilder.fromHttpUrl(discogsBaseUrl.concat(releaseEndpoint)
-                                .concat(String.valueOf(discogsEntry.getId())))
+                UriComponentsBuilder.fromHttpUrl(
+                                discogsBaseUrl.concat(releaseEndpoint)
+                                        .concat(String.valueOf(discogsEntry.getId())))
                         .queryParam("token", token)
                         .queryParam("curr_abbr", "GBP")
                         .toUriString();
@@ -105,25 +160,27 @@ public class DiscogsUrlBuilder {
         log.debug("Building marketplace URL for DiscogsEntry ID: {}",
                 discogsEntry.getId());
 
-        String searchUrl =
-                UriComponentsBuilder.fromHttpUrl(discogsBaseUrl.concat(marketplaceUrl)
-                                .concat(String.valueOf(discogsEntry.getId())))
+        String releaseUrl =
+                UriComponentsBuilder.fromHttpUrl(
+                                discogsBaseUrl.concat(marketplaceUrl)
+                                        .concat(String.valueOf(discogsEntry.getId())))
                         .queryParam("token", token)
                         .queryParam("curr_abbr", "GBP")
                         .toUriString();
 
-        log.debug("Generated marketplace URL: {}", searchUrl);
-        return searchUrl;
+        log.debug("Generated marketplace URL: {}", releaseUrl);
+        return releaseUrl;
     }
 
     /**
      * Adds query parameters to the given {@link UriComponentsBuilder} based
-     * on the provided {@link DiscogsQueryDTO}.
+     * on the provided
+     * {@link DiscogsQueryDTO}.
      *
-     * @param uriBuilder      the {@link UriComponentsBuilder} to which the
-     *                        query parameters should be added
-     * @param discogsQueryDTO the query data transfer object containing the
-     *                        parameters to be added
+     * @param uriBuilder      the {@link UriComponentsBuilder} to which query
+     *                        parameters will be added
+     * @param discogsQueryDTO the search query data transfer object
+     *                        containing the search criteria
      */
     private void addQueryParams(final UriComponentsBuilder uriBuilder,
                                 final DiscogsQueryDTO discogsQueryDTO) {
@@ -165,16 +222,18 @@ public class DiscogsUrlBuilder {
      *
      * @param discogsQueryDTO the search query data transfer object
      *                        containing the search criteria
-     * @return the fully constructed search URL with query parameters for a
-     * compilation album
+     * @return the fully constructed compilation search URL with query
+     * parameters
      */
-    public String generateCompilationSearchUrl(final DiscogsQueryDTO discogsQueryDTO) {
+    public String generateCompilationSearchUrl(
+            final DiscogsQueryDTO discogsQueryDTO) {
         log.debug("Building compilation search URL with parameters: {}",
                 discogsQueryDTO);
 
         DiscogsQueryDTO dtoForUrl = DiscogsQueryDTO.builder()
                 .country(discogsQueryDTO.getCountry())
-                .format(discogsQueryDTO.getFormat().replace(" ", "+"))
+                .format(discogsQueryDTO.getFormat()
+                        .replace(" ", "+"))
                 .types(discogsQueryDTO.getTypes())
                 .album(discogsQueryDTO.getAlbum())
                 .track(discogsQueryDTO.getTrack())
@@ -182,7 +241,8 @@ public class DiscogsUrlBuilder {
                 .build();
 
         UriComponentsBuilder uriBuilder =
-                UriComponentsBuilder.fromHttpUrl(discogsBaseUrl.concat(discogsSearchEndpoint))
+                UriComponentsBuilder.fromHttpUrl(
+                                discogsBaseUrl.concat(discogsSearchEndpoint))
                         .queryParam("per_page", pageSize)
                         .queryParam("page", 1)
                         .queryParam("token", token);

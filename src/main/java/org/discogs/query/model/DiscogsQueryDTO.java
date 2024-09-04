@@ -30,14 +30,14 @@ import org.discogs.query.enums.DiscogsTypes;
 public class DiscogsQueryDTO {
 
     /**
-     * The name of the artist to search for. This field is required and
-     * cannot be blank.
+     * The name of the artist to search for.
+     * This field is required and cannot be blank.
      */
     @NotBlank
     private String artist;
 
     /**
-     * The name of the album to search for
+     * The name of the album to search for.
      */
     private String album;
 
@@ -52,7 +52,7 @@ public class DiscogsQueryDTO {
     private String format;
 
     /**
-     * The country for the Discogs entry
+     * The country for the Discogs entry.
      */
     private DiscogCountries country;
 

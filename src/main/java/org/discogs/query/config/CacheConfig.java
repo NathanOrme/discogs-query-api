@@ -22,6 +22,10 @@ public class CacheConfig {
      * Duration value to be used for caching
      */
     private static final int DURATION = 10;
+    /**
+     * Maximum size for cache
+     */
+    public static final int MAXIMUM_SIZE = 1000;
 
     /**
      * Creates and configures a {@link CacheManager} bean using Caffeine.
@@ -41,7 +45,7 @@ public class CacheConfig {
         cacheManager.setCaffeine(Caffeine.newBuilder()
                 .expireAfterWrite(DURATION, TimeUnit.MINUTES) // Configure cache
                 // expiration
-                .maximumSize(1000)); // Configure maximum cache size
+                .maximumSize(MAXIMUM_SIZE)); // Configure maximum cache size
         return cacheManager;
     }
 }

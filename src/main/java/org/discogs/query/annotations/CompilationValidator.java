@@ -18,13 +18,16 @@ import org.springframework.stereotype.Component;
 public class CompilationValidator
         implements ConstraintValidator<CompilationValidation, DiscogsQueryDTO> {
 
-    private static boolean isFormatBlankOrNotCompilation(final DiscogsQueryDTO discogsQueryDTO) {
+    private static boolean isFormatBlankOrNotCompilation(
+            final DiscogsQueryDTO discogsQueryDTO) {
         if (discogsQueryDTO.getFormat() == null) {
             return true;
         }
-        return !discogsQueryDTO.getFormat().equalsIgnoreCase(DiscogsFormats.COMP.getFormat())
-                && !discogsQueryDTO.getFormat()
-                .equalsIgnoreCase(DiscogsFormats.VINYL_COMPILATION.getFormat());
+        String compFormat = DiscogsFormats.COMP.getFormat();
+        String vinylCompFormat = DiscogsFormats.VINYL_COMPILATION.getFormat();
+        String format = discogsQueryDTO.getFormat();
+        return !format.equalsIgnoreCase(compFormat)
+                && !format.equalsIgnoreCase(vinylCompFormat);
     }
 
     private boolean isNotBlankBlank(final String string) {
@@ -44,7 +47,8 @@ public class CompilationValidator
      */
     @Override
     public boolean isValid(final DiscogsQueryDTO discogsQueryDTO,
-                           final ConstraintValidatorContext constraintValidatorContext) {
+                           final ConstraintValidatorContext
+                                   constraintValidatorContext) {
         if (isFormatBlankOrNotCompilation(discogsQueryDTO)) {
             return true;
         }

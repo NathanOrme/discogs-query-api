@@ -42,8 +42,8 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
      * @param artistName      the artist name to compare with.
      * @return {@code true} if the artist names match, otherwise {@code false}.
      */
-    private static boolean isArtistNameMatching(final DiscogsQueryDTO discogsQueryDTO,
-                                                final String artistName) {
+    private boolean isArtistNameMatching(final DiscogsQueryDTO discogsQueryDTO,
+                                         final String artistName) {
         return artistName.equalsIgnoreCase(discogsQueryDTO.getArtist());
     }
 
@@ -58,7 +58,9 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
      * @return {@code true} if the track titles match or if the track title
      * contains the query track title, otherwise {@code false}.
      */
-    private static boolean isTrackEqualToOrContains(final DiscogsQueryDTO discogsQueryDTO, final Track track) {
+    private boolean isTrackEqualToOrContains(
+            final DiscogsQueryDTO discogsQueryDTO,
+            final Track track) {
         String title = track.getTitle().toLowerCase();
         return title.equalsIgnoreCase(discogsQueryDTO.getTrack())
                 || title.contains(discogsQueryDTO.getTrack().toLowerCase());
@@ -117,8 +119,8 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
         } catch (final Exception e) {
             log.error("Error retrieving release details for entry ID {}",
                     discogsEntry.getId(), e);
-            throw new DiscogsSearchException("Failed to retrieve release " +
-                    "details for entry ID " +
+            throw new DiscogsSearchException("Failed to retrieve release "
+                    + "details for entry ID " +
                     discogsEntry.getId(), e);
         }
     }
@@ -137,7 +139,8 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
      * otherwise {@code false}.
      */
     private boolean filterIfTrackOnAlbum(final DiscogsEntry discogsEntry,
-                                         final DiscogsQueryDTO discogsQueryDTO) {
+                                         final DiscogsQueryDTO
+                                                 discogsQueryDTO) {
         try {
             log.debug("Filtering track on album for entry ID {}",
                     discogsEntry.getId());
@@ -150,15 +153,16 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
             boolean isOnAlbum = !isNotVariousArtist(discogsQueryDTO.getArtist())
                     || filterArtists(discogsQueryDTO, release);
 
-            if (stringHelper.isNotNullOrBlank(discogsQueryDTO.getTrack()) && isOnAlbum) {
-                log.info("Track specified in query. Applying filter and " +
-                        "sorting results...");
+            if (stringHelper.isNotNullOrBlank(discogsQueryDTO.getTrack())
+                    && isOnAlbum) {
+                log.info("Track specified in query. Applying filter and "
+                        + "sorting results...");
                 isOnAlbum = filterTracks(discogsQueryDTO, release);
             }
 
             if (isOnAlbum) {
-                log.debug("Entry ID {} is on the album and matches the " +
-                        "filters", discogsEntry.getId());
+                log.debug("Entry ID {} is on the album and matches the "
+                        + "filters", discogsEntry.getId());
                 discogsEntry.setLowestPrice((float) release.getLowestPrice());
             } else {
                 log.debug("Entry ID {} does not match album filters",
@@ -180,8 +184,10 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
      * Artists", otherwise {@code false}.
      */
     private boolean isNotVariousArtist(final String artist) {
-        return !DiscogsVarious.VARIOUS.getVariousName().equalsIgnoreCase(artist)
-                && !DiscogsVarious.VARIOUS_ARTIST.getVariousName().equalsIgnoreCase(artist);
+        String various = DiscogsVarious.VARIOUS.getVariousName();
+        String variousArtist = DiscogsVarious.VARIOUS_ARTIST.getVariousName();
+        return !various.equalsIgnoreCase(artist)
+                && !variousArtist.equalsIgnoreCase(artist);
     }
 
     /**
@@ -228,12 +234,8 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
      */
     private boolean filterTracks(final DiscogsQueryDTO discogsQueryDTO,
                                  final DiscogsRelease release) {
-        log.debug("Filtering tracks for release ID {}", release.getId());
-        boolean trackMatch = release.getTracklist().stream()
+        return release.getTracklist().stream()
                 .anyMatch(track -> isTrackEqualToOrContains(discogsQueryDTO,
                         track));
-        log.debug("Track match status for release ID {}: {}", release.getId()
-                , trackMatch);
-        return trackMatch;
     }
 }

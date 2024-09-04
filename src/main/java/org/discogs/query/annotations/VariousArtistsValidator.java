@@ -2,8 +2,10 @@ package org.discogs.query.annotations;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.enums.DiscogsVarious;
+import org.discogs.query.helpers.StringHelper;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.springframework.stereotype.Component;
 
@@ -17,9 +19,15 @@ import java.util.Arrays;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class VariousArtistsValidator
         implements ConstraintValidator<VariousArtistsValidation,
         DiscogsQueryDTO> {
+
+    /**
+     * String helper object to handle string operations
+     */
+    private final StringHelper stringHelper;
 
     /**
      * Validates the provided DiscogsQueryDTO based on the context of
@@ -37,9 +45,10 @@ public class VariousArtistsValidator
      */
     @Override
     public boolean isValid(final DiscogsQueryDTO discogsQueryDTO,
-                           final ConstraintValidatorContext constraintValidatorContext) {
-        log.info("Starting validation for DiscogsQueryDTO for Various Artists" +
-                " scenario.");
+                           final ConstraintValidatorContext
+                                   constraintValidatorContext) {
+        log.info("Starting validation for DiscogsQueryDTO for Various Artists"
+                + " scenario.");
 
         if (discogsQueryDTO == null) {
             log.warn("DTO supplied to validator is null.");
@@ -51,23 +60,21 @@ public class VariousArtistsValidator
 
         boolean isVariousArtist = Arrays.stream(DiscogsVarious.values())
                 .map(DiscogsVarious::getVariousName)
-                .anyMatch(value -> value.equalsIgnoreCase(discogsQueryDTO.getArtist()));
+                .anyMatch(value -> value.equalsIgnoreCase(discogsQueryDTO
+                        .getArtist()));
 
         if (isVariousArtist) {
             log.info("DTO artist is identified as a 'Various Artists' type.");
-            boolean isTrackValid = isNotBlankBlank(discogsQueryDTO.getTrack());
-            boolean isAlbumValid = isNotBlankBlank(discogsQueryDTO.getAlbum());
-            if (isTrackValid) {
+            boolean isTrackValid =
+                    stringHelper.isNotNullOrBlank(discogsQueryDTO.getTrack());
+            boolean isAlbumValid =
+                    stringHelper.isNotNullOrBlank(discogsQueryDTO.getAlbum());
+            if (isTrackValid || isAlbumValid) {
                 log.info("Validation completed successfully.");
                 return true;
             }
-            if (isAlbumValid) {
-                log.info("Validation completed successfully.");
-                return true;
-            }
-
-            log.error("Invalid DiscogsQueryDTO: 'Various Artists' " +
-                    "must be supplied with both a track and an album.");
+            log.error("Invalid DiscogsQueryDTO: 'Various Artists' "
+                    + "must be supplied with both a track and an album.");
             return false;
         }
 
@@ -75,13 +82,4 @@ public class VariousArtistsValidator
         return true;
     }
 
-    /**
-     * Checks if a string is neither null nor blank.
-     *
-     * @param string the string to check
-     * @return true if the string is non-null and non-blank; false otherwise
-     */
-    private boolean isNotBlankBlank(final String string) {
-        return string != null && !string.isBlank();
-    }
 }

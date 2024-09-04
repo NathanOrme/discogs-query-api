@@ -18,6 +18,15 @@ import org.springframework.stereotype.Component;
 public class CompilationValidator
         implements ConstraintValidator<CompilationValidation, DiscogsQueryDTO> {
 
+    private static boolean isFormatBlankOrNotCompilation(final DiscogsQueryDTO discogsQueryDTO) {
+        if (discogsQueryDTO.getFormat() == null) {
+            return true;
+        }
+        return !discogsQueryDTO.getFormat().equalsIgnoreCase(DiscogsFormats.COMP.getFormat())
+                && !discogsQueryDTO.getFormat()
+                .equalsIgnoreCase(DiscogsFormats.VINYL_COMPILATION.getFormat());
+    }
+
     private boolean isNotBlankBlank(final String string) {
         return string != null && !string.isBlank();
     }
@@ -42,14 +51,5 @@ public class CompilationValidator
         }
         return isNotBlankBlank(discogsQueryDTO.getAlbum());
 
-    }
-
-    private static boolean isFormatBlankOrNotCompilation(final DiscogsQueryDTO discogsQueryDTO) {
-        if (discogsQueryDTO.getFormat() == null) {
-            return true;
-        }
-        return !discogsQueryDTO.getFormat().equalsIgnoreCase(DiscogsFormats.COMP.getFormat())
-                && !discogsQueryDTO.getFormat()
-                .equalsIgnoreCase(DiscogsFormats.VINYL_COMPILATION.getFormat());
     }
 }

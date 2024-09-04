@@ -32,6 +32,32 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
     private final StringHelper stringHelper;
 
     /**
+     * Checks if the artist name from the query DTO matches the given artist name.
+     *
+     * @param discogsQueryDTO the search query data transfer object containing the artist name.
+     * @param artistName      the artist name to compare with.
+     * @return {@code true} if the artist names match, otherwise {@code false}.
+     */
+    private static boolean isArtistNameMatching(final DiscogsQueryDTO discogsQueryDTO,
+                                                final String artistName) {
+        return artistName.equalsIgnoreCase(discogsQueryDTO.getArtist());
+    }
+
+    /**
+     * Checks if the track title from the query DTO matches or is contained in the given track title.
+     *
+     * @param discogsQueryDTO the search query data transfer object containing the track title.
+     * @param track           the {@link Track} object containing the track title.
+     * @return {@code true} if the track titles match or if the track title
+     * contains the query track title, otherwise {@code false}.
+     */
+    private static boolean isTrackEqualToOrContains(final DiscogsQueryDTO discogsQueryDTO, final Track track) {
+        String title = track.getTitle().toLowerCase();
+        return title.equalsIgnoreCase(discogsQueryDTO.getTrack())
+                || title.contains(discogsQueryDTO.getTrack().toLowerCase());
+    }
+
+    /**
      * Filters and sorts Discogs search results based on the provided query data.
      * Filters out entries without a price and sorts the remaining entries by lowest price.
      *
@@ -164,31 +190,5 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
                 .anyMatch(track -> isTrackEqualToOrContains(discogsQueryDTO, track));
         log.debug("Track match status for release ID {}: {}", release.getId(), trackMatch);
         return trackMatch;
-    }
-
-    /**
-     * Checks if the artist name from the query DTO matches the given artist name.
-     *
-     * @param discogsQueryDTO the search query data transfer object containing the artist name.
-     * @param artistName      the artist name to compare with.
-     * @return {@code true} if the artist names match, otherwise {@code false}.
-     */
-    private static boolean isArtistNameMatching(final DiscogsQueryDTO discogsQueryDTO,
-                                                final String artistName) {
-        return artistName.equalsIgnoreCase(discogsQueryDTO.getArtist());
-    }
-
-    /**
-     * Checks if the track title from the query DTO matches or is contained in the given track title.
-     *
-     * @param discogsQueryDTO the search query data transfer object containing the track title.
-     * @param track           the {@link Track} object containing the track title.
-     * @return {@code true} if the track titles match or if the track title
-     * contains the query track title, otherwise {@code false}.
-     */
-    private static boolean isTrackEqualToOrContains(final DiscogsQueryDTO discogsQueryDTO, final Track track) {
-        String title = track.getTitle().toLowerCase();
-        return title.equalsIgnoreCase(discogsQueryDTO.getTrack())
-                || title.contains(discogsQueryDTO.getTrack().toLowerCase());
     }
 }

@@ -50,18 +50,18 @@ public class VariousArtistsValidator
             log.info("DTO artist is identified as a 'Various Artists' type.");
             boolean isTrackValid = isNotBlankBlank(discogsQueryDTO.getTrack());
             boolean isAlbumValid = isNotBlankBlank(discogsQueryDTO.getAlbum());
-            if(isTrackValid) {
-                    log.info("Validation completed successfully.");
-                    return true;
+            if (isTrackValid) {
+                log.info("Validation completed successfully.");
+                return true;
             }
-            if(isAlbumValid) {
-                    log.info("Validation completed successfully.");
-                    return true;
-            } 
+            if (isAlbumValid) {
+                log.info("Validation completed successfully.");
+                return true;
+            }
 
-                log.error("Invalid DiscogsQueryDTO: 'Various Artists' " +
-                        "must be supplied with both a track and an album.");
-                return false;
+            log.error("Invalid DiscogsQueryDTO: 'Various Artists' " +
+                    "must be supplied with both a track and an album.");
+            return false;
         }
 
         log.info("Validation completed successfully.");

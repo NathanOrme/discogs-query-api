@@ -1,7 +1,9 @@
 # Discogs Query
 
-A Spring Boot application for querying the Discogs API. This project allows you to search for records in the Discogs
-database by specifying an artist, track, and optional format. It includes configuration for API documentation using
+A Spring Boot application for querying the Discogs API. This project allows you
+to search for records in the Discogs
+database by specifying an artist, track, and optional format. It includes
+configuration for API documentation using
 Swagger and handles exceptions related to Discogs API interactions.
 
 <!-- TOC -->
@@ -25,16 +27,21 @@ Swagger and handles exceptions related to Discogs API interactions.
 
 ## Features
 
-- **Search Functionality**: Query the Discogs database using artist, track, and format information.
-- **Swagger API Documentation**: Automatically generates interactive API documentation.
-- **Exception Handling**: Custom exception handling for errors related to the Discogs API.
+- **Search Functionality**: Query the Discogs database using artist, track, and
+  format information.
+- **Swagger API Documentation**: Automatically generates interactive API
+  documentation.
+- **Exception Handling**: Custom exception handling for errors related to the
+  Discogs API.
 
 ## Architecture
 
-- **Spring Boot**: The application is built using the Spring Boot framework for easy configuration and deployment.
+- **Spring Boot**: The application is built using the Spring Boot framework for
+  easy configuration and deployment.
 - **RestTemplate**: Used for making HTTP requests to the Discogs API.
 - **Swagger**: Integrated for API documentation.
-- **Custom Exceptions**: Handles internal server errors with a custom exception class.
+- **Custom Exceptions**: Handles internal server errors with a custom exception
+  class.
 
 ## Getting Started
 
@@ -64,7 +71,8 @@ mvn spring-boot:run
 
 ### Configuration
 
-The application requires certain configuration properties to interact with the Discogs API. These properties should be
+The application requires certain configuration properties to interact with the
+Discogs API. These properties should be
 defined in the application.properties file:
 
 ```properties
@@ -103,7 +111,8 @@ discogs.token=YourAccessToken
     }
   ]
   ```
-- **Response**: An example response can be found [here](readme-resources/example-response.json)
+- **Response**: An example response can be
+  found [here](readme-resources/example-response.json)
 
 ### API Documentation
 
@@ -112,9 +121,11 @@ http://localhost:9090/swagger-ui.html
 
 ## Exception Handling
 
-The application uses a custom exception handler for errors related to the Discogs API:
+The application uses a custom exception handler for errors related to the
+Discogs API:
 
-- **`DiscogsAPIException`**: Thrown when an internal server error occurs. It maps to HTTP status code 500.
+- **`DiscogsAPIException`**: Thrown when an internal server error occurs. It
+  maps to HTTP status code 500.
 
 ## Development
 

@@ -14,7 +14,8 @@ class RateLimiterTest {
 
     private RateLimiter rateLimiter;
 
-    @Value("${discogs.rate-limit:60}") // Default rate limit if not set in test environment
+    @Value("${discogs.rate-limit:60}")
+    // Default rate limit if not set in test environment
     private int rateLimit;
 
     @BeforeEach

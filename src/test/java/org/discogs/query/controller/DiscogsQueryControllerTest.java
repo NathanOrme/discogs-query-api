@@ -25,7 +25,7 @@ class DiscogsQueryControllerTest {
     private static final String BASIC_AUTH_HEADER =
             "Basic " + java.util.Base64.getEncoder().encodeToString((
                     "username" +
-                    ":password").getBytes());
+                            ":password").getBytes());
     @Autowired
     private MockMvc mockMvc;
     @MockBean

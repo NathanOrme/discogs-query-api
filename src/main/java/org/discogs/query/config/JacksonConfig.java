@@ -27,13 +27,15 @@ import org.springframework.context.annotation.Configuration;
  * registered with the {@link ObjectMapper}.
  * This setup ensures that any JSON processing
  * involving {@link DiscogsTypes} and {@link DiscogsFormats}
- * will use the specified deserializers to convert JSON strings into enum constants.
+ * will use the specified deserializers to convert JSON strings into enum
+ * constants.
  */
 @Configuration
 public class JacksonConfig {
 
     /**
-     * Creates and configures an {@link ObjectMapper} bean with custom deserialization settings.
+     * Creates and configures an {@link ObjectMapper} bean with custom
+     * deserialization settings.
      *
      * <p>This method initializes an {@link ObjectMapper} and
      * configures it with a {@link SimpleModule} that includes
@@ -41,15 +43,19 @@ public class JacksonConfig {
      * The deserializers handle the conversion
      * of JSON strings to their respective enum values.
      *
-     * @return a configured {@link ObjectMapper} instance with the custom deserializers registered
+     * @return a configured {@link ObjectMapper} instance with the custom
+     * deserializers registered
      */
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
-        module.addDeserializer(DiscogsTypes.class, new DiscogsTypesDeserializer());
-        module.addDeserializer(DiscogsFormats.class, new DiscogsFormatsDeserializer());
-        module.addDeserializer(DiscogCountries.class, new DiscogsCountryDeserializer());
+        module.addDeserializer(DiscogsTypes.class,
+                new DiscogsTypesDeserializer());
+        module.addDeserializer(DiscogsFormats.class,
+                new DiscogsFormatsDeserializer());
+        module.addDeserializer(DiscogCountries.class,
+                new DiscogsCountryDeserializer());
         mapper.registerModule(module);
         return mapper;
     }

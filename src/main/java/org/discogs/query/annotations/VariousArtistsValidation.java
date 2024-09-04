@@ -25,7 +25,8 @@ public @interface VariousArtistsValidation {
      *
      * @return the default error message
      */
-    String message() default "A track or album must be supplied if dealing with various artists";
+    String message() default "A track or album must be supplied if dealing " +
+            "with various artists";
 
     /**
      * Groups of constraints that this annotation belongs to.

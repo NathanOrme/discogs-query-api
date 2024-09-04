@@ -13,7 +13,8 @@ import java.util.List;
 
 /**
  * Data Transfer Object (DTO) representing an entry in Discogs.
- * This class encapsulates details about a Discogs entry such as ID, title, format, and URLs.
+ * This class encapsulates details about a Discogs entry such as ID, title,
+ * format, and URLs.
  */
 @Getter
 @Setter
@@ -35,7 +36,8 @@ public class DiscogsEntryDTO {
     private String title;
 
     /**
-     * A list of formats associated with the Discogs entry (e.g., vinyl, CD, etc.).
+     * A list of formats associated with the Discogs entry (e.g., vinyl, CD,
+     * etc.).
      */
     private List<String> format;
 

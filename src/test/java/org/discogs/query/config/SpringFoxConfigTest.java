@@ -16,6 +16,7 @@ class SpringFoxConfigTest {
     @Test
     void testDocketBean() {
         // Assert that the Docket bean is created and not null
-        assertNotNull(docket, "Docket bean should be created by the SpringFoxConfig class.");
+        assertNotNull(docket, "Docket bean should be created by the " +
+                "SpringFoxConfig class.");
     }
 }

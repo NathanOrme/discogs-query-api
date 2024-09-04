@@ -16,7 +16,8 @@ public class JacksonConfigTest {
      */
     @Test
     public void testObjectMapperConfiguration() {
-        // Initialize the Spring application context with the configuration class
+        // Initialize the Spring application context with the configuration
+        // class
         try (AnnotationConfigApplicationContext context =
                      new AnnotationConfigApplicationContext(JacksonConfig.class)) {
 

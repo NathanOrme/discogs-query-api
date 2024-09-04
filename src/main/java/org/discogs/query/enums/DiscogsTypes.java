@@ -6,8 +6,10 @@ import lombok.Getter;
 /**
  * Enum representing different types of resources available in the Discogs API.
  * <p>
- * This enum provides predefined constants for various resource types, such as releases, masters, artists, and labels.
- * Each constant is associated with a type string that represents its name in the Discogs API.
+ * This enum provides predefined constants for various resource types, such
+ * as releases, masters, artists, and labels.
+ * Each constant is associated with a type string that represents its name in
+ * the Discogs API.
  * <p>
  * The available types are:
  * <ul>
@@ -50,7 +52,8 @@ public enum DiscogsTypes {
     /**
      * Represents an unknown or unspecified type.
      * <p>
-     * This type is used when the input type string does not match any defined types.
+     * This type is used when the input type string does not match any
+     * defined types.
      */
     UNKNOWN("");
 
@@ -60,12 +63,15 @@ public enum DiscogsTypes {
     private final String type;
 
     /**
-     * Returns the {@link DiscogsTypes} constant associated with the given type string.
+     * Returns the {@link DiscogsTypes} constant associated with the given
+     * type string.
      * <p>
-     * If the type string does not match any defined constant, {@link #UNKNOWN} is returned.
+     * If the type string does not match any defined constant,
+     * {@link #UNKNOWN} is returned.
      *
      * @param type the type string to match
-     * @return the {@link DiscogsTypes} constant corresponding to the type string,
+     * @return the {@link DiscogsTypes} constant corresponding to the type
+     * string,
      * or {@link #UNKNOWN} if no match is found
      */
     public static DiscogsTypes fromString(final String type) {

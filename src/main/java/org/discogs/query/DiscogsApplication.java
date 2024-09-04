@@ -7,7 +7,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * Entry point for the Discogs Query Application.
- * This class contains the `main` method that starts the Spring Boot application.
+ * This class contains the `main` method that starts the Spring Boot
+ * application.
  */
 @EnableCaching
 @EnableScheduling
@@ -15,7 +16,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class DiscogsApplication {
 
     /**
-     * Main method that serves as the entry point for the Spring Boot application.
+     * Main method that serves as the entry point for the Spring Boot
+     * application.
      *
      * @param args command-line arguments passed to the application (if any)
      */

@@ -1,5 +1,6 @@
 /**
- * This package contains classes that represent various components of a music release
+ * This package contains classes that represent various components of a music
+ * release
  * in the Discogs database. These components include:
  *
  * <ul>
@@ -8,11 +9,13 @@
  *   <li>{@link org.discogs.query.domain.release.ExtraArtist} -
  *   Represents an additional artist or contributor in a release.</li>
  *   <li>{@link org.discogs.query.domain.release.Format} -
- *   Represents the format in which the release is available, such as CD or vinyl.</li>
+ *   Represents the format in which the release is available, such as CD or
+ *   vinyl.</li>
  *   <li>{@link org.discogs.query.domain.release.Label} -
  *   Represents the label responsible for the release.</li>
  *   <li>{@link org.discogs.query.domain.release.Track} -
- *   Represents individual tracks in a release, including title, duration, and position.</li>
+ *   Represents individual tracks in a release, including title, duration,
+ *   and position.</li>
  * </ul>
  * <p>
  * These classes are primarily used to map the structure

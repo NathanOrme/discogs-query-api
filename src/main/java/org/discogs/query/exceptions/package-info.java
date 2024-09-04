@@ -1,5 +1,6 @@
 /**
- * Contains custom exception classes for handling errors in the Discogs Query application.
+ * Contains custom exception classes for handling errors in the Discogs Query
+ * application.
  * <p>
  * This package includes exceptions specifically
  * designed to handle and represent error conditions

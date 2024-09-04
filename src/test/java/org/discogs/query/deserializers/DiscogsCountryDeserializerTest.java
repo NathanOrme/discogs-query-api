@@ -14,14 +14,16 @@ class DiscogsCountryDeserializerTest {
     @Test
     void testDeserializeValidCountry() throws Exception {
         String json = "\"US\"";
-        DiscogCountries country = objectMapper.readValue(json, DiscogCountries.class);
+        DiscogCountries country = objectMapper.readValue(json,
+                DiscogCountries.class);
         assertEquals(DiscogCountries.US, country);
     }
 
     @Test
     void testDeserializeNullCountry() throws Exception {
         String json = "null";
-        DiscogCountries country = objectMapper.readValue(json, DiscogCountries.class);
+        DiscogCountries country = objectMapper.readValue(json,
+                DiscogCountries.class);
         assertNull(country);
     }
 }

@@ -15,7 +15,8 @@ import org.discogs.query.enums.DiscogsTypes;
 
 /**
  * Data Transfer Object (DTO) representing a query to search Discogs.
- * This class encapsulates the search criteria such as artist, track, and optional format.
+ * This class encapsulates the search criteria such as artist, track, and
+ * optional format.
  */
 @Getter
 @Setter
@@ -29,7 +30,8 @@ import org.discogs.query.enums.DiscogsTypes;
 public class DiscogsQueryDTO {
 
     /**
-     * The name of the artist to search for. This field is required and cannot be blank.
+     * The name of the artist to search for. This field is required and
+     * cannot be blank.
      */
     @NotBlank
     private String artist;

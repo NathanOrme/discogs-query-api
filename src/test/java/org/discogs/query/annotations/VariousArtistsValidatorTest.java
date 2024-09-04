@@ -8,18 +8,21 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class VariousArtistsValidatorTest {
 
-    private final VariousArtistsValidator validator = new VariousArtistsValidator();
+    private final VariousArtistsValidator validator =
+            new VariousArtistsValidator();
 
     @Test
     void testValidCase() {
-        DiscogsQueryDTO dto = new DiscogsQueryDTO("Various Artists", "Some Album", "Some Track", null, null, null);
+        DiscogsQueryDTO dto = new DiscogsQueryDTO("Various Artists", "Some " +
+                "Album", "Some Track", null, null, null);
         boolean result = validator.isValid(dto, null);
         assertTrue(result);
     }
 
     @Test
     void testInvalidCase() {
-        DiscogsQueryDTO dto = new DiscogsQueryDTO("Various Artists", null, null, null, null, null);
+        DiscogsQueryDTO dto = new DiscogsQueryDTO("Various Artists", null,
+                null, null, null, null);
         boolean result = validator.isValid(dto, null);
         assertFalse(result);
     }

@@ -12,7 +12,8 @@ public interface RetryService {
     /**
      * Executes a callable action with retry logic.
      * <p>
-     * This method retries the action if it fails, up to a maximum number of attempts.
+     * This method retries the action if it fails, up to a maximum number of
+     * attempts.
      *
      * @param action            the callable action to be executed
      * @param actionDescription a description of the action being performed

@@ -10,9 +10,12 @@ import org.springframework.security.web.SecurityFilterChain;
 /**
  * Security configuration class for the application.
  * <p>
- * This class configures the security settings for the application by implementing
- * {@link SecurityFilterChain}. It sets up basic HTTP authentication, disables CSRF protection,
- * enforces stateless session management, and configures CORS (Cross-Origin Resource Sharing)
+ * This class configures the security settings for the application by
+ * implementing
+ * {@link SecurityFilterChain}. It sets up basic HTTP authentication,
+ * disables CSRF protection,
+ * enforces stateless session management, and configures CORS (Cross-Origin
+ * Resource Sharing)
  * settings to allow requests from specified origins.
  */
 @Configuration
@@ -23,8 +26,10 @@ public class SecurityConfig {
      * <p>
      * This method sets up security configurations, including:
      * <ul>
-     *     <li>Disabling CSRF (Cross-Site Request Forgery) protection, which is typically used
-     *     to prevent CSRF attacks. This is often disabled for stateless APIs.</li>
+     *     <li>Disabling CSRF (Cross-Site Request Forgery) protection, which
+     *     is typically used
+     *     to prevent CSRF attacks. This is often disabled for stateless APIs
+     *     .</li>
      *     <li>Requiring authentication for all
      *     incoming requests to ensure that only authenticated
      *     users can access any part of the application.</li>
@@ -33,10 +38,12 @@ public class SecurityConfig {
      *     using a username and password sent in HTTP headers.</li>
      *     <li>Configuring session management to be stateless,
      *     meaning the server will not maintain
-     *     any session state between requests, which is common for REST APIs.</li>
+     *     any session state between requests, which is common for REST APIs
+     *     .</li>
      *     <li>Setting up CORS (Cross-Origin Resource Sharing)
      *     to allow requests from specified origins
-     *     and methods, which is necessary for enabling front-end applications running on different
+     *     and methods, which is necessary for enabling front-end
+     *     applications running on different
      *     origins to interact with this backend service.</li>
      * </ul>
      *
@@ -44,7 +51,8 @@ public class SecurityConfig {
      *             used to configure security settings for the application.
      * @return A {@link SecurityFilterChain} containing
      * the configured security settings for the application.
-     * @throws Exception If an error occurs during the configuration of security settings.
+     * @throws Exception If an error occurs during the configuration of
+     *                   security settings.
      */
     @Bean
     public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {

@@ -17,7 +17,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component
 public class RateLimiter {
 
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private final ScheduledExecutorService scheduler =
+            Executors.newScheduledThreadPool(1);
     private final AtomicInteger requestCount = new AtomicInteger(0);
 
     @Value("${discogs.rate-limit}")
@@ -28,8 +29,10 @@ public class RateLimiter {
      * The scheduler resets the request count every minute.
      */
     public RateLimiter() {
-        log.info("Initializing RateLimiter with a max of {} requests per minute.", maxRequestsPerMinute);
-        scheduler.scheduleAtFixedRate(this::resetRequestCount, 1, 1, TimeUnit.MINUTES);
+        log.info("Initializing RateLimiter with a max of {} requests per " +
+                "minute.", maxRequestsPerMinute);
+        scheduler.scheduleAtFixedRate(this::resetRequestCount, 1, 1,
+                TimeUnit.MINUTES);
     }
 
     /**
@@ -43,13 +46,16 @@ public class RateLimiter {
     /**
      * Attempts to acquire a permit for a request.
      *
-     * @return true if a request can be made, false if the rate limit has been reached
+     * @return true if a request can be made, false if the rate limit has
+     * been reached
      */
     public boolean tryAcquire() {
         int currentCount = requestCount.incrementAndGet();
         if (currentCount > maxRequestsPerMinute) {
-            requestCount.decrementAndGet(); // Roll back increment if limit exceeded
-            log.warn("Rate limit exceeded. Current request count: {}", currentCount - 1);
+            requestCount.decrementAndGet(); // Roll back increment if limit
+            // exceeded
+            log.warn("Rate limit exceeded. Current request count: {}",
+                    currentCount - 1);
             return false;
         }
         log.debug("Permit acquired. Current request count: {}", currentCount);

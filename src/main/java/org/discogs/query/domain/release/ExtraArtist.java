@@ -44,7 +44,8 @@ public class ExtraArtist {
     private String resourceUrl;
 
     /**
-     * The role of the extra artist in the release (e.g., "Vocals", "Producer", etc.).
+     * The role of the extra artist in the release (e.g., "Vocals",
+     * "Producer", etc.).
      */
     private String role;
 

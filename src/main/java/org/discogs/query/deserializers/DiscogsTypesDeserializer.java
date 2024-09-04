@@ -10,8 +10,10 @@ import java.io.IOException;
 /**
  * Custom deserializer for {@link DiscogsTypes} enum using Jackson.
  * <p>
- * This class is responsible for deserializing JSON representation of {@link DiscogsTypes} enum values
- * during the deserialization process. It converts a JSON string into the corresponding {@link DiscogsTypes}
+ * This class is responsible for deserializing JSON representation of
+ * {@link DiscogsTypes} enum values
+ * during the deserialization process. It converts a JSON string into the
+ * corresponding {@link DiscogsTypes}
  * enum constant.
  * <p>
  * The deserializer handles cases where the JSON string may be null,
@@ -29,7 +31,8 @@ public class DiscogsTypesDeserializer extends JsonDeserializer<DiscogsTypes> {
      * method. If the JSON string is null, empty, or does
      * not match any known enum constants, the method will return
      * {@code null}. This behavior can be adjusted based on application needs,
-     * for example by returning a default value like {@link DiscogsTypes#UNKNOWN}.
+     * for example by returning a default value like
+     * {@link DiscogsTypes#UNKNOWN}.
      *
      * @param jp   the JSON parser used to read the JSON content
      * @param ctxt the deserialization context
@@ -38,11 +41,13 @@ public class DiscogsTypesDeserializer extends JsonDeserializer<DiscogsTypes> {
      * @throws IOException if there is an error reading the JSON content
      */
     @Override
-    public DiscogsTypes deserialize(final JsonParser jp, final DeserializationContext ctxt)
+    public DiscogsTypes deserialize(final JsonParser jp,
+                                    final DeserializationContext ctxt)
             throws IOException {
         String value = jp.getText();
         if (value == null || value.isEmpty()) {
-            return null; // Or handle the default case, e.g., DiscogsTypes.UNKNOWN
+            return null; // Or handle the default case, e.g., DiscogsTypes
+            // .UNKNOWN
         }
         try {
             return DiscogsTypes.valueOf(value.toUpperCase());

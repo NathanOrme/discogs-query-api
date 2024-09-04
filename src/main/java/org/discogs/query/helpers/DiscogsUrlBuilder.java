@@ -12,7 +12,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
- * Utility class to build URLs for Discogs API requests.
+ * Utility class for constructing URLs for Discogs API requests.
+ * <p>
+ * This class provides methods to build URLs for searching Discogs entries,
+ * retrieving release details, and accessing marketplace information. It uses
+ * the base URL and endpoint configurations specified in application properties
+ * and supports dynamic query parameter construction.
  */
 @Getter
 @Slf4j
@@ -21,20 +26,27 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class DiscogsUrlBuilder {
 
     private final UriBuilderHelper uriBuilderHelper;
+
     @Value("${discogs.url}")
-    String discogsBaseUrl;
+    private String discogsBaseUrl;
+
     @Value("${discogs.search}")
-    String discogsSearchEndpoint;
+    private String discogsSearchEndpoint;
+
     @Value("${discogs.release}")
-    String releaseEndpoint;
+    private String releaseEndpoint;
+
     @Value("${discogs.page-size}")
-    int pageSize;
+    private int pageSize;
+
     @Value("${discogs.token}")
-    String token;
+    private String token;
+
     @Value("${discogs.baseUrl}")
-    String discogsWebsiteBaseUrl;
+    private String discogsWebsiteBaseUrl;
+
     @Value("${discogs.marketplaceCheck}")
-    String marketplaceUrl;
+    private String marketplaceUrl;
 
     /**
      * Builds the search URL based on the provided query parameters.
@@ -87,23 +99,32 @@ public class DiscogsUrlBuilder {
      * Builds the marketplace URL for the given DiscogsEntry.
      *
      * @param discogsEntry the Discogs entry containing the release ID
-     * @return the fully constructed release URL
+     * @return the fully constructed marketplace URL
      */
-    public String builldMarketplaceUrl(final DiscogsEntry discogsEntry) {
+    public String buildMarketplaceUrl(final DiscogsEntry discogsEntry) {
         log.debug("Building marketplace URL for DiscogsEntry ID: {}",
                 discogsEntry.getId());
 
-        String releaseUrl =
+        String searchUrl =
                 UriComponentsBuilder.fromHttpUrl(discogsBaseUrl.concat(marketplaceUrl)
                                 .concat(String.valueOf(discogsEntry.getId())))
                         .queryParam("token", token)
                         .queryParam("curr_abbr", "GBP")
                         .toUriString();
 
-        log.debug("Generated marketplace URL: {}", releaseUrl);
-        return releaseUrl;
+        log.debug("Generated marketplace URL: {}", searchUrl);
+        return searchUrl;
     }
 
+    /**
+     * Adds query parameters to the given {@link UriComponentsBuilder} based
+     * on the provided {@link DiscogsQueryDTO}.
+     *
+     * @param uriBuilder      the {@link UriComponentsBuilder} to which the
+     *                        query parameters should be added
+     * @param discogsQueryDTO the query data transfer object containing the
+     *                        parameters to be added
+     */
     private void addQueryParams(final UriComponentsBuilder uriBuilder,
                                 final DiscogsQueryDTO discogsQueryDTO) {
         log.debug("Adding query parameters to URL: {}", discogsQueryDTO);
@@ -139,12 +160,13 @@ public class DiscogsUrlBuilder {
     }
 
     /**
-     * Builds the search URL for a compilation album
-     * based on the provided query parameters.
+     * Builds the search URL for a compilation album based on the provided
+     * query parameters.
      *
      * @param discogsQueryDTO the search query data transfer object
      *                        containing the search criteria
-     * @return the fully constructed search URL with query parameters
+     * @return the fully constructed search URL with query parameters for a
+     * compilation album
      */
     public String generateCompilationSearchUrl(final DiscogsQueryDTO discogsQueryDTO) {
         log.debug("Building compilation search URL with parameters: {}",

@@ -170,7 +170,7 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
             try {
                 log.info("Generating marketplace URL for query: {}", entry);
                 var marketplaceUrl =
-                        discogsUrlBuilder.builldMarketplaceUrl(entry);
+                        discogsUrlBuilder.buildMarketplaceUrl(entry);
                 log.info("Getting marketplace result for the following entry:"
                         + " {}", entry);
                 var discogsMarketplaceResult =

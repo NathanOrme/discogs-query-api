@@ -7,6 +7,7 @@ import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.enums.DiscogsFormats;
 import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.helpers.DiscogsUrlBuilder;
+import org.discogs.query.helpers.StringHelper;
 import org.discogs.query.interfaces.DiscogsAPIClient;
 import org.discogs.query.interfaces.DiscogsFilterService;
 import org.discogs.query.interfaces.DiscogsQueryService;
@@ -34,6 +35,7 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
     private final DiscogsResultMapper discogsResultMapper;
     private final DiscogsUrlBuilder discogsUrlBuilder;
     private final DiscogsFilterService discogsFilterService;
+    private final StringHelper stringHelper;
 
     static boolean isCompilationFormat(final DiscogsQueryDTO discogsQueryDTO) {
         boolean isCompilation = DiscogsFormats.COMP.getFormat().equalsIgnoreCase(discogsQueryDTO.getFormat())
@@ -60,7 +62,7 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
             DiscogsResult results = discogsAPIClient.getResultsForQuery(searchUrl);
             log.info("Received {} results from Discogs API", results.getResults().size());
 
-            if (isCompilationFormat(discogsQueryDTO)) {
+            if (isCompilationFormat(discogsQueryDTO) && !stringHelper.isNotNullOrBlank(discogsQueryDTO.getAlbum())) {
                 log.info("Query format is a compilation. Processing compilation search...");
                 processCompilationSearch(discogsQueryDTO, results);
                 log.info("After processing compilation search, {} total results available",
@@ -125,8 +127,12 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
         log.debug("Correcting URIs for result entries");
         results.getResults().stream()
                 .filter(entry -> !entry.getUri().contains(discogsUrlBuilder.getDiscogsWebsiteBaseUrl()))
-                .forEach(entry -> entry.setUri(discogsUrlBuilder.getDiscogsWebsiteBaseUrl().concat(entry.getUri())));
+                .forEach(entry -> entry.setUri(buildCorrectUri(entry)));
         log.debug("URI correction completed");
+    }
+
+    private String buildCorrectUri(final DiscogsEntry entry) {
+        return discogsUrlBuilder.getDiscogsWebsiteBaseUrl().concat(entry.getUri());
     }
 
     private void processCompilationSearch(final DiscogsQueryDTO discogsQueryDTO, final DiscogsResult results) {

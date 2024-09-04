@@ -9,6 +9,7 @@ import org.discogs.query.domain.release.Track;
 import org.discogs.query.enums.DiscogsVarious;
 import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.helpers.DiscogsUrlBuilder;
+import org.discogs.query.helpers.StringHelper;
 import org.discogs.query.interfaces.DiscogsAPIClient;
 import org.discogs.query.interfaces.DiscogsFilterService;
 import org.discogs.query.model.DiscogsQueryDTO;
@@ -28,6 +29,7 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
 
     private final DiscogsAPIClient discogsAPIClient;
     private final DiscogsUrlBuilder discogsUrlBuilder;
+    private final StringHelper stringHelper;
 
     /**
      * Filters and sorts Discogs search results based on the provided query data.
@@ -95,7 +97,7 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
             boolean isOnAlbum = !isNotVariousArtist(discogsQueryDTO.getArtist())
                     || filterArtists(discogsQueryDTO, release);
 
-            if (isTrackSupplied(discogsQueryDTO) && isOnAlbum) {
+            if (stringHelper.isNotNullOrBlank(discogsQueryDTO.getTrack()) && isOnAlbum) {
                 log.info("Track specified in query. Applying filter and sorting results...");
                 isOnAlbum = filterTracks(discogsQueryDTO, release);
             }
@@ -122,16 +124,6 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
     private boolean isNotVariousArtist(final String artist) {
         return !DiscogsVarious.VARIOUS.getVariousName().equalsIgnoreCase(artist)
                 && !DiscogsVarious.VARIOUS_ARTIST.getVariousName().equalsIgnoreCase(artist);
-    }
-
-    /**
-     * Checks if a track is provided in the query DTO.
-     *
-     * @param discogsQueryDTO the search query data transfer object containing filter criteria.
-     * @return {@code true} if a track is provided, otherwise {@code false}.
-     */
-    private static boolean isTrackSupplied(final DiscogsQueryDTO discogsQueryDTO) {
-        return discogsQueryDTO.getTrack() != null && !discogsQueryDTO.getTrack().isBlank();
     }
 
     /**

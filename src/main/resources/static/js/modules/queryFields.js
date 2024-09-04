@@ -1,7 +1,13 @@
 // /js/modules/queryFields.js
-import { discogsTypes, discogFormats, discogCountries } from "./discogsData.js";
+import {
+    discogsTypes
+    , discogFormats
+    , discogCountries
+} from "./discogsData.js";
 
-export function createQueryFields(queriesContainer, queryCounter, isFirstQuery = false) {
+export function createQueryFields(queriesContainer, queryCounter,
+    isFirstQuery =
+    false) {
     const queryDiv = document.createElement("div");
     queryDiv.className = "query";
 
@@ -10,7 +16,8 @@ export function createQueryFields(queriesContainer, queryCounter, isFirstQuery =
 
     // Create the Query Title
     const queryTitle = document.createElement("span");
-    queryTitle.textContent = `Query ${queryCounter}`; // Add the query number
+    queryTitle.textContent =
+    `Query ${queryCounter}`; // Add the query number
     queryHeader.appendChild(queryTitle);
 
     // Create the Delete button
@@ -32,7 +39,8 @@ export function createQueryFields(queriesContainer, queryCounter, isFirstQuery =
 
     // Add event listener to toggle query content visibility
     queryHeader.addEventListener("click", () => {
-        const content = queryDiv.querySelector(".query-content");
+        const content = queryDiv.querySelector(
+            ".query-content");
         content.classList.toggle("hidden");
     });
 
@@ -70,14 +78,16 @@ export function createQueryFields(queriesContainer, queryCounter, isFirstQuery =
     queryDiv.appendChild(queryContent);
 
     // Ensure all other query contents are hidden except for the new one
-    const allQueryContents = document.querySelectorAll(".query-content");
+    const allQueryContents = document.querySelectorAll(
+        ".query-content");
     allQueryContents.forEach(content => {
         content.classList.add("hidden");
     });
 
     // Append the queryDiv to the container and ensure the new query is open
     queriesContainer.appendChild(queryDiv);
-    queryContent.classList.remove("hidden"); // Keep the new query open
+    queryContent.classList.remove(
+    "hidden"); // Keep the new query open
 
     return queryCounter + 1;
 }

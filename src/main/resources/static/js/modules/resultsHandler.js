@@ -1,9 +1,9 @@
 export function displayResults(response) {
-    const resultsContainer = document.getElementById("results");
-    resultsContainer.innerHTML = "";
+    const resultsContainer = document.getElementById('results');
+    resultsContainer.innerHTML = '';
 
     if (!Array.isArray(response) || response.length === 0) {
-        displayError("No results found.");
+        displayError('No results found.');
         return;
     }
 
@@ -18,34 +18,34 @@ export function displayResults(response) {
 
         hasResults = true;  // Mark that we have valid results
 
-        const queryHeader = document.createElement("h2");
+        const queryHeader = document.createElement('h2');
         queryHeader.textContent = `Results for Query ${index + 1}`;
         resultsContainer.appendChild(queryHeader);
 
-        const resultsSection = document.createElement("div");
-        resultsSection.className = "results-section";
+        const resultsSection = document.createElement('div');
+        resultsSection.className = 'results-section';
 
-        const resultsContent = document.createElement("div");
-        resultsContent.className = "results-content hidden";
+        const resultsContent = document.createElement('div');
+        resultsContent.className = 'results-content hidden';
 
         results.forEach(entry => {
-            const title = entry.title || "No Title";
-            const id = entry.id || "N/A";
-            const format = entry.format ? entry.format.join(", ") : "N/A";
-            const country = entry.country || "N/A";
-            const year = entry.year || "N/A";
-            const uri = entry.uri || "#";
+            const title = entry.title || 'No Title';
+            const id = entry.id || 'N/A';
+            const format = entry.format ? entry.format.join(', ') : 'N/A';
+            const country = entry.country || 'N/A';
+            const year = entry.year || 'N/A';
+            const uri = entry.uri || '#';
 
             const numberForSale = (entry.numberForSale !== null && entry.numberForSale !== undefined)
                             ? entry.numberForSale
                             : 0;
 
             const lowestPrice = (entry.lowestPrice !== null && entry.lowestPrice !== undefined)
-                ? "£" + parseFloat(entry.lowestPrice).toFixed(2)
-                : "N/A";
+                ? '£' + parseFloat(entry.lowestPrice).toFixed(2)
+                : 'N/A';
 
-            const resultItem = document.createElement("div");
-            resultItem.className = "result-item";
+            const resultItem = document.createElement('div');
+            resultItem.className = 'result-item';
 
             resultItem.innerHTML = `
                 <h3>${title}</h3>
@@ -65,12 +65,12 @@ export function displayResults(response) {
 
         resultsSection.appendChild(resultsContent);
 
-        const toggleHeader = document.createElement("div");
-        toggleHeader.className = "results-toggle-header";
-        toggleHeader.textContent = "Show Results";
-        toggleHeader.addEventListener("click", () => {
-            resultsContent.classList.toggle("hidden");
-            toggleHeader.textContent = resultsContent.classList.contains("hidden") ? "Show Results" : "Hide Results";
+        const toggleHeader = document.createElement('div');
+        toggleHeader.className = 'results-toggle-header';
+        toggleHeader.textContent = 'Show Results';
+        toggleHeader.addEventListener('click', () => {
+            resultsContent.classList.toggle('hidden');
+            toggleHeader.textContent = resultsContent.classList.contains('hidden') ? 'Show Results' : 'Hide Results';
         });
 
         resultsSection.insertBefore(toggleHeader, resultsContent);
@@ -79,12 +79,12 @@ export function displayResults(response) {
     });
 
     if (!hasResults) {
-        displayError("No results available for the provided query.");
+        displayError('No results available for the provided query.');
     }
 }
 
 export function displayError(message) {
-    const resultsContainer = document.getElementById("results");
+    const resultsContainer = document.getElementById('results');
     resultsContainer.innerHTML = `<p class="error-message">${message}</p>`;
 }
  

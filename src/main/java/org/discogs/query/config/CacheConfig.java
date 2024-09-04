@@ -19,6 +19,11 @@ import java.util.concurrent.TimeUnit;
 public class CacheConfig {
 
     /**
+     * Duration value to be used for caching
+     */
+    private static final int DURATION = 10;
+
+    /**
      * Creates and configures a {@link CacheManager} bean using Caffeine.
      * <p>
      * This method sets up a {@link CaffeineCacheManager} with specific cache
@@ -34,7 +39,7 @@ public class CacheConfig {
     public CacheManager cacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
         cacheManager.setCaffeine(Caffeine.newBuilder()
-                .expireAfterWrite(10, TimeUnit.MINUTES) // Configure cache
+                .expireAfterWrite(DURATION, TimeUnit.MINUTES) // Configure cache
                 // expiration
                 .maximumSize(1000)); // Configure maximum cache size
         return cacheManager;

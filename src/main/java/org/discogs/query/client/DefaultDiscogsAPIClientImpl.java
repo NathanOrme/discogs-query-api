@@ -18,7 +18,6 @@ import java.util.concurrent.Callable;
 
 /**
  * A client component for interacting with the Discogs API.
- * <p>
  * This class uses {@link HttpRequestService} to send HTTP requests to the
  * Discogs API,
  * handles responses, and manages retries and rate limits using
@@ -32,6 +31,9 @@ import java.util.concurrent.Callable;
 @RequiredArgsConstructor
 public class DefaultDiscogsAPIClientImpl implements DiscogsAPIClient {
 
+    /**
+     * Log message used when a cache miss occurs for a search URL.
+     */
     public static final String CACHE_MISS_FOR_SEARCH_URL = "Cache miss for " +
             "searchUrl: {}";
 
@@ -41,14 +43,13 @@ public class DefaultDiscogsAPIClientImpl implements DiscogsAPIClient {
 
     /**
      * Retrieves results from the Discogs API for a given search URL.
-     * <p>
      * This method is cached using Spring's caching abstraction with Caffeine.
      *
-     * @param searchUrl the URL to query the Discogs API
+     * @param searchUrl the URL to query the Discogs API.
      * @return an instance of {@link DiscogsResult} containing the API
-     * response data
+     * response data.
      * @throws DiscogsSearchException if an error occurs while fetching data
-     *                                from the Discogs API
+     * from the Discogs API.
      */
     @Cacheable(value = "discogsResults", key = "#searchUrl")
     @Override
@@ -60,13 +61,12 @@ public class DefaultDiscogsAPIClientImpl implements DiscogsAPIClient {
 
     /**
      * Retrieves a string result from the Discogs API for a given search URL.
-     * <p>
      * This method is cached using Spring's caching abstraction with Caffeine.
      *
-     * @param searchUrl the URL to query the Discogs API
-     * @return a {@link String} containing the API response data
+     * @param searchUrl the URL to query the Discogs API.
+     * @return a {@link String} containing the API response data.
      * @throws DiscogsSearchException if an error occurs while fetching data
-     *                                from the Discogs API
+     * from the Discogs API.
      */
     @Cacheable(value = "stringResults", key = "#searchUrl")
     @Override
@@ -78,14 +78,13 @@ public class DefaultDiscogsAPIClientImpl implements DiscogsAPIClient {
 
     /**
      * Checks whether the given item is listed on the Discogs Marketplace.
-     * <p>
      * This method is cached using Spring's caching abstraction with Caffeine.
      *
-     * @param url the URL pointing to the item on the Discogs Marketplace
+     * @param url the URL pointing to the item on the Discogs Marketplace.
      * @return a {@link DiscogsMarketplaceResult} object containing the
-     * details of the item on the marketplace
+     * details of the item on the marketplace.
      * @throws DiscogsSearchException if an error occurs while fetching data
-     *                                from the Discogs API
+     * from the Discogs API.
      */
     @Cacheable(value = "marketplaceResults", key = "#url")
     @Override
@@ -97,15 +96,14 @@ public class DefaultDiscogsAPIClientImpl implements DiscogsAPIClient {
     }
 
     /**
-     * Checks whether the given item is listed on the Discogs Marketplace.
-     * <p>
+     * Retrieves a {@link DiscogsRelease} object for a given URL.
      * This method is cached using Spring's caching abstraction with Caffeine.
      *
-     * @param url the URL pointing to the item on the Discogs Marketplace
+     * @param url the URL pointing to the item on the Discogs Marketplace.
      * @return a {@link DiscogsRelease} object containing the details of the
-     * item on the marketplace
+     * release.
      * @throws DiscogsSearchException if an error occurs while fetching data
-     *                                from the Discogs API
+     * from the Discogs API.
      */
     @Cacheable(value = "marketplaceResults", key = "#url")
     @Override
@@ -118,21 +116,17 @@ public class DefaultDiscogsAPIClientImpl implements DiscogsAPIClient {
 
     /**
      * Executes a callable action with rate limit and retry logic.
-     * <p>
      * This method ensures the rate limit is respected before executing the
-     * action and retries the action
-     * in case of failure.
+     * action and retries the action in case of failure.
      *
-     * @param action            the callable action to be executed
-     * @param actionDescription a description of the action being performed
-     * @param <T>               the type of the result returned by the action
-     * @return the result of the action
+     * @param action            the callable action to be executed.
+     * @param actionDescription a description of the action being performed.
+     * @param <T>               the type of the result returned by the action.
+     * @return the result of the action.
      * @throws DiscogsSearchException      if an error occurs while fetching
-     *                                     data from the Discogs API after
-     *                                     all retry attempts
+     * data from the Discogs API after all retry attempts.
      * @throws DiscogsMarketplaceException if an error occurs while fetching
-     *                                     data from the Discogs Marketplace
-     *                                     API after all retry attempts
+     * data from the Discogs Marketplace API after all retry attempts.
      */
     private <T> T executeWithRateLimitAndRetry(final Callable<T> action,
                                                final String actionDescription) {

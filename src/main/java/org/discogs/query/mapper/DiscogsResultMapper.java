@@ -1,11 +1,10 @@
 package org.discogs.query.mapper;
 
+import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,11 +14,9 @@ import org.springframework.stereotype.Component;
  * This class uses {@link ModelMapper} to facilitate the transformation of
  * domain objects into their respective Data Transfer Objects (DTOs).
  */
+@Slf4j
 @Component
 public class DiscogsResultMapper {
-
-    private static final Logger log =
-            LoggerFactory.getLogger(DiscogsResultMapper.class);
 
     /**
      * Maps a {@link DiscogsResult} object to a {@link DiscogsResultDTO} object.

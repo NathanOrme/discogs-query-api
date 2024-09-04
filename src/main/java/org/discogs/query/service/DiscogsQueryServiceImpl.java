@@ -41,11 +41,19 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
 
     static boolean isCompilationFormat(final DiscogsQueryDTO discogsQueryDTO) {
         boolean isCompilation =
-                DiscogsFormats.COMP.getFormat().equalsIgnoreCase(discogsQueryDTO.getFormat())
-                        || DiscogsFormats.VINYL_COMPILATION.getFormat().equalsIgnoreCase(discogsQueryDTO.getFormat());
+                isCompilation(discogsQueryDTO);
         log.debug("Checking if format is compilation: {}. Result: {}",
                 discogsQueryDTO.getFormat(), isCompilation);
         return isCompilation;
+    }
+
+    private static boolean isCompilation(final DiscogsQueryDTO discogsQueryDTO) {
+        String format = discogsQueryDTO.getFormat();
+        if (DiscogsFormats.COMP.getFormat().equalsIgnoreCase(format)) {
+            return true;
+        }
+        return DiscogsFormats.VINYL_COMPILATION.getFormat()
+                .equalsIgnoreCase(format);
     }
 
     /**
@@ -146,16 +154,22 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
     private void correctUriForResultEntries(final DiscogsResult results) {
         log.debug("Correcting URIs for result entries");
         results.getResults().stream()
-                .filter(entry -> !entry.getUri().contains(discogsUrlBuilder.getDiscogsWebsiteBaseUrl()))
+                .filter(entry -> !isContainingBaseUrl(entry))
                 .forEach(entry -> entry.setUri(buildCorrectUri(entry)));
         log.debug("URI correction completed");
+    }
+
+    private boolean isContainingBaseUrl(final DiscogsEntry entry) {
+        return entry.getUri()
+                .contains(discogsUrlBuilder.getDiscogsWebsiteBaseUrl());
     }
 
     private String buildCorrectUri(final DiscogsEntry entry) {
         return discogsUrlBuilder.getDiscogsWebsiteBaseUrl().concat(entry.getUri());
     }
 
-    private void processCompilationSearch(final DiscogsQueryDTO discogsQueryDTO, final DiscogsResult results) {
+    private void processCompilationSearch(final DiscogsQueryDTO discogsQueryDTO,
+                                          final DiscogsResult results) {
         log.debug("Generating compilation search URL for query: {}",
                 discogsQueryDTO);
         String searchUrl =

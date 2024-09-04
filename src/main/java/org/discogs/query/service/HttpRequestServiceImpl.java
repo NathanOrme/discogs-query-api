@@ -16,6 +16,14 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementation of the {@link HttpRequestService} interface for executing
+ * HTTP requests.
+ * This class uses {@link RestTemplate} to perform HTTP operations and
+ * includes error handling
+ * and logging for request execution. It also constructs HTTP headers
+ * including a user agent.
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -23,9 +31,29 @@ public class HttpRequestServiceImpl implements HttpRequestService {
 
     private final RestTemplate restTemplate;
 
+    /**
+     * User agent string for HTTP requests.
+     */
     @Value("${discogs.agent}")
     private String userAgent;
 
+    /**
+     * Executes an HTTP GET request to the specified URL and returns the
+     * response body of the specified type.
+     * <p>
+     * This method constructs the necessary HTTP headers, performs the
+     * request using {@link RestTemplate},
+     * and logs the request and response details. It throws a
+     * {@link DiscogsSearchException} if the request fails
+     * or if the response body is {@code null}.
+     *
+     * @param url          the URL to send the request to.
+     * @param responseType the type of the response body to be returned.
+     * @param <T>          the type of the response body.
+     * @return the response body of type {@code T}.
+     * @throws DiscogsSearchException if an error occurs during the request
+     * or if the response body is {@code null}.
+     */
     @Override
     public <T> T executeRequest(final String url, final Class<T> responseType) {
         log.info("Executing HTTP request to URL: {}", url);
@@ -52,6 +80,15 @@ public class HttpRequestServiceImpl implements HttpRequestService {
         }
     }
 
+    /**
+     * Builds HTTP headers for the request.
+     * <p>
+     * This method sets the `Accept` and `Content-Type` headers to
+     * `application/json` and includes
+     * a `User-Agent` header.
+     *
+     * @return the constructed {@link HttpHeaders} object.
+     */
     private HttpHeaders buildHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
@@ -60,6 +97,15 @@ public class HttpRequestServiceImpl implements HttpRequestService {
         return headers;
     }
 
+    /**
+     * Logs details of the HTTP response received from the Discogs API.
+     * <p>
+     * This method logs the body of the response if it is not {@code null}
+     * and also logs the status code.
+     *
+     * @param response the {@link ResponseEntity} object containing the HTTP
+     *                 response details.
+     */
     private void logApiResponse(final ResponseEntity<?> response) {
         if (response.getBody() != null) {
             log.info("Discogs API response body: {}", response.getBody());

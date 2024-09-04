@@ -5,9 +5,8 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * Enum representing a list of countries in the Discogs database.
- * Each enum constant corresponds to a country and is associated with a
- * string value
+ * Enum representing a list of countries in the Discogs database. Each enum
+ * constant corresponds to a country and is associated with a string value
  * that represents the country's name.
  */
 @Getter
@@ -16,352 +15,352 @@ import lombok.ToString;
 public enum DiscogCountries {
 
     /**
-     * United Kingdom
+     * United Kingdom.
      */
     UK("UK"),
 
     /**
-     * United States
+     * United States.
      */
     US("US"),
 
     /**
-     * Europe (region)
+     * Europe (region).
      */
     EUROPE("Europe"),
 
     /**
-     * Costa Rica
+     * Costa Rica.
      */
     COSTA_RICA("Costa Rica"),
 
     /**
-     * Cuba
+     * Cuba.
      */
     CUBA("Cuba"),
 
     /**
-     * Israel
+     * Israel.
      */
     ISRAEL("Israel"),
 
     /**
-     * Brazil
+     * Brazil.
      */
     BRAZIL("Brazil"),
 
     /**
-     * Greece
+     * Greece.
      */
     GREECE("Greece"),
 
     /**
-     * Uruguay
+     * Uruguay.
      */
     URUGUAY("Uruguay"),
 
     /**
-     * Latvia
+     * Latvia.
      */
     LATVIA("Latvia"),
 
     /**
-     * Austria
+     * Austria.
      */
     AUSTRIA("Austria"),
 
     /**
-     * Albania
+     * Albania.
      */
     ALBANIA("Albania"),
 
     /**
-     * Australia
+     * Australia.
      */
     AUSTRALIA("Australia"),
 
     /**
-     * New Zealand
+     * New Zealand.
      */
     NEW_ZEALAND("New Zealand"),
 
     /**
-     * Paraguay
+     * Paraguay.
      */
     PARAGUAY("Paraguay"),
 
     /**
-     * Peru
+     * Peru.
      */
     PERU("Peru"),
 
     /**
-     * Hungary
+     * Hungary.
      */
     HUNGARY("Hungary"),
 
     /**
-     * Netherlands
+     * Netherlands.
      */
     NETHERLANDS("Netherlands"),
 
     /**
-     * Canada
+     * Canada.
      */
     CANADA("Canada"),
 
     /**
-     * Hong Kong
+     * Hong Kong.
      */
     HONG_KONG("Hong Kong"),
 
     /**
-     * Trinidad
+     * Trinidad.
      */
     TRINIDAD("Trinidad"),
 
     /**
-     * Tobago
+     * Tobago.
      */
     TOBAGO("Tobago"),
 
     /**
-     * Estonia
+     * Estonia.
      */
     ESTONIA("Estonia"),
 
     /**
-     * Fiji
+     * Fiji.
      */
     FIJI("Fiji"),
 
     /**
-     * Philippines
+     * Philippines.
      */
     PHILIPPINES("Philippines"),
 
     /**
-     * Germany
+     * Germany.
      */
     GERMANY("Germany"),
 
     /**
-     * Georgia
+     * Georgia.
      */
     GEORGIA("Georgia"),
 
     /**
-     * Norway
+     * Norway.
      */
     NORWAY("Norway"),
 
     /**
-     * Croatia
+     * Croatia.
      */
     CROATIA("Croatia"),
 
     /**
-     * Ireland
+     * Ireland.
      */
     IRELAND("Ireland"),
 
     /**
-     * India
+     * India.
      */
     INDIA("India"),
 
     /**
-     * Japan
+     * Japan.
      */
     JAPAN("Japan"),
 
     /**
-     * Indonesia
+     * Indonesia.
      */
     INDONESIA("Indonesia"),
 
     /**
-     * Denmark
+     * Denmark.
      */
     DENMARK("Denmark"),
 
     /**
-     * South Korea
+     * South Korea.
      */
     SOUTH_KOREA("South Korea"),
 
     /**
-     * Lithuania
+     * Lithuania.
      */
     LITHUANIA("Lithuania"),
 
     /**
-     * Malaysia
+     * Malaysia.
      */
     MALAYSIA("Malaysia"),
 
     /**
-     * China
+     * China.
      */
     CHINA("China"),
 
     /**
-     * Kenya
+     * Kenya.
      */
     KENYA("Kenya"),
 
     /**
-     * Turkey
+     * Turkey.
      */
     TURKEY("Turkey"),
 
     /**
-     * Bulgaria
+     * Bulgaria.
      */
     BULGARIA("Bulgaria"),
 
     /**
-     * Taiwan
+     * Taiwan.
      */
     TAIWAN("Taiwan"),
 
     /**
-     * Sweden
+     * Sweden.
      */
     SWEDEN("Sweden"),
 
     /**
-     * Finland
+     * Finland.
      */
     FINLAND("Finland"),
 
     /**
-     * Iceland
+     * Iceland.
      */
     ICELAND("Iceland"),
 
     /**
-     * Czech Republic
+     * Czech Republic.
      */
     CZECH_REPUBLIC("Czech Republic"),
 
     /**
-     * Russian Federation
+     * Russian Federation.
      */
     RUSSIAN_FEDERATION("Russian Federation"),
 
     /**
-     * Belgium
+     * Belgium.
      */
     BELGIUM("Belgium"),
 
     /**
-     * France
+     * France.
      */
     FRANCE("France"),
 
     /**
-     * Luxembourg
+     * Luxembourg.
      */
     LUXEMBOURG("Luxembourg"),
 
     /**
-     * Mexico
+     * Mexico.
      */
     MEXICO("Mexico"),
 
     /**
-     * Venezuela
+     * Venezuela.
      */
     VENEZUELA("Venezuela"),
 
     /**
-     * Argentina
+     * Argentina.
      */
     ARGENTINA("Argentina"),
 
     /**
-     * South Africa
+     * South Africa.
      */
     SOUTH_AFRICA("South Africa"),
 
     /**
-     * Colombia
+     * Colombia.
      */
     COLOMBIA("Colombia"),
 
     /**
-     * Slovenia
+     * Slovenia.
      */
     SLOVENIA("Slovenia"),
 
     /**
-     * Chile
+     * Chile.
      */
     CHILE("Chile"),
 
     /**
-     * Italy
+     * Italy.
      */
     ITALY("Italy"),
 
     /**
-     * The Vatican
+     * The Vatican.
      */
     THE_VATICAN("The Vatican"),
 
     /**
-     * San Marino
+     * San Marino.
      */
     SAN_MARINO("San Marino"),
 
     /**
-     * Serbia
+     * Serbia.
      */
     SERBIA("Serbia"),
 
     /**
-     * Montenegro
+     * Montenegro.
      */
     MONTENEGRO("Montenegro"),
 
     /**
-     * Slovakia
+     * Slovakia.
      */
     SLOVAKIA("Slovakia"),
 
     /**
-     * Portugal
+     * Portugal.
      */
     PORTUGAL("Portugal"),
 
     /**
-     * Switzerland
+     * Switzerland.
      */
     SWITZERLAND("Switzerland"),
 
     /**
-     * Liechtenstein
+     * Liechtenstein.
      */
     LIECHTENSTEIN("Liechtenstein"),
 
     /**
-     * Ukraine
+     * Ukraine.
      */
     UKRAINE("Ukraine"),
 
     /**
-     * Romania
+     * Romania.
      */
     ROMANIA("Romania"),
 
     /**
-     * Poland
+     * Poland.
      */
     POLAND("Poland"),
 
     /**
-     * Unknown country
+     * Unknown country.
      */
     UNKNOWN("");
 
@@ -372,15 +371,12 @@ public enum DiscogCountries {
 
     /**
      * Returns the {@link DiscogCountries} constant associated with the given
-     * country string.
-     * <p>
-     * If the country string does not match any defined constant,
-     * {@link #UNKNOWN} is returned.
+     * country string. If the country string does not match any defined
+     * constant, {@link #UNKNOWN} is returned.
      *
      * @param country the country string to match
      * @return the {@link DiscogCountries} constant corresponding to the
-     * country string,
-     * or {@link #UNKNOWN} if no match is found
+     * country string, or {@link #UNKNOWN} if no match is found
      */
     public static DiscogCountries fromString(final String country) {
         for (final DiscogCountries t : DiscogCountries.values()) {

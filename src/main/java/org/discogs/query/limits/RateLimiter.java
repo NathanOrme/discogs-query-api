@@ -22,15 +22,15 @@ public class RateLimiter {
     private final AtomicInteger requestCount = new AtomicInteger(0);
 
     @Value("${discogs.rate-limit}")
-    int maxRequestsPerMinute;
+    private int maxRequestsPerMinute;
 
     /**
      * Creates a new RateLimiter with the given limit on requests per minute.
      * The scheduler resets the request count every minute.
      */
     public RateLimiter() {
-        log.info("Initializing RateLimiter with a max of {} requests per " +
-                "minute.", maxRequestsPerMinute);
+        log.info("Initializing RateLimiter with a max of {} requests per "
+                + "minute.", maxRequestsPerMinute);
         scheduler.scheduleAtFixedRate(this::resetRequestCount, 1, 1,
                 TimeUnit.MINUTES);
     }

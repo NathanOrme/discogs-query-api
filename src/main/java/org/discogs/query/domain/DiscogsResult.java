@@ -10,8 +10,10 @@ import lombok.ToString;
 import java.util.List;
 
 /**
- * Data Transfer Object (DTO) representing the results of a Discogs search query.
- * This class encapsulates a list of {@link DiscogsEntry} objects that match the search criteria.
+ * Data Transfer Object (DTO) representing the results of a Discogs search
+ * query.
+ * This class encapsulates a list of {@link DiscogsEntry} objects that match
+ * the search criteria.
  */
 @Getter
 @Setter

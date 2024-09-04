@@ -11,26 +11,32 @@ class StringHelperTest {
 
     @Test
     void testIsNotNullOrBlank_withNonNullNonBlankString() {
-        assertTrue(stringHelper.isNotNullOrBlank("Hello World"), "Expected true for a non-null, non-blank string");
+        assertTrue(stringHelper.isNotNullOrBlank("Hello World"), "Expected " +
+                "true for a non-null, non-blank string");
     }
 
     @Test
     void testIsNotNullOrBlank_withNullString() {
-        assertFalse(stringHelper.isNotNullOrBlank(null), "Expected false for a null string");
+        assertFalse(stringHelper.isNotNullOrBlank(null), "Expected false for " +
+                "a null string");
     }
 
     @Test
     void testIsNotNullOrBlank_withBlankString() {
-        assertFalse(stringHelper.isNotNullOrBlank("   "), "Expected false for a blank string");
+        assertFalse(stringHelper.isNotNullOrBlank("   "), "Expected false for" +
+                " a blank string");
     }
 
     @Test
     void testIsNotNullOrBlank_withEmptyString() {
-        assertFalse(stringHelper.isNotNullOrBlank(""), "Expected false for an empty string");
+        assertFalse(stringHelper.isNotNullOrBlank(""), "Expected false for an" +
+                " empty string");
     }
 
     @Test
     void testIsNotNullOrBlank_withStringContainingWhitespace() {
-        assertTrue(stringHelper.isNotNullOrBlank("  abc  "), "Expected true for a string containing non-whitespace characters surrounded by whitespace");
+        assertTrue(stringHelper.isNotNullOrBlank("  abc  "), "Expected true " +
+                "for a string containing non-whitespace characters surrounded" +
+                " by whitespace");
     }
 }

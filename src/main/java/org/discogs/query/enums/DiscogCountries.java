@@ -6,7 +6,8 @@ import lombok.ToString;
 
 /**
  * Enum representing a list of countries in the Discogs database.
- * Each enum constant corresponds to a country and is associated with a string value
+ * Each enum constant corresponds to a country and is associated with a
+ * string value
  * that represents the country's name.
  */
 @Getter
@@ -370,12 +371,15 @@ public enum DiscogCountries {
     private final String countryName;
 
     /**
-     * Returns the {@link DiscogCountries} constant associated with the given country string.
+     * Returns the {@link DiscogCountries} constant associated with the given
+     * country string.
      * <p>
-     * If the country string does not match any defined constant, {@link #UNKNOWN} is returned.
+     * If the country string does not match any defined constant,
+     * {@link #UNKNOWN} is returned.
      *
      * @param country the country string to match
-     * @return the {@link DiscogCountries} constant corresponding to the country string,
+     * @return the {@link DiscogCountries} constant corresponding to the
+     * country string,
      * or {@link #UNKNOWN} if no match is found
      */
     public static DiscogCountries fromString(final String country) {

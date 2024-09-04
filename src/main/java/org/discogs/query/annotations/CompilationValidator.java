@@ -36,8 +36,10 @@ public class CompilationValidator
      * a compilation album. If a track hasn't been supplied or an album,
      * then reject it entirely.
      *
-     * @param discogsQueryDTO            the DiscogsQueryDTO object to be validated
-     * @param constraintValidatorContext the context in which the constraint is evaluated
+     * @param discogsQueryDTO            the DiscogsQueryDTO object to be
+     *                                   validated
+     * @param constraintValidatorContext the context in which the constraint
+     *                                   is evaluated
      * @return whether it matches the criteria or not
      */
     @Override

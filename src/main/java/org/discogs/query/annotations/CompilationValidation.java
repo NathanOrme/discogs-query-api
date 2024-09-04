@@ -25,7 +25,8 @@ public @interface CompilationValidation {
      *
      * @return the default error message
      */
-    String message() default "A track or album must be supplied if dealing with compilation";
+    String message() default "A track or album must be supplied if dealing " +
+            "with compilation";
 
     /**
      * Groups of constraints that this annotation belongs to.

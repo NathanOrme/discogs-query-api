@@ -17,9 +17,11 @@ class DiscordsAppConfigTest {
     @Test
     void testRestTemplateBean() {
         // Act
-        RestTemplate restTemplate = applicationContext.getBean(RestTemplate.class);
+        RestTemplate restTemplate =
+                applicationContext.getBean(RestTemplate.class);
 
         // Assert
-        assertNotNull(restTemplate, "RestTemplate bean should be created by the configuration class.");
+        assertNotNull(restTemplate, "RestTemplate bean should be created by " +
+                "the configuration class.");
     }
 }

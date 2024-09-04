@@ -20,12 +20,14 @@ class SecurityConfigTest {
         // Mock authentication for the test
     void testSecurityConfiguration() throws Exception {
         mockMvc.perform(get("/"))
-                .andExpect(status().isOk()); // Ensure that the endpoint is accessible
+                .andExpect(status().isOk()); // Ensure that the endpoint is
+        // accessible
     }
 
     @Test
     void testSecurityConfigurationWithoutAuth() throws Exception {
         mockMvc.perform(get("/"))
-                .andExpect(status().isOk()); // Ensure that the endpoint is accessible without auth
+                .andExpect(status().isOk()); // Ensure that the endpoint is
+        // accessible without auth
     }
 }

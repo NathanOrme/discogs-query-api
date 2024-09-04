@@ -4,10 +4,12 @@
  * <p>
  * This package includes service classes that encapsulate the core
  * business logic and provide methods for interacting
- * with external systems, such as APIs, and processing data within the application. It includes:
+ * with external systems, such as APIs, and processing data within the
+ * application. It includes:
  * <ul>
  *     <li>Services for querying and processing data from the Discogs API.</li>
- *     <li>Business logic for managing and transforming data related to Discogs queries and results.</li>
+ *     <li>Business logic for managing and transforming data related to
+ *     Discogs queries and results.</li>
  * </ul>
  * <p>
  * The service classes in this package act as intermediaries

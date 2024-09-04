@@ -9,14 +9,16 @@ import springfox.documentation.spring.web.plugins.Docket;
 
 /**
  * Configuration class for setting up Swagger documentation.
- * This class configures Swagger to generate API documentation for the Discogs Query application.
+ * This class configures Swagger to generate API documentation for the
+ * Discogs Query application.
  */
 @Configuration
 public class SpringFoxConfig {
 
     /**
      * Creates a {@link Docket} bean to configure Swagger for the application.
-     * This bean sets up the Swagger documentation to include all APIs and paths in the application.
+     * This bean sets up the Swagger documentation to include all APIs and
+     * paths in the application.
      *
      * @return a {@link Docket} instance configured for Swagger 2 documentation
      */

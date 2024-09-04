@@ -20,7 +20,8 @@ import java.util.Objects;
 
 /**
  * Controller for handling Discogs query-related operations.
- * This controller provides an API endpoint for searching Discogs based on user queries.
+ * This controller provides an API endpoint for searching Discogs based on
+ * user queries.
  */
 @Slf4j
 @RestController
@@ -33,8 +34,10 @@ public class DiscogsQueryController {
     /**
      * Searches Discogs using the provided query data.
      *
-     * @param discogsQueryDTO the data transfer object containing the search query details
-     * @return a {@link ResponseEntity} containing the search results wrapped in {@link DiscogsResultDTO}
+     * @param discogsQueryDTO the data transfer object containing the search
+     *                        query details
+     * @return a {@link ResponseEntity} containing the search results wrapped
+     * in {@link DiscogsResultDTO}
      */
     @ResponseStatus(HttpStatus.OK)
     @PostMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE,
@@ -42,7 +45,8 @@ public class DiscogsQueryController {
     public ResponseEntity<List<DiscogsResultDTO>> searchBasedOnQuery(
             @RequestBody @Valid final List<DiscogsQueryDTO> discogsQueryDTO) {
 
-        log.info("Received search request with {} queries", discogsQueryDTO.size());
+        log.info("Received search request with {} queries",
+                discogsQueryDTO.size());
 
         List<DiscogsResultDTO> resultDTOList = discogsQueryDTO.stream()
                 .map(query -> {

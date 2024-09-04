@@ -69,23 +69,27 @@ class DiscogsQueryServiceImplTest {
     @Test
     void testSearchBasedOnQuery_discogsSearchException() {
         // Setup mock behaviors
-        when(discogsUrlBuilder.buildSearchUrl(discogsQueryDTO)).thenReturn("mocked-url");
+        when(discogsUrlBuilder.buildSearchUrl(discogsQueryDTO)).thenReturn(
+                "mocked-url");
         doThrow(new DiscogsSearchException("API error")).when(discogsAPIClient).getResultsForQuery(anyString());
 
         // Perform the search
-        DiscogsResultDTO result = discogsQueryServiceImpl.searchBasedOnQuery(discogsQueryDTO);
+        DiscogsResultDTO result =
+                discogsQueryServiceImpl.searchBasedOnQuery(discogsQueryDTO);
 
         // Verify behaviors
         verify(discogsAPIClient, times(1)).getResultsForQuery(anyString());
 
         // Validate results
-        assertEquals(new DiscogsResultDTO().toString(), result.toString());  // Empty DTO is expected on exception
+        assertEquals(new DiscogsResultDTO().toString(), result.toString());
+        // Empty DTO is expected on exception
     }
 
     @Test
     void testSearchBasedOnQuery_unexpectedException() {
         // Setup mock behaviors
-        when(discogsUrlBuilder.buildSearchUrl(discogsQueryDTO)).thenReturn("mocked-url");
+        when(discogsUrlBuilder.buildSearchUrl(discogsQueryDTO)).thenReturn(
+                "mocked-url");
         doThrow(new RuntimeException("Unexpected error")).when(discogsAPIClient).getResultsForQuery(anyString());
 
         // Perform the search and expect exception
@@ -103,7 +107,8 @@ class DiscogsQueryServiceImplTest {
         discogsQueryDTO.setFormat(DiscogsFormats.COMP.getFormat());
 
         // When
-        boolean isCompilation = DiscogsQueryServiceImpl.isCompilationFormat(discogsQueryDTO);
+        boolean isCompilation =
+                DiscogsQueryServiceImpl.isCompilationFormat(discogsQueryDTO);
 
         // Then
         assertTrue(isCompilation);

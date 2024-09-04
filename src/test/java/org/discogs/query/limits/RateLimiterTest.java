@@ -31,7 +31,8 @@ class RateLimiterTest {
     @Test
     void testAllowRequestsWithinLimit() {
         for (int i = 0; i < rateLimit; i++) {
-            assertTrue(rateLimiter.tryAcquire(), "Request " + (i + 1) + " should be allowed.");
+            assertTrue(rateLimiter.tryAcquire(), "Request " + (i + 1) + " " +
+                    "should be allowed.");
         }
     }
 
@@ -41,9 +42,11 @@ class RateLimiterTest {
     @Test
     void testDenyRequestsBeyondLimit() {
         for (int i = 0; i < rateLimit; i++) {
-            assertTrue(rateLimiter.tryAcquire(), "Request " + (i + 1) + " should be allowed.");
+            assertTrue(rateLimiter.tryAcquire(), "Request " + (i + 1) + " " +
+                    "should be allowed.");
         }
-        assertFalse(rateLimiter.tryAcquire(), "Should not allow request beyond the limit.");
+        assertFalse(rateLimiter.tryAcquire(), "Should not allow request " +
+                "beyond the limit.");
     }
 
     /**
@@ -54,15 +57,18 @@ class RateLimiterTest {
     // Adjust timeout as needed
     void testRateLimiterResetsAfterOneMinute() throws InterruptedException {
         for (int i = 0; i < rateLimit; i++) {
-            assertTrue(rateLimiter.tryAcquire(), "Request " + (i + 1) + " should be allowed.");
+            assertTrue(rateLimiter.tryAcquire(), "Request " + (i + 1) + " " +
+                    "should be allowed.");
         }
-        assertFalse(rateLimiter.tryAcquire(), "Should not allow request beyond the limit.");
+        assertFalse(rateLimiter.tryAcquire(), "Should not allow request " +
+                "beyond the limit.");
 
         // Wait for rate limiter to reset
         TimeUnit.SECONDS.sleep(65); // Sleep for longer than the reset period
 
         for (int i = 0; i < rateLimit; i++) {
-            assertTrue(rateLimiter.tryAcquire(), "Request " + (i + 1) + " should be allowed after reset.");
+            assertTrue(rateLimiter.tryAcquire(), "Request " + (i + 1) + " " +
+                    "should be allowed after reset.");
         }
     }
 }

@@ -14,8 +14,10 @@
  * <p>
  * The mapper classes help ensure that data is correctly
  * and efficiently transformed from one format to another,
- * improving data consistency and reducing the risk of errors during data conversion.
+ * improving data consistency and reducing the risk of errors during data
+ * conversion.
  * This separation of concerns
- * supports a clean architecture by decoupling data representation from business logic.
+ * supports a clean architecture by decoupling data representation from
+ * business logic.
  */
 package org.discogs.query.mapper;

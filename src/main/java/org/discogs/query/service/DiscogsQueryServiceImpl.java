@@ -21,7 +21,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Implementation of {@link DiscogsQueryService} that interacts with the Discogs API.
+ * Implementation of {@link DiscogsQueryService} that interacts with the
+ * Discogs API.
  * This service handles search requests and processes the API responses.
  */
 @Slf4j
@@ -29,7 +30,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class DiscogsQueryServiceImpl implements DiscogsQueryService {
 
-    private static final String UNEXPECTED_ISSUE_OCCURRED = "Unexpected issue occurred";
+    private static final String UNEXPECTED_ISSUE_OCCURRED = "Unexpected issue" +
+            " occurred";
 
     private final DiscogsAPIClient discogsAPIClient;
     private final DiscogsResultMapper discogsResultMapper;
@@ -38,16 +40,19 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
     private final StringHelper stringHelper;
 
     static boolean isCompilationFormat(final DiscogsQueryDTO discogsQueryDTO) {
-        boolean isCompilation = DiscogsFormats.COMP.getFormat().equalsIgnoreCase(discogsQueryDTO.getFormat())
-                || DiscogsFormats.VINYL_COMPILATION.getFormat().equalsIgnoreCase(discogsQueryDTO.getFormat());
-        log.debug("Checking if format is compilation: {}. Result: {}", discogsQueryDTO.getFormat(), isCompilation);
+        boolean isCompilation =
+                DiscogsFormats.COMP.getFormat().equalsIgnoreCase(discogsQueryDTO.getFormat())
+                        || DiscogsFormats.VINYL_COMPILATION.getFormat().equalsIgnoreCase(discogsQueryDTO.getFormat());
+        log.debug("Checking if format is compilation: {}. Result: {}",
+                discogsQueryDTO.getFormat(), isCompilation);
         return isCompilation;
     }
 
     /**
      * Searches the Discogs database based on the provided query.
      *
-     * @param discogsQueryDTO the search query containing artist, track, and optional format information
+     * @param discogsQueryDTO the search query containing artist, track, and
+     *                        optional format information
      * @return a {@link DiscogsResultDTO} with the search results
      */
     @Override
@@ -55,17 +60,22 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
         try {
             log.info("Starting search for query: {}", discogsQueryDTO);
 
-            String searchUrl = discogsUrlBuilder.buildSearchUrl(discogsQueryDTO);
+            String searchUrl =
+                    discogsUrlBuilder.buildSearchUrl(discogsQueryDTO);
             log.debug("Built search URL: {}", searchUrl);
 
             log.info("Sending search request to Discogs API...");
-            DiscogsResult results = discogsAPIClient.getResultsForQuery(searchUrl);
-            log.info("Received {} results from Discogs API", results.getResults().size());
+            DiscogsResult results =
+                    discogsAPIClient.getResultsForQuery(searchUrl);
+            log.info("Received {} results from Discogs API",
+                    results.getResults().size());
 
             if (isCompilationFormat(discogsQueryDTO) && !stringHelper.isNotNullOrBlank(discogsQueryDTO.getAlbum())) {
-                log.info("Query format is a compilation. Processing compilation search...");
+                log.info("Query format is a compilation. Processing " +
+                        "compilation search...");
                 processCompilationSearch(discogsQueryDTO, results);
-                log.info("After processing compilation search, {} total results available",
+                log.info("After processing compilation search, {} total " +
+                                "results available",
                         results.getResults().size());
             }
 
@@ -78,14 +88,19 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
 
             getLowestPriceOnMarketplace(results);
 
-            DiscogsResultDTO resultDTO = discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
-            log.info("Search processing completed successfully for query: {}", discogsQueryDTO);
+            DiscogsResultDTO resultDTO =
+                    discogsResultMapper.mapObjectToDTO(results,
+                            discogsQueryDTO);
+            log.info("Search processing completed successfully for query: {}"
+                    , discogsQueryDTO);
 
             return resultDTO;
         } catch (final DiscogsSearchException e) {
-            log.error("DiscogsSearchException occurred while processing query: {}. Error: {}",
+            log.error("DiscogsSearchException occurred while processing " +
+                            "query: {}. Error: {}",
                     discogsQueryDTO, e.getMessage(), e);
-            return new DiscogsResultDTO(); // Return an empty DTO or handle as per your error strategy
+            return new DiscogsResultDTO(); // Return an empty DTO or handle
+            // as per your error strategy
         } catch (final Exception e) {
             log.error(UNEXPECTED_ISSUE_OCCURRED +
                             " while processing query: {}. Error: {}",
@@ -103,22 +118,27 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
         results.getResults().forEach(entry -> {
             try {
                 log.info("Generating marketplace URL for query: {}", entry);
-                var marketplaceUrl = discogsUrlBuilder.builldMarketplaceUrl(entry);
-                log.info("Getting marketplace result for the following entry: {}", entry);
+                var marketplaceUrl =
+                        discogsUrlBuilder.builldMarketplaceUrl(entry);
+                log.info("Getting marketplace result for the following entry:" +
+                        " {}", entry);
                 var discogsMarketplaceResult = discogsAPIClient
                         .getMarketplaceResultForQuery(marketplaceUrl);
                 if (discogsMarketplaceResult != null) {
                     entry.setNumberForSale(discogsMarketplaceResult.getNumberForSale());
-                    var lowestPriceResult = discogsMarketplaceResult.getResult();
+                    var lowestPriceResult =
+                            discogsMarketplaceResult.getResult();
                     if (lowestPriceResult != null) {
                         entry.setLowestPrice(lowestPriceResult.getValue());
-                        log.info("Amended lowest price for the following entry: {}", entry);
+                        log.info("Amended lowest price for the following " +
+                                "entry: {}", entry);
                     }
                 } else {
                     log.warn("Marketplace result is null for entry: {}", entry);
                 }
             } catch (final Exception e) {
-                log.error("Failed to process entry: {} due to {}", entry, e.getMessage(), e);
+                log.error("Failed to process entry: {} due to {}", entry,
+                        e.getMessage(), e);
             }
         });
     }
@@ -136,19 +156,24 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
     }
 
     private void processCompilationSearch(final DiscogsQueryDTO discogsQueryDTO, final DiscogsResult results) {
-        log.debug("Generating compilation search URL for query: {}", discogsQueryDTO);
-        String searchUrl = discogsUrlBuilder.generateCompilationSearchUrl(discogsQueryDTO);
+        log.debug("Generating compilation search URL for query: {}",
+                discogsQueryDTO);
+        String searchUrl =
+                discogsUrlBuilder.generateCompilationSearchUrl(discogsQueryDTO);
         log.debug("Compilation search URL: {}", searchUrl);
 
         log.info("Sending compilation search request to Discogs API...");
-        DiscogsResult compResults = discogsAPIClient.getResultsForQuery(searchUrl);
-        log.info("Received {} compilation results from Discogs API", compResults.getResults().size());
+        DiscogsResult compResults =
+                discogsAPIClient.getResultsForQuery(searchUrl);
+        log.info("Received {} compilation results from Discogs API",
+                compResults.getResults().size());
 
         Set<DiscogsEntry> entries = new HashSet<>(results.getResults());
         entries.addAll(compResults.getResults());
         results.setResults(new ArrayList<>(entries));
 
-        log.debug("Merged original results with compilation results. Total results: {}", results.getResults().size());
+        log.debug("Merged original results with compilation results. Total " +
+                "results: {}", results.getResults().size());
     }
 
 }

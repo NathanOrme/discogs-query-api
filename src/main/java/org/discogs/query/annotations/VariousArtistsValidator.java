@@ -18,26 +18,33 @@ import java.util.Arrays;
 @Slf4j
 @Component
 public class VariousArtistsValidator
-        implements ConstraintValidator<VariousArtistsValidation, DiscogsQueryDTO> {
+        implements ConstraintValidator<VariousArtistsValidation,
+        DiscogsQueryDTO> {
 
     /**
-     * Validates the provided DiscogsQueryDTO based on the context of "Various Artists".
-     * If the artist in the DTO matches one of the predefined "Various Artists" values,
+     * Validates the provided DiscogsQueryDTO based on the context of
+     * "Various Artists".
+     * If the artist in the DTO matches one of the predefined "Various
+     * Artists" values,
      * it checks whether the track or album fields are properly provided.
      *
-     * @param discogsQueryDTO            the DiscogsQueryDTO object to be validated
-     * @param constraintValidatorContext the context in which the constraint is evaluated
+     * @param discogsQueryDTO            the DiscogsQueryDTO object to be
+     *                                   validated
+     * @param constraintValidatorContext the context in which the constraint
+     *                                   is evaluated
      * @return true if the DTO is valid or if
      * it does not match the criteria for "Various Artists"; false otherwise
      */
     @Override
     public boolean isValid(final DiscogsQueryDTO discogsQueryDTO,
                            final ConstraintValidatorContext constraintValidatorContext) {
-        log.info("Starting validation for DiscogsQueryDTO for Various Artists scenario.");
+        log.info("Starting validation for DiscogsQueryDTO for Various Artists" +
+                " scenario.");
 
         if (discogsQueryDTO == null) {
             log.warn("DTO supplied to validator is null.");
-            // Returning true here assumes that the null DTO is considered valid.
+            // Returning true here assumes that the null DTO is considered
+            // valid.
             // Adjust based on your validation requirements.
             return true;
         }

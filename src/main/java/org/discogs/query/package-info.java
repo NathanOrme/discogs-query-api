@@ -9,12 +9,17 @@
  * Key areas covered in this package include:
  * <ul>
  *     <li>Controllers for handling incoming requests and responses.</li>
- *     <li>Service layers for implementing business logic and interacting with external APIs.</li>
- *     <li>Models and data transfer objects for representing and transferring data.</li>
- *     <li>Configuration classes for setting up the application context and security.</li>
+ *     <li>Service layers for implementing business logic and interacting
+ *     with external APIs.</li>
+ *     <li>Models and data transfer objects for representing and transferring
+ *     data.</li>
+ *     <li>Configuration classes for setting up the application context and
+ *     security.</li>
  * </ul>
  * <p>
- * The organization of this package supports a modular architecture, where different aspects of the application are
- * encapsulated in separate components, making it easier to manage, extend, and maintain the application.
+ * The organization of this package supports a modular architecture, where
+ * different aspects of the application are
+ * encapsulated in separate components, making it easier to manage, extend,
+ * and maintain the application.
  */
 package org.discogs.query;

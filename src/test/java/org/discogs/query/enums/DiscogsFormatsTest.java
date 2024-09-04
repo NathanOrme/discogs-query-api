@@ -14,8 +14,11 @@ class DiscogsFormatsTest {
         DiscogsFormats vinylCompilation = DiscogsFormats.VINYL_COMPILATION;
 
         // Act & Assert
-        assertEquals("vinyl", vinyl.getFormat(), "The format for VINYL should be 'vinyl'");
-        assertEquals("compilation", comp.getFormat(), "The format for COMP should be 'compilation'");
-        assertEquals("compilation vinyl", vinylCompilation.getFormat(), "The format for VINYL_COMPILATION should be 'compilation vinyl'");
+        assertEquals("vinyl", vinyl.getFormat(), "The format for VINYL should" +
+                " be 'vinyl'");
+        assertEquals("compilation", comp.getFormat(), "The format for COMP " +
+                "should be 'compilation'");
+        assertEquals("compilation vinyl", vinylCompilation.getFormat(), "The " +
+                "format for VINYL_COMPILATION should be 'compilation vinyl'");
     }
 }

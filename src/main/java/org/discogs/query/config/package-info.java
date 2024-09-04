@@ -1,7 +1,8 @@
 /**
  * Contains configuration classes for the Discogs Query application.
  * <p>
- * This package includes various configuration settings necessary for the proper functioning of the application.
+ * This package includes various configuration settings necessary for the
+ * proper functioning of the application.
  * It encompasses:
  * <ul>
  *     <li>Security configurations, defining how security

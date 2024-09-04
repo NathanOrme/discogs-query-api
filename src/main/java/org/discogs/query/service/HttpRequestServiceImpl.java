@@ -37,12 +37,15 @@ public class HttpRequestServiceImpl implements HttpRequestService {
         log.debug("HTTP entity created with headers");
 
         try {
-            ResponseEntity<T> response = restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
-            log.info("Received HTTP response with status code: {}", response.getStatusCode());
+            ResponseEntity<T> response = restTemplate.exchange(url,
+                    HttpMethod.GET, entity, responseType);
+            log.info("Received HTTP response with status code: {}",
+                    response.getStatusCode());
             logApiResponse(response);
 
             return Optional.ofNullable(response.getBody())
-                    .orElseThrow(() -> new DiscogsSearchException("Failed to fetch data from Discogs API"));
+                    .orElseThrow(() -> new DiscogsSearchException("Failed to " +
+                            "fetch data from Discogs API"));
         } catch (final Exception e) {
             log.error("Error executing HTTP request to URL: {}", url, e);
             throw new DiscogsSearchException("HTTP request failed", e);

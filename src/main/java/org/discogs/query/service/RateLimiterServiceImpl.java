@@ -25,11 +25,13 @@ public class RateLimiterServiceImpl implements RateLimiterService {
                 TimeUnit.MILLISECONDS.sleep(100);
             } catch (final InterruptedException e) {
                 Thread.currentThread().interrupt();
-                log.error("Thread interrupted while waiting for rate limit to reset", e);
+                log.error("Thread interrupted while waiting for rate limit to" +
+                        " reset", e);
                 return;
             }
         }
 
-        log.debug("Acquired permit from rate limiter, proceeding with execution.");
+        log.debug("Acquired permit from rate limiter, proceeding with " +
+                "execution.");
     }
 }

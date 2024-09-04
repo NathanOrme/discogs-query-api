@@ -31,12 +31,14 @@ public class UriBuilderHelper {
      *                   if null or blank, the parameter will not be added
      */
     public void addIfNotNullOrBlank(final UriComponentsBuilder uriBuilder,
-                                    final String paramName, final String paramValue) {
+                                    final String paramName,
+                                    final String paramValue) {
         if (paramValue != null && !paramValue.isBlank()) {
             uriBuilder.queryParam(paramName, paramValue);
             log.debug("Added query parameter: {}={}", paramName, paramValue);
         } else {
-            log.debug("Skipped adding query parameter: {} (value is null or blank)", paramName);
+            log.debug("Skipped adding query parameter: {} (value is null or " +
+                    "blank)", paramName);
         }
     }
 
@@ -60,7 +62,8 @@ public class UriBuilderHelper {
             uriBuilder.queryParam(paramName, paramValue);
             log.debug("Added query parameter: {}={}", paramName, paramValue);
         } else {
-            log.debug("Skipped adding query parameter: {} (value is null)", paramName);
+            log.debug("Skipped adding query parameter: {} (value is null)",
+                    paramName);
         }
     }
 }

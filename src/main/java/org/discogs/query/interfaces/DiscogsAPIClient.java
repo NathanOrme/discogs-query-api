@@ -22,7 +22,7 @@ public interface DiscogsAPIClient {
      * @return an instance of {@link DiscogsResult} containing the API
      * response data
      */
-    DiscogsResult getResultsForQuery(final String searchUrl);
+    DiscogsResult getResultsForQuery(String searchUrl);
 
     /**
      * Retrieves a string result from the Discogs API for a given search URL.
@@ -30,7 +30,7 @@ public interface DiscogsAPIClient {
      * @param searchUrl the URL to query the Discogs API
      * @return a {@link String} containing the API response data
      */
-    String getStringResultForQuery(final String searchUrl);
+    String getStringResultForQuery(String searchUrl);
 
     /**
      * Searches the website to see if a release exists
@@ -38,7 +38,7 @@ public interface DiscogsAPIClient {
      * @param searchUrl URL to use
      * @return a {@link DiscogsResult} result if found on the website.
      */
-    DiscogsRelease getRelease(final String searchUrl);
+    DiscogsRelease getRelease(String searchUrl);
 
     /**
      * Searches marketplace to see if release is on marketplace
@@ -46,6 +46,6 @@ public interface DiscogsAPIClient {
      * @param url URL to use for search
      * @return Result to say if on marketplace
      */
-    DiscogsMarketplaceResult getMarketplaceResultForQuery(final String url);
+    DiscogsMarketplaceResult getMarketplaceResultForQuery(String url);
 
 }

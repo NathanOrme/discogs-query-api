@@ -37,12 +37,12 @@ public enum DiscogQueryParams {
     TYPE("type"),
 
     /**
-     * Represents the "album" query parameter
+     * Represents the "album" query parameter.
      */
     ALBUM("release_title"),
 
     /**
-     * Represents the "country" query parameter
+     * Represents the "country" query parameter.
      */
     COUNTRY("country");
 

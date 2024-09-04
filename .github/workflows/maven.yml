@@ -8,7 +8,7 @@ on:
 
 concurrency:
   group: ${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   build:
@@ -43,6 +43,26 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
+
+      - name: Super-linter
+        uses: super-linter/super-linter@v7.1.0
+        env:
+          # To report GitHub Actions status checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FIX_YAML_PRETTIER: true
+          FIX_GOOGLE_JAVA_FORMAT: true
+          FIX_CSS_PRETTIER: true
+
+      - name: Commit and push linting fixes
+        if: >
+          github.event_name == 'pull_request' &&
+          github.ref_name != github.event.repository.default_branch
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          branch: ${{ github.event.pull_request.head.ref || github.head_ref || github.ref }}
+          commit_message: "chore: fix linting issues"
+          commit_user_name: super-linter
+          commit_user_email: super-linter@super-linter.dev
 
       - name: Set Version With Maven
         run: mvn versions:set -DnewVersion=${{ steps.removev.outputs.ref_name }}

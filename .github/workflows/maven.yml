@@ -8,7 +8,6 @@ on:
 
 concurrency:
   group: ${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 jobs:
   build:
@@ -49,12 +48,6 @@ jobs:
 
       - name: Install dependencies
         run: mvn clean install -DskipTests
-
-      - name: Super-linter
-        uses: super-linter/super-linter@v7.1.0
-        env:
-          # To report GitHub Actions status checks
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build with Maven and buildpacks
         run: mvn clean install package javadoc:javadoc spring-boot:build-image

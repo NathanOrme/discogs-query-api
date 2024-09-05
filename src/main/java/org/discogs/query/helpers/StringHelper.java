@@ -1,6 +1,7 @@
 package org.discogs.query.helpers;
 
 import lombok.NoArgsConstructor;
+import org.discogs.query.enums.DiscogsVarious;
 import org.springframework.stereotype.Component;
 
 /**
@@ -38,5 +39,17 @@ public class StringHelper {
      */
     public boolean isNotNullOrBlank(final String string) {
         return string != null && !string.isBlank();
+    }
+
+    /**
+     * Checks if the artist is not categorized as a "Various Artists" entry.
+     *
+     * @param artist the artist name to check.
+     * @return {@code true} if the artist is not categorized as "Various
+     * Artists", otherwise {@code false}.
+     */
+    public boolean isNotVariousArtist(final String artist) {
+        return !DiscogsVarious.VARIOUS.getVariousName().equalsIgnoreCase(artist)
+                && !DiscogsVarious.VARIOUS_ARTIST.getVariousName().equalsIgnoreCase(artist);
     }
 }

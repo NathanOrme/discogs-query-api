@@ -145,7 +145,7 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
 
     private void correctUriForResultEntries(final DiscogsResult results) {
         log.debug("Correcting URIs for result entries");
-        results.getResults().stream()
+        results.getResults().parallelStream()
                 .filter(entry -> !entry.getUri().contains(discogsUrlBuilder.getDiscogsWebsiteBaseUrl()))
                 .forEach(entry -> entry.setUri(buildCorrectUri(entry)));
         log.debug("URI correction completed");

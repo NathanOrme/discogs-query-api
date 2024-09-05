@@ -68,7 +68,7 @@ public class DiscogsQueryController {
     }
 
     private int calculateSizeOfResults(final List<DiscogsResultDTO> resultDTOList) {
-        return resultDTOList.stream()
+        return resultDTOList.parallelStream()
                 .filter(discogsResultDTO -> discogsResultDTO.getResults() != null)
                 .mapToInt(discogsResultDTO -> discogsResultDTO.getResults().size())
                 .sum();

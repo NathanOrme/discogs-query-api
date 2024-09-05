@@ -80,7 +80,7 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
         log.info("Filtering and sorting results for query: {}",
                 discogsQueryDTO);
 
-        var filteredAndSortedResults = results.getResults().stream()
+        var filteredAndSortedResults = results.getResults().parallelStream()
                 .filter(entry -> filterIfTrackOnAlbum(entry, discogsQueryDTO))
                 .filter(entry -> Objects.nonNull(entry.getLowestPrice()))
                 .sorted((e1, e2) -> Float.compare(e1.getLowestPrice(),
@@ -186,14 +186,14 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
     private boolean filterArtists(final DiscogsQueryDTO discogsQueryDTO,
                                   final DiscogsRelease release) {
         log.debug("Filtering artists for release ID {}", release.getId());
-        boolean isArtistMatch = release.getArtists().stream()
+        boolean isArtistMatch = release.getArtists().parallelStream()
                 .anyMatch(artist -> isArtistNameMatching(discogsQueryDTO,
                         artist.getName()));
 
         if (!isArtistMatch && release.getExtraArtists() != null) {
             log.debug("Checking extra artists for release ID {}",
                     release.getId());
-            isArtistMatch = release.getExtraArtists().stream()
+            isArtistMatch = release.getExtraArtists().parallelStream()
                     .anyMatch(artist -> isArtistNameMatching(discogsQueryDTO,
                             artist.getName()));
         }
@@ -217,7 +217,7 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
     private boolean filterTracks(final DiscogsQueryDTO discogsQueryDTO,
                                  final DiscogsRelease release) {
         log.debug("Filtering tracks for release ID {}", release.getId());
-        boolean trackMatch = release.getTracklist().stream()
+        boolean trackMatch = release.getTracklist().parallelStream()
                 .anyMatch(track -> isTrackEqualToOrContains(discogsQueryDTO,
                         track));
         log.debug("Track match status for release ID {}: {}", release.getId()

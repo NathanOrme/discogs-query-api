@@ -76,6 +76,6 @@ class DiscogsFilterServiceImplTest {
 
         discogsFilterService.filterAndSortResults(queryDTO, result);
 
-        assertTrue(result.getResults().stream().allMatch(e -> e.getLowestPrice() != null));
+        assertTrue(result.getResults().parallelStream().allMatch(e -> e.getLowestPrice() != null));
     }
 }

@@ -38,7 +38,7 @@ class DiscogsUrlBuilderTest {
 
     @BeforeEach
     public void setUp() {
-        discogsUrlBuilder = new DiscogsUrlBuilder(new UriBuilderHelper());
+        discogsUrlBuilder = new DiscogsUrlBuilder(new UriBuilderHelper(new StringHelper()));
         discogsUrlBuilder.discogsBaseUrl = discogsBaseUrl;
         discogsUrlBuilder.discogsSearchEndpoint = discogsSearchEndpoint;
         discogsUrlBuilder.releaseEndpoint = releaseEndpoint;

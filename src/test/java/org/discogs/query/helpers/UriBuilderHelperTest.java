@@ -10,10 +10,12 @@ class UriBuilderHelperTest {
 
     private UriBuilderHelper uriBuilderHelper;
     private UriComponentsBuilder uriComponentsBuilder;
+    private StringHelper stringHelper;
 
     @BeforeEach
     void setUp() {
-        uriBuilderHelper = new UriBuilderHelper();
+        stringHelper = new StringHelper();
+        uriBuilderHelper = new UriBuilderHelper(stringHelper);
         uriComponentsBuilder = UriComponentsBuilder.newInstance();
     }
 

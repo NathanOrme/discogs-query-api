@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Slf4j
@@ -28,6 +29,21 @@ class DiscogsQueryServiceImplIT {
                 .build();
         var result = discogsQueryService.searchBasedOnQuery(discogsQueryDTO);
         assertNotNull(result);
+        assertNotEquals(0, result.getResults().size());
+        log.info(result.toString());
+    }
+
+    @Test
+    void search_WithKnownQueryAndCompilationVinyl_ReturnsResult() {
+        DiscogsQueryDTO discogsQueryDTO = DiscogsQueryDTO.builder()
+                .artist("Sam Cooke")
+                .track("Chain Gang")
+                .format(DiscogsFormats.LP.getFormat())
+                .country(DiscogCountries.UK)
+                .build();
+        var result = discogsQueryService.searchBasedOnQuery(discogsQueryDTO);
+        assertNotNull(result);
+        assertNotEquals(0, result.getResults().size());
         log.info(result.toString());
     }
 }

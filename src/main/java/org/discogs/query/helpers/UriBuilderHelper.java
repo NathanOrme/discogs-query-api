@@ -1,5 +1,6 @@
 package org.discogs.query.helpers;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -14,7 +15,10 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class UriBuilderHelper {
+
+    private final StringHelper stringHelper;
 
     /**
      * Adds a query parameter to the given {@link UriComponentsBuilder}
@@ -33,7 +37,7 @@ public class UriBuilderHelper {
     public void addIfNotNullOrBlank(final UriComponentsBuilder uriBuilder,
                                     final String paramName,
                                     final String paramValue) {
-        if (paramValue != null && !paramValue.isBlank()) {
+        if (stringHelper.isNotNullOrBlank(paramValue)) {
             uriBuilder.queryParam(paramName, paramValue);
             log.debug("Added query parameter: {}={}", paramName, paramValue);
         } else {

@@ -6,7 +6,6 @@ import org.discogs.query.domain.DiscogsEntry;
 import org.discogs.query.domain.DiscogsRelease;
 import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.domain.release.Track;
-import org.discogs.query.enums.DiscogsVarious;
 import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.helpers.DiscogsUrlBuilder;
 import org.discogs.query.helpers.StringHelper;
@@ -147,7 +146,7 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
                         discogsEntry.getId());
                 return false;
             }
-            boolean isOnAlbum = !isNotVariousArtist(discogsQueryDTO.getArtist())
+            boolean isOnAlbum = !stringHelper.isNotVariousArtist(discogsQueryDTO.getArtist())
                     || filterArtists(discogsQueryDTO, release);
 
             if (stringHelper.isNotNullOrBlank(discogsQueryDTO.getTrack()) && isOnAlbum) {
@@ -172,17 +171,6 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
         }
     }
 
-    /**
-     * Checks if the artist is not categorized as a "Various Artists" entry.
-     *
-     * @param artist the artist name to check.
-     * @return {@code true} if the artist is not categorized as "Various
-     * Artists", otherwise {@code false}.
-     */
-    private boolean isNotVariousArtist(final String artist) {
-        return !DiscogsVarious.VARIOUS.getVariousName().equalsIgnoreCase(artist)
-                && !DiscogsVarious.VARIOUS_ARTIST.getVariousName().equalsIgnoreCase(artist);
-    }
 
     /**
      * Filters a Discogs release based on the artist name provided in the

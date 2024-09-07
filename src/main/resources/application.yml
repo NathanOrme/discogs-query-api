@@ -16,8 +16,6 @@ spring:
   jpa:
     database: POSTGRESQL
     show-sql: true
-    hibernate:
-      ddl-auto: create-drop
   datasource:
     platform: postgres
     url: jdbc:postgresql://ep-patient-wind-a27e9thy.eu-central-1.aws.neon.tech/discogs-query-api?sslmode=require

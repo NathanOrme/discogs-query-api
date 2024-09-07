@@ -13,6 +13,17 @@ springdoc:
   show-actuator: true
 
 spring:
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://ep-bold-night-a2na3gkb.eu-central-1.pg.koyeb.app/koyebdb
+    username: koyeb-adm
+    password: 8WfiMj2lZsOB
+    driverClassName: org.postgresql.Driver
   security:
     user:
       name: username

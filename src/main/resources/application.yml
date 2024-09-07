@@ -13,6 +13,17 @@ springdoc:
   show-actuator: true
 
 spring:
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://ep-patient-wind-a27e9thy.eu-central-1.aws.neon.tech/discogs-query-api?sslmode=require
+    username: discogs-query-api_owner
+    password: XREB6Ppz9IFh
+    driverClassName: org.postgresql.Driver
   security:
     user:
       name: username

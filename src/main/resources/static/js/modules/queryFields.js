@@ -43,6 +43,9 @@ export function createQueryFields(queriesContainer, queryCounter, isFirstQuery =
         <label for="artist">Artist:</label>
         <input type="text" class="artist" name="artist" required>
 
+        <label for="artist">Barcode:</label>
+        <input type="text" class="barcode" name="barcode" required>
+
         <label for="album">Album (optional):</label>
         <input type="text" class="album" name="album">
 

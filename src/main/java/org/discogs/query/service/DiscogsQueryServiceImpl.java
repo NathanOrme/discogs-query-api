@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.domain.DiscogsEntry;
 import org.discogs.query.domain.DiscogsResult;
-import org.discogs.query.domain.db.DiscogsResultDb;
 import org.discogs.query.enums.DiscogsFormats;
 import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.helpers.DiscogsUrlBuilder;
@@ -15,12 +14,10 @@ import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.mapper.DiscogsResultMapper;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
-import org.discogs.query.repository.DiscogsResultDbRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -40,7 +37,6 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
     private final DiscogsResultMapper discogsResultMapper;
     private final DiscogsUrlBuilder discogsUrlBuilder;
     private final DiscogsFilterService discogsFilterService;
-    private final DiscogsResultDbRepository discogsResultDbRepository;
     private final StringHelper stringHelper;
 
     static boolean isCompilationFormat(final DiscogsQueryDTO discogsQueryDTO) {
@@ -68,7 +64,11 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
                     discogsUrlBuilder.buildSearchUrl(discogsQueryDTO);
             log.debug("Built search URL: {}", searchUrl);
 
-            var results = getResultsForSearchUrl(searchUrl);
+            log.info("Sending search request to Discogs API...");
+            DiscogsResult results =
+                    discogsAPIClient.getResultsForQuery(searchUrl);
+            log.info("Received {} results from Discogs API",
+                    results.getResults().size());
 
             if (stringHelper.isNotNullOrBlank(discogsQueryDTO.getBarcode())) {
                 return discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
@@ -111,27 +111,6 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
                     discogsQueryDTO, e.getMessage(), e);
             throw new DiscogsSearchException(UNEXPECTED_ISSUE_OCCURRED, e);
         }
-    }
-
-    private DiscogsResult getResultsForSearchUrl(final String searchUrl) {
-        log.info("Sending search request to Discogs API...");
-        Optional<DiscogsResultDb> optionalDiscogsResultDb =
-                discogsResultDbRepository.findBySearchUrl(searchUrl);
-        DiscogsResult results;
-        if (optionalDiscogsResultDb.isPresent()) {
-            results = discogsResultMapper.mapDbEntityToObject(optionalDiscogsResultDb.get());
-            log.info("Received {} results from Discogs API DB",
-                    results.getResults().size());
-        } else {
-            results = discogsAPIClient.getResultsForQuery(searchUrl);
-            log.info("Received {} results from Discogs API",
-                    results.getResults().size());
-            DiscogsResultDb discogsResultDb = discogsResultMapper.mapObjectToDbEntity(results, searchUrl);
-            discogsResultDbRepository.save(discogsResultDb);
-            log.info("Save {} results to Discogs API DB for URL {}", results, searchUrl);
-
-        }
-        return results;
     }
 
     private void getLowestPriceOnMarketplace(final DiscogsResult results) {

@@ -10,7 +10,6 @@ import org.discogs.query.interfaces.DiscogsFilterService;
 import org.discogs.query.mapper.DiscogsResultMapper;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
-import org.discogs.query.repository.DiscogsResultDbRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,9 +42,6 @@ class DiscogsQueryServiceImplTest {
 
     @Mock
     private DiscogsFilterService discogsFilterService;
-
-    @Mock
-    private DiscogsResultDbRepository discogsResultDbRepository;
 
     @InjectMocks
     private DiscogsQueryServiceImpl discogsQueryServiceImpl;

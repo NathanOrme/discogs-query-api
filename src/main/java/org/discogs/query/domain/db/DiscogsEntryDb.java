@@ -37,12 +37,13 @@ public class DiscogsEntryDb {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long discogsEntryId;
 
     /**
      * The unique identifier for the Discogs entry.
      */
-    private int discogsId;
+    @JsonProperty("id")
+    private int id;
 
     /**
      * The title of the Discogs entry.

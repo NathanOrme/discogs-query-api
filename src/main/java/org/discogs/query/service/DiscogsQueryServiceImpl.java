@@ -70,6 +70,10 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
             log.info("Received {} results from Discogs API",
                     results.getResults().size());
 
+            if (stringHelper.isNotNullOrBlank(discogsQueryDTO.getBarcode())) {
+                return discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
+            }
+
             if (isCompilationFormat(discogsQueryDTO) && !stringHelper.isNotNullOrBlank(discogsQueryDTO.getAlbum())) {
                 log.info("Query format is a compilation. Processing " +
                         "compilation search...");

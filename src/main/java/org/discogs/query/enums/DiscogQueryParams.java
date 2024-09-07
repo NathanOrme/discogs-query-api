@@ -44,7 +44,11 @@ public enum DiscogQueryParams {
     /**
      * Represents the "country" query parameter
      */
-    COUNTRY("country");
+    COUNTRY("country"),
+    /**
+     * Represents the "barcode" query parameter
+     */
+    BARCODE("barcode");
 
     /**
      * The query type string associated with the enum constant.

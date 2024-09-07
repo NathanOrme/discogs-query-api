@@ -20,7 +20,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class DiscogsUrlBuilder {
 
+    public static final String PER_PAGE = "per_page";
+    public static final String PAGE = "page";
+    public static final String TOKEN = "token";
     private final UriBuilderHelper uriBuilderHelper;
+    private final StringHelper stringHelper;
+
     @Value("${discogs.url}")
     String discogsBaseUrl;
     @Value("${discogs.search}")
@@ -48,15 +53,12 @@ public class DiscogsUrlBuilder {
 
         UriComponentsBuilder uriBuilder =
                 UriComponentsBuilder.fromHttpUrl(discogsBaseUrl.concat(discogsSearchEndpoint))
-                        .queryParam("per_page", pageSize)
-                        .queryParam("page", 1)
-                        .queryParam("token", token);
+                        .queryParam(PER_PAGE, pageSize)
+                        .queryParam(PAGE, 1)
+                        .queryParam(TOKEN, token);
 
         addQueryParams(uriBuilder, discogsQueryDTO);
-        String searchUrl = uriBuilder
-                .encode()
-                .toUriString()
-                .replace("%20", "+");
+        String searchUrl = getUrlString(uriBuilder);
 
         log.debug("Generated search URL: {}", searchUrl);
         return searchUrl;
@@ -75,7 +77,7 @@ public class DiscogsUrlBuilder {
         String releaseUrl =
                 UriComponentsBuilder.fromHttpUrl(discogsBaseUrl.concat(releaseEndpoint)
                                 .concat(String.valueOf(discogsEntry.getId())))
-                        .queryParam("token", token)
+                        .queryParam(TOKEN, token)
                         .queryParam("curr_abbr", "GBP")
                         .toUriString();
 
@@ -96,7 +98,7 @@ public class DiscogsUrlBuilder {
         String releaseUrl =
                 UriComponentsBuilder.fromHttpUrl(discogsBaseUrl.concat(marketplaceUrl)
                                 .concat(String.valueOf(discogsEntry.getId())))
-                        .queryParam("token", token)
+                        .queryParam(TOKEN, token)
                         .queryParam("curr_abbr", "GBP")
                         .toUriString();
 
@@ -104,10 +106,52 @@ public class DiscogsUrlBuilder {
         return releaseUrl;
     }
 
-    private void addQueryParams(final UriComponentsBuilder uriBuilder,
-                                final DiscogsQueryDTO discogsQueryDTO) {
+    /**
+     * Adds query parameters to the URI builder based on the DiscogsQueryDTO object.
+     * If a barcode is supplied, only the barcode is used as a query parameter.
+     * Otherwise, other query parameters such as artist, album, track, format, country,
+     * and type are added.
+     *
+     * @param uriBuilder      the URI builder to which query parameters will be added
+     * @param discogsQueryDTO the data transfer object containing query parameters
+     */
+    private void addQueryParams(final UriComponentsBuilder uriBuilder, final DiscogsQueryDTO discogsQueryDTO) {
         log.debug("Adding query parameters to URL: {}", discogsQueryDTO);
 
+        if (handleBarcodeParam(uriBuilder, discogsQueryDTO)) {
+            return;
+        }
+
+        handleOtherParams(uriBuilder, discogsQueryDTO);
+    }
+
+    /**
+     * Handles adding the barcode parameter to the URI builder if it is present
+     * in the DiscogsQueryDTO. If the barcode is supplied, only the barcode is used.
+     *
+     * @param uriBuilder      the URI builder to which the barcode parameter will be added
+     * @param discogsQueryDTO the data transfer object containing the barcode
+     * @return true if the barcode parameter was added, false otherwise
+     */
+    private boolean handleBarcodeParam(final UriComponentsBuilder uriBuilder, final DiscogsQueryDTO discogsQueryDTO) {
+        if (stringHelper.isNotNullOrBlank(discogsQueryDTO.getBarcode())) {
+            log.info("Barcode supplied, only using that for entry");
+            uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
+                    DiscogQueryParams.BARCODE.getQueryType(),
+                    discogsQueryDTO.getBarcode());
+            return true; // Barcode handled
+        }
+        return false; // No barcode handled
+    }
+
+    /**
+     * Handles adding other query parameters (artist, album, track, format, country, and type)
+     * to the URI builder if the barcode is not supplied in the DiscogsQueryDTO.
+     *
+     * @param uriBuilder      the URI builder to which other query parameters will be added
+     * @param discogsQueryDTO the data transfer object containing the other query parameters
+     */
+    private void handleOtherParams(final UriComponentsBuilder uriBuilder, final DiscogsQueryDTO discogsQueryDTO) {
         uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
                 DiscogQueryParams.ARTIST.getQueryType(),
                 discogsQueryDTO.getArtist());
@@ -138,6 +182,7 @@ public class DiscogsUrlBuilder {
                 DiscogQueryParams.TYPE.getQueryType(), types.getType());
     }
 
+
     /**
      * Builds the search URL for a compilation album
      * based on the provided query parameters.
@@ -161,17 +206,27 @@ public class DiscogsUrlBuilder {
 
         UriComponentsBuilder uriBuilder =
                 UriComponentsBuilder.fromHttpUrl(discogsBaseUrl.concat(discogsSearchEndpoint))
-                        .queryParam("per_page", pageSize)
-                        .queryParam("page", 1)
-                        .queryParam("token", token);
+                        .queryParam(PER_PAGE, pageSize)
+                        .queryParam(PAGE, 1)
+                        .queryParam(TOKEN, token);
 
         addQueryParams(uriBuilder, dtoForUrl);
-        String compilationSearchUrl = uriBuilder
-                .encode()
-                .toUriString()
-                .replace("%20", "+");
+        String compilationSearchUrl = getUrlString(uriBuilder);
 
         log.debug("Generated compilation search URL: {}", compilationSearchUrl);
         return compilationSearchUrl;
+    }
+
+    /**
+     * Builds URL string by encoding it, then replacing the space encoding.
+     *
+     * @param uriBuilder Builder to use
+     * @return Built URL String
+     */
+    private static String getUrlString(final UriComponentsBuilder uriBuilder) {
+        return uriBuilder
+                .encode()
+                .toUriString()
+                .replace("%20", "+");
     }
 }

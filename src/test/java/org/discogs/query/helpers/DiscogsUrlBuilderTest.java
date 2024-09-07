@@ -38,13 +38,19 @@ class DiscogsUrlBuilderTest {
 
     @BeforeEach
     public void setUp() {
-        discogsUrlBuilder = new DiscogsUrlBuilder(new UriBuilderHelper(new StringHelper()));
+        buildDiscogsUriBuilder();
         discogsUrlBuilder.discogsBaseUrl = discogsBaseUrl;
         discogsUrlBuilder.discogsSearchEndpoint = discogsSearchEndpoint;
         discogsUrlBuilder.releaseEndpoint = releaseEndpoint;
         discogsUrlBuilder.pageSize = pageSize;
         discogsUrlBuilder.token = token;
         discogsUrlBuilder.discogsWebsiteBaseUrl = discogsWebsiteBaseUrl;
+    }
+
+    private void buildDiscogsUriBuilder() {
+        StringHelper stringHelper = new StringHelper();
+        UriBuilderHelper uriBuilderHelper = new UriBuilderHelper(stringHelper);
+        discogsUrlBuilder = new DiscogsUrlBuilder(uriBuilderHelper, stringHelper);
     }
 
     /**

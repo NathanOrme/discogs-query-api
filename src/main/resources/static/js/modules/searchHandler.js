@@ -8,6 +8,7 @@ function handleSearchFormSubmit(event) {
 
     const queries = Array.from(document.querySelectorAll('.query')).map(queryDiv => {
         const artist = queryDiv.querySelector('.artist').value;
+        const barcode = queryDiv.querySelector('.barcode').value || null;
         const album = queryDiv.querySelector('.album').value || null;
         const track = queryDiv.querySelector('.track').value || null;
         const format = queryDiv.querySelector('.format').value || null;
@@ -16,6 +17,7 @@ function handleSearchFormSubmit(event) {
 
         return {
             artist: artist,
+            barcode: barcode,
             album: album,
             track: track,
             format: format,

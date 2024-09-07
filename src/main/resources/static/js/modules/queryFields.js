@@ -41,7 +41,10 @@ export function createQueryFields(queriesContainer, queryCounter, isFirstQuery =
 
     queryContent.innerHTML = `
         <label for="artist">Artist:</label>
-        <input type="text" class="artist" name="artist" required>
+        <input type="text" class="artist" name="artist">
+
+        <label for="barcode">Barcode:</label>
+        <input type="text" class="barcode" name="barcode">
 
         <label for="album">Album (optional):</label>
         <input type="text" class="album" name="album">
@@ -78,6 +81,19 @@ export function createQueryFields(queriesContainer, queryCounter, isFirstQuery =
     // Append the queryDiv to the container and ensure the new query is open
     queriesContainer.appendChild(queryDiv);
     queryContent.classList.remove('hidden'); // Keep the new query open
+
+    // Add validation logic for artist or barcode
+    const submitButton = document.querySelector('form button[type="submit"]');
+    submitButton.addEventListener('click', (e) => {
+        const artistInput = queryDiv.querySelector('.artist').value.trim();
+        const barcodeInput = queryDiv.querySelector('.barcode').value.trim();
+
+        // Check if both artist and barcode are empty
+        if (!artistInput && !barcodeInput) {
+            e.preventDefault(); // Prevent form submission
+            alert('Please provide either an artist name or a barcode.');
+        }
+    });
 
     return queryCounter + 1;
 }

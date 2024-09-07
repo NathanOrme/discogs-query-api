@@ -20,9 +20,9 @@ spring:
       ddl-auto: create-drop
   datasource:
     platform: postgres
-    url: jdbc:postgresql://ep-bold-night-a2na3gkb.eu-central-1.pg.koyeb.app/koyebdb
-    username: koyeb-adm
-    password: 8WfiMj2lZsOB
+    url: jdbc:postgresql://ep-patient-wind-a27e9thy.eu-central-1.aws.neon.tech/discogs-query-api?sslmode=require
+    username: discogs-query-api_owner
+    password: XREB6Ppz9IFh
     driverClassName: org.postgresql.Driver
   security:
     user:

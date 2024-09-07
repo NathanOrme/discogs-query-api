@@ -34,6 +34,17 @@ class DiscogsQueryServiceImplIT {
     }
 
     @Test
+    void search_WithKnownQueryAndBarcode_ReturnsResult() {
+        DiscogsQueryDTO discogsQueryDTO = DiscogsQueryDTO.builder()
+                .barcode("7 2064-24425-2 4")
+                .build();
+        var result = discogsQueryService.searchBasedOnQuery(discogsQueryDTO);
+        assertNotNull(result);
+        assertNotEquals(0, result.getResults().size());
+        log.info(result.toString());
+    }
+
+    @Test
     void search_WithKnownQueryAndCompilationVinyl_ReturnsResult() {
         DiscogsQueryDTO discogsQueryDTO = DiscogsQueryDTO.builder()
                 .artist("Sam Cooke")

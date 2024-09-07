@@ -62,4 +62,9 @@ public class DiscogsQueryDTO {
      */
     private DiscogsTypes types;
 
+    /**
+     * Barcode for the entry to search for.
+     */
+    private String barcode;
+
 }

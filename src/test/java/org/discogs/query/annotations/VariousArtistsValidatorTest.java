@@ -14,7 +14,7 @@ class VariousArtistsValidatorTest {
     @Test
     void testValidCase() {
         DiscogsQueryDTO dto = new DiscogsQueryDTO("Various Artists", "Some " +
-                "Album", "Some Track", null, null, null);
+                "Album", "Some Track", null, null, null, null);
         boolean result = validator.isValid(dto, null);
         assertTrue(result);
     }
@@ -22,7 +22,7 @@ class VariousArtistsValidatorTest {
     @Test
     void testInvalidCase() {
         DiscogsQueryDTO dto = new DiscogsQueryDTO("Various Artists", null,
-                null, null, null, null);
+                null, null, null, null, null);
         boolean result = validator.isValid(dto, null);
         assertFalse(result);
     }

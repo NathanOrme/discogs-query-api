@@ -51,6 +51,14 @@ public class DiscogsResultMapper {
         }
     }
 
+    /**
+     * Maps a {@link DiscogsResult} object to a {@link DiscogsResultDb} object.
+     *
+     * @param discogsResult the {@link DiscogsResult} object to be mapped
+     * @param searchUrl     Url used for the query
+     * @return a {@link DiscogsResultDb} object that corresponds to the
+     * provided {@link DiscogsResult}
+     */
     public DiscogsResultDb mapObjectToDbEntity(final DiscogsResult discogsResult,
                                                final String searchUrl) {
         log.debug("Starting mapping of DiscogsResult to DiscogsResultDb for result: {}", discogsResult);

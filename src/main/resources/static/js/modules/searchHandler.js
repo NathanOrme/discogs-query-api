@@ -1,7 +1,18 @@
 // /js/modules/searchHandler.js
 import { displayResults, displayError } from './resultsHandler.js';
 
-// Your existing code...
+function getApiUrl() {
+    const hostname = window.location.hostname;
+
+    if (hostname.includes("render")) {
+        return 'https://discogs-query-api.onrender.com/discogs-query/search';
+    } else if (hostname.includes("koyeb")) {
+        return 'https://discogs-query-api-rgbnathan.koyeb.app/discogs-query/search';
+    } else {
+        // Fallback or default URL
+        return 'http://localhost:9090/discogs-query/search';
+    }
+}
 
 function handleSearchFormSubmit(event) {
     event.preventDefault();
@@ -34,7 +45,9 @@ function handleSearchFormSubmit(event) {
     searchButton.disabled = true;
     loadingSpinner.style.display = 'block';
 
-    fetch('https://discogs-query-api.onrender.com/discogs-query/search', {
+    const apiUrl = getApiUrl();  // Get the API URL based on the platform
+
+    fetch(apiUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

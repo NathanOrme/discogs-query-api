@@ -82,12 +82,13 @@ export function createQueryFields(queriesContainer, queryCounter, isFirstQuery =
     queriesContainer.appendChild(queryDiv);
     queryContent.classList.remove('hidden'); // Keep the new query open
 
-    // Validation logic to ensure either artist or barcode is provided
-    queryDiv.addEventListener('submit', (e) => {
+    // Add validation logic for artist or barcode
+    const submitButton = document.querySelector('form button[type="submit"]');
+    submitButton.addEventListener('click', (e) => {
         const artistInput = queryDiv.querySelector('.artist').value.trim();
         const barcodeInput = queryDiv.querySelector('.barcode').value.trim();
 
-        // Check if both are empty strings
+        // Check if both artist and barcode are empty
         if (!artistInput && !barcodeInput) {
             e.preventDefault(); // Prevent form submission
             alert('Please provide either an artist name or a barcode.');

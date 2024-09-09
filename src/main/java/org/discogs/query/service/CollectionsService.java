@@ -5,8 +5,10 @@ import org.discogs.query.model.DiscogsMapResultDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Service class responsible for operations related to collections and data transformation.
@@ -16,18 +18,23 @@ public class CollectionsService {
 
     /**
      * Converts a list of Discogs entries from a {@link DiscogsResultDTO} object into a map and stores the map in a
-     * {@link DiscogsMapResultDTO} object. The map uses the entry titles as keys and the corresponding
+     * {@link DiscogsMapResultDTO} object. The map uses the entry titles as keys and lists of corresponding
      * {@link DiscogsEntryDTO} objects as values.
      *
-     * @param entry the {@link DiscogsResultDTO} containing the list of Discogs entries to be converted
+     * @param discogsResultDTO the {@link DiscogsResultDTO} containing the list of Discogs entries to be converted
      * @return a {@link DiscogsMapResultDTO} containing the search query and the converted map of entries
      */
-    public DiscogsMapResultDTO convertListToMapForDTO(final DiscogsResultDTO entry) {
+    public DiscogsMapResultDTO convertListToMapForDTO(final DiscogsResultDTO discogsResultDTO) {
         DiscogsMapResultDTO discogsMapResultDTO = new DiscogsMapResultDTO();
-        discogsMapResultDTO.setSearchQuery(entry.getSearchQuery());
+        discogsMapResultDTO.setSearchQuery(discogsResultDTO.getSearchQuery());
 
-        Map<String, DiscogsEntryDTO> mapOfEntries = entry.getResults().stream()
-                .collect(Collectors.toMap(DiscogsEntryDTO::getTitle, discogsEntryDTO -> discogsEntryDTO));
+        Map<String, List<DiscogsEntryDTO>> mapOfEntries = new HashMap<>();
+
+        for (final DiscogsEntryDTO entryDTO : discogsResultDTO.getResults()) {
+            mapOfEntries
+                    .computeIfAbsent(entryDTO.getTitle(), k -> new ArrayList<>())
+                    .add(entryDTO);
+        }
 
         discogsMapResultDTO.setResults(mapOfEntries);
         return discogsMapResultDTO;

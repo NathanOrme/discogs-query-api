@@ -12,7 +12,7 @@ export function displayResults(response) {
     response.forEach((queryResult, index) => {
         const results = queryResult.results;
 
-        if (!Array.isArray(results) || results.length === 0) {
+        if (!results || Object.keys(results).length === 0) {
             return;
         }
 
@@ -22,60 +22,68 @@ export function displayResults(response) {
         queryHeader.textContent = `Results for Query ${index + 1}`;
         resultsContainer.appendChild(queryHeader);
 
-        const resultsSection = document.createElement('div');
-        resultsSection.className = 'results-section';
+        // Iterate over the keys in the results map
+        Object.keys(results).forEach((title) => {
+            const entries = results[title];
 
-        const resultsContent = document.createElement('div');
-        resultsContent.className = 'results-content hidden';
+            if (!Array.isArray(entries) || entries.length === 0) {
+                return;
+            }
 
-        results.forEach(entry => {
-            const title = entry.title || 'No Title';
-            const id = entry.id || 'N/A';
-            const format = entry.format ? entry.format.join(', ') : 'N/A';
-            const country = entry.country || 'N/A';
-            const year = entry.year || 'N/A';
-            const uri = entry.uri || '#';
+            const resultsSection = document.createElement('div');
+            resultsSection.className = 'results-section';
 
-            const numberForSale = (entry.numberForSale !== null && entry.numberForSale !== undefined)
-                            ? entry.numberForSale
-                            : 0;
+            const resultsContent = document.createElement('div');
+            resultsContent.className = 'results-content hidden';
 
-            const lowestPrice = (entry.lowestPrice !== null && entry.lowestPrice !== undefined)
-                ? '£' + parseFloat(entry.lowestPrice).toFixed(2)
-                : 'N/A';
+            entries.forEach(entry => {
+                const id = entry.id || 'N/A';
+                const format = entry.format ? entry.format.join(', ') : 'N/A';
+                const country = entry.country || 'N/A';
+                const year = entry.year || 'N/A';
+                const uri = entry.uri || '#';
 
-            const resultItem = document.createElement('div');
-            resultItem.className = 'result-item';
+                const numberForSale = (entry.numberForSale !== null && entry.numberForSale !== undefined)
+                                ? entry.numberForSale
+                                : 0;
 
-            resultItem.innerHTML = `
-                <h3>${title}</h3>
-                <div class="details">
-                    <p><strong>ID:</strong> ${id}</p>
-                    <p><strong>Formats:</strong> ${format}</p>
-                    <p><strong>Country:</strong> ${country}</p>
-                    <p><strong>Year:</strong> ${year}</p>
-                    <p><strong>URL:</strong> <a href="${uri}" target="_blank">${uri}</a></p>
-                    <p><strong>Number For Sale:</strong> ${numberForSale}</p>
-                    <p><strong>Lowest Price:</strong> ${lowestPrice}</p>
-                </div>
-            `;
+                const lowestPrice = (entry.lowestPrice !== null && entry.lowestPrice !== undefined)
+                    ? '£' + parseFloat(entry.lowestPrice).toFixed(2)
+                    : 'N/A';
 
-            resultsContent.appendChild(resultItem);
+                const resultItem = document.createElement('div');
+                resultItem.className = 'result-item';
+
+                resultItem.innerHTML = `
+                    <h3>${entry.title || title}</h3>
+                    <div class="details">
+                        <p><strong>ID:</strong> ${id}</p>
+                        <p><strong>Formats:</strong> ${format}</p>
+                        <p><strong>Country:</strong> ${country}</p>
+                        <p><strong>Year:</strong> ${year}</p>
+                        <p><strong>URL:</strong> <a href="${uri}" target="_blank">${uri}</a></p>
+                        <p><strong>Number For Sale:</strong> ${numberForSale}</p>
+                        <p><strong>Lowest Price:</strong> ${lowestPrice}</p>
+                    </div>
+                `;
+
+                resultsContent.appendChild(resultItem);
+            });
+
+            resultsSection.appendChild(resultsContent);
+
+            const toggleHeader = document.createElement('div');
+            toggleHeader.className = 'results-toggle-header';
+            toggleHeader.textContent = `Show Results for ${title}`;
+            toggleHeader.addEventListener('click', () => {
+                resultsContent.classList.toggle('hidden');
+                toggleHeader.textContent = resultsContent.classList.contains('hidden') ? `Show Results for ${title}` : `Hide Results for ${title}`;
+            });
+
+            resultsSection.insertBefore(toggleHeader, resultsContent);
+
+            resultsContainer.appendChild(resultsSection);
         });
-
-        resultsSection.appendChild(resultsContent);
-
-        const toggleHeader = document.createElement('div');
-        toggleHeader.className = 'results-toggle-header';
-        toggleHeader.textContent = 'Show Results';
-        toggleHeader.addEventListener('click', () => {
-            resultsContent.classList.toggle('hidden');
-            toggleHeader.textContent = resultsContent.classList.contains('hidden') ? 'Show Results' : 'Hide Results';
-        });
-
-        resultsSection.insertBefore(toggleHeader, resultsContent);
-
-        resultsContainer.appendChild(resultsSection);
     });
 
     if (!hasResults) {
@@ -87,4 +95,3 @@ export function displayError(message) {
     const resultsContainer = document.getElementById('results');
     resultsContainer.innerHTML = `<p class="error-message">${message}</p>`;
 }
- 

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,5 +34,5 @@ public class DiscogsMapResultDTO {
      * results.
      * The key is the title of the release
      */
-    private Map<String, DiscogsEntryDTO> results;
+    private Map<String, List<DiscogsEntryDTO>> results;
 }

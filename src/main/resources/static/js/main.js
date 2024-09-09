@@ -8,7 +8,7 @@ const addQueryButton = document.getElementById("addQueryButton");
 
 let queryCounter = 1;
 
-createQueryFields(queriesContainer, queryCounter, true);
+queryCounter = createQueryFields(queriesContainer, queryCounter, true);
 
 addQueryButton.addEventListener("click", () => {
   queryCounter = createQueryFields(queriesContainer, queryCounter);

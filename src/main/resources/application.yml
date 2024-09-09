@@ -39,4 +39,4 @@ discogs:
   agent: DiscogsQueryApplication/1.0 +https://github.com/NathanOrme/discogs-query-api
   page-size: 300
   rate-limit: 50
-  token: fXZuXsfLTsbwhcTYzgiPrjpzLPNPUXoGpSseGEXV
+  token: ${DISCOGS_TOKEN}

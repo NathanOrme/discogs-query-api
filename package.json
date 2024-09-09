@@ -1,0 +1,16 @@
+{
+  "name": "jest-setup",
+  "version": "1.0.0",
+  "description": "A project setup for running Jest tests",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^28.1.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "author": "",
+  "license": "ISC"
+}

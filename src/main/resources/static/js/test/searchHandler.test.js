@@ -1,4 +1,4 @@
-import { handleSearchFormSubmit } from './../modules/searchHandler';
+import { handleSearchFormSubmit } from "./../modules/searchHandler";
 
 // Mock DOM elements
 document.body.innerHTML = `
@@ -31,35 +31,39 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-test('handles search form submission', () => {
-  const mockFetch = jest.fn(() => Promise.resolve({
-    ok: true,
-    json: () => Promise.resolve([{ results: [] }])
-  }));
+test("handles search form submission", () => {
+  const mockFetch = jest.fn(() =>
+    Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve([{ results: [] }]),
+    }),
+  );
   global.fetch = mockFetch;
 
-  const form = document.querySelector('form');
-  form.addEventListener('submit', handleSearchFormSubmit);
+  const form = document.querySelector("form");
+  form.addEventListener("submit", handleSearchFormSubmit);
 
-  form.dispatchEvent(new Event('submit'));
+  form.dispatchEvent(new Event("submit"));
 
   expect(mockFetch).toHaveBeenCalled();
   expect(mockFetch).toHaveBeenCalledWith(
-    'http://localhost:9090/discogs-query/search', // or the correct URL based on the environment
+    "http://localhost:9090/discogs-query/search", // or the correct URL based on the environment
     expect.objectContaining({
-      method: 'POST',
+      method: "POST",
       headers: expect.objectContaining({
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       }),
-      body: JSON.stringify([{
-        artist: 'Artist Name',
-        barcode: '123456',
-        album: 'Album Name',
-        track: 'Track Name',
-        format: 'vinyl',
-        country: 'US',
-        types: 'RELEASE'
-      }])
-    })
+      body: JSON.stringify([
+        {
+          artist: "Artist Name",
+          barcode: "123456",
+          album: "Album Name",
+          track: "Track Name",
+          format: "vinyl",
+          country: "US",
+          types: "RELEASE",
+        },
+      ]),
+    }),
   );
 });

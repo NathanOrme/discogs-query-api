@@ -5,10 +5,6 @@ on:
   push:
     branches:
       - 'main'
-      -
-concurrency:
-  group: ${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   format:
@@ -22,12 +18,13 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Prettier
+      - name: Prettier JS
         run: npx prettier --write **/*.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - name: Commit formatting changes
+        uses: stefanzweifel/git-auto-commit-action@v4
         if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
         with:
           commit_message: "style: format files"

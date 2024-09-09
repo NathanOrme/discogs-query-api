@@ -1,4 +1,4 @@
-name: Java CI with Maven
+name: Java and Jest CI with Maven
 
 on:
   pull_request:
@@ -8,12 +8,13 @@ on:
 
 concurrency:
   group: ${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 jobs:
-  build:
+  setup:
     runs-on: ubuntu-latest
-
+    outputs:
+      version: ${{ steps.removev.outputs.ref_name }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -21,21 +22,46 @@ jobs:
           fetch-depth: 0
 
       - name: Get next version
-
         uses: rickstaa/action-get-semver@v1
         id: get_semver
         with:
           bump_level: "minor"
 
       - name: Show the next version
-        run: |
-          echo ${{ steps.get_semver.outputs.next_version }}
+        run: echo ${{ steps.get_semver.outputs.next_version }}
 
       - name: Remove v prefix
         id: removev
-        run: echo "::set-output name=ref_name::$(echo ${{ steps.get_semver.outputs.next_version }} | perl -0777 -pe 's/^v//')"
-      - name: Use result
-        run: echo "${{ steps.removev.outputs.ref_name }}"
+        run: echo "ref_name=$(echo ${{ steps.get_semver.outputs.next_version }} | sed 's/^v//')" >> $GITHUB_ENV
+
+  test:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Jest tests
+        run: npm test
+
+  build:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -45,7 +71,7 @@ jobs:
           cache: maven
 
       - name: Set Version With Maven
-        run: mvn versions:set -DnewVersion=${{ steps.removev.outputs.ref_name }}
+        run: mvn versions:set -DnewVersion=${{ needs.setup.outputs.version }}
 
       - name: Install dependencies
         run: mvn clean install -DskipTests
@@ -56,26 +82,53 @@ jobs:
       - name: Build with Maven and buildpacks
         run: mvn clean install package javadoc:javadoc spring-boot:build-image
 
-      - name: Zip Javadoc
-        uses: vimtor/action-zip@v1.2
+  package:
+    runs-on: ubuntu-latest
+    needs: [ build, test ]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
         with:
-          files: target/site/apidocs
-          dest: apidocs.zip
+          fetch-depth: 0
+          
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
 
-      - name: Generate Changelog
-        uses: Bullrich/generate-release-changelog@master
-        id: Changelog
-        env:
-          REPO: ${{ github.repository }}
+      - name: Set Version With Maven
+        run: mvn versions:set -DnewVersion=${{ needs.setup.outputs.version }}
+
+      - name: Install dependencies
+        run: mvn clean install -DskipTests
+
+      - name: Zip Javadoc
+        run: |
+          mkdir -p ${{ github.workspace }}/target/site/apidocs
+          zip -r ${{ github.workspace }}/apidocs.zip target/site/apidocs
+
+  release:
+    runs-on: ubuntu-latest
+    needs: [ package ]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Javadoc
+        run: |
+          ls -al ${{ github.workspace }}/apidocs.zip
 
       - name: Create Release
-        if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
-          name: Release ${{ steps.get_semver.outputs.next_version }}
-          tag_name: ${{ steps.get_semver.outputs.next_version }}
-          token: ${{secrets.GITHUB_TOKEN}}
+          name: Release ${{ needs.setup.outputs.version }}
+          tag_name: ${{ needs.setup.outputs.version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           generate_release_notes: true
-          files: apidocs.zip
-          body: ${{ steps.Changelog.outputs.changelog }}
-      
+          files: ${{ github.workspace }}/apidocs.zip
+          body: ${{ needs.package.outputs.Changelog }}

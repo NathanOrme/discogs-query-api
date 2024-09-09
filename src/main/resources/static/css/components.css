@@ -139,6 +139,7 @@ input[type="checkbox"] {
     min-width: 300px;
     max-width: 800px;
     transition: background-color 0.3s, color 0.3s;
+    margin-bottom: 20px; /* Add margin for spacing */
 }
 
 .results-toggle-header {
@@ -148,6 +149,11 @@ input[type="checkbox"] {
     color: white;
     border-radius: 4px;
     font-weight: bold;
+    margin-bottom: 10px; /* Space below the header */
+    display: flex;
+    justify-content: space-between; /* Space between items */
+    align-items: center; /* Center items vertically */
+    overflow: hidden; /* Prevent overflow */
 }
 
 .results-toggle-header:hover {
@@ -164,7 +170,7 @@ input[type="checkbox"] {
 }
 
 .result-item {
-    margin-bottom: 15px;
+    margin-bottom: 20px; /* Increased space between results */
     padding: 15px;
     border: 1px solid #ddd;
     border-radius: 8px;

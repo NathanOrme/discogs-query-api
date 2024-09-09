@@ -1,8 +1,10 @@
 name: Format the code
 
 on:
-  push:
   pull_request:
+  push:
+    branches:
+      - 'main'
 
 jobs:
   format:

@@ -36,7 +36,7 @@ discogs:
   search: database/search
   release: releases/
   marketplaceCheck: marketplace/stats/
-  agent: DiscogsQueryApplication/1.0 +https://github.com/NathanOrme/discogs-query-api
+  agent: ${DISCOGS_AGENT}
   page-size: 300
   rate-limit: 50
   token: ${DISCOGS_TOKEN}

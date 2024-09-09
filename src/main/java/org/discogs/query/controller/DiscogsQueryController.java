@@ -4,8 +4,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.interfaces.DiscogsQueryService;
+import org.discogs.query.model.DiscogsMapResultDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
+import org.discogs.query.service.CollectionsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,7 @@ import java.util.Objects;
 public class DiscogsQueryController {
 
     private final DiscogsQueryService discogsQueryService;
+    private final CollectionsService collectionsService;
 
     /**
      * Searches Discogs using the provided query data.
@@ -43,7 +46,7 @@ public class DiscogsQueryController {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<DiscogsResultDTO>> searchBasedOnQuery(
+    public ResponseEntity<List<DiscogsMapResultDTO>> searchBasedOnQuery(
             @RequestBody @Valid final List<DiscogsQueryDTO> discogsQueryDTO) {
 
         log.info("Received search request with {} queries",
@@ -64,8 +67,10 @@ public class DiscogsQueryController {
         }
         int size = calculateSizeOfResults(resultDTOList);
         log.info("Returning {} results: {}", size, resultDTOList);
-
-        return ResponseEntity.status(HttpStatus.OK).body(resultDTOList);
+        var resultMapDTOList = resultDTOList.parallelStream()
+                .map(entry -> collectionsService.convertListToMapForDTO(entry))
+                .toList();
+        return ResponseEntity.status(HttpStatus.OK).body(resultMapDTOList);
     }
 
     private int calculateSizeOfResults(final List<DiscogsResultDTO> resultDTOList) {

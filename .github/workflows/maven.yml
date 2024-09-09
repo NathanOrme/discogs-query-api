@@ -37,7 +37,7 @@ jobs:
 
       - name: Set output for version
         id: set_output
-        run: echo "version=${{ steps.get_semver.outputs.next_version }}" >> $GITHUB_ENV
+        run: echo "::set-output name=version::${{ steps.get_semver.outputs.next_version }}"
 
   test:
     runs-on: ubuntu-latest

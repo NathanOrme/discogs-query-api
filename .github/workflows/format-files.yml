@@ -25,12 +25,6 @@ jobs:
         run: |
           minifier.sh $prepo
 
-      - name: Format Java based on Google Format
-        uses: axel-op/googlejavaformat-action@v3
-        with:
-          args: "--skip-sorting-imports --replace"
-          skip-commit: true
-
       - name: Prettier
         run: npx prettier --write **/*.js
         env:

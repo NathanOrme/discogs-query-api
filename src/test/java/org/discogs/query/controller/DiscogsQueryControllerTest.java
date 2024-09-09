@@ -4,6 +4,7 @@ import org.discogs.query.config.SecurityConfig;
 import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
+import org.discogs.query.service.CollectionsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -30,6 +31,8 @@ class DiscogsQueryControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private DiscogsQueryService discogsQueryService;
+    @MockBean
+    private CollectionsService collectionsService;
 
     @Test
     void testSearchDiscogs_Success() throws Exception {

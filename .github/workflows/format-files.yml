@@ -23,6 +23,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Prettier Test JS
+        run: npx prettier --write **/*.test.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Commit formatting changes
         uses: stefanzweifel/git-auto-commit-action@v5
         if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}

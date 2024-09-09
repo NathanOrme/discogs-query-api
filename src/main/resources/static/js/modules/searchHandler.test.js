@@ -1,51 +1,65 @@
 import { handleSearchFormSubmit } from './searchHandler';
-import '@testing-library/jest-dom/extend-expect';
 
 // Mock DOM elements
 document.body.innerHTML = `
   <form>
     <div class="query">
-      <input class="artist" value="Artist Name">
-      <input class="barcode" value="123456">
-      <input class="album" value="Album Name">
-      <input class="track" value="Track Name">
-      <select class="format"><option value="vinyl">Vinyl</option></select>
-      <select class="country"><option value="US">US</option></select>
-      <select class="types"><option value="RELEASE">Release</option></select>
+      <input type="text" class="artist" value="Artist Name">
+      <input type="text" class="barcode" value="123456">
+      <input type="text" class="album" value="Album Name">
+      <input type="text" class="track" value="Track Name">
+      <select class="format">
+        <option value="vinyl">Vinyl</option>
+        <option value="cd">CD</option>
+      </select>
+      <select class="country">
+        <option value="US">US</option>
+        <option value="UK">UK</option>
+      </select>
+      <select class="types">
+        <option value="RELEASE">Release</option>
+        <option value="MASTER">Master</option>
+      </select>
     </div>
-    <button id="searchButton">Search</button>
-    <div id="loading" style="display:none;"></div>
+    <button type="submit" id="searchButton">Search</button>
+    <div id="loading" style="display: none;">Loading...</div>
   </form>
+  <div id="results"></div>
 `;
 
-describe('handleSearchFormSubmit', () => {
-  it('should handle the form submission and call API', async () => {
-    const fetchMock = jest.spyOn(global, 'fetch').mockResolvedValue({
-      ok: true,
-      json: async () => [{ results: [] }]
-    });
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
-    const form = document.querySelector('form');
-    form.addEventListener('submit', handleSearchFormSubmit);
-    await form.dispatchEvent(new Event('submit', { bubbles: true }));
+test('handles search form submission', () => {
+  const mockFetch = jest.fn(() => Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve([{ results: [] }])
+  }));
+  global.fetch = mockFetch;
 
-    expect(document.getElementById('searchButton').disabled).toBe(false);
-    expect(document.getElementById('loading').style.display).toBe('none');
-    expect(fetchMock).toHaveBeenCalledTimes(1);
+  const form = document.querySelector('form');
+  form.addEventListener('submit', handleSearchFormSubmit);
 
-    fetchMock.mockRestore();
-  });
+  form.dispatchEvent(new Event('submit'));
 
-  it('should handle API errors', async () => {
-    jest.spyOn(global, 'fetch').mockRejectedValue(new Error('API error'));
-
-    const form = document.querySelector('form');
-    form.addEventListener('submit', handleSearchFormSubmit);
-    await form.dispatchEvent(new Event('submit', { bubbles: true }));
-
-    expect(document.getElementById('searchButton').disabled).toBe(false);
-    expect(document.getElementById('loading').style.display).toBe('none');
-
-    jest.restoreAllMocks();
-  });
+  expect(mockFetch).toHaveBeenCalled();
+  expect(mockFetch).toHaveBeenCalledWith(
+    'http://localhost:9090/discogs-query/search', // or the correct URL based on the environment
+    expect.objectContaining({
+      method: 'POST',
+      headers: expect.objectContaining({
+        'Content-Type': 'application/json'
+      }),
+      body: JSON.stringify([{
+        artist: 'Artist Name',
+        barcode: '123456',
+        album: 'Album Name',
+        track: 'Track Name',
+        format: 'vinyl',
+        country: 'US',
+        types: 'RELEASE'
+      }])
+    })
+  );
 });

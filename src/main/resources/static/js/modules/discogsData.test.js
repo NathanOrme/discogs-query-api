@@ -1,24 +1,32 @@
 import { discogsTypes, discogFormats, discogCountries } from './discogsData';
 
-describe('discogsData', () => {
-  test('should export discogsTypes array', () => {
-    expect(discogsTypes).toBeInstanceOf(Array);
-    expect(discogsTypes.length).toBeGreaterThan(0);
-    expect(discogsTypes[0]).toHaveProperty('value');
-    expect(discogsTypes[0]).toHaveProperty('text');
-  });
+test('discogsTypes contains expected values', () => {
+  expect(discogsTypes).toEqual([
+    { value: "RELEASE", text: "Release" },
+    { value: "MASTER", text: "Master" },
+    { value: "", text: "Select a type" }
+  ]);
+});
 
-  test('should export discogFormats array', () => {
-    expect(discogFormats).toBeInstanceOf(Array);
-    expect(discogFormats.length).toBeGreaterThan(0);
-    expect(discogFormats[0]).toHaveProperty('value');
-    expect(discogFormats[0]).toHaveProperty('text');
-  });
+test('discogFormats contains expected values', () => {
+  expect(discogFormats).toEqual([
+    { value: "", text: "Any Format" },
+    { value: "vinyl", text: "Vinyl" },
+    { value: "album", text: "Album" },
+    { value: "lp", text: "LP" },
+    { value: "compilation", text: "Compilation" },
+    { value: "album vinyl", text: "Album Vinyl" },
+    { value: "compilation vinyl", text: "Compilation Vinyl" }
+  ]);
+});
 
-  test('should export discogCountries array', () => {
-    expect(discogCountries).toBeInstanceOf(Array);
-    expect(discogCountries.length).toBeGreaterThan(0);
-    expect(discogCountries[0]).toHaveProperty('value');
-    expect(discogCountries[0]).toHaveProperty('text');
-  });
+test('discogCountries contains expected values', () => {
+  expect(discogCountries).toEqual([
+    { value: "", text: "Any Country" },
+    { value: "EUROPE", text: "Europe" },
+    { value: "UK", text: "UK" },
+    { value: "US", text: "US" },
+    { value: "COSTA_RICA", text: "Costa Rica" },
+    // Add more values as needed
+  ]);
 });

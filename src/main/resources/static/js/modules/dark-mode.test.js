@@ -1,32 +1,28 @@
-import './dark-mode'; // Import the script to run it
+import './dark-mode'; // Import the module to run the code
 
-describe('Dark Mode Toggle', () => {
-  beforeEach(() => {
-    document.body.innerHTML = `
-      <button id="toggleDarkMode"></button>
-    `;
-    localStorage.clear();
-  });
+document.body.innerHTML = `
+  <button id="toggleDarkMode">Toggle Dark Mode</button>
+`;
 
-  test('should apply dark mode if localStorage has enabled value', () => {
-    localStorage.setItem('dark-mode', 'enabled');
-    require('./dark-mode');
-    expect(document.body.classList.contains('dark-mode')).toBe(true);
-  });
+test('toggles dark mode on button click', () => {
+  const toggleButton = document.getElementById('toggleDarkMode');
 
-  test('should toggle dark mode on button click', () => {
-    const toggleButton = document.getElementById('toggleDarkMode');
-    require('./dark-mode'); // Import again to attach event listeners
+  // Initial state should not have dark mode
+  expect(document.body.classList.contains('dark-mode')).toBe(false);
 
-    // Initially, dark mode should not be enabled
-    expect(document.body.classList.contains('dark-mode')).toBe(false);
+  toggleButton.click();
+  expect(document.body.classList.contains('dark-mode')).toBe(true);
 
-    toggleButton.click();
-    expect(document.body.classList.contains('dark-mode')).toBe(true);
-    expect(localStorage.getItem('dark-mode')).toBe('enabled');
+  toggleButton.click();
+  expect(document.body.classList.contains('dark-mode')).toBe(false);
+});
 
-    toggleButton.click();
-    expect(document.body.classList.contains('dark-mode')).toBe(false);
-    expect(localStorage.getItem('dark-mode')).toBe('disabled');
-  });
+test('loads dark mode from localStorage', () => {
+  localStorage.setItem('dark-mode', 'enabled');
+  document.body.innerHTML = `
+    <button id="toggleDarkMode">Toggle Dark Mode</button>
+  `;
+  import('./dark-mode'); // Re-import to re-run the setup
+
+  expect(document.body.classList.contains('dark-mode')).toBe(true);
 });

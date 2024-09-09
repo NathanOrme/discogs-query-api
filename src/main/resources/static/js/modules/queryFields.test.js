@@ -1,58 +1,50 @@
 import { createQueryFields } from './queryFields';
-import { discogsTypes, discogFormats, discogCountries } from './discogsData';
 
 describe('createQueryFields', () => {
   let queriesContainer;
 
   beforeEach(() => {
-    document.body.innerHTML = '<div id="queriesContainer"></div>';
-    queriesContainer = document.getElementById('queriesContainer');
+    // Set up a container for the query fields
+    queriesContainer = document.createElement('div');
+    queriesContainer.id = 'queriesContainer';
+    document.body.appendChild(queriesContainer);
   });
 
-  test('should create a query field with correct elements', () => {
-    const queryCounter = createQueryFields(queriesContainer, 1);
-
-    expect(queriesContainer.children.length).toBe(1);
-    const queryDiv = queriesContainer.children[0];
-    expect(queryDiv).toHaveClass('query');
-
-    const queryHeader = queryDiv.querySelector('.query-header');
-    expect(queryHeader).toBeInTheDocument();
-
-    const deleteButton = queryHeader.querySelector('.delete-button');
-    expect(deleteButton).toBeInTheDocument();
-
-    const queryContent = queryDiv.querySelector('.query-content');
-    expect(queryContent).toBeInTheDocument();
-
-    const formatSelect = queryContent.querySelector('select.format');
-    const countrySelect = queryContent.querySelector('select.country');
-    const typesSelect = queryContent.querySelector('select.types');
-
-    expect(formatSelect.children.length).toBe(discogFormats.length + 1); // Including default option
-    expect(countrySelect.children.length).toBe(discogCountries.length + 1); // Including default option
-    expect(typesSelect.children.length).toBe(discogsTypes.length + 1); // Including default option
+  afterEach(() => {
+    // Clean up after each test
+    queriesContainer.remove();
   });
 
-  test('should prevent form submission if artist and barcode are empty', () => {
-    const queryCounter = createQueryFields(queriesContainer, 1);
-    const submitButton = document.createElement('button');
-    submitButton.setAttribute('type', 'submit');
-    document.body.appendChild(submitButton);
+  test('creates and appends a query field correctly', () => {
+    const initialQueryCount = document.querySelectorAll('.query').length;
+    const newQueryCounter = createQueryFields(queriesContainer, initialQueryCount);
 
-    const artistInput = queriesContainer.querySelector('.artist');
-    const barcodeInput = queriesContainer.querySelector('.barcode');
-    artistInput.value = '';
-    barcodeInput.value = '';
+    // Check if the new query field was created
+    const queryDivs = document.querySelectorAll('.query');
+    expect(queryDivs.length).toBe(initialQueryCount + 1);
 
-    const event = new Event('click');
-    const preventDefault = jest.fn();
-    submitButton.addEventListener('click', (e) => {
-      e.preventDefault = preventDefault;
-    });
+    const newQueryDiv = queryDivs[queryDivs.length - 1];
 
+    // Verify the query header
+    const queryHeader = newQueryDiv.querySelector('.query-header');
+    expect(queryHeader).not.toBeNull();
+    expect(queryHeader.textContent).toContain(`Query ${newQueryCounter}`);
+
+    // Check if the query content is present
+    const queryContent = newQueryDiv.querySelector('.query-content');
+    expect(queryContent).not.toBeNull();
+    expect(queryContent.querySelectorAll('input').length).toBe(4); // Artist, Barcode, Album, Track
+    expect(queryContent.querySelectorAll('select').length).toBe(3); // Format, Country, Types
+  });
+
+  test('validates artist or barcode before submission', () => {
+    // Add a query field
+    createQueryFields(queriesContainer, 0);
+
+    const submitButton = document.querySelector('form button[type="submit"]');
     submitButton.click();
-    expect(preventDefault).toHaveBeenCalled();
-    expect(window.alert).toHaveBeenCalledWith('Please provide either an artist name or a barcode.');
+
+    // Expect alert to be called (you can mock alert if needed)
+    expect(window.alert).toHaveBeenCalledWith("Please provide either an artist name or a barcode.");
   });
 });

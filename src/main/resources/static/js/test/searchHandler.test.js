@@ -1,4 +1,4 @@
-import { handleSearchFormSubmit } from './searchHandler';
+import { handleSearchFormSubmit } from './../modules/searchHandler';
 
 // Mock DOM elements
 document.body.innerHTML = `

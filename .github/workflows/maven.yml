@@ -90,12 +90,21 @@ jobs:
 
       - name: Install dependencies
         run: mvn clean install -DskipTests
+        env:
+          DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
+          DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}
 
       - name: Run Checkstyle
         run: mvn checkstyle:check -Dcheckstyle.config.location=lint/checkstyle.xml
+        env:
+          DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
+          DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}
 
       - name: Build with Maven and buildpacks
         run: mvn clean install package javadoc:javadoc spring-boot:build-image
+        env:
+          DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
+          DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}
 
       - name: Checkout Code
         uses: actions/checkout@v4

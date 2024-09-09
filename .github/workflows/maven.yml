@@ -14,7 +14,7 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.removev.outputs.ref_name }}
+      version: ${{ steps.set_output.outputs.version }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -28,7 +28,7 @@ jobs:
           bump_level: "minor"
 
       - name: Show the next version
-        run:
+        run: |
           echo "Next version: ${{ steps.get_semver.outputs.next_version }}"
 
       - name: Remove v prefix
@@ -90,7 +90,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     needs: [ build, test ]
-    #if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -106,12 +106,6 @@ jobs:
           else
             echo "Version from setup: ${{ needs.setup.outputs.version }}"
           fi
-
-      - name: Set Version With Maven
-        run: mvn versions:set -DnewVersion=${{ needs.setup.outputs.version }}
-
-      - name: Install dependencies
-        run: mvn clean install -DskipTests
 
       - name: Zip Javadoc
         run: |

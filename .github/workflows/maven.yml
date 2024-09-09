@@ -22,19 +22,22 @@ jobs:
           fetch-depth: 0
 
       - name: Get next version
-        uses: rickstaa/action-get-semver@v1
         id: get_semver
+        uses: rickstaa/action-get-semver@v1
         with:
           bump_level: "minor"
 
       - name: Show the next version
-        run: echo ${{ steps.get_semver.outputs.next_version }}
+        run:
+          echo "Next version: ${{ steps.get_semver.outputs.next_version }}"
 
       - name: Remove v prefix
         id: removev
-        run: |
-          version=$(echo ${{ steps.get_semver.outputs.next_version }} | sed 's/^v//')
-          echo "version=$version" >> $GITHUB_ENV
+        run: echo "ref_name=$(echo ${{ steps.get_semver.outputs.next_version }} | sed 's/^v//')" >> $GITHUB_ENV
+
+      - name: Set output for version
+        id: set_output
+        run: echo "version=${{ steps.get_semver.outputs.next_version }}" >> $GITHUB_ENV
 
   test:
     runs-on: ubuntu-latest
@@ -73,7 +76,7 @@ jobs:
           cache: maven
 
       - name: Set Version With Maven
-        run: mvn versions:set -DnewVersion=${{ env.version }}
+        run: mvn versions:set -DnewVersion=${{ needs.setup.outputs.version }}
 
       - name: Install dependencies
         run: mvn clean install -DskipTests
@@ -87,22 +90,25 @@ jobs:
   release:
     runs-on: ubuntu-latest
     needs: [ build, test ]
-    if: github.ref == 'refs/heads/main'
+    #if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-          cache: maven
+      - name: Ensure Version is Available
+        id: check_version
+        run: |
+          if [ -z "${{ needs.setup.outputs.version }}" ]; then
+            echo "Version is not available. Failing the build."
+            exit 1
+          else
+            echo "Version from setup: ${{ needs.setup.outputs.version }}"
+          fi
 
       - name: Set Version With Maven
-        run: mvn versions:set -DnewVersion=${{ env.version }}
+        run: mvn versions:set -DnewVersion=${{ needs.setup.outputs.version }}
 
       - name: Install dependencies
         run: mvn clean install -DskipTests
@@ -124,8 +130,8 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          name: Release ${{ env.version }}
-          tag_name: ${{ env.version }}
+          name: Release ${{ needs.setup.outputs.version }}
+          tag_name: ${{ needs.setup.outputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
           generate_release_notes: true
           files: target/site/apidocs.zip

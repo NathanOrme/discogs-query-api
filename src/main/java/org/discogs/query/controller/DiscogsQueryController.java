@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -59,10 +60,10 @@ public class DiscogsQueryController {
 
         if (resultDTOList.isEmpty()) {
             log.warn("No results found for the provided queries");
-        } else {
-            int size = calculateSizeOfResults(resultDTOList);
-            log.info("Returning {} results: {}", size, resultDTOList);
+            return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
         }
+        int size = calculateSizeOfResults(resultDTOList);
+        log.info("Returning {} results: {}", size, resultDTOList);
 
         return ResponseEntity.status(HttpStatus.OK).body(resultDTOList);
     }

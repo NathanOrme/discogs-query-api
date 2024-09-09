@@ -32,7 +32,7 @@ jobs:
 
       - name: Remove v prefix
         id: removev
-        run: echo "::set-output name=ref_name::$(echo ${{ steps.get_semver.outputs.next_version }} | sed 's/^v//')"
+        run: echo "ref_name=$(echo ${{ steps.get_semver.outputs.next_version }} | sed 's/^v//')" >> $GITHUB_ENV
 
   test:
     runs-on: ubuntu-latest
@@ -42,6 +42,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -97,16 +98,9 @@ jobs:
         run: mvn clean install -DskipTests
 
       - name: Zip Javadoc
-        uses: vimtor/action-zip@v1.2
-        with:
-          files: target/site/apidocs
-          dest: apidocs.zip
-
-      - name: Generate Changelog
-        uses: Bullrich/generate-release-changelog@master
-        id: Changelog
-        env:
-          REPO: ${{ github.repository }}
+        run: |
+          mkdir -p ${{ github.workspace }}/target/site/apidocs
+          zip -r ${{ github.workspace }}/apidocs.zip target/site/apidocs
 
   release:
     runs-on: ubuntu-latest
@@ -117,12 +111,17 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Use Javadoc
+        run: |
+          ls -al ${{ github.workspace }}/apidocs.zip
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           name: Release ${{ needs.setup.outputs.version }}
           tag_name: ${{ needs.setup.outputs.version }}
-          token: ${{secrets.GITHUB_TOKEN}}
+          token: ${{ secrets.GITHUB_TOKEN }}
           generate_release_notes: true
-          files: apidocs.zip
+          files: ${{ github.workspace }}/apidocs.zip
           body: ${{ needs.package.outputs.Changelog }}

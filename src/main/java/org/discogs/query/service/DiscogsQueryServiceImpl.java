@@ -91,6 +91,7 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
             log.info("Filtering and sorting completed");
 
             getLowestPriceOnMarketplace(results);
+            discogsFilterService.filterOutEmptyLowestPrice(results);
 
             DiscogsResultDTO resultDTO =
                     discogsResultMapper.mapObjectToDTO(results,

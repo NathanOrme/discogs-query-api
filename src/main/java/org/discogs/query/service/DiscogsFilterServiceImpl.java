@@ -14,6 +14,7 @@ import org.discogs.query.interfaces.DiscogsFilterService;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Objects;
 
 /**
@@ -121,6 +122,30 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
                     discogsEntry.getId(), e);
         }
     }
+
+    /**
+     * Filters out entries with null or zero lowest price from the given DiscogsResult.
+     *
+     * <p>This method updates the results in the given DiscogsResult object by removing
+     * any entries where the lowest price is either null or zero. If the results list is
+     * null, it sets the results to an empty list.
+     *
+     * @param results the DiscogsResult object containing a list of entries to be filtered
+     */
+    @Override
+    public void filterOutEmptyLowestPrice(final DiscogsResult results) {
+        if (results.getResults() == null) {
+            results.setResults(Collections.emptyList());
+            return;
+        }
+
+        var filteredResults = results.getResults().stream()
+                .filter(discogsEntry -> discogsEntry.getLowestPrice() != null)
+                .filter(discogsEntry -> discogsEntry.getLowestPrice() != 0f)
+                .toList();
+        results.setResults(filteredResults);
+    }
+
 
     /**
      * Filters a Discogs entry based on whether it contains the specified

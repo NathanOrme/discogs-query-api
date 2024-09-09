@@ -75,6 +75,16 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Ensure Version is Available
+        id: check_version
+        run: |
+          if [ -z "${{ needs.setup.outputs.version }}" ]; then
+            echo "Version is not available. Failing the build."
+            exit 1
+          else
+            echo "Version from setup: ${{ needs.setup.outputs.version }}"
+          fi
+
       - name: Set Version With Maven
         run: mvn versions:set -DnewVersion=${{ needs.setup.outputs.version }}
 

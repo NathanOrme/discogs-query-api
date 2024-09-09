@@ -39,7 +39,7 @@ jobs:
         id: set_output
         run: echo "::set-output name=version::${{ steps.get_semver.outputs.next_version }}"
 
-  test:
+  javascript-test:
     runs-on: ubuntu-latest
     needs: setup
     steps:
@@ -61,7 +61,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    needs: setup
+    needs: [ setup, javascript-test ]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -97,33 +97,16 @@ jobs:
       - name: Build with Maven and buildpacks
         run: mvn clean install package javadoc:javadoc spring-boot:build-image
 
-  release:
-    runs-on: ubuntu-latest
-    needs: [ build, test ]
-    if: github.ref == 'refs/heads/main'
-    steps:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Ensure Version is Available
-        id: check_version
-        run: |
-          if [ -z "${{ needs.setup.outputs.version }}" ]; then
-            echo "Version is not available. Failing the build."
-            exit 1
-          else
-            echo "Version from setup: ${{ needs.setup.outputs.version }}"
-          fi
-
       - name: Zip Javadoc
         run: |
           mkdir -p target/site/apidocs
           zip -r target/site/apidocs.zip target/site/apidocs || exit 1
-
-      - name: List Files
-        run: ls -al target/site/
+          echo "Javadoc zip created."
 
       - name: Generate Changelog
         uses: Bullrich/generate-release-changelog@master
@@ -133,6 +116,7 @@ jobs:
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main'
         with:
           name: Release ${{ needs.setup.outputs.version }}
           tag_name: ${{ needs.setup.outputs.version }}

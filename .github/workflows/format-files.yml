@@ -18,15 +18,6 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Set up Minify Actions
-        uses: amireshoon/minifyAction@main
-        with:
-          repo: $prepo
-
-      - name: Minifying Codes
-        run: |
-          minifier.sh $prepo
-
       - name: Prettier
         run: npx prettier --write **/*.js
         env:

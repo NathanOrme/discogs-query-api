@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -52,5 +53,17 @@ public class DiscogsQueryControllerAdvice {
     public ResponseEntity<ErrorMessageDTO> handleTimeoutException(final TimeoutException ex) {
         return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body(new ErrorMessageDTO("Request took too long to " +
                 "process."));
+    }
+
+    /**
+     * Handles {@link java.io.IOException} and returns a {@link ResponseEntity}
+     * with a 500 Internal server error status and a custom error message.
+     *
+     * @param ex the {@link TimeoutException} to handle
+     * @return a {@link ResponseEntity} containing the custom timeout message and HTTP status
+     */
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<ErrorMessageDTO> handleIOException(final IOException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessageDTO(ex.getMessage()));
     }
 }

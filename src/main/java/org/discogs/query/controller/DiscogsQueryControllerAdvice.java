@@ -66,4 +66,17 @@ public class DiscogsQueryControllerAdvice {
     public ResponseEntity<ErrorMessageDTO> handleIOException(final IOException ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessageDTO(ex.getMessage()));
     }
+
+    /**
+     * Handles {@link Exception} and returns a {@link ResponseEntity}
+     * with a 500 Internal server error status and a custom error message.
+     *
+     * @param ex the {@link Exception} to handle
+     * @return a {@link ResponseEntity} containing the custom timeout message and HTTP status
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorMessageDTO> handleIOException(final Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessageDTO("An unexpected " +
+                "error occurred: %s".formatted(ex.getMessage())));
+    }
 }

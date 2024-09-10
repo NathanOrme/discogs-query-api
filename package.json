@@ -17,13 +17,17 @@
     "@testing-library/jest-dom": "6.5.0"
   },
   "babel": {
-    "presets": ["@babel/preset-env"]
+    "presets": [
+      "@babel/preset-env"
+    ]
   },
   "jest": {
     "transform": {
       "^.+\\.js$": "babel-jest"
     },
     "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": ["<rootDir>/src/setupTests.js"]
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/setupTests.js"
+    ]
   }
 }

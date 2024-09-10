@@ -42,6 +42,19 @@ public class DiscogsUrlBuilder {
     String marketplaceUrl;
 
     /**
+     * Builds URL string by encoding it, then replacing the space encoding.
+     *
+     * @param uriBuilder Builder to use
+     * @return Built URL String
+     */
+    private static String getUrlString(final UriComponentsBuilder uriBuilder) {
+        return uriBuilder
+                .encode()
+                .toUriString()
+                .replace("%20", "+");
+    }
+
+    /**
      * Builds the search URL based on the provided query parameters.
      *
      * @param discogsQueryDTO the search query data transfer object
@@ -182,7 +195,6 @@ public class DiscogsUrlBuilder {
                 DiscogQueryParams.TYPE.getQueryType(), types.getType());
     }
 
-
     /**
      * Builds the search URL for a compilation album
      * based on the provided query parameters.
@@ -215,18 +227,5 @@ public class DiscogsUrlBuilder {
 
         log.debug("Generated compilation search URL: {}", compilationSearchUrl);
         return compilationSearchUrl;
-    }
-
-    /**
-     * Builds URL string by encoding it, then replacing the space encoding.
-     *
-     * @param uriBuilder Builder to use
-     * @return Built URL String
-     */
-    private static String getUrlString(final UriComponentsBuilder uriBuilder) {
-        return uriBuilder
-                .encode()
-                .toUriString()
-                .replace("%20", "+");
     }
 }

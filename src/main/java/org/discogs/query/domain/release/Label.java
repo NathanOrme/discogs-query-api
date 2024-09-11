@@ -1,7 +1,6 @@
 package org.discogs.query.domain.release;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +10,6 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-@JsonDeserialize(as = Label.class)
 public class Label {
 
     /**

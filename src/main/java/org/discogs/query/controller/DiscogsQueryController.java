@@ -68,7 +68,7 @@ public class DiscogsQueryController {
         int size = calculateSizeOfResults(resultDTOList);
         log.info("Returning {} results: {}", size, resultDTOList);
         var resultMapDTOList = resultDTOList.parallelStream()
-                .map(entry -> collectionsService.convertListToMapForDTO(entry))
+                .map(collectionsService::convertListToMapForDTO)
                 .toList();
         return ResponseEntity.status(HttpStatus.OK).body(resultMapDTOList);
     }

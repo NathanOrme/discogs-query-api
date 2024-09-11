@@ -1,6 +1,8 @@
 package org.discogs.query.domain.release;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +11,9 @@ import lombok.NoArgsConstructor;
  * track title, duration, position, and type.
  */
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Track {
 
     /**

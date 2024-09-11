@@ -1,5 +1,6 @@
 package org.discogs.query.service;
 
+import org.discogs.query.interfaces.CollectionsService;
 import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsMapResultDTO;
 import org.discogs.query.model.DiscogsResultDTO;
@@ -14,7 +15,7 @@ import java.util.Map;
  * Service class responsible for operations related to collections and data transformation.
  */
 @Service
-public class CollectionsService {
+public class CollectionsServiceImpl implements CollectionsService {
 
     /**
      * Converts a list of Discogs entries from a {@link DiscogsResultDTO} object into a map and stores the map in a
@@ -24,6 +25,7 @@ public class CollectionsService {
      * @param discogsResultDTO the {@link DiscogsResultDTO} containing the list of Discogs entries to be converted
      * @return a {@link DiscogsMapResultDTO} containing the search query and the converted map of entries
      */
+    @Override
     public DiscogsMapResultDTO convertListToMapForDTO(final DiscogsResultDTO discogsResultDTO) {
         DiscogsMapResultDTO discogsMapResultDTO = new DiscogsMapResultDTO();
         discogsMapResultDTO.setSearchQuery(discogsResultDTO.getSearchQuery());

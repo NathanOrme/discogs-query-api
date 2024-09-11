@@ -46,7 +46,7 @@ public class RetryServiceImpl implements RetryService {
         throw new IllegalStateException("Retry logic should never reach here.");
     }
 
-    private boolean is429StatusCodeException(final Exception e) {
+    boolean is429StatusCodeException(final Exception e) {
         if (!(e.getCause() instanceof final HttpClientErrorException httpClientErrorException)) {
             return false;
         }

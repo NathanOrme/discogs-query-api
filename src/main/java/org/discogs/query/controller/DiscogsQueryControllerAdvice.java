@@ -14,6 +14,27 @@ import java.util.concurrent.TimeoutException;
 /**
  * Global exception handler for the Discogs Query application.
  * Handles exceptions thrown by controllers and provides appropriate HTTP responses.
+ *
+ * <p>This class centralizes the handling of exceptions across all controllers
+ * in the application, returning consistent error responses with proper
+ * HTTP status codes and error messages.
+ *
+ * <p>Annotations:
+ * <ul>
+ *  <li>{@link ControllerAdvice} - Declares this class as an exception handler across all controllers.</li>
+ *  <li>{@link ExceptionHandler} - Specifies which exceptions are handled by each method.</li>
+ * </ul>
+ *
+ * <p>Handles the following exceptions:
+ * <ul>
+ *  <li>{@link DiscogsMarketplaceException} - Returns 500 Internal Server Error.</li>
+ *  <li>{@link DiscogsSearchException} - Returns 500 Internal Server Error.</li>
+ *  <li>{@link TimeoutException} - Returns 408 Request Timeout.</li>
+ *  <li>{@link IOException} - Returns 500 Internal Server Error.</li>
+ *  <li>{@link Exception} - Returns 500 Internal Server Error for unexpected errors.</li>
+ * </ul>
+ *
+ * @author Nathan Orme
  */
 @ControllerAdvice
 public class DiscogsQueryControllerAdvice {
@@ -56,11 +77,11 @@ public class DiscogsQueryControllerAdvice {
     }
 
     /**
-     * Handles {@link java.io.IOException} and returns a {@link ResponseEntity}
-     * with a 500 Internal server error status and a custom error message.
+     * Handles {@link IOException} and returns a {@link ResponseEntity}
+     * with a 500 Internal Server Error status and a custom error message.
      *
-     * @param ex the {@link TimeoutException} to handle
-     * @return a {@link ResponseEntity} containing the custom timeout message and HTTP status
+     * @param ex the {@link IOException} to handle
+     * @return a {@link ResponseEntity} containing the error message and HTTP status
      */
     @ExceptionHandler(IOException.class)
     public ResponseEntity<ErrorMessageDTO> handleIOException(final IOException ex) {
@@ -69,10 +90,10 @@ public class DiscogsQueryControllerAdvice {
 
     /**
      * Handles {@link Exception} and returns a {@link ResponseEntity}
-     * with a 500 Internal server error status and a custom error message.
+     * with a 500 Internal Server Error status and a custom error message.
      *
      * @param ex the {@link Exception} to handle
-     * @return a {@link ResponseEntity} containing the custom timeout message and HTTP status
+     * @return a {@link ResponseEntity} containing the error message and HTTP status
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessageDTO> handleException(final Exception ex) {

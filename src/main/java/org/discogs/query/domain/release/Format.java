@@ -1,6 +1,7 @@
 package org.discogs.query.domain.release;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,8 +12,9 @@ import java.util.List;
  * includes descriptions related to the format.
  */
 @Data
+@Builder
 @NoArgsConstructor
-@JsonDeserialize(as = Format.class)
+@AllArgsConstructor
 public class Format {
 
     /**

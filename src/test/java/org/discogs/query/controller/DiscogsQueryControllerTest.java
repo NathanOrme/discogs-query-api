@@ -1,10 +1,10 @@
 package org.discogs.query.controller;
 
 import org.discogs.query.config.SecurityConfig;
+import org.discogs.query.interfaces.CollectionsService;
 import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
-import org.discogs.query.service.CollectionsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

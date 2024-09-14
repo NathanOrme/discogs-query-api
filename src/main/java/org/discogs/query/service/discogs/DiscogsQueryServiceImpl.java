@@ -1,4 +1,4 @@
-package org.discogs.query.service;
+package org.discogs.query.service.discogs;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

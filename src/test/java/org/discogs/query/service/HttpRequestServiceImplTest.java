@@ -1,10 +1,12 @@
 package org.discogs.query.service;
 
 import org.discogs.query.interfaces.HttpRequestService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -13,20 +15,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class HttpRequestServiceImplTest {
 
-    private HttpRequestService httpRequestService;
+    @Mock
     private RestTemplate restTemplate;
-
-    @BeforeEach
-    public void setUp() {
-        restTemplate = mock(RestTemplate.class);
-        httpRequestService = new HttpRequestServiceImpl(restTemplate);
-    }
+    @Mock
+    private HttpHeaders httpHeaders;
+    @InjectMocks
+    private HttpRequestService httpRequestService;
 
     @Test
     void testExecuteRequest() throws Exception {

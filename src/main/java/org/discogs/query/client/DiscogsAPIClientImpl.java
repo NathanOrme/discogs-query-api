@@ -30,7 +30,7 @@ import java.util.concurrent.Callable;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class DefaultDiscogsAPIClientImpl implements DiscogsAPIClient {
+public class DiscogsAPIClientImpl implements DiscogsAPIClient {
 
     public static final String CACHE_MISS_FOR_SEARCH_URL = "Cache miss for " +
             "searchUrl: {}";

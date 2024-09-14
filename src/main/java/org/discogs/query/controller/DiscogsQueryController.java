@@ -3,7 +3,7 @@ package org.discogs.query.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.discogs.query.interfaces.CollectionsService;
+import org.discogs.query.interfaces.DiscogsMappingService;
 import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.model.DiscogsMapResultDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
@@ -32,7 +32,7 @@ import java.util.Objects;
 public class DiscogsQueryController {
 
     private final DiscogsQueryService discogsQueryService;
-    private final CollectionsService collectionsService;
+    private final DiscogsMappingService discogsMappingService;
 
     /**
      * Searches Discogs using the provided query data.
@@ -84,14 +84,14 @@ public class DiscogsQueryController {
 
     /**
      * Maps the {@link DiscogsResultDTO} objects to {@link DiscogsMapResultDTO} objects
-     * using the {@link CollectionsService}.
+     * using the {@link DiscogsMappingService}.
      *
      * @param resultDTOList the list of {@link DiscogsResultDTO} objects
      * @return a list of {@link DiscogsMapResultDTO} objects
      */
     private List<DiscogsMapResultDTO> mapResultsToDTO(final List<DiscogsResultDTO> resultDTOList) {
         return resultDTOList.parallelStream()
-                .map(collectionsService::convertListToMapForDTO)
+                .map(discogsMappingService::convertEntriesToMapByTitle)
                 .toList();
     }
 

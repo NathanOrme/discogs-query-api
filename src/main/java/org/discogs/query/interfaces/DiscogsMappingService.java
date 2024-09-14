@@ -7,7 +7,7 @@ import org.discogs.query.model.DiscogsResultDTO;
 /**
  * Interface defining operations related to collections and data transformation.
  */
-public interface CollectionsService {
+public interface DiscogsMappingService {
 
     /**
      * Converts a list of Discogs entries from a {@link DiscogsResultDTO} object into a map and stores the map in a
@@ -17,6 +17,6 @@ public interface CollectionsService {
      * @param discogsResultDTO the {@link DiscogsResultDTO} containing the list of Discogs entries to be converted
      * @return a {@link DiscogsMapResultDTO} containing the search query and the converted map of entries
      */
-    DiscogsMapResultDTO convertListToMapForDTO(final DiscogsResultDTO discogsResultDTO);
+    DiscogsMapResultDTO convertEntriesToMapByTitle(final DiscogsResultDTO discogsResultDTO);
 }
 

@@ -2,7 +2,7 @@ package org.discogs.query.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.discogs.query.config.SecurityConfig;
-import org.discogs.query.interfaces.CollectionsService;
+import org.discogs.query.interfaces.DiscogsMappingService;
 import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.model.DiscogsMapResultDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
@@ -45,7 +45,7 @@ class DiscogsQueryControllerTest {
     private DiscogsQueryService discogsQueryService;
 
     @MockBean
-    private CollectionsService collectionsService;
+    private DiscogsMappingService discogsMappingService;
 
     @Test
     void testSearchBasedOnQuery_Successful() throws Exception {
@@ -57,7 +57,7 @@ class DiscogsQueryControllerTest {
         List<DiscogsMapResultDTO> mapResultDTOList = List.of(mapResultDTO);
 
         when(discogsQueryService.searchBasedOnQuery(any(DiscogsQueryDTO.class))).thenReturn(resultDTO);
-        when(collectionsService.convertListToMapForDTO(any(DiscogsResultDTO.class))).thenReturn(mapResultDTO);
+        when(discogsMappingService.convertEntriesToMapByTitle(any(DiscogsResultDTO.class))).thenReturn(mapResultDTO);
 
         // Act & Assert
         mockMvc.perform(MockMvcRequestBuilders.post("/discogs-query/search")

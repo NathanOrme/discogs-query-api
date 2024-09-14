@@ -20,7 +20,7 @@ public class HttpRequestServiceImpl implements HttpRequestService {
 
     private final RestTemplate restTemplate;
     private final HttpHeaders headers;
-    
+
     @Override
     public <T> T executeRequest(final String url, final Class<T> responseType) {
         log.info("Executing HTTP request to URL: {}", url);

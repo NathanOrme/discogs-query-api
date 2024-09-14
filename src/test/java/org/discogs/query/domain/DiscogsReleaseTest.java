@@ -129,6 +129,6 @@ class DiscogsReleaseTest {
         assertEquals(9.99, release.getLowestPrice(), 0.01);
         assertEquals(2022, release.getYear());
     }
-    
+
 }
 

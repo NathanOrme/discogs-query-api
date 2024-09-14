@@ -72,7 +72,7 @@ public class DiscogsQueryController {
      * @return a list of {@link DiscogsResultDTO} objects
      */
     private List<DiscogsResultDTO> processQueries(final List<DiscogsQueryDTO> discogsQueryDTOList) {
-        return discogsQueryDTOList.stream()
+        return discogsQueryDTOList.parallelStream()
                 .map(query -> {
                     log.debug("Processing query: {}", query);
                     return discogsQueryService.searchBasedOnQuery(query);

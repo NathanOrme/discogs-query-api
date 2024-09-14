@@ -20,30 +20,43 @@ public class RetryServiceImpl implements RetryService {
     public <T> T executeWithRetry(final Callable<T> action,
                                   final String actionDescription) throws Exception {
         int attempt = 1;
-        while (attempt <= RETRY_COUNT) {
+        while (isAttemptNumberLessThanMaximum(attempt)) {
             try {
                 log.info("Attempting {}. Attempt {} of {}", actionDescription
                         , attempt, RETRY_COUNT);
                 return action.call();
             } catch (final Exception e) {
-                log.warn("Error during {} on attempt {} of {}. Exception: {}",
-                        actionDescription, attempt, RETRY_COUNT,
-                        e.getMessage());
-                if (attempt == RETRY_COUNT) {
-                    throw e; // rethrow after final attempt
-                }
-                attempt++;
-                if (is429StatusCodeException(e)) {
-                    log.info("429 Status Code Received - Sleeping for a " +
-                            "minute");
-                    TimeUnit.MINUTES.sleep(1);
-                } else {
-                    log.info("Sleeping for {} seconds", RETRY_DELAY);
-                    TimeUnit.SECONDS.sleep(RETRY_DELAY);
-                }
+                attempt = handleRetryCount(actionDescription, e, attempt);
+                delayThreadBasedOnStatusCode(e);
             }
         }
         throw new IllegalStateException("Retry logic should never reach here.");
+    }
+
+    private static boolean isAttemptNumberLessThanMaximum(final int attempt) {
+        return attempt <= RETRY_COUNT;
+    }
+
+    private int handleRetryCount(final String actionDescription,
+                                 final Exception e, int attempt) throws Exception {
+        log.warn("Error during {} on attempt {} of {}. Exception: {}",
+                actionDescription, attempt, RETRY_COUNT,
+                e.getMessage());
+        if (attempt == RETRY_COUNT) {
+            throw e;
+        }
+        attempt++;
+        return attempt;
+    }
+
+    private void delayThreadBasedOnStatusCode(final Exception e) throws InterruptedException {
+        if (is429StatusCodeException(e)) {
+            log.info("429 Status Code Received - Sleeping for 30 seconds");
+            TimeUnit.SECONDS.sleep(30);
+        } else {
+            log.info("Sleeping for {} seconds", RETRY_DELAY);
+            TimeUnit.SECONDS.sleep(RETRY_DELAY);
+        }
     }
 
     boolean is429StatusCodeException(final Exception e) {

@@ -1,7 +1,7 @@
 package org.discogs.query.helpers;
 
 import lombok.NoArgsConstructor;
-import org.discogs.query.enums.DiscogsVarious;
+import org.discogs.query.model.enums.DiscogsVarious;
 import org.springframework.stereotype.Component;
 
 /**

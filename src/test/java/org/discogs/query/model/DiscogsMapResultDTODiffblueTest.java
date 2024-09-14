@@ -1,7 +1,7 @@
 package org.discogs.query.model;
 
-import org.discogs.query.enums.DiscogCountries;
-import org.discogs.query.enums.DiscogsTypes;
+import org.discogs.query.model.enums.DiscogCountries;
+import org.discogs.query.model.enums.DiscogsTypes;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;

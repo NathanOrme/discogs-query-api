@@ -1,11 +1,11 @@
 package org.discogs.query.service.discogs;
 
-import org.discogs.query.enums.DiscogCountries;
-import org.discogs.query.enums.DiscogsTypes;
 import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsMapResultDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
+import org.discogs.query.model.enums.DiscogCountries;
+import org.discogs.query.model.enums.DiscogsTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

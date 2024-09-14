@@ -2,14 +2,14 @@ package org.discogs.query.service.discogs;
 
 import org.discogs.query.domain.DiscogsEntry;
 import org.discogs.query.domain.DiscogsResult;
-import org.discogs.query.enums.DiscogsFormats;
 import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.helpers.DiscogsUrlBuilder;
 import org.discogs.query.interfaces.DiscogsAPIClient;
 import org.discogs.query.interfaces.DiscogsFilterService;
-import org.discogs.query.mapper.DiscogsResultMapper;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
+import org.discogs.query.model.enums.DiscogsFormats;
+import org.discogs.query.service.ResultMappingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,7 +35,7 @@ class DiscogsQueryServiceImplTest {
     private DiscogsAPIClient discogsAPIClient;
 
     @Mock
-    private DiscogsResultMapper discogsResultMapper;
+    private ResultMappingService resultMappingService;
 
     @Mock
     private DiscogsUrlBuilder discogsUrlBuilder;

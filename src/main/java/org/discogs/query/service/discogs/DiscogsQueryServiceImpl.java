@@ -5,16 +5,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.domain.DiscogsEntry;
 import org.discogs.query.domain.DiscogsMarketplaceResult;
 import org.discogs.query.domain.DiscogsResult;
-import org.discogs.query.enums.DiscogsFormats;
 import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.helpers.DiscogsUrlBuilder;
 import org.discogs.query.helpers.StringHelper;
 import org.discogs.query.interfaces.DiscogsAPIClient;
 import org.discogs.query.interfaces.DiscogsFilterService;
 import org.discogs.query.interfaces.DiscogsQueryService;
-import org.discogs.query.mapper.DiscogsResultMapper;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
+import org.discogs.query.model.enums.DiscogsFormats;
+import org.discogs.query.service.ResultMappingService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
     private static final String UNEXPECTED_ISSUE_OCCURRED = "Unexpected issue occurred";
 
     private final DiscogsAPIClient discogsAPIClient;
-    private final DiscogsResultMapper discogsResultMapper;
+    private final ResultMappingService resultMappingService;
     private final DiscogsUrlBuilder discogsUrlBuilder;
     private final DiscogsFilterService discogsFilterService;
     private final StringHelper stringHelper;
@@ -45,9 +45,11 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
      * @return true if the format is a compilation, false otherwise
      */
     static boolean isCompilationFormat(final DiscogsQueryDTO discogsQueryDTO) {
-        boolean isCompilation = DiscogsFormats.COMP.getFormat().equalsIgnoreCase(discogsQueryDTO.getFormat())
-                || DiscogsFormats.VINYL_COMPILATION.getFormat().equalsIgnoreCase(discogsQueryDTO.getFormat());
-        log.debug("Checking if format is compilation: {}. Result: {}", discogsQueryDTO.getFormat(), isCompilation);
+        String format = discogsQueryDTO.getFormat();
+        String compFormat = DiscogsFormats.COMP.getFormat();
+        String vinylCompFormat = DiscogsFormats.VINYL_COMPILATION.getFormat();
+        boolean isCompilation = compFormat.equalsIgnoreCase(format) || vinylCompFormat.equalsIgnoreCase(format);
+        log.debug("Checking if format is compilation: {}. Result: {}", format, isCompilation);
         return isCompilation;
     }
 
@@ -69,7 +71,7 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
             log.info("Received {} results from Discogs API", results.getResults().size());
 
             if (stringHelper.isNotNullOrBlank(discogsQueryDTO.getBarcode())) {
-                return discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
+                return resultMappingService.mapObjectToDTO(results, discogsQueryDTO);
             }
 
             if (isCompilationFormat(discogsQueryDTO) && !stringHelper.isNotNullOrBlank(discogsQueryDTO.getAlbum())) {
@@ -86,7 +88,7 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
             getLowestPriceOnMarketplace(results);
             discogsFilterService.filterOutEmptyLowestPrice(results);
 
-            DiscogsResultDTO resultDTO = discogsResultMapper.mapObjectToDTO(results, discogsQueryDTO);
+            DiscogsResultDTO resultDTO = resultMappingService.mapObjectToDTO(results, discogsQueryDTO);
             log.info("Search processing completed successfully for query: {}", discogsQueryDTO);
 
             return resultDTO;

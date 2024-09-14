@@ -23,26 +23,26 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(classes = {CollectionsServiceImpl.class})
+@ContextConfiguration(classes = {DiscogsMappingServiceImpl.class})
 @ExtendWith(SpringExtension.class)
-class CollectionsServiceImplDiffblueTest {
-    
+class DiscogsMappingServiceImplDiffblueTest {
+
     @Autowired
-    private CollectionsServiceImpl collectionsServiceImpl;
+    private DiscogsMappingServiceImpl discogsMappingServiceImpl;
 
     /**
      * Method under test:
-     * {@link CollectionsServiceImpl#convertListToMapForDTO(DiscogsResultDTO)}
+     * {@link DiscogsMappingServiceImpl#convertEntriesToMapByTitle(DiscogsResultDTO)}
      */
     @Test
-    void testConvertListToMapForDTO() {
+    void testConvertEntriesToMapByTitle() {
         // Arrange
         DiscogsResultDTO.DiscogsResultDTOBuilder builderResult = DiscogsResultDTO.builder();
         DiscogsResultDTO discogsResultDTO = builderResult.results(new ArrayList<>()).build();
 
         // Act
-        DiscogsMapResultDTO actualConvertListToMapForDTOResult = collectionsServiceImpl
-                .convertListToMapForDTO(discogsResultDTO);
+        DiscogsMapResultDTO actualConvertListToMapForDTOResult = discogsMappingServiceImpl
+                .convertEntriesToMapByTitle(discogsResultDTO);
 
         // Assert
         assertNull(actualConvertListToMapForDTOResult.getSearchQuery());
@@ -51,10 +51,10 @@ class CollectionsServiceImplDiffblueTest {
 
     /**
      * Method under test:
-     * {@link CollectionsServiceImpl#convertListToMapForDTO(DiscogsResultDTO)}
+     * {@link DiscogsMappingServiceImpl#convertEntriesToMapByTitle(DiscogsResultDTO)}
      */
     @Test
-    void testConvertListToMapForDTO2() {
+    void testConvertEntriesToMapByTitle2() {
         // Arrange
         DiscogsResultDTO discogsResultDTO = mock(DiscogsResultDTO.class);
         when(discogsResultDTO.getResults()).thenReturn(new ArrayList<>());
@@ -70,8 +70,8 @@ class CollectionsServiceImplDiffblueTest {
         when(discogsResultDTO.getSearchQuery()).thenReturn(buildResult);
 
         // Act
-        DiscogsMapResultDTO actualConvertListToMapForDTOResult = collectionsServiceImpl
-                .convertListToMapForDTO(discogsResultDTO);
+        DiscogsMapResultDTO actualConvertListToMapForDTOResult = discogsMappingServiceImpl
+                .convertEntriesToMapByTitle(discogsResultDTO);
 
         // Assert
         verify(discogsResultDTO).getResults();
@@ -89,10 +89,10 @@ class CollectionsServiceImplDiffblueTest {
 
     /**
      * Method under test:
-     * {@link CollectionsServiceImpl#convertListToMapForDTO(DiscogsResultDTO)}
+     * {@link DiscogsMappingServiceImpl#convertEntriesToMapByTitle(DiscogsResultDTO)}
      */
     @Test
-    void testConvertListToMapForDTO3() {
+    void testConvertEntriesToMapByTitle3() {
         // Arrange
         ArrayList<DiscogsEntryDTO> discogsEntryDTOList = new ArrayList<>();
         DiscogsEntryDTO.DiscogsEntryDTOBuilder countryResult = DiscogsEntryDTO.builder().country("GB");
@@ -120,8 +120,8 @@ class CollectionsServiceImplDiffblueTest {
         when(discogsResultDTO.getSearchQuery()).thenReturn(buildResult2);
 
         // Act
-        DiscogsMapResultDTO actualConvertListToMapForDTOResult = collectionsServiceImpl
-                .convertListToMapForDTO(discogsResultDTO);
+        DiscogsMapResultDTO actualConvertListToMapForDTOResult = discogsMappingServiceImpl
+                .convertEntriesToMapByTitle(discogsResultDTO);
 
         // Assert
         verify(discogsResultDTO).getResults();
@@ -141,10 +141,10 @@ class CollectionsServiceImplDiffblueTest {
 
     /**
      * Method under test:
-     * {@link CollectionsServiceImpl#convertListToMapForDTO(DiscogsResultDTO)}
+     * {@link DiscogsMappingServiceImpl#convertEntriesToMapByTitle(DiscogsResultDTO)}
      */
     @Test
-    void testConvertListToMapForDTO4() {
+    void testConvertEntriesToMapByTitle4() {
         // Arrange
         ArrayList<DiscogsEntryDTO> discogsEntryDTOList = new ArrayList<>();
         DiscogsEntryDTO.DiscogsEntryDTOBuilder countryResult = DiscogsEntryDTO.builder().country("GB");
@@ -183,8 +183,8 @@ class CollectionsServiceImplDiffblueTest {
         when(discogsResultDTO.getSearchQuery()).thenReturn(buildResult3);
 
         // Act
-        DiscogsMapResultDTO actualConvertListToMapForDTOResult = collectionsServiceImpl
-                .convertListToMapForDTO(discogsResultDTO);
+        DiscogsMapResultDTO actualConvertListToMapForDTOResult = discogsMappingServiceImpl
+                .convertEntriesToMapByTitle(discogsResultDTO);
 
         // Assert
         verify(discogsResultDTO).getResults();

@@ -40,6 +40,6 @@ discogs:
   release: releases/
   marketplaceCheck: marketplace/stats/
   agent: ${DISCOGS_AGENT}
-  page-size: 300
-  rate-limit: 50
+  page-size: 50
+  rate-limit: 60
   token: ${DISCOGS_TOKEN}

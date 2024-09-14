@@ -38,7 +38,8 @@ public class QueryProcessingService {
         return handleFuturesWithTimeout(futures, timeoutInSeconds);
     }
 
-    private List<CompletableFuture<DiscogsResultDTO>> createFuturesForQueries(final List<DiscogsQueryDTO> discogsQueryDTOList) {
+    private List<CompletableFuture<DiscogsResultDTO>> createFuturesForQueries(
+            final List<DiscogsQueryDTO> discogsQueryDTOList) {
         return discogsQueryDTOList.stream()
                 .map(query -> CompletableFuture.supplyAsync(() -> {
                     log.debug("Processing query: {}", query);
@@ -47,8 +48,9 @@ public class QueryProcessingService {
                 .toList();
     }
 
-    private List<DiscogsResultDTO> handleFuturesWithTimeout(final List<CompletableFuture<DiscogsResultDTO>> futures,
-                                                            final long timeoutInSeconds) {
+    private List<DiscogsResultDTO> handleFuturesWithTimeout(
+            final List<CompletableFuture<DiscogsResultDTO>> futures,
+            final long timeoutInSeconds) {
         return futures.stream()
                 .map(future -> getFutureResultWithTimeout(future, timeoutInSeconds))
                 .filter(Objects::nonNull)
@@ -56,8 +58,8 @@ public class QueryProcessingService {
                 .toList();
     }
 
-    private DiscogsResultDTO getFutureResultWithTimeout(final CompletableFuture<DiscogsResultDTO> future,
-                                                        final long timeoutInSeconds) {
+    private DiscogsResultDTO getFutureResultWithTimeout(
+            final CompletableFuture<DiscogsResultDTO> future, final long timeoutInSeconds) {
         try {
             return future.get(timeoutInSeconds, TimeUnit.SECONDS);
         } catch (final InterruptedException | ExecutionException e) {

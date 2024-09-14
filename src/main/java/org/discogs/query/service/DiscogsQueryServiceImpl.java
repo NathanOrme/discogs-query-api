@@ -3,6 +3,7 @@ package org.discogs.query.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.domain.DiscogsEntry;
+import org.discogs.query.domain.DiscogsMarketplaceResult;
 import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.enums.DiscogsFormats;
 import org.discogs.query.exceptions.DiscogsSearchException;
@@ -16,9 +17,8 @@ import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Implementation of {@link DiscogsQueryService} that interacts with the
@@ -138,9 +138,15 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
         DiscogsResult compResults = discogsAPIClient.getResultsForQuery(searchUrl);
         log.info("Received {} compilation results from Discogs API", compResults.getResults().size());
 
-        Set<DiscogsEntry> entries = new HashSet<>(results.getResults());
-        entries.addAll(compResults.getResults());
-        results.setResults(new ArrayList<>(entries));
+        List<DiscogsEntry> mergedResults = Stream.concat(
+                        results.getResults().stream(),
+                        compResults.getResults().stream()
+                )
+                .distinct()
+                .toList();
+
+        results.setResults(mergedResults);
+
 
         log.debug("Merged results with compilation results. Total results: {}", results.getResults().size());
     }
@@ -179,7 +185,7 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
             return;
         }
 
-        results.getResults().forEach(entry -> {
+        results.getResults().parallelStream().forEach(entry -> {
             try {
                 log.debug("Generating marketplace URL for entry: {}", entry);
                 String marketplaceUrl = discogsUrlBuilder.builldMarketplaceUrl(entry);
@@ -187,12 +193,7 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
                 var discogsMarketplaceResult = discogsAPIClient.getMarketplaceResultForQuery(marketplaceUrl);
 
                 if (discogsMarketplaceResult != null) {
-                    entry.setNumberForSale(discogsMarketplaceResult.getNumberForSale());
-                    var lowestPriceResult = discogsMarketplaceResult.getResult();
-                    if (lowestPriceResult != null) {
-                        entry.setLowestPrice(lowestPriceResult.getValue());
-                        log.debug("Amended lowest price for entry: {}", entry);
-                    }
+                    setLowestPriceResultAndNumberForSale(entry, discogsMarketplaceResult);
                 } else {
                     log.warn("Marketplace result is null for entry: {}", entry);
                 }
@@ -201,4 +202,30 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
             }
         });
     }
+
+    /**
+     * Updates the given {@link DiscogsEntry} with the lowest price and number for sale
+     * from the provided {@link DiscogsMarketplaceResult}.
+     *
+     * <p>This method sets the number of items for sale and the lowest price from the
+     * {@code DiscogsMarketplaceResult} to the corresponding fields in the {@code DiscogsEntry}.
+     * It also logs a debug message if a lowest price is set.</p>
+     *
+     * @param entry                    the {@link DiscogsEntry} object to be updated. It should be an instance
+     *                                 where the number of items for sale and the lowest price need to be set.
+     * @param discogsMarketplaceResult the {@link DiscogsMarketplaceResult} object containing
+     *                                 the number of items for sale and the lowest price result.
+     *                                 It should not be {@code null}. The lowest price is obtained
+     *                                 from the result inside this object.
+     */
+    private static void setLowestPriceResultAndNumberForSale(final DiscogsEntry entry,
+                                                             final DiscogsMarketplaceResult discogsMarketplaceResult) {
+        entry.setNumberForSale(discogsMarketplaceResult.getNumberForSale());
+        var lowestPriceResult = discogsMarketplaceResult.getResult();
+        if (lowestPriceResult != null) {
+            entry.setLowestPrice(lowestPriceResult.getValue());
+            log.debug("Amended lowest price for entry: {}", entry);
+        }
+    }
+
 }

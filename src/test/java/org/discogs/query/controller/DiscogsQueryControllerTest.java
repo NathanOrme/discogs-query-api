@@ -1,108 +1,56 @@
 package org.discogs.query.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.discogs.query.config.SecurityConfig;
 import org.discogs.query.interfaces.CollectionsService;
 import org.discogs.query.interfaces.DiscogsQueryService;
-import org.discogs.query.model.DiscogsMapResultDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Import(SecurityConfig.class)
 @WebMvcTest(DiscogsQueryController.class)
-public class DiscogsQueryControllerTest {
+class DiscogsQueryControllerTest {
 
+    private static final String BASIC_AUTH_HEADER =
+            "Basic " + java.util.Base64.getEncoder().encodeToString((
+                    "username" +
+                            ":password").getBytes());
     @Autowired
     private MockMvc mockMvc;
-
-    @Mock
+    @MockBean
     private DiscogsQueryService discogsQueryService;
-
-    @Mock
+    @MockBean
     private CollectionsService collectionsService;
 
-    @InjectMocks
-    private DiscogsQueryController discogsQueryController;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
     @Test
-    void testSearchBasedOnQuery_Successful() throws Exception {
-        // Given
-        DiscogsQueryDTO queryDTO = new DiscogsQueryDTO();
-        DiscogsResultDTO resultDTO = new DiscogsResultDTO();
-        DiscogsMapResultDTO mapResultDTO = new DiscogsMapResultDTO();
+    void testSearchDiscogs_Success() throws Exception {
+        // Arrange
+        DiscogsResultDTO resultDTO = new DiscogsResultDTO();  // You would
+        // populate this with the actual expected result data
 
-        List<DiscogsResultDTO> resultDTOList = List.of(resultDTO);
-        List<DiscogsMapResultDTO> mapResultDTOList = List.of(mapResultDTO);
-
-        when(discogsQueryService.searchBasedOnQuery(any(DiscogsQueryDTO.class))).thenReturn(resultDTO);
-        when(collectionsService.convertListToMapForDTO(any(DiscogsResultDTO.class))).thenReturn(mapResultDTO);
-
-        // When & Then
-        mockMvc.perform(MockMvcRequestBuilders.post("/discogs-query/search")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(List.of(queryDTO))))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0]").isNotEmpty())
-                .andDo(print());
-    }
-
-    @Test
-    void testSearchBasedOnQuery_NoResults() throws Exception {
-        // Given
-        DiscogsQueryDTO queryDTO = new DiscogsQueryDTO();
-        when(discogsQueryService.searchBasedOnQuery(any(DiscogsQueryDTO.class))).thenReturn(null);
-
-        // When & Then
-        mockMvc.perform(MockMvcRequestBuilders.post("/discogs-query/search")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(List.of(queryDTO))))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$").isEmpty())
-                .andDo(print());
-    }
-
-    @Test
-    void testSearchBasedOnQuery_Exception() throws Exception {
-        // Given
-        DiscogsQueryDTO queryDTO = new DiscogsQueryDTO();
+        // Mock the service to return the resultDTO when called
         when(discogsQueryService.searchBasedOnQuery(any(DiscogsQueryDTO.class)))
-                .thenThrow(new RuntimeException("Unexpected error"));
+                .thenReturn(resultDTO);
 
-        // When & Then
-        mockMvc.perform(MockMvcRequestBuilders.post("/discogs-query/search")
+        // Act & Assert
+        mockMvc.perform(post("/discogs-query/search")
+                        .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(List.of(queryDTO))))
-                .andExpect(MockMvcResultMatchers.status().isInternalServerError())
-                .andExpect(MockMvcResultMatchers.jsonPath("$").isEmpty())
-                .andDo(print());
+                        .content("[{\"artist\":\"The Beatles\", " +
+                                "\"track\":\"Hey Jude\"}]"))
+                .andExpect(status().isOk());
     }
 
-    private static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

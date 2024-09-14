@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,21 +37,42 @@ public class DiscogsQueryController {
     /**
      * Searches Discogs using the provided query data.
      *
-     * @param discogsQueryDTO the data transfer object containing the search
+     * @param discogsQueryDTO the data transfer objects containing the search
      *                        query details
-     * @return a {@link ResponseEntity} containing the search results wrapped
-     * in {@link DiscogsResultDTO}
+     * @return a {@link ResponseEntity} containing a list of {@link DiscogsMapResultDTO}
+     * wrapped in {@link HttpStatus#OK} if results are found, or an empty list if no results are found
      */
     @ResponseStatus(HttpStatus.OK)
     @PostMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<DiscogsMapResultDTO>> searchBasedOnQuery(
+    public ResponseEntity<List<DiscogsMapResultDTO>> search(
             @RequestBody @Valid final List<DiscogsQueryDTO> discogsQueryDTO) {
 
-        log.info("Received search request with {} queries",
-                discogsQueryDTO.size());
+        log.info("Received search request with {} queries", discogsQueryDTO.size());
 
-        List<DiscogsResultDTO> resultDTOList = discogsQueryDTO.stream()
+        List<DiscogsResultDTO> resultDTOList = processQueries(discogsQueryDTO);
+
+        if (resultDTOList.isEmpty()) {
+            log.warn("No results found for the provided queries");
+            return ResponseEntity.noContent().build();
+        }
+
+        int size = calculateSizeOfResults(resultDTOList);
+        log.info("Returning {} results: {}", size, resultDTOList);
+
+        List<DiscogsMapResultDTO> resultMapDTOList = mapResultsToDTO(resultDTOList);
+
+        return ResponseEntity.ok().body(resultMapDTOList);
+    }
+
+    /**
+     * Processes each query and retrieves the results from the Discogs API.
+     *
+     * @param discogsQueryDTOList the list of {@link DiscogsQueryDTO} objects to process
+     * @return a list of {@link DiscogsResultDTO} objects
+     */
+    private List<DiscogsResultDTO> processQueries(final List<DiscogsQueryDTO> discogsQueryDTOList) {
+        return discogsQueryDTOList.stream()
                 .map(query -> {
                     log.debug("Processing query: {}", query);
                     return discogsQueryService.searchBasedOnQuery(query);
@@ -60,19 +80,27 @@ public class DiscogsQueryController {
                 .filter(Objects::nonNull)
                 .peek(result -> log.debug("Received result: {}", result))
                 .toList();
-
-        if (resultDTOList.isEmpty()) {
-            log.warn("No results found for the provided queries");
-            return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
-        }
-        int size = calculateSizeOfResults(resultDTOList);
-        log.info("Returning {} results: {}", size, resultDTOList);
-        var resultMapDTOList = resultDTOList.parallelStream()
-                .map(collectionsService::convertListToMapForDTO)
-                .toList();
-        return ResponseEntity.status(HttpStatus.OK).body(resultMapDTOList);
     }
 
+    /**
+     * Maps the {@link DiscogsResultDTO} objects to {@link DiscogsMapResultDTO} objects
+     * using the {@link CollectionsService}.
+     *
+     * @param resultDTOList the list of {@link DiscogsResultDTO} objects
+     * @return a list of {@link DiscogsMapResultDTO} objects
+     */
+    private List<DiscogsMapResultDTO> mapResultsToDTO(final List<DiscogsResultDTO> resultDTOList) {
+        return resultDTOList.parallelStream()
+                .map(collectionsService::convertListToMapForDTO)
+                .toList();
+    }
+
+    /**
+     * Calculates the total number of results across all {@link DiscogsResultDTO} objects.
+     *
+     * @param resultDTOList the list of {@link DiscogsResultDTO} objects
+     * @return the total number of results
+     */
     private int calculateSizeOfResults(final List<DiscogsResultDTO> resultDTOList) {
         return resultDTOList.parallelStream()
                 .filter(discogsResultDTO -> discogsResultDTO.getResults() != null)

@@ -1,4 +1,4 @@
-package org.discogs.query.service;
+package org.discogs.query.service.discogs;
 
 import org.discogs.query.domain.DiscogsEntry;
 import org.discogs.query.domain.DiscogsResult;

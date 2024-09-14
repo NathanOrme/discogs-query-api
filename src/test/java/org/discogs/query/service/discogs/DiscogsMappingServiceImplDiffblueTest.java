@@ -1,4 +1,4 @@
-package org.discogs.query.service;
+package org.discogs.query.service.discogs;
 
 import org.discogs.query.enums.DiscogCountries;
 import org.discogs.query.enums.DiscogsTypes;

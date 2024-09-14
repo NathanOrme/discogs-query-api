@@ -30,6 +30,9 @@ logging:
     org.hibernate: WARN             # Reduce verbosity of Hibernate logs
     org.discogs.query: DEBUG
 
+queries:
+  timeout: 59
+
 discogs:
   url: https://api.discogs.com/
   baseUrl: https://www.discogs.com

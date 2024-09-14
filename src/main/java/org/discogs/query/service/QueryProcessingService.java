@@ -13,7 +13,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.stream.Collectors;
 
 /**
  * Service for processing Discogs queries using asynchronous tasks.
@@ -45,7 +44,7 @@ public class QueryProcessingService {
                     log.debug("Processing query: {}", query);
                     return discogsQueryService.searchBasedOnQuery(query);
                 }))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private List<DiscogsResultDTO> handleFuturesWithTimeout(final List<CompletableFuture<DiscogsResultDTO>> futures,
@@ -54,7 +53,7 @@ public class QueryProcessingService {
                 .map(future -> getFutureResultWithTimeout(future, timeoutInSeconds))
                 .filter(Objects::nonNull)
                 .peek(result -> log.debug("Received result: {}", result))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private DiscogsResultDTO getFutureResultWithTimeout(final CompletableFuture<DiscogsResultDTO> future,

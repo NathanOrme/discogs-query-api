@@ -118,8 +118,8 @@ jobs:
           DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
           DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}
 
-      - name: Build with Maven and buildpacks
-        run: mvn clean install package javadoc:javadoc spring-boot:build-image
+      - name: Build with Maven
+        run: mvn clean install package javadoc:javadoc
         env:
           DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
           DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}

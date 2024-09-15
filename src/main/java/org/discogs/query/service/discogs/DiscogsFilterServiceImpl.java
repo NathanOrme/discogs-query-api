@@ -14,6 +14,7 @@ import org.discogs.query.interfaces.DiscogsFilterService;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.springframework.stereotype.Service;
 
+import java.text.Normalizer;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -34,6 +35,28 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
     private final StringHelper stringHelper;
 
     /**
+     * Normalizes the input string by performing the following operations:
+     * 1. Decomposes accented characters into base characters.
+     * 2. Removes all combining diacritical marks.
+     * 3. Replaces " and" with "&".
+     * 4. Removes apostrophes.
+     * 5. Replaces hyphens with spaces.
+     * 6. Normalizes whitespace by trimming and replacing multiple spaces with a single space.
+     *
+     * @param input the string to be normalized
+     * @return a normalized string with standard formatting
+     */
+    public static String normalizeString(String input) {
+        return Normalizer.normalize(input, Normalizer.Form.NFD)
+                .replaceAll("[\\p{InCombiningDiacriticalMarks}]", "") // Remove accents
+                .replace(" and ", " & ")                               // Replace " and" with "&"
+                .replace("'", "")                                    // Remove apostrophes
+                .replace("-", " ")                                   // Replace hyphens with spaces
+                .replaceAll("\\s+", " ")                             // Normalize whitespace
+                .trim();                                             // Trim leading and trailing spaces
+    }
+    
+    /**
      * Checks if the artist name from the query DTO matches the given artist
      * name.
      *
@@ -44,7 +67,10 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
      */
     private static boolean isArtistNameMatching(final DiscogsQueryDTO discogsQueryDTO,
                                                 final String artistName) {
-        return artistName.equalsIgnoreCase(discogsQueryDTO.getArtist());
+        String normalizedArtistName = normalizeString(artistName);
+        String normalizedDiscogsArtist = normalizeString(discogsQueryDTO.getArtist());
+
+        return normalizedArtistName.equalsIgnoreCase(normalizedDiscogsArtist);
     }
 
     /**

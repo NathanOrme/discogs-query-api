@@ -213,3 +213,13 @@ input[type="checkbox"] {
     text-align: center;
     transition: background-color 0.3s, color 0.3s;
 }
+
+#cheapest-item-section {
+    margin-top: 20px;
+}
+
+.cheapest-item {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+}

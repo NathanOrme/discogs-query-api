@@ -9,9 +9,7 @@ package org.discogs.query.model;
  * the details of the error encountered.
  */
 public record ErrorMessageDTO(
-        /**
-         * The message describing the error.
-         */
+
         String errorMessage
 ) {
 }

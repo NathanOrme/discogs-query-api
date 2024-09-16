@@ -61,7 +61,7 @@ class DiscogsQueryControllerTest {
     void testSearchBasedOnQuery_Successful() throws Exception {
         // Arrange
         DiscogsResultDTO resultDTO = new DiscogsResultDTO(DISCOGS_QUERY_DTO, List.of());
-        DiscogsMapResultDTO mapResultDTO = new DiscogsMapResultDTO(DISCOGS_QUERY_DTO, Map.of());
+        DiscogsMapResultDTO mapResultDTO = new DiscogsMapResultDTO(DISCOGS_QUERY_DTO, Map.of(), null);
 
         List<DiscogsResultDTO> resultDTOList = List.of(resultDTO);
         List<DiscogsMapResultDTO> mapResultDTOList = List.of(mapResultDTO);

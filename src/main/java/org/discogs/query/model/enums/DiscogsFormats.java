@@ -26,6 +26,11 @@ public enum DiscogsFormats {
     ALBUM("album"),
 
     /**
+     * Represents the "cd" format.
+     */
+    CD("cd"),
+
+    /**
      * Represents the "vinyl" format.
      */
     VINYL("vinyl"),

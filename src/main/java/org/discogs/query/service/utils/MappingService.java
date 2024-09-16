@@ -10,6 +10,7 @@ import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -50,11 +51,15 @@ public class MappingService {
 
         log.info("Converting Discogs entries to map by title");
 
+        DiscogsEntryDTO cheapestItem = discogsResultDTO.results().stream()
+                .min(Comparator.comparing(DiscogsEntryDTO::lowestPrice))
+                .orElse(null);
+
         Map<String, List<DiscogsEntryDTO>> mapOfEntries = discogsResultDTO.results()
                 .stream()
                 .collect(Collectors.groupingBy(DiscogsEntryDTO::title));
 
-        return new DiscogsMapResultDTO(discogsResultDTO.searchQuery(), mapOfEntries);
+        return new DiscogsMapResultDTO(discogsResultDTO.searchQuery(), mapOfEntries, cheapestItem);
     }
 
     /**

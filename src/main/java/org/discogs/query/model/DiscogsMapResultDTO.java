@@ -9,15 +9,11 @@ import java.util.Map;
  * match the search criteria.
  */
 public record DiscogsMapResultDTO(
-        /**
-         * The {@link DiscogsQueryDTO} query used to obtain the results.
-         */
+        
         DiscogsQueryDTO searchQuery,
 
-        /**
-         * A Map of {@link DiscogsEntryDTO} objects that represent the search
-         * results. The key is the title of the release.
-         */
-        Map<String, List<DiscogsEntryDTO>> results
+        Map<String, List<DiscogsEntryDTO>> results,
+
+        DiscogsEntryDTO cheapestItem
 ) {
 }

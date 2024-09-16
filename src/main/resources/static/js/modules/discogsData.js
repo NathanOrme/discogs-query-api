@@ -9,6 +9,7 @@ export const discogFormats = [
   { value: "", text: "Any Format" },
   { value: "vinyl", text: "Vinyl" },
   { value: "album", text: "Album" },
+  { value: "cd", text: "CD" },
   { value: "lp", text: "LP" },
   { value: "compilation", text: "Compilation" },
   { value: "album vinyl", text: "Album Vinyl" },

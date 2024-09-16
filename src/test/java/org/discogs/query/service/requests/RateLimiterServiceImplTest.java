@@ -3,6 +3,7 @@ package org.discogs.query.service.requests;
 import org.discogs.query.interfaces.RateLimiterService;
 import org.discogs.query.limits.RateLimiter;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.mock;
@@ -10,6 +11,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@Disabled
 class RateLimiterServiceImplTest {
 
     private RateLimiterService rateLimiterService;

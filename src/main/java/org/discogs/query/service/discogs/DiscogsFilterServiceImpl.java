@@ -12,9 +12,9 @@ import org.discogs.query.helpers.StringHelper;
 import org.discogs.query.interfaces.DiscogsAPIClient;
 import org.discogs.query.interfaces.DiscogsFilterService;
 import org.discogs.query.model.DiscogsQueryDTO;
+import org.discogs.query.service.NormalizationService;
 import org.springframework.stereotype.Service;
 
-import java.text.Normalizer;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -33,29 +33,8 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
     private final DiscogsAPIClient discogsAPIClient;
     private final DiscogsUrlBuilder discogsUrlBuilder;
     private final StringHelper stringHelper;
+    private final NormalizationService normalizationService;
 
-    /**
-     * Normalizes the input string by performing the following operations:
-     * 1. Decomposes accented characters into base characters.
-     * 2. Removes all combining diacritical marks.
-     * 3. Replaces " and" with "&".
-     * 4. Removes apostrophes.
-     * 5. Replaces hyphens with spaces.
-     * 6. Normalizes whitespace by trimming and replacing multiple spaces with a single space.
-     *
-     * @param input the string to be normalized
-     * @return a normalized string with standard formatting
-     */
-    public static String normalizeString(String input) {
-        return Normalizer.normalize(input, Normalizer.Form.NFD)
-                .replaceAll("[\\p{InCombiningDiacriticalMarks}]", "") // Remove accents
-                .replace(" and ", " & ")                               // Replace " and" with "&"
-                .replace("'", "")                                    // Remove apostrophes
-                .replace("-", " ")                                   // Replace hyphens with spaces
-                .replaceAll("\\s+", " ")                             // Normalize whitespace
-                .trim();                                             // Trim leading and trailing spaces
-    }
-    
     /**
      * Checks if the artist name from the query DTO matches the given artist
      * name.
@@ -65,10 +44,10 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
      * @param artistName      the artist name to compare with.
      * @return {@code true} if the artist names match, otherwise {@code false}.
      */
-    private static boolean isArtistNameMatching(final DiscogsQueryDTO discogsQueryDTO,
-                                                final String artistName) {
-        String normalizedArtistName = normalizeString(artistName);
-        String normalizedDiscogsArtist = normalizeString(discogsQueryDTO.getArtist());
+    private boolean isArtistNameMatching(final DiscogsQueryDTO discogsQueryDTO,
+                                         final String artistName) {
+        String normalizedArtistName = normalizationService.normalizeString(artistName);
+        String normalizedDiscogsArtist = normalizationService.normalizeString(discogsQueryDTO.artist());
 
         return normalizedArtistName.equalsIgnoreCase(normalizedDiscogsArtist);
     }
@@ -86,8 +65,8 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
      */
     private static boolean isTrackEqualToOrContains(final DiscogsQueryDTO discogsQueryDTO, final Track track) {
         String title = track.getTitle().toLowerCase();
-        return title.equalsIgnoreCase(discogsQueryDTO.getTrack())
-                || title.contains(discogsQueryDTO.getTrack().toLowerCase());
+        return title.equalsIgnoreCase(discogsQueryDTO.track())
+                || title.contains(discogsQueryDTO.track().toLowerCase());
     }
 
     /**
@@ -197,10 +176,10 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
                         discogsEntry.getId());
                 return false;
             }
-            boolean isOnAlbum = !stringHelper.isNotVariousArtist(discogsQueryDTO.getArtist())
+            boolean isOnAlbum = !stringHelper.isNotVariousArtist(discogsQueryDTO.artist())
                     || filterArtists(discogsQueryDTO, release);
 
-            if (stringHelper.isNotNullOrBlank(discogsQueryDTO.getTrack()) && isOnAlbum) {
+            if (stringHelper.isNotNullOrBlank(discogsQueryDTO.track()) && isOnAlbum) {
                 log.info("Track specified in query. Applying filter and " +
                         "sorting results...");
                 isOnAlbum = filterTracks(discogsQueryDTO, release);

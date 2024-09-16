@@ -1,4 +1,4 @@
-package org.discogs.query.service;
+package org.discogs.query.service.requests;
 
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.interfaces.RetryService;
@@ -16,6 +16,10 @@ public class RetryServiceImpl implements RetryService {
     private static final int RETRY_COUNT = 3;
     private static final long RETRY_DELAY = 2; // in seconds
 
+    private static boolean isAttemptNumberLessThanMaximum(final int attempt) {
+        return attempt <= RETRY_COUNT;
+    }
+
     @Override
     public <T> T executeWithRetry(final Callable<T> action,
                                   final String actionDescription) throws Exception {
@@ -31,10 +35,6 @@ public class RetryServiceImpl implements RetryService {
             }
         }
         throw new IllegalStateException("Retry logic should never reach here.");
-    }
-
-    private static boolean isAttemptNumberLessThanMaximum(final int attempt) {
-        return attempt <= RETRY_COUNT;
     }
 
     private int handleRetryCount(final String actionDescription,

@@ -53,17 +53,15 @@ class DiscogsQueryServiceImplTest {
     @BeforeEach
     void setUp() {
         // Initialize test data
-        discogsQueryDTO = new DiscogsQueryDTO();
-        discogsQueryDTO.setArtist("Test Artist");
-        discogsQueryDTO.setTrack("Test Track");
-        discogsQueryDTO.setFormat(DiscogsFormats.COMP.getFormat());
+        discogsQueryDTO = new DiscogsQueryDTO("Test Artist", null, "Test Track",
+                DiscogsFormats.COMP.getFormat(), null, null, null);
 
         DiscogsEntry entry = new DiscogsEntry();
         entry.setUri("/test-uri");
         discogsResult = new DiscogsResult();
         discogsResult.setResults(Collections.singletonList(entry));
 
-        discogsResultDTO = new DiscogsResultDTO();
+        discogsResultDTO = new DiscogsResultDTO(null, null);
     }
 
     @Test
@@ -81,7 +79,7 @@ class DiscogsQueryServiceImplTest {
         verify(discogsAPIClient, times(1)).getResultsForQuery(anyString());
 
         // Validate results
-        assertEquals(new DiscogsResultDTO().toString(), result.toString());
+        assertEquals(new DiscogsResultDTO(null, null).toString(), result.toString());
         // Empty DTO is expected on exception
     }
 
@@ -103,8 +101,6 @@ class DiscogsQueryServiceImplTest {
 
     @Test
     void testIsCompilationFormat() {
-        // Given
-        discogsQueryDTO.setFormat(DiscogsFormats.COMP.getFormat());
 
         // When
         boolean isCompilation =

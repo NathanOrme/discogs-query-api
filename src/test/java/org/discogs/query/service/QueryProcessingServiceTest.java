@@ -27,9 +27,10 @@ class QueryProcessingServiceTest {
     }
 
     @Test
-    void processQueries_Success() throws Exception {
-        DiscogsQueryDTO queryDTO = new DiscogsQueryDTO();
-        DiscogsResultDTO resultDTO = new DiscogsResultDTO();
+    void processQueries_Success() {
+        DiscogsQueryDTO queryDTO = new DiscogsQueryDTO(null, null, null, null,
+                null, null, null);
+        DiscogsResultDTO resultDTO = new DiscogsResultDTO(null, null);
 
         when(discogsQueryService.searchBasedOnQuery(queryDTO)).thenReturn(resultDTO);
 

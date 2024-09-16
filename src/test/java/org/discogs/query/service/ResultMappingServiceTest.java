@@ -28,8 +28,8 @@ class ResultMappingServiceTest {
 
     @Test
     void mapResultsToDTO() {
-        DiscogsResultDTO resultDTO = new DiscogsResultDTO();
-        DiscogsMapResultDTO mapResultDTO = new DiscogsMapResultDTO();
+        DiscogsResultDTO resultDTO = new DiscogsResultDTO(null, null);
+        DiscogsMapResultDTO mapResultDTO = new DiscogsMapResultDTO(null, null);
 
         when(discogsMappingService.convertEntriesToMapByTitle(resultDTO)).thenReturn(mapResultDTO);
 

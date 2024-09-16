@@ -32,12 +32,11 @@ import java.util.List;
 @RequestMapping("discogs-query")
 public class DiscogsQueryController {
 
-    @Value("${queries.timeout:59}")
-    private int timeoutInSeconds;
-
     private final QueryProcessingService queryProcessingService;
     private final ResultMappingService resultMappingService;
     private final ResultCalculationService resultCalculationService;
+    @Value("${queries.timeout:59}")
+    private int timeoutInSeconds;
 
     /**
      * Searches Discogs using the provided query data.

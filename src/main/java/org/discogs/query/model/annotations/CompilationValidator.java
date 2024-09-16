@@ -19,11 +19,11 @@ public class CompilationValidator
         implements ConstraintValidator<CompilationValidation, DiscogsQueryDTO> {
 
     private static boolean isFormatBlankOrNotCompilation(final DiscogsQueryDTO discogsQueryDTO) {
-        if (discogsQueryDTO.getFormat() == null) {
+        if (discogsQueryDTO.format() == null) {
             return true;
         }
-        return !discogsQueryDTO.getFormat().equalsIgnoreCase(DiscogsFormats.COMP.getFormat())
-                && !discogsQueryDTO.getFormat()
+        return !discogsQueryDTO.format().equalsIgnoreCase(DiscogsFormats.COMP.getFormat())
+                && !discogsQueryDTO.format()
                 .equalsIgnoreCase(DiscogsFormats.VINYL_COMPILATION.getFormat());
     }
 
@@ -48,10 +48,10 @@ public class CompilationValidator
         if (isFormatBlankOrNotCompilation(discogsQueryDTO)) {
             return true;
         }
-        if (isNotBlankBlank(discogsQueryDTO.getTrack())) {
+        if (isNotBlankBlank(discogsQueryDTO.track())) {
             return true;
         }
-        return isNotBlankBlank(discogsQueryDTO.getAlbum());
+        return isNotBlankBlank(discogsQueryDTO.album());
 
     }
 }

@@ -4,7 +4,6 @@ import org.discogs.query.domain.DiscogsEntry;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,35 +15,21 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 class DiscogsUrlBuilderTest {
 
+    // Hardcoded values for testing
+    private final String discogsBaseUrl = "https://api.discogs.com";
+    private final String releaseEndpoint = "/releases/";
+    private final String token = "dummyToken";
     private DiscogsUrlBuilder discogsUrlBuilder;
-
-    @Value("${discogs.url}")
-    private String discogsBaseUrl;
-
-    @Value("${discogs.search}")
-    private String discogsSearchEndpoint;
-
-    @Value("${discogs.release}")
-    private String releaseEndpoint;
-
-    @Value("${discogs.page-size}")
-    private int pageSize;
-
-    @Value("${discogs.token}")
-    private String token;
-
-    @Value("${discogs.baseUrl}")
-    private String discogsWebsiteBaseUrl;
 
     @BeforeEach
     public void setUp() {
         buildDiscogsUriBuilder();
         discogsUrlBuilder.discogsBaseUrl = discogsBaseUrl;
-        discogsUrlBuilder.discogsSearchEndpoint = discogsSearchEndpoint;
+        discogsUrlBuilder.discogsSearchEndpoint = "/search";
         discogsUrlBuilder.releaseEndpoint = releaseEndpoint;
-        discogsUrlBuilder.pageSize = pageSize;
+        discogsUrlBuilder.pageSize = 50;
         discogsUrlBuilder.token = token;
-        discogsUrlBuilder.discogsWebsiteBaseUrl = discogsWebsiteBaseUrl;
+        discogsUrlBuilder.discogsWebsiteBaseUrl = "https://www.discogs.com";
     }
 
     private void buildDiscogsUriBuilder() {
@@ -58,14 +43,19 @@ class DiscogsUrlBuilderTest {
      */
     @Test
     void testBuildSearchUrl() {
-        DiscogsQueryDTO queryDTO = new DiscogsQueryDTO();
-        queryDTO.setArtist("Artist A");
-        queryDTO.setTrack("Track A");
-        queryDTO.setAlbum("Album A");
-        queryDTO.setFormat("Format A");
+        DiscogsQueryDTO queryDTO = new DiscogsQueryDTO(
+                "Artist A", // artist
+                "Album A",  // album
+                "Track A",  // track
+                "Format A", // format
+                null,       // country
+                null,       // types
+                null        // barcode
+        );
 
         String actualUrl = discogsUrlBuilder.buildSearchUrl(queryDTO);
         assertNotNull(actualUrl);
+        // Add more assertions here to validate the constructed URL
     }
 
     /**
@@ -73,8 +63,9 @@ class DiscogsUrlBuilderTest {
      */
     @Test
     void testBuildReleaseUrl() {
-        DiscogsEntry entry = new DiscogsEntry();
-        entry.setId(123);
+        DiscogsEntry entry = DiscogsEntry.builder()
+                .id(123)
+                .build();
 
         String expectedUrl = discogsBaseUrl.concat(releaseEndpoint)
                 .concat("123")
@@ -85,4 +76,3 @@ class DiscogsUrlBuilderTest {
         assertEquals(expectedUrl, actualUrl);
     }
 }
-

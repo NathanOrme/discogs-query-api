@@ -147,11 +147,11 @@ public class DiscogsUrlBuilder {
      * @return true if the barcode parameter was added, false otherwise
      */
     private boolean handleBarcodeParam(final UriComponentsBuilder uriBuilder, final DiscogsQueryDTO discogsQueryDTO) {
-        if (stringHelper.isNotNullOrBlank(discogsQueryDTO.getBarcode())) {
+        if (stringHelper.isNotNullOrBlank(discogsQueryDTO.barcode())) {
             log.info("Barcode supplied, only using that for entry");
             uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
                     DiscogQueryParams.BARCODE.getQueryType(),
-                    discogsQueryDTO.getBarcode());
+                    discogsQueryDTO.barcode());
             return true; // Barcode handled
         }
         return false; // No barcode handled
@@ -167,27 +167,27 @@ public class DiscogsUrlBuilder {
     private void handleOtherParams(final UriComponentsBuilder uriBuilder, final DiscogsQueryDTO discogsQueryDTO) {
         uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
                 DiscogQueryParams.ARTIST.getQueryType(),
-                discogsQueryDTO.getArtist());
+                discogsQueryDTO.artist());
 
         uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
                 DiscogQueryParams.ALBUM.getQueryType(),
-                discogsQueryDTO.getAlbum());
+                discogsQueryDTO.album());
 
         uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
                 DiscogQueryParams.TRACK.getQueryType(),
-                discogsQueryDTO.getTrack());
+                discogsQueryDTO.track());
 
         uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
                 DiscogQueryParams.FORMAT.getQueryType(),
-                discogsQueryDTO.getFormat());
+                discogsQueryDTO.format());
 
-        if (discogsQueryDTO.getCountry() != null) {
+        if (discogsQueryDTO.country() != null) {
             uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
                     DiscogQueryParams.COUNTRY.getQueryType(),
-                    discogsQueryDTO.getCountry().getCountryName());
+                    discogsQueryDTO.country().getCountryName());
         }
 
-        DiscogsTypes types = discogsQueryDTO.getTypes();
+        DiscogsTypes types = discogsQueryDTO.types();
         if (types == null || DiscogsTypes.UNKNOWN == types) {
             types = DiscogsTypes.RELEASE;
         }
@@ -207,14 +207,14 @@ public class DiscogsUrlBuilder {
         log.debug("Building compilation search URL with parameters: {}",
                 discogsQueryDTO);
 
-        DiscogsQueryDTO dtoForUrl = DiscogsQueryDTO.builder()
-                .country(discogsQueryDTO.getCountry())
-                .format(discogsQueryDTO.getFormat().replace(" ", "+"))
-                .types(discogsQueryDTO.getTypes())
-                .album(discogsQueryDTO.getAlbum())
-                .track(discogsQueryDTO.getTrack())
-                .artist("Various")
-                .build();
+        DiscogsQueryDTO dtoForUrl = new DiscogsQueryDTO(
+                "Various",
+                discogsQueryDTO.album(),
+                discogsQueryDTO.track(),
+                discogsQueryDTO.format().replace(" ", "+"),
+                discogsQueryDTO.country(),
+                discogsQueryDTO.types(),
+                discogsQueryDTO.barcode());
 
         UriComponentsBuilder uriBuilder =
                 UriComponentsBuilder.fromHttpUrl(discogsBaseUrl.concat(discogsSearchEndpoint))

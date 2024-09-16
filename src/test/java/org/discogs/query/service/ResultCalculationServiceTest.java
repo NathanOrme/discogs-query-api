@@ -22,8 +22,9 @@ class ResultCalculationServiceTest {
 
     @Test
     void calculateSizeOfResults() {
-        DiscogsResultDTO resultDTO = new DiscogsResultDTO();
-        resultDTO.setResults(Collections.singletonList(new DiscogsEntryDTO()));
+        DiscogsResultDTO resultDTO = new DiscogsResultDTO(null, List.of(
+                new DiscogsEntryDTO(1, null, null, null,
+                        null, null, null, null, null, null)));
 
         List<DiscogsResultDTO> resultDTOList = Collections.singletonList(resultDTO);
 

@@ -6,6 +6,8 @@ import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.helpers.DiscogsUrlBuilder;
 import org.discogs.query.interfaces.DiscogsAPIClient;
 import org.discogs.query.model.DiscogsQueryDTO;
+import org.discogs.query.model.enums.DiscogCountries;
+import org.discogs.query.model.enums.DiscogsTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -51,9 +53,8 @@ class DiscogsFilterServiceImplTest {
         when(discogsUrlBuilder.buildReleaseUrl(entry)).thenReturn("url");
         when(discogsAPIClient.getRelease("url")).thenReturn(release);
 
-        DiscogsRelease actualRelease =
-                discogsFilterService.getReleaseDetails(entry);
-        assertEquals(actualRelease, release);
+        DiscogsRelease actualRelease = discogsFilterService.getReleaseDetails(entry);
+        assertEquals(release, actualRelease);
     }
 
     /**
@@ -61,9 +62,15 @@ class DiscogsFilterServiceImplTest {
      */
     @Test
     void testFilterAndSortResults() {
-        DiscogsQueryDTO queryDTO = new DiscogsQueryDTO();
-        queryDTO.setArtist("Artist");
-        queryDTO.setTrack("Track");
+        DiscogsQueryDTO queryDTO = new DiscogsQueryDTO(
+                "Artist",
+                "Track",
+                "Album",
+                "Format",
+                DiscogCountries.UK,
+                DiscogsTypes.RELEASE,
+                "Barcode"
+        );
 
         DiscogsEntry entry = new DiscogsEntry();
         entry.setId(123);

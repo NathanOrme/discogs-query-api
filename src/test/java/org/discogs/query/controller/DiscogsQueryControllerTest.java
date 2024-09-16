@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -35,10 +36,15 @@ class DiscogsQueryControllerTest {
     private static final String BASIC_AUTH_HEADER =
             "Basic " + java.util.Base64.getEncoder().encodeToString(("username:password").getBytes());
 
-    private static final DiscogsQueryDTO DISCOGS_QUERY_DTO = DiscogsQueryDTO.builder()
-            .artist("War")
-            .track("Low Rider")
-            .build();
+    private static final DiscogsQueryDTO DISCOGS_QUERY_DTO = new DiscogsQueryDTO(
+            "War", // artist
+            null,  // album
+            "Low Rider", // track
+            null,  // format
+            null,  // country
+            null,  // types
+            null   // barcode
+    );
 
     @Autowired
     private MockMvc mockMvc;
@@ -55,8 +61,8 @@ class DiscogsQueryControllerTest {
     @Test
     void testSearchBasedOnQuery_Successful() throws Exception {
         // Arrange
-        DiscogsResultDTO resultDTO = new DiscogsResultDTO();
-        DiscogsMapResultDTO mapResultDTO = new DiscogsMapResultDTO();
+        DiscogsResultDTO resultDTO = new DiscogsResultDTO(DISCOGS_QUERY_DTO, List.of());
+        DiscogsMapResultDTO mapResultDTO = new DiscogsMapResultDTO(DISCOGS_QUERY_DTO, Map.of());
 
         List<DiscogsResultDTO> resultDTOList = List.of(resultDTO);
         List<DiscogsMapResultDTO> mapResultDTOList = List.of(mapResultDTO);
@@ -77,6 +83,7 @@ class DiscogsQueryControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0]").exists())
                 .andDo(print());
     }
+
 
     @Test
     void testSearchBasedOnQuery_NoResults() throws Exception {

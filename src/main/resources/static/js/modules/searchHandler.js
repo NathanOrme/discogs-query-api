@@ -1,5 +1,5 @@
 import { displayResults, displayError } from "./resultsHandler.js";
-import { displayCheapestItems } from './cheapestItem.js'; // Correct the import path
+import { displayCheapestItems } from './cheapestItem.js';
 
 function getApiUrl() {
   const hostname = window.location.hostname;
@@ -61,7 +61,7 @@ function handleSearchFormSubmit(event) {
       if (!response.ok) {
         return response.text().then((errorMessage) => {
           throw new Error(
-            `Server responded with status ${response.status}: ${errorMessage}`,
+            `Server responded with status ${response.status}: ${errorMessage}`
           );
         });
       }
@@ -70,17 +70,27 @@ function handleSearchFormSubmit(event) {
     .then((data) => {
       console.log("API Response:", data);
 
-      // Extract cheapest items from the API response
-      const cheapestItems = data.cheapestItems || [];
-      displayCheapestItems(cheapestItems);
+      // Assuming data is an array of DiscogsMapResultDTO objects
+      if (Array.isArray(data) && data.length > 0) {
+        // Extract cheapest items from each result
+        const cheapestItems = data
+          .map(result => result.cheapestItem)
+          .filter(item => item !== null);
 
-      // Display search results
-      displayResults(data);
+        // Display the cheapest items
+        displayCheapestItems(cheapestItems);
+
+      } else {
+        // No results
+        displayCheapestItems([]);
+      }
+        // Display the results
+        displayResults(data);
     })
     .catch((error) => {
       console.error("Error:", error);
       displayError(
-        "There was an issue with your request. Please try again later.",
+        "There was an issue with your request. Please try again later."
       );
     })
     .finally(() => {

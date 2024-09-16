@@ -227,6 +227,7 @@ input[type="checkbox"] {
     margin-top: 0;
 }
 
+/* Header for Cheapest Item Section */
 .cheapest-item-header {
     cursor: pointer;
     padding: 12px;
@@ -245,6 +246,7 @@ input[type="checkbox"] {
     background-color: #0056b3;
 }
 
+/* Content for Cheapest Item Section */
 .cheapest-item-content {
     border-top: 1px solid #ccc;
     padding-top: 10px;
@@ -264,4 +266,55 @@ input[type="checkbox"] {
 .cheapest-item h3 {
     margin: 0 0 10px;
     color: #333;
+}
+
+/* Details inside each Cheapest Item */
+.cheapest-item .details {
+    font-size: 14px;
+    color: #555;
+}
+
+.cheapest-item .details p {
+    margin: 5px 0;
+}
+
+.cheapest-item .details a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.cheapest-item .details a:hover {
+    text-decoration: underline;
+}
+
+/* Ensuring visibility and layout */
+.cheapest-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* View Item Button Styles */
+.view-item-button {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    border: 1px solid transparent;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.view-item-button:hover {
+    background-color: #0056b3;
+    color: #fff;
+}
+
+.view-item-button:focus {
+    outline: none;
 }

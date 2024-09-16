@@ -21,8 +21,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * Implementation of {@link DiscogsQueryService} that interacts with the
- * Discogs API.
+ * Implementation of {@link DiscogsQueryService} that interacts with the Discogs API.
  * This service handles search requests and processes the API responses.
  */
 @Slf4j
@@ -120,7 +119,7 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
         } catch (final DiscogsSearchException e) {
             log.error("DiscogsSearchException while processing query: {}. Error: {}", discogsQueryDTO, e.getMessage()
                     , e);
-            return new DiscogsResultDTO(null, null); // Return an empty DTO or handle as per your error strategy
+            return new DiscogsResultDTO(null, null);
         } catch (final Exception e) {
             log.error(UNEXPECTED_ISSUE_OCCURRED + " while processing query: {}. Error: {}", discogsQueryDTO,
                     e.getMessage(), e);
@@ -165,17 +164,16 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
         DiscogsResult compResults = discogsAPIClient.getResultsForQuery(searchUrl);
         log.info("Received {} compilation results from Discogs API", compResults.getResults().size());
 
-        List<DiscogsEntry> mergedResults = Stream.concat(
-                        results.getResults().stream(),
-                        compResults.getResults().stream()
-                )
-                .distinct()
-                .toList();
+        List<DiscogsEntry> mergedResults = concatStreams(results, compResults).distinct().toList();
 
         results.setResults(mergedResults);
 
 
         log.debug("Merged results with compilation results. Total results: {}", results.getResults().size());
+    }
+
+    private static Stream<DiscogsEntry> concatStreams(final DiscogsResult results, final DiscogsResult compResults) {
+        return Stream.concat(results.getResults().stream(), compResults.getResults().stream());
     }
 
     /**

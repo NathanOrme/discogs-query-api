@@ -9,7 +9,7 @@ import org.discogs.query.interfaces.DiscogsFilterService;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.discogs.query.model.enums.DiscogsFormats;
-import org.discogs.query.service.utils.MappingService;
+import org.discogs.query.service.MappingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

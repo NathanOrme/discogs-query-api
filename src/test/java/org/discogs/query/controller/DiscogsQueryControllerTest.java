@@ -5,9 +5,9 @@ import org.discogs.query.config.SecurityConfig;
 import org.discogs.query.model.DiscogsMapResultDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
+import org.discogs.query.service.MappingService;
 import org.discogs.query.service.QueryProcessingService;
 import org.discogs.query.service.ResultCalculationService;
-import org.discogs.query.service.utils.MappingService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.List;
 import java.util.Map;
 
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -66,7 +67,7 @@ class DiscogsQueryControllerTest {
         List<DiscogsResultDTO> resultDTOList = List.of(resultDTO);
         List<DiscogsMapResultDTO> mapResultDTOList = List.of(mapResultDTO);
 
-        when(queryProcessingService.processQueries(anyList()))
+        when(queryProcessingService.processQueries(anyList(), anyInt()))
                 .thenReturn(resultDTOList);
         when(resultCalculationService.calculateSizeOfResults(resultDTOList))
                 .thenReturn(resultDTOList.size());
@@ -87,7 +88,7 @@ class DiscogsQueryControllerTest {
     @Test
     void testSearchBasedOnQuery_NoResults() throws Exception {
         // Arrange
-        when(queryProcessingService.processQueries(anyList()))
+        when(queryProcessingService.processQueries(anyList(), anyInt()))
                 .thenReturn(List.of());
         when(resultCalculationService.calculateSizeOfResults(anyList()))
                 .thenReturn(0);
@@ -104,7 +105,7 @@ class DiscogsQueryControllerTest {
     @Test
     void testSearchBasedOnQuery_Exception() throws Exception {
         // Arrange
-        when(queryProcessingService.processQueries(anyList()))
+        when(queryProcessingService.processQueries(anyList(), anyInt()))
                 .thenThrow(new RuntimeException("Test Exception"));
 
         // Act & Assert

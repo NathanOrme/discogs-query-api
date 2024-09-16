@@ -25,7 +25,7 @@ EXPOSE 8080
 
 # Add metadata labels
 LABEL org.opencontainers.image.title="Discogs Query Application" \
-      org.opencontainers.image.version="2.0" \
+      org.opencontainers.image.version="1.0" \
       org.opencontainers.image.description="A Java application for querying Discogs" \
       org.opencontainers.image.authors="Nathan Orme"
 

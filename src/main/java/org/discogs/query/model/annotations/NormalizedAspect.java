@@ -3,7 +3,7 @@ package org.discogs.query.model.annotations;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.discogs.query.service.utils.NormalizationService;
+import org.discogs.query.service.NormalizationService;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;

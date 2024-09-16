@@ -2,7 +2,7 @@ package org.discogs.query.model.annotations;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.discogs.query.service.utils.NormalizationService;
+import org.discogs.query.service.NormalizationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;

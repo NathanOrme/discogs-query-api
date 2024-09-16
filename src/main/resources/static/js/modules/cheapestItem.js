@@ -34,7 +34,7 @@ export function displayCheapestItems(items) {
             const details = document.createElement('div');
             details.className = 'details';
             details.innerHTML = `
-                <p><strong>Price:</strong> ${item.lowestPrice !== null ? item.lowestPrice.toFixed(2) : 'N/A'}</p>
+                <p><strong>Price:</strong> ${item.lowestPrice !== null ? "£" + item.lowestPrice.toFixed(2) : 'N/A'}</p>
                 <p><strong>Number For Sale:</strong> ${item.numberForSale !== null ? item.numberForSale : 'N/A'}</p>
                 <p><strong>Country:</strong> ${item.country || 'N/A'}</p>
                 <a href="${item.uri || '#'}" target="_blank">View Item</a>

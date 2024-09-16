@@ -6,10 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.model.DiscogsMapResultDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
-import org.discogs.query.service.MappingService;
 import org.discogs.query.service.QueryProcessingService;
 import org.discogs.query.service.ResultCalculationService;
-import org.springframework.beans.factory.annotation.Value;
+import org.discogs.query.service.utils.MappingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,9 +37,6 @@ public class DiscogsQueryController {
     private final MappingService mappingService;
     private final ResultCalculationService resultCalculationService;
 
-    @Value("${queries.timeout:59}")
-    private int timeoutInSeconds;
-
     /**
      * Searches Discogs using the provided query data.
      *
@@ -56,7 +52,7 @@ public class DiscogsQueryController {
 
         log.info("Received search request with {} queries", discogsQueryDTO.size());
 
-        List<DiscogsResultDTO> resultDTOList = queryProcessingService.processQueries(discogsQueryDTO, timeoutInSeconds);
+        List<DiscogsResultDTO> resultDTOList = queryProcessingService.processQueries(discogsQueryDTO);
 
         if (resultDTOList.isEmpty()) {
             log.warn("No results found for the provided queries");

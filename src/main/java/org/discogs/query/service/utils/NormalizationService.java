@@ -1,4 +1,4 @@
-package org.discogs.query.service;
+package org.discogs.query.service.utils;
 
 import org.springframework.stereotype.Service;
 

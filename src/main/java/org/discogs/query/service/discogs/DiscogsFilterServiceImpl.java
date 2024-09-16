@@ -12,7 +12,7 @@ import org.discogs.query.helpers.StringHelper;
 import org.discogs.query.interfaces.DiscogsAPIClient;
 import org.discogs.query.interfaces.DiscogsFilterService;
 import org.discogs.query.model.DiscogsQueryDTO;
-import org.discogs.query.service.NormalizationService;
+import org.discogs.query.service.utils.NormalizationService;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;

@@ -51,12 +51,12 @@ public class VariousArtistsValidator
 
         boolean isVariousArtist = Arrays.stream(DiscogsVarious.values())
                 .map(DiscogsVarious::getVariousName)
-                .anyMatch(value -> value.equalsIgnoreCase(discogsQueryDTO.getArtist()));
+                .anyMatch(value -> value.equalsIgnoreCase(discogsQueryDTO.artist()));
 
         if (isVariousArtist) {
             log.info("DTO artist is identified as a 'Various Artists' type.");
-            boolean isTrackValid = isNotBlankBlank(discogsQueryDTO.getTrack());
-            boolean isAlbumValid = isNotBlankBlank(discogsQueryDTO.getAlbum());
+            boolean isTrackValid = isNotBlankBlank(discogsQueryDTO.track());
+            boolean isAlbumValid = isNotBlankBlank(discogsQueryDTO.album());
             if (isTrackValid) {
                 log.info("Validation completed successfully.");
                 return true;

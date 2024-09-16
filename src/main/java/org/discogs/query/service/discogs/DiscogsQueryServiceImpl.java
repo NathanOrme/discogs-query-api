@@ -45,7 +45,7 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
      * @return true if the format is a compilation, false otherwise
      */
     static boolean isCompilationFormat(final DiscogsQueryDTO discogsQueryDTO) {
-        String format = discogsQueryDTO.getFormat();
+        String format = discogsQueryDTO.format();
         String compFormat = DiscogsFormats.COMP.getFormat();
         String vinylCompFormat = DiscogsFormats.VINYL_COMPILATION.getFormat();
         boolean isCompilation = compFormat.equalsIgnoreCase(format) || vinylCompFormat.equalsIgnoreCase(format);
@@ -70,11 +70,11 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
             DiscogsResult results = performSearch(searchUrl);
             log.info("Received {} results from Discogs API", results.getResults().size());
 
-            if (stringHelper.isNotNullOrBlank(discogsQueryDTO.getBarcode())) {
+            if (stringHelper.isNotNullOrBlank(discogsQueryDTO.barcode())) {
                 return resultMappingService.mapObjectToDTO(results, discogsQueryDTO);
             }
 
-            if (isCompilationFormat(discogsQueryDTO) && !stringHelper.isNotNullOrBlank(discogsQueryDTO.getAlbum())) {
+            if (isCompilationFormat(discogsQueryDTO) && !stringHelper.isNotNullOrBlank(discogsQueryDTO.album())) {
                 log.info("Processing compilation search...");
                 processCompilationSearch(discogsQueryDTO, results);
                 log.info("Total results after processing compilation search: {}", results.getResults().size());
@@ -95,7 +95,7 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
         } catch (final DiscogsSearchException e) {
             log.error("DiscogsSearchException while processing query: {}. Error: {}", discogsQueryDTO, e.getMessage()
                     , e);
-            return new DiscogsResultDTO(); // Return an empty DTO or handle as per your error strategy
+            return new DiscogsResultDTO(null, null); // Return an empty DTO or handle as per your error strategy
         } catch (final Exception e) {
             log.error(UNEXPECTED_ISSUE_OCCURRED + " while processing query: {}. Error: {}", discogsQueryDTO,
                     e.getMessage(), e);

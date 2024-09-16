@@ -34,14 +34,12 @@ public class DiscogsMappingServiceImpl implements DiscogsMappingService {
 
         log.info("Converting Discogs entries to map by title");
 
-        DiscogsMapResultDTO discogsMapResultDTO = new DiscogsMapResultDTO();
-        discogsMapResultDTO.setSearchQuery(discogsResultDTO.getSearchQuery());
-
-        Map<String, List<DiscogsEntryDTO>> mapOfEntries = discogsResultDTO.getResults()
+        // Create a map of entries by grouping DiscogsEntryDTO objects by their title
+        Map<String, List<DiscogsEntryDTO>> mapOfEntries = discogsResultDTO.results()
                 .stream()
-                .collect(Collectors.groupingBy(DiscogsEntryDTO::getTitle));
+                .collect(Collectors.groupingBy(DiscogsEntryDTO::title));
 
-        discogsMapResultDTO.setResults(mapOfEntries);
-        return discogsMapResultDTO;
+        // Create a new instance of DiscogsMapResultDTO with the search query and results
+        return new DiscogsMapResultDTO(discogsResultDTO.searchQuery(), mapOfEntries);
     }
 }

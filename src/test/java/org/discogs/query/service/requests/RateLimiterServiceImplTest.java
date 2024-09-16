@@ -1,4 +1,4 @@
-package org.discogs.query.service;
+package org.discogs.query.service.requests;
 
 import org.discogs.query.interfaces.RateLimiterService;
 import org.discogs.query.limits.RateLimiter;

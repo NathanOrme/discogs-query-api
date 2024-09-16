@@ -19,8 +19,8 @@ public class ResultCalculationService {
      */
     public int calculateSizeOfResults(final List<DiscogsResultDTO> resultDTOList) {
         return resultDTOList.parallelStream()
-                .filter(discogsResultDTO -> discogsResultDTO.getResults() != null)
-                .mapToInt(discogsResultDTO -> discogsResultDTO.getResults().size())
+                .filter(discogsResultDTO -> discogsResultDTO.results() != null)
+                .mapToInt(discogsResultDTO -> discogsResultDTO.results().size())
                 .sum();
     }
 }

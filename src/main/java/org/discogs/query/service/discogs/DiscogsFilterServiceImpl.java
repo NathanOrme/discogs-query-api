@@ -46,7 +46,7 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
      * @param input the string to be normalized
      * @return a normalized string with standard formatting
      */
-    public static String normalizeString(String input) {
+    public static String normalizeString(final String input) {
         return Normalizer.normalize(input, Normalizer.Form.NFD)
                 .replaceAll("[\\p{InCombiningDiacriticalMarks}]", "") // Remove accents
                 .replace(" and ", " & ")                               // Replace " and" with "&"
@@ -55,7 +55,7 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
                 .replaceAll("\\s+", " ")                             // Normalize whitespace
                 .trim();                                             // Trim leading and trailing spaces
     }
-    
+
     /**
      * Checks if the artist name from the query DTO matches the given artist
      * name.
@@ -68,7 +68,7 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
     private static boolean isArtistNameMatching(final DiscogsQueryDTO discogsQueryDTO,
                                                 final String artistName) {
         String normalizedArtistName = normalizeString(artistName);
-        String normalizedDiscogsArtist = normalizeString(discogsQueryDTO.getArtist());
+        String normalizedDiscogsArtist = normalizeString(discogsQueryDTO.artist());
 
         return normalizedArtistName.equalsIgnoreCase(normalizedDiscogsArtist);
     }
@@ -86,8 +86,8 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
      */
     private static boolean isTrackEqualToOrContains(final DiscogsQueryDTO discogsQueryDTO, final Track track) {
         String title = track.getTitle().toLowerCase();
-        return title.equalsIgnoreCase(discogsQueryDTO.getTrack())
-                || title.contains(discogsQueryDTO.getTrack().toLowerCase());
+        return title.equalsIgnoreCase(discogsQueryDTO.track())
+                || title.contains(discogsQueryDTO.track().toLowerCase());
     }
 
     /**
@@ -197,10 +197,10 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
                         discogsEntry.getId());
                 return false;
             }
-            boolean isOnAlbum = !stringHelper.isNotVariousArtist(discogsQueryDTO.getArtist())
+            boolean isOnAlbum = !stringHelper.isNotVariousArtist(discogsQueryDTO.artist())
                     || filterArtists(discogsQueryDTO, release);
 
-            if (stringHelper.isNotNullOrBlank(discogsQueryDTO.getTrack()) && isOnAlbum) {
+            if (stringHelper.isNotNullOrBlank(discogsQueryDTO.track()) && isOnAlbum) {
                 log.info("Track specified in query. Applying filter and " +
                         "sorting results...");
                 isOnAlbum = filterTracks(discogsQueryDTO, release);

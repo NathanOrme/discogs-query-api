@@ -50,9 +50,10 @@ public class ResultMappingService {
 
         try {
             ModelMapper modelMapper = new ModelMapper();
-            var resultDTO = modelMapper.map(discogsResult,
-                    DiscogsResultDTO.class);
-            resultDTO.setSearchQuery(discogsQueryDTO);
+            var resultDTO = modelMapper.map(discogsResult, DiscogsResultDTO.class);
+
+            // Now, create a new instance of DiscogsResultDTO with the searchQuery set
+            resultDTO = new DiscogsResultDTO(discogsQueryDTO, resultDTO.results());
 
             log.debug("Mapping completed successfully for query: {}",
                     discogsQueryDTO);

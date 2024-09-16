@@ -35,7 +35,7 @@ class DiscogsQueryControllerAdviceTest {
         assertNotNull(response);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals("Marketplace error", response.getBody().getErrorMessage());
+        assertEquals("Marketplace error", response.getBody().errorMessage());
     }
 
     @Test
@@ -50,7 +50,7 @@ class DiscogsQueryControllerAdviceTest {
         assertNotNull(response);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals("Search error", response.getBody().getErrorMessage());
+        assertEquals("Search error", response.getBody().errorMessage());
     }
 
     @Test
@@ -65,7 +65,7 @@ class DiscogsQueryControllerAdviceTest {
         assertNotNull(response);
         assertEquals(HttpStatus.REQUEST_TIMEOUT, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals("Request took too long to process.", response.getBody().getErrorMessage());
+        assertEquals("Request took too long to process.", response.getBody().errorMessage());
     }
 
     @Test
@@ -80,7 +80,7 @@ class DiscogsQueryControllerAdviceTest {
         assertNotNull(response);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals("IO error occurred", response.getBody().getErrorMessage());
+        assertEquals("IO error occurred", response.getBody().errorMessage());
     }
 
     @Test
@@ -95,6 +95,6 @@ class DiscogsQueryControllerAdviceTest {
         assertNotNull(response);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals("An unexpected error occurred: Generic error occurred", response.getBody().getErrorMessage());
+        assertEquals("An unexpected error occurred: Generic error occurred", response.getBody().errorMessage());
     }
 }

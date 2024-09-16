@@ -18,8 +18,7 @@ class DiscogsQueryDTOTest {
 
     @BeforeEach
     void setUp() {
-        try (ValidatorFactory factory =
-                     Validation.buildDefaultValidatorFactory()) {
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
             validator = factory.getValidator();
         }
     }
@@ -27,59 +26,63 @@ class DiscogsQueryDTOTest {
     @Test
     void testValidDiscogsQueryDTO() {
         // Arrange
-        DiscogsQueryDTO queryDTO = DiscogsQueryDTO.builder()
-                .artist("The Beatles")
-                .track("Hey Jude")
-                .format("Vinyl")
-                .build();
+        DiscogsQueryDTO queryDTO = new DiscogsQueryDTO(
+                "The Beatles",
+                "Hey Jude",
+                null,  // Format can be null or empty
+                null,  // Country can be null
+                null,  // Barcode can be null
+                null,  // Types can be null
+                "Vinyl" // Optional format
+        );
 
         // Act
-        Set<ConstraintViolation<DiscogsQueryDTO>> violations =
-                validator.validate(queryDTO);
+        Set<ConstraintViolation<DiscogsQueryDTO>> violations = validator.validate(queryDTO);
 
         // Assert
-        assertTrue(violations.isEmpty(), "There should be no validation " +
-                "violations");
+        assertTrue(violations.isEmpty(), "There should be no validation violations");
     }
 
     @Test
     void testInvalidDiscogsQueryDTO_EmptyArtist() {
         // Arrange
-        DiscogsQueryDTO queryDTO = DiscogsQueryDTO.builder()
-                .artist("")
-                .track("Hey Jude")
-                .format("Vinyl")
-                .build();
+        DiscogsQueryDTO queryDTO = new DiscogsQueryDTO(
+                "",  // Invalid artist
+                "Hey Jude",
+                "Vinyl",
+                null,
+                null,
+                null,
+                null
+        );
 
         // Act
-        Set<ConstraintViolation<DiscogsQueryDTO>> violations =
-                validator.validate(queryDTO);
+        Set<ConstraintViolation<DiscogsQueryDTO>> violations = validator.validate(queryDTO);
 
         // Assert
-        assertEquals(1, violations.size(), "There should be one validation " +
-                "violation");
-        ConstraintViolation<DiscogsQueryDTO> violation =
-                violations.iterator().next();
-        assertEquals("must not be blank", violation.getMessage(), "Artist " +
-                "field should not be blank");
-        assertEquals("artist", violation.getPropertyPath().toString(),
-                "Violation should be on the artist field");
+        assertEquals(1, violations.size(), "There should be one validation violation");
+        ConstraintViolation<DiscogsQueryDTO> violation = violations.iterator().next();
+        assertEquals("must not be blank", violation.getMessage(), "Artist field should not be blank");
+        assertEquals("artist", violation.getPropertyPath().toString(), "Violation should be on the artist field");
     }
 
     @Test
     void testValidDiscogsQueryDTO_WithoutFormat() {
         // Arrange
-        DiscogsQueryDTO queryDTO = DiscogsQueryDTO.builder()
-                .artist("The Beatles")
-                .track("Hey Jude")
-                .build();
+        DiscogsQueryDTO queryDTO = new DiscogsQueryDTO(
+                "The Beatles",
+                "Hey Jude",
+                null,  // Format can be null
+                null,
+                null,
+                null,
+                null
+        );
 
         // Act
-        Set<ConstraintViolation<DiscogsQueryDTO>> violations =
-                validator.validate(queryDTO);
+        Set<ConstraintViolation<DiscogsQueryDTO>> violations = validator.validate(queryDTO);
 
         // Assert
-        assertTrue(violations.isEmpty(), "There should be no validation " +
-                "violations");
+        assertTrue(violations.isEmpty(), "There should be no validation violations");
     }
 }

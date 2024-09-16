@@ -1,4 +1,4 @@
-package org.discogs.query.service;
+package org.discogs.query.service.requests;
 
 import org.discogs.query.interfaces.HttpRequestService;
 import org.junit.jupiter.api.BeforeEach;

@@ -2,13 +2,8 @@ package org.discogs.query.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import org.discogs.query.model.annotations.CompilationValidation;
+import org.discogs.query.model.annotations.Normalized;
 import org.discogs.query.model.annotations.VariousArtistsValidation;
 import org.discogs.query.model.enums.DiscogCountries;
 import org.discogs.query.model.enums.DiscogsTypes;
@@ -18,53 +13,49 @@ import org.discogs.query.model.enums.DiscogsTypes;
  * This class encapsulates the search criteria such as artist, track, and
  * optional format.
  */
-@Getter
-@Setter
-@Builder
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @CompilationValidation
 @VariousArtistsValidation
-public class DiscogsQueryDTO {
+public record DiscogsQueryDTO(
+        /**
+         * The name of the artist to search for. This field is required and
+         * cannot be blank.
+         */
+        @NotBlank
+        @Normalized
+        String artist,
 
-    /**
-     * The name of the artist to search for. This field is required and
-     * cannot be blank.
-     */
-    @NotBlank
-    private String artist;
+        /**
+         * The name of the album to search for.
+         */
+        @Normalized
+        String album,
 
-    /**
-     * The name of the album to search for
-     */
-    private String album;
+        /**
+         * The name of the track to search for.
+         */
+        @Normalized
+        String track,
 
-    /**
-     * The name of the track to search for.
-     */
-    private String track;
+        /**
+         * The format of the track (e.g., vinyl, CD, etc.). This field is optional.
+         */
+        String format,
 
-    /**
-     * The format of the track (e.g., vinyl, CD, etc.). This field is optional.
-     */
-    private String format;
+        /**
+         * The country for the Discogs entry.
+         */
+        DiscogCountries country,
 
-    /**
-     * The country for the Discogs entry
-     */
-    private DiscogCountries country;
+        /**
+         * Type of results we want to filter by.
+         * Refer to {@link DiscogsTypes}.
+         */
+        DiscogsTypes types,
 
-    /**
-     * Type of results we want to filter by.
-     * Refer to {@link DiscogsTypes}
-     */
-    private DiscogsTypes types;
-
-    /**
-     * Barcode for the entry to search for.
-     */
-    private String barcode;
-
+        /**
+         * Barcode for the entry to search for.
+         */
+        String barcode
+) {
 }

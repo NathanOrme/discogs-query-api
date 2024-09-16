@@ -36,22 +36,6 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
     private final NormalizationService normalizationService;
 
     /**
-     * Checks if the artist name from the query DTO matches the given artist
-     * name.
-     *
-     * @param discogsQueryDTO the search query data transfer object
-     *                        containing the artist name.
-     * @param artistName      the artist name to compare with.
-     * @return {@code true} if the artist names match, otherwise {@code false}.
-     */
-    private boolean isArtistNameMatching(final DiscogsQueryDTO discogsQueryDTO, final String artistName) {
-        String normalizedArtistName = normalizationService.normalizeString(artistName);
-        String normalizedDiscogsArtist = normalizationService.normalizeString(discogsQueryDTO.artist());
-
-        return normalizedArtistName.equalsIgnoreCase(normalizedDiscogsArtist);
-    }
-
-    /**
      * Checks if the track title from the query DTO matches or is contained
      * in the given track title.
      *
@@ -66,6 +50,22 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
         String title = track.getTitle().toLowerCase();
         return title.equalsIgnoreCase(discogsQueryDTO.track())
                 || title.contains(discogsQueryDTO.track().toLowerCase());
+    }
+
+    /**
+     * Checks if the artist name from the query DTO matches the given artist
+     * name.
+     *
+     * @param discogsQueryDTO the search query data transfer object
+     *                        containing the artist name.
+     * @param artistName      the artist name to compare with.
+     * @return {@code true} if the artist names match, otherwise {@code false}.
+     */
+    private boolean isArtistNameMatching(final DiscogsQueryDTO discogsQueryDTO, final String artistName) {
+        String normalizedArtistName = normalizationService.normalizeString(artistName);
+        String normalizedDiscogsArtist = normalizationService.normalizeString(discogsQueryDTO.artist());
+
+        return normalizedArtistName.equalsIgnoreCase(normalizedDiscogsArtist);
     }
 
     /**

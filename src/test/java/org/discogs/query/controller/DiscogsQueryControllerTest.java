@@ -5,9 +5,9 @@ import org.discogs.query.config.SecurityConfig;
 import org.discogs.query.model.DiscogsMapResultDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
+import org.discogs.query.service.MappingService;
 import org.discogs.query.service.QueryProcessingService;
 import org.discogs.query.service.ResultCalculationService;
-import org.discogs.query.service.ResultMappingService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +53,7 @@ class DiscogsQueryControllerTest {
     private QueryProcessingService queryProcessingService;
 
     @MockBean
-    private ResultMappingService resultMappingService;
+    private MappingService mappingService;
 
     @MockBean
     private ResultCalculationService resultCalculationService;
@@ -71,7 +71,7 @@ class DiscogsQueryControllerTest {
                 .thenReturn(resultDTOList);
         when(resultCalculationService.calculateSizeOfResults(resultDTOList))
                 .thenReturn(resultDTOList.size());
-        when(resultMappingService.mapResultsToDTO(resultDTOList))
+        when(mappingService.mapResultsToDTO(resultDTOList))
                 .thenReturn(mapResultDTOList);
 
         // Act & Assert

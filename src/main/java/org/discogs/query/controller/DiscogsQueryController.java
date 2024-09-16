@@ -6,9 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.model.DiscogsMapResultDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
+import org.discogs.query.service.MappingService;
 import org.discogs.query.service.QueryProcessingService;
 import org.discogs.query.service.ResultCalculationService;
-import org.discogs.query.service.ResultMappingService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,9 +33,9 @@ import java.util.List;
 public class DiscogsQueryController {
 
     private static final String APPLICATION_JSON_VALUE = MediaType.APPLICATION_JSON_VALUE;
-    
+
     private final QueryProcessingService queryProcessingService;
-    private final ResultMappingService resultMappingService;
+    private final MappingService mappingService;
     private final ResultCalculationService resultCalculationService;
 
     @Value("${queries.timeout:59}")
@@ -66,7 +66,7 @@ public class DiscogsQueryController {
         int size = resultCalculationService.calculateSizeOfResults(resultDTOList);
         log.info("Returning {} results: {}", size, resultDTOList);
 
-        List<DiscogsMapResultDTO> resultMapDTOList = resultMappingService.mapResultsToDTO(resultDTOList);
+        List<DiscogsMapResultDTO> resultMapDTOList = mappingService.mapResultsToDTO(resultDTOList);
 
         return ResponseEntity.ok().body(resultMapDTOList);
     }

@@ -9,7 +9,7 @@ import org.discogs.query.interfaces.DiscogsFilterService;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.discogs.query.model.enums.DiscogsFormats;
-import org.discogs.query.service.ResultMappingService;
+import org.discogs.query.service.MappingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,7 +35,7 @@ class DiscogsQueryServiceImplTest {
     private DiscogsAPIClient discogsAPIClient;
 
     @Mock
-    private ResultMappingService resultMappingService;
+    private MappingService mappingService;
 
     @Mock
     private DiscogsUrlBuilder discogsUrlBuilder;
@@ -47,8 +47,6 @@ class DiscogsQueryServiceImplTest {
     private DiscogsQueryServiceImpl discogsQueryServiceImpl;
 
     private DiscogsQueryDTO discogsQueryDTO;
-    private DiscogsResult discogsResult;
-    private DiscogsResultDTO discogsResultDTO;
 
     @BeforeEach
     void setUp() {
@@ -58,10 +56,9 @@ class DiscogsQueryServiceImplTest {
 
         DiscogsEntry entry = new DiscogsEntry();
         entry.setUri("/test-uri");
-        discogsResult = new DiscogsResult();
+        DiscogsResult discogsResult = new DiscogsResult();
         discogsResult.setResults(Collections.singletonList(entry));
 
-        discogsResultDTO = new DiscogsResultDTO(null, null);
     }
 
     @Test

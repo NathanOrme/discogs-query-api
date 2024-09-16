@@ -14,7 +14,7 @@ import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.discogs.query.model.enums.DiscogsFormats;
-import org.discogs.query.service.ResultMappingService;
+import org.discogs.query.service.MappingService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
     private static final String UNEXPECTED_ISSUE_OCCURRED = "Unexpected issue occurred";
 
     private final DiscogsAPIClient discogsAPIClient;
-    private final ResultMappingService resultMappingService;
+    private final MappingService mappingService;
     private final DiscogsUrlBuilder discogsUrlBuilder;
     private final DiscogsFilterService discogsFilterService;
     private final StringHelper stringHelper;
@@ -96,7 +96,7 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
             log.info("Received {} results from Discogs API", results.getResults().size());
 
             if (stringHelper.isNotNullOrBlank(discogsQueryDTO.barcode())) {
-                return resultMappingService.mapObjectToDTO(results, discogsQueryDTO);
+                return mappingService.mapObjectToDTO(results, discogsQueryDTO);
             }
 
             if (isCompilationFormat(discogsQueryDTO) && !stringHelper.isNotNullOrBlank(discogsQueryDTO.album())) {
@@ -113,7 +113,7 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
             getLowestPriceOnMarketplace(results);
             discogsFilterService.filterOutEmptyLowestPrice(results);
 
-            DiscogsResultDTO resultDTO = resultMappingService.mapObjectToDTO(results, discogsQueryDTO);
+            DiscogsResultDTO resultDTO = mappingService.mapObjectToDTO(results, discogsQueryDTO);
             log.info("Search processing completed successfully for query: {}", discogsQueryDTO);
 
             return resultDTO;

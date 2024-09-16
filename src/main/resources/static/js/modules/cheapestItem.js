@@ -1,17 +1,49 @@
-export function displayCheapestItems(results) {
-    const container = document.getElementById('cheapest-items-container');
-    container.innerHTML = '';
+// modules/cheapestItem.js
 
-    results.forEach(result => {
-        if (result.cheapestItem) {
-            const itemElement = document.createElement('div');
-            itemElement.className = 'cheapest-item';
-            itemElement.innerHTML = `
-                <h3>${result.cheapestItem.title}</h3>
-                <p>Price: $${result.cheapestItem.lowestPrice}</p>
-                <p><a href="${result.cheapestItem.url}" target="_blank">View Item</a></p>
-            `;
-            container.appendChild(itemElement);
-        }
+/**
+ * Function to create and display the "Cheapest Item" section.
+ * @param {Array} items - Array of items where each item contains title, price, seller, and url.
+ */
+export function displayCheapestItems(items) {
+    const container = document.getElementById('cheapest-item-section');
+    container.innerHTML = ''; // Clear any existing content
+
+    if (items.length === 0) {
+        container.innerHTML = '<p>No items found.</p>';
+        return;
+    }
+
+    const section = document.createElement('div');
+    section.className = 'cheapest-item-section'; // Apply specific class for cheapest item section
+
+    const header = document.createElement('div');
+    header.className = 'cheapest-item-header';
+    header.innerHTML = '<h2>Cheapest Item for Each Query</h2>';
+    section.appendChild(header);
+
+    const content = document.createElement('div');
+    content.className = 'cheapest-item-content';
+
+    items.forEach(item => {
+        const itemContainer = document.createElement('div');
+        itemContainer.className = 'cheapest-item'; // Apply class for each item
+
+        const title = document.createElement('h3');
+        title.textContent = item.title;
+        itemContainer.appendChild(title);
+
+        const details = document.createElement('div');
+        details.className = 'details';
+        details.innerHTML = `
+            <p><strong>Price:</strong> ${item.price}</p>
+            <p><strong>Seller:</strong> ${item.seller}</p>
+            <a href="${item.url}" target="_blank">View Item</a>
+        `;
+        itemContainer.appendChild(details);
+
+        content.appendChild(itemContainer);
     });
+
+    section.appendChild(content);
+    container.appendChild(section);
 }

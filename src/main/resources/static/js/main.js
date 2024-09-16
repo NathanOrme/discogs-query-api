@@ -1,7 +1,6 @@
 import { createQueryFields } from "./modules/queryFields.js";
 import { handleSearchFormSubmit } from "./modules/searchHandler.js";
 import { displayResults, displayError } from "./modules/resultsHandler.js";
-import { displayCheapestItems } from './modules/cheapestItem.js';
 import "./modules/dark-mode.js";
 
 const queriesContainer = document.getElementById("queriesContainer");

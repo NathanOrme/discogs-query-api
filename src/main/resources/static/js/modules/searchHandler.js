@@ -1,5 +1,5 @@
-// /js/modules/searchHandler.js
 import { displayResults, displayError } from "./resultsHandler.js";
+import { displayCheapestItems } from './cheapestItem.js'; // Correct the import path
 
 function getApiUrl() {
   const hostname = window.location.hostname;
@@ -69,6 +69,12 @@ function handleSearchFormSubmit(event) {
     })
     .then((data) => {
       console.log("API Response:", data);
+
+      // Extract cheapest items from the API response
+      const cheapestItems = data.cheapestItems || [];
+      displayCheapestItems(cheapestItems);
+
+      // Display search results
       displayResults(data);
     })
     .catch((error) => {

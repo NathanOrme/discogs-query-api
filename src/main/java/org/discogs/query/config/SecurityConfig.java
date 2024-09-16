@@ -26,42 +26,32 @@ public class SecurityConfig {
      * <p>
      * This method sets up security configurations, including:
      * <ul>
-     *     <li>Disabling CSRF (Cross-Site Request Forgery) protection, which
-     *     is typically used
-     *     to prevent CSRF attacks. This is often disabled for stateless APIs
+     *     <li>Disabling CSRF (Cross-Site Request Forgery) protection, which is typically used to prevent CSRF
+     *     attacks. This is often disabled for stateless APIs
      *     .</li>
-     *     <li>Requiring authentication for all
-     *     incoming requests to ensure that only authenticated
+     *     <li>Requiring authentication for all incoming requests to ensure that only authenticated
      *     users can access any part of the application.</li>
-     *     <li>Using basic HTTP authentication,
-     *     which involves a simple authentication mechanism
+     *     <li>Using basic HTTP authentication, which involves a simple authentication mechanism
      *     using a username and password sent in HTTP headers.</li>
-     *     <li>Configuring session management to be stateless,
-     *     meaning the server will not maintain
+     *     <li>Configuring session management to be stateless, meaning the server will not maintain
      *     any session state between requests, which is common for REST APIs
      *     .</li>
-     *     <li>Setting up CORS (Cross-Origin Resource Sharing)
-     *     to allow requests from specified origins
-     *     and methods, which is necessary for enabling front-end
-     *     applications running on different
+     *     <li>Setting up CORS (Cross-Origin Resource Sharing) to allow requests from specified origins
+     *     and methods, which is necessary for enabling front-end applications running on different
      *     origins to interact with this backend service.</li>
      * </ul>
      *
-     * @param http The {@link HttpSecurity} object
-     *             used to configure security settings for the application.
+     * @param http The {@link HttpSecurity} object used to configure security settings for the application.
      * @return A {@link SecurityFilterChain} containing
      * the configured security settings for the application.
-     * @throws Exception If an error occurs during the configuration of
-     *                   security settings.
+     * @throws Exception If an error occurs during the configuration of security settings.
      */
     @Bean
     public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll()
-                )
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // Stateless session management
+                .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
+                // Stateless session management
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
 }

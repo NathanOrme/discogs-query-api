@@ -8,6 +8,7 @@ import org.discogs.query.model.DiscogsMapResultDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.record.RecordModule;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,7 +50,7 @@ public class ResultMappingService {
                 "query: {}", discogsQueryDTO);
 
         try {
-            ModelMapper modelMapper = new ModelMapper();
+            ModelMapper modelMapper = new ModelMapper().registerModule(new RecordModule());
             var resultDTO = modelMapper.map(discogsResult, DiscogsResultDTO.class);
 
             // Now, create a new instance of DiscogsResultDTO with the searchQuery set

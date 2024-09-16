@@ -44,8 +44,7 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
      * @param artistName      the artist name to compare with.
      * @return {@code true} if the artist names match, otherwise {@code false}.
      */
-    private boolean isArtistNameMatching(final DiscogsQueryDTO discogsQueryDTO,
-                                         final String artistName) {
+    private boolean isArtistNameMatching(final DiscogsQueryDTO discogsQueryDTO, final String artistName) {
         String normalizedArtistName = normalizationService.normalizeString(artistName);
         String normalizedDiscogsArtist = normalizationService.normalizeString(discogsQueryDTO.artist());
 
@@ -81,10 +80,8 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
      *                        sorted.
      */
     @Override
-    public void filterAndSortResults(final DiscogsQueryDTO discogsQueryDTO,
-                                     final DiscogsResult results) {
-        log.info("Filtering and sorting results for query: {}",
-                discogsQueryDTO);
+    public void filterAndSortResults(final DiscogsQueryDTO discogsQueryDTO, final DiscogsResult results) {
+        log.info("Filtering and sorting results for query: {}", discogsQueryDTO);
 
         var filteredAndSortedResults = results.getResults().parallelStream()
                 .filter(entry -> filterIfTrackOnAlbum(entry, discogsQueryDTO))
@@ -93,8 +90,8 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
                         e2.getLowestPrice()))
                 .toList();
 
-        log.info("Filtered and sorted {} results out of {}",
-                filteredAndSortedResults.size(), results.getResults().size());
+        log.info("Filtered and sorted {} results out of {}", filteredAndSortedResults.size(),
+                results.getResults().size());
         results.setResults(filteredAndSortedResults);
     }
 
@@ -120,11 +117,9 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
                     discogsEntry.getId());
             return release;
         } catch (final Exception e) {
-            log.error("Error retrieving release details for entry ID {}",
-                    discogsEntry.getId(), e);
-            throw new DiscogsSearchException("Failed to retrieve release " +
-                    "details for entry ID " +
-                    discogsEntry.getId(), e);
+            log.error("Error retrieving release details for entry ID {}", discogsEntry.getId(), e);
+            throw new DiscogsSearchException("Failed to retrieve release details for entry ID "
+                    + discogsEntry.getId(), e);
         }
     }
 
@@ -165,38 +160,31 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
      * @return {@code true} if the entry matches the query criteria,
      * otherwise {@code false}.
      */
-    private boolean filterIfTrackOnAlbum(final DiscogsEntry discogsEntry,
-                                         final DiscogsQueryDTO discogsQueryDTO) {
+    private boolean filterIfTrackOnAlbum(final DiscogsEntry discogsEntry, final DiscogsQueryDTO discogsQueryDTO) {
         try {
-            log.debug("Filtering track on album for entry ID {}",
-                    discogsEntry.getId());
+            log.debug("Filtering track on album for entry ID {}", discogsEntry.getId());
             DiscogsRelease release = getReleaseDetails(discogsEntry);
             if (release == null) {
-                log.error("No release details found for entry ID {}",
-                        discogsEntry.getId());
+                log.error("No release details found for entry ID {}", discogsEntry.getId());
                 return false;
             }
             boolean isOnAlbum = !stringHelper.isNotVariousArtist(discogsQueryDTO.artist())
                     || filterArtists(discogsQueryDTO, release);
 
             if (stringHelper.isNotNullOrBlank(discogsQueryDTO.track()) && isOnAlbum) {
-                log.info("Track specified in query. Applying filter and " +
-                        "sorting results...");
+                log.info("Track specified in query. Applying filter and sorting results...");
                 isOnAlbum = filterTracks(discogsQueryDTO, release);
             }
 
             if (isOnAlbum) {
-                log.debug("Entry ID {} is on the album and matches the " +
-                        "filters", discogsEntry.getId());
+                log.debug("Entry ID {} is on the album and matches the filters", discogsEntry.getId());
                 discogsEntry.setLowestPrice((float) release.getLowestPrice());
             } else {
-                log.debug("Entry ID {} does not match album filters",
-                        discogsEntry.getId());
+                log.debug("Entry ID {} does not match album filters", discogsEntry.getId());
             }
             return isOnAlbum;
         } catch (final Exception e) {
-            log.error("Error filtering track on album for entry ID {}",
-                    discogsEntry.getId(), e);
+            log.error("Error filtering track on album for entry ID {}", discogsEntry.getId(), e);
             return false;
         }
     }

@@ -9,7 +9,9 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Field;
 
 /**
- * Aspect to apply normalization to fields annotated with @Normalize in records or other classes.
+ * Aspect to apply normalization to fields annotated with @Normalized in records or other classes.
+ * This aspect is triggered before the constructor execution to ensure that fields are normalized
+ * before the object is fully instantiated.
  */
 @Aspect
 @Component
@@ -18,10 +20,16 @@ public class NormalizedAspect {
 
     private final NormalizationService normalizationService;
 
-    @Before("execution(* *.new(..))")
+    /**
+     * Applies normalization to fields annotated with @Normalized and of type String.
+     * This method is executed before the constructor of the target object.
+     *
+     * @param obj the object being constructed
+     * @throws IllegalAccessException if the field cannot be accessed
+     */
+    @Before("execution(* *.new(..)) && target(obj)")
     public void normalizeFields(final Object obj) throws IllegalAccessException {
-        Field[] fields = obj.getClass().getDeclaredFields();
-        for (final Field field : fields) {
+        for (final Field field : obj.getClass().getDeclaredFields()) {
             if (field.isAnnotationPresent(Normalized.class) && field.getType() == String.class) {
                 field.setAccessible(true);
                 String value = (String) field.get(obj);
@@ -31,5 +39,4 @@ public class NormalizedAspect {
             }
         }
     }
-
 }

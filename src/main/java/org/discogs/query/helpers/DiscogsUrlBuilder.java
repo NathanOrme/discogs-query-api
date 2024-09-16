@@ -104,7 +104,7 @@ public class DiscogsUrlBuilder {
      * @param discogsEntry the Discogs entry containing the release ID
      * @return the fully constructed release URL
      */
-    public String builldMarketplaceUrl(final DiscogsEntry discogsEntry) {
+    public String buildMarketplaceUrl(final DiscogsEntry discogsEntry) {
         log.debug("Building marketplace URL for DiscogsEntry ID: {}",
                 discogsEntry.getId());
 

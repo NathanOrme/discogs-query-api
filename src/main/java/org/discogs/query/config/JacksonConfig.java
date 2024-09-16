@@ -50,12 +50,9 @@ public class JacksonConfig {
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
-        module.addDeserializer(DiscogsTypes.class,
-                new DiscogsTypesDeserializer());
-        module.addDeserializer(DiscogsFormats.class,
-                new DiscogsFormatsDeserializer());
-        module.addDeserializer(DiscogCountries.class,
-                new DiscogsCountryDeserializer());
+        module.addDeserializer(DiscogsTypes.class, new DiscogsTypesDeserializer());
+        module.addDeserializer(DiscogsFormats.class, new DiscogsFormatsDeserializer());
+        module.addDeserializer(DiscogCountries.class, new DiscogsCountryDeserializer());
         mapper.registerModule(module);
         return mapper;
     }

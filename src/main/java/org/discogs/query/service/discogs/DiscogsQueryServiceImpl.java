@@ -215,7 +215,7 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
         results.getResults().parallelStream().forEach(entry -> {
             try {
                 log.debug("Generating marketplace URL for entry: {}", entry);
-                String marketplaceUrl = discogsUrlBuilder.builldMarketplaceUrl(entry);
+                String marketplaceUrl = discogsUrlBuilder.buildMarketplaceUrl(entry);
                 log.debug("Getting marketplace result for entry: {}", entry);
                 var discogsMarketplaceResult = discogsAPIClient.getMarketplaceResultForQuery(marketplaceUrl);
 

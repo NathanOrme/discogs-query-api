@@ -19,12 +19,10 @@ public class HttpConfig {
     private String userAgent;
 
     /**
-     * Creates a {@link RestTemplate} bean.
-     * This bean is used to make HTTP requests to external services, such as
-     * the Discogs API.
+     * Creates a {@link RestTemplate} bean. This bean is used to make HTTP requests to external services, such as the
+     * Discogs API.
      *
-     * @return a {@link RestTemplate} instance configured for use in the
-     * application
+     * @return a {@link RestTemplate} instance configured for use in the application
      */
     @Bean
     public RestTemplate restTemplate() {
@@ -33,8 +31,7 @@ public class HttpConfig {
 
     /**
      * Creates a {@link HttpHeaders} bean.
-     * This bean is used to configure HTTP headers, including the User-Agent,
-     * for requests to external services.
+     * This bean is used to configure HTTP headers, including the User-Agent, for requests to external services.
      *
      * @return a {@link HttpHeaders} instance with default configurations
      */

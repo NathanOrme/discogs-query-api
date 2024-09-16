@@ -10,34 +10,27 @@ import java.io.IOException;
 /**
  * Custom deserializer for {@link DiscogsFormats} enum using Jackson.
  * <p>
- * This class is responsible for deserializing JSON representation of
- * {@link DiscogsFormats} enum values
- * during the deserialization process. It converts a JSON string into the
- * corresponding {@link DiscogsFormats}
- * enum constant.
+ * This class is responsible for deserializing JSON representation of {@link DiscogsFormats} enum values during the
+ * deserialization process. It converts a JSON string into the corresponding {@link DiscogsFormats} enum constant.
  * <p>
- * The deserializer handles cases where the JSON string may be null,
- * empty, or does not match any known enum constants.
+ * The deserializer handles cases where the JSON string may be null, empty, or does not match any known enum constants.
  */
 public class DiscogsFormatsDeserializer extends JsonDeserializer<DiscogsFormats> {
 
     /**
      * Deserializes a JSON string into a {@link DiscogsFormats} enum constant.
      * <p>
-     * This method reads the JSON string value from the parser,
-     * converts it to uppercase, and attempts to
-     * match it with one of the {@link DiscogsFormats} enum
-     * constants using the {@link DiscogsFormats#valueOf(String)}
-     * method. If the JSON string is null, empty, or does
-     * not match any known enum constants, the method will return
-     * {@code null}. This behavior can be adjusted based on application needs,
-     * for example by returning a default value like
+     * This method reads the JSON string value from the parser, converts it to uppercase, and attempts to
+     * match it with one of the {@link DiscogsFormats} enum constants using the
+     * {@link DiscogsFormats#valueOf(String)} method. If the JSON string is null, empty, or does not match any known
+     * enum constants, the method will return
+     * {@code null}. This behavior can be adjusted based on application needs, for example by returning a default
+     * value like
      * {@link DiscogsFormats#UNKNOWN}.
      *
      * @param jp   the JSON parser used to read the JSON content
      * @param ctxt the deserialization context
-     * @return the corresponding {@link DiscogsFormats} enum constant,
-     * or {@code null} if no match is found
+     * @return the corresponding {@link DiscogsFormats} enum constant, or {@code null} if no match is found
      * @throws IOException if there is an error reading the JSON content
      */
     @Override
@@ -46,13 +39,12 @@ public class DiscogsFormatsDeserializer extends JsonDeserializer<DiscogsFormats>
             throws IOException {
         String value = jp.getText();
         if (value == null || value.isEmpty()) {
-            return null; // Or handle the default case, e.g., DiscogFormats
-            // .UNKNOWN
+            return null;
         }
         try {
             return DiscogsFormats.valueOf(value.toUpperCase());
         } catch (final IllegalArgumentException e) {
-            return null; // Or handle unknown values
+            return null;
         }
     }
 }

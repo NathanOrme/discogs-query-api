@@ -45,10 +45,8 @@ public class DiscogsAPIClientImpl implements DiscogsAPIClient {
      * This method is cached using Spring's caching abstraction with Caffeine.
      *
      * @param searchUrl the URL to query the Discogs API
-     * @return an instance of {@link DiscogsResult} containing the API
-     * response data
-     * @throws DiscogsSearchException if an error occurs while fetching data
-     *                                from the Discogs API
+     * @return an instance of {@link DiscogsResult} containing the API response data
+     * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API
      */
     @Cacheable(value = "discogsResults", key = "#searchUrl")
     @Override
@@ -65,8 +63,7 @@ public class DiscogsAPIClientImpl implements DiscogsAPIClient {
      *
      * @param searchUrl the URL to query the Discogs API
      * @return a {@link String} containing the API response data
-     * @throws DiscogsSearchException if an error occurs while fetching data
-     *                                from the Discogs API
+     * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API
      */
     @Cacheable(value = "stringResults", key = "#searchUrl")
     @Override
@@ -84,16 +81,14 @@ public class DiscogsAPIClientImpl implements DiscogsAPIClient {
      * @param url the URL pointing to the item on the Discogs Marketplace
      * @return a {@link DiscogsMarketplaceResult} object containing the
      * details of the item on the marketplace
-     * @throws DiscogsSearchException if an error occurs while fetching data
-     *                                from the Discogs API
+     * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API
      */
     @Cacheable(value = "marketplaceResults", key = "#url")
     @Override
     public DiscogsMarketplaceResult getMarketplaceResultForQuery(final String url) {
         log.info("Cache miss for url: {}", url);
-        return executeWithRateLimitAndRetry(() -> httpRequestService
-                        .executeRequest(url, DiscogsMarketplaceResult.class),
-                "Discogs Marketplace API Request");
+        return executeWithRateLimitAndRetry(() -> httpRequestService.executeRequest(url,
+                DiscogsMarketplaceResult.class), "Discogs Marketplace API Request");
     }
 
     /**
@@ -111,42 +106,35 @@ public class DiscogsAPIClientImpl implements DiscogsAPIClient {
     @Override
     public DiscogsRelease getRelease(final String url) {
         log.info("Cache miss for url: {}", url);
-        return executeWithRateLimitAndRetry(() -> httpRequestService
-                        .executeRequest(url, DiscogsRelease.class),
+        return executeWithRateLimitAndRetry(() -> httpRequestService.executeRequest(url, DiscogsRelease.class),
                 "Discogs Release API Request");
     }
 
     /**
      * Executes a callable action with rate limit and retry logic.
      * <p>
-     * This method ensures the rate limit is respected before executing the
-     * action and retries the action
-     * in case of failure.
+     * This method ensures the rate limit is respected before executing the action and retries the action in case of
+     * failure.
      *
      * @param action            the callable action to be executed
      * @param actionDescription a description of the action being performed
      * @param <T>               the type of the result returned by the action
      * @return the result of the action
-     * @throws DiscogsSearchException      if an error occurs while fetching
-     *                                     data from the Discogs API after
-     *                                     all retry attempts
-     * @throws DiscogsMarketplaceException if an error occurs while fetching
-     *                                     data from the Discogs Marketplace
-     *                                     API after all retry attempts
+     * @throws DiscogsSearchException      if an error occurs while fetching data from the Discogs API after all
+     *                                     retry attempts
+     * @throws DiscogsMarketplaceException if an error occurs while fetching data from the Discogs Marketplace API
+     *                                     after all retry attempts
      */
-    private <T> T executeWithRateLimitAndRetry(final Callable<T> action,
-                                               final String actionDescription) {
+    private <T> T executeWithRateLimitAndRetry(final Callable<T> action, final String actionDescription) {
         try {
             rateLimiterService.waitForRateLimit();  // Ensure rate limit
             // before executing the action
             return retryService.executeWithRetry(action, actionDescription);
         } catch (final Exception e) {
             if (DiscogsMarketplaceResult.class.isAssignableFrom(action.getClass())) {
-                throw new DiscogsMarketplaceException("Failed to fetch data " +
-                        "from Discogs Marketplace API", e);
+                throw new DiscogsMarketplaceException("Failed to fetch data from Discogs Marketplace API", e);
             }
-            throw new DiscogsSearchException("Failed to fetch data from " +
-                    "Discogs API", e);
+            throw new DiscogsSearchException("Failed to fetch data from Discogs API", e);
         }
     }
 }

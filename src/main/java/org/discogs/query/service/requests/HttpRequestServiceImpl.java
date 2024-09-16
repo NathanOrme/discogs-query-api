@@ -37,18 +37,13 @@ public class HttpRequestServiceImpl implements HttpRequestService {
         }
     }
 
-    private <T> T processRequestExchange(final String url,
-                                         final Class<T> responseType,
-                                         final HttpEntity<Void> entity) {
-        ResponseEntity<T> response = restTemplate.exchange(url,
-                HttpMethod.GET, entity, responseType);
-        log.info("Received HTTP response with status code: {}",
-                response.getStatusCode());
+    private <T> T processRequestExchange(final String url, final Class<T> responseType, final HttpEntity<Void> entity) {
+        ResponseEntity<T> response = restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
+        log.info("Received HTTP response with status code: {}", response.getStatusCode());
         logApiResponse(response);
 
-        return Optional.ofNullable(response.getBody())
-                .orElseThrow(() -> new DiscogsSearchException("Failed to " +
-                        "fetch data from Discogs API"));
+        return Optional.ofNullable(response.getBody()).orElseThrow(() ->
+                new DiscogsSearchException("Failed to fetch data from Discogs API"));
     }
 
     private void logApiResponse(final ResponseEntity<?> response) {

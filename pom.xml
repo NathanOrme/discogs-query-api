@@ -104,6 +104,18 @@
             <version>3.0.0</version>
         </dependency>
 
+        <!-- Mapping-->
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper-module-record</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+
         <!-- Jakarta -->
         <dependency>
             <groupId>jakarta.validation</groupId>
@@ -128,11 +140,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.modelmapper</groupId>
-            <artifactId>modelmapper</artifactId>
-            <version>3.2.1</version>
         </dependency>
         <dependency>
             <groupId>org.xmlunit</groupId>

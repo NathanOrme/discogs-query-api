@@ -9,10 +9,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation to validate {@link org.discogs.query.model.DiscogsQueryDTO}
- * objects for the "Various Artists" scenario.
- * This annotation ensures that when the artist is
- * identified as "Various Artists", both a track and an album
+ * Annotation to validate {@link org.discogs.query.model.DiscogsQueryDTO} objects for the "Various Artists" scenario.
+ * This annotation ensures that when the artist is identified as "Various Artists", both a track and an album
  * must be supplied in the DTO.
  */
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
@@ -25,8 +23,7 @@ public @interface VariousArtistsValidation {
      *
      * @return the default error message
      */
-    String message() default "A track or album must be supplied if dealing " +
-            "with various artists";
+    String message() default "A track or album must be supplied if dealing with various artists";
 
     /**
      * Groups of constraints that this annotation belongs to.

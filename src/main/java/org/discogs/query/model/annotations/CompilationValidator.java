@@ -8,50 +8,36 @@ import org.discogs.query.model.enums.DiscogsFormats;
 import org.springframework.stereotype.Component;
 
 /**
- * Validator for ensuring that DiscogsQueryDTO is
- * properly validated when the artist is one of the "Various Artists".
- * This validator checks if the provided DTO meets
- * the necessary criteria based on the presence of certain fields.
+ * Validator for ensuring that DiscogsQueryDTO is properly validated when the artist is one of the "Various Artists".
+ * This validator checks if the provided DTO meets the necessary criteria based on the presence of certain fields.
  */
 @Slf4j
 @Component
-public class CompilationValidator
-        implements ConstraintValidator<CompilationValidation, DiscogsQueryDTO> {
+public class CompilationValidator implements ConstraintValidator<CompilationValidation, DiscogsQueryDTO> {
 
-    private static boolean isFormatBlankOrNotCompilation(final DiscogsQueryDTO discogsQueryDTO) {
-        if (discogsQueryDTO.format() == null) {
-            return true;
-        }
-        return !discogsQueryDTO.format().equalsIgnoreCase(DiscogsFormats.COMP.getFormat())
-                && !discogsQueryDTO.format()
-                .equalsIgnoreCase(DiscogsFormats.VINYL_COMPILATION.getFormat());
+    private boolean isFormatCompilation(final DiscogsQueryDTO dto) {
+        return DiscogsFormats.COMP.getFormat().equalsIgnoreCase(dto.format()) ||
+                DiscogsFormats.VINYL_COMPILATION.getFormat().equalsIgnoreCase(dto.format());
     }
 
-    private boolean isNotBlankBlank(final String string) {
-        return string != null && !string.isBlank();
+    private boolean isFieldNotBlank(final String field) {
+        return field != null && !field.isBlank();
     }
 
     /**
      * Validates the provided DiscogsQueryDTO based on the context of
-     * a compilation album. If a track hasn't been supplied or an album,
-     * then reject it entirely.
+     * a compilation album. If the format is not a compilation, it passes validation.
+     * Otherwise, it ensures either a track or album field is provided.
      *
-     * @param discogsQueryDTO            the DiscogsQueryDTO object to be
-     *                                   validated
-     * @param constraintValidatorContext the context in which the constraint
-     *                                   is evaluated
+     * @param discogsQueryDTO the DiscogsQueryDTO object to be validated
+     * @param context         the context in which the constraint is evaluated
      * @return whether it matches the criteria or not
      */
     @Override
-    public boolean isValid(final DiscogsQueryDTO discogsQueryDTO,
-                           final ConstraintValidatorContext constraintValidatorContext) {
-        if (isFormatBlankOrNotCompilation(discogsQueryDTO)) {
+    public boolean isValid(final DiscogsQueryDTO discogsQueryDTO, final ConstraintValidatorContext context) {
+        if (!isFormatCompilation(discogsQueryDTO)) {
             return true;
         }
-        if (isNotBlankBlank(discogsQueryDTO.track())) {
-            return true;
-        }
-        return isNotBlankBlank(discogsQueryDTO.album());
-
+        return isFieldNotBlank(discogsQueryDTO.track()) || isFieldNotBlank(discogsQueryDTO.album());
     }
 }

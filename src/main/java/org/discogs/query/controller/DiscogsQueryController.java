@@ -32,9 +32,12 @@ import java.util.List;
 @RequestMapping("discogs-query")
 public class DiscogsQueryController {
 
+    private static final String APPLICATION_JSON_VALUE = MediaType.APPLICATION_JSON_VALUE;
+    
     private final QueryProcessingService queryProcessingService;
     private final ResultMappingService resultMappingService;
     private final ResultCalculationService resultCalculationService;
+
     @Value("${queries.timeout:59}")
     private int timeoutInSeconds;
 
@@ -47,8 +50,7 @@ public class DiscogsQueryController {
      * wrapped in {@link HttpStatus#OK} if results are found, or an empty list if no results are found
      */
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/search", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<DiscogsMapResultDTO>> search(
             @RequestBody @Valid final List<DiscogsQueryDTO> discogsQueryDTO) {
 

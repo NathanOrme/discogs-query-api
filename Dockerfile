@@ -5,7 +5,7 @@ FROM maven:3-amazoncorretto-21 AS builder
 WORKDIR /app
 
 # Copy the Maven POM file and source code
-COPY pom.xml .
+COPY pom.xml ./
 COPY src ./src
 
 # Package the application (This will compile the code and build the JAR)
@@ -22,6 +22,16 @@ COPY --from=builder /app/target/discogs-query-1.0-SNAPSHOT.jar /app/discogs-app.
 
 # Expose the port the application will run on
 EXPOSE 8080
+
+# Add metadata labels
+LABEL org.opencontainers.image.title="Discogs Query Application" \
+      org.opencontainers.image.version="1.0" \
+      org.opencontainers.image.description="A Java application for querying Discogs" \
+      org.opencontainers.image.authors="Nathan Orme"
+
+# Health check to ensure the application is running properly
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s \
+  CMD ["curl", "--silent", "--fail", "http://localhost:8080/actuator/health"]
 
 # Run the JAR file
 ENTRYPOINT ["java", "-jar", "/app/discogs-app.jar"]

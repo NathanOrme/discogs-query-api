@@ -1,5 +1,6 @@
 package org.discogs.query.service;
 
+import org.discogs.query.model.DiscogsQueryDTO;
 import org.springframework.stereotype.Service;
 
 import java.text.Normalizer;
@@ -32,7 +33,29 @@ public class NormalizationService {
                 .replace(" & ", " and ")
                 .replace("'", "")
                 .replace("-", " ")
+                .replace("?", "")
                 .replaceAll("\\s+", " ")
                 .trim();
+    }
+
+    /**
+     * Normalizes the fields of the given {@link DiscogsQueryDTO} object.
+     *
+     * @param query the {@link DiscogsQueryDTO} object to be normalized; if {@code null}, this method returns {@code
+     * null}
+     * @return a new {@link DiscogsQueryDTO} object with normalized fields
+     */
+    public DiscogsQueryDTO normalizeQuery(final DiscogsQueryDTO query) {
+        if (query == null) return null;
+
+        return new DiscogsQueryDTO(
+                normalizeString(query.artist()),
+                normalizeString(query.album()),
+                normalizeString(query.track()),
+                query.format(),
+                query.country(),
+                query.types(),
+                query.barcode()
+        );
     }
 }

@@ -69,23 +69,22 @@ function handleSearchFormSubmit(event) {
     })
     .then((data) => {
       console.log("API Response:", data);
-
-      // Assuming data is an array of DiscogsMapResultDTO objects
-      if (Array.isArray(data) && data.length > 0) {
-        // Extract cheapest items from each result
-        const cheapestItems = data
-          .map(result => result.cheapestItem)
-          .filter(item => item !== null);
-
-        // Display the cheapest items
-        displayCheapestItems(cheapestItems);
-
-      } else {
-        // No results
-        displayCheapestItems([]);
-      }
         // Display the results
         displayResults(data);
+        // Assuming data is an array of DiscogsMapResultDTO objects
+          if (Array.isArray(data) && data.length > 0) {
+            // Extract cheapest items from each result
+            const cheapestItems = data
+              .map(result => result.cheapestItem)
+              .filter(item => item !== null);
+
+            // Display the cheapest items
+            displayCheapestItems(cheapestItems);
+
+          } else {
+            // No results
+            displayCheapestItems([]);
+          }
     })
     .catch((error) => {
       console.error("Error:", error);

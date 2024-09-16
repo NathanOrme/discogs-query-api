@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 /**
  * Implementation of {@link DiscogsFilterService} for filtering and sorting
@@ -48,11 +47,7 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
         String title = normalizationService.normalizeString(track.getTitle().toLowerCase());
         String normalizedQueryTrack = normalizationService.normalizeString(discogsQueryDTO.track());
 
-        // Create a regular expression pattern from the first string
-        Pattern pattern = Pattern.compile(Pattern.quote(title), Pattern.CASE_INSENSITIVE);
-
-        // Check if the second string contains the pattern
-        return pattern.matcher(normalizedQueryTrack).find();
+        return title.equalsIgnoreCase(normalizedQueryTrack) || title.contains(normalizedQueryTrack.toLowerCase());
     }
 
     /**

@@ -3,7 +3,6 @@ package org.discogs.query.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 import org.discogs.query.model.annotations.CompilationValidation;
-import org.discogs.query.model.annotations.Normalized;
 import org.discogs.query.model.annotations.VariousArtistsValidation;
 import org.discogs.query.model.enums.DiscogCountries;
 import org.discogs.query.model.enums.DiscogsTypes;
@@ -18,13 +17,10 @@ import org.discogs.query.model.enums.DiscogsTypes;
 @VariousArtistsValidation
 public record DiscogsQueryDTO(
         @NotBlank
-        @Normalized
         String artist,
 
-        @Normalized
         String album,
 
-        @Normalized
         String track,
 
         String format,
@@ -32,7 +28,7 @@ public record DiscogsQueryDTO(
         DiscogCountries country,
 
         DiscogsTypes types,
-        
+
         String barcode
 ) {
 }

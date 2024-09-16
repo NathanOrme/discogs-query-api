@@ -24,6 +24,7 @@ import java.util.concurrent.TimeoutException;
 public class QueryProcessingService {
 
     private final DiscogsQueryService discogsQueryService;
+    private final NormalizationService normalizationService;
 
     /**
      * Processes each query asynchronously and retrieves the results from the Discogs API.
@@ -34,8 +35,23 @@ public class QueryProcessingService {
      */
     public List<DiscogsResultDTO> processQueries(final List<DiscogsQueryDTO> discogsQueryDTOList,
                                                  final long timeoutInSeconds) {
-        List<CompletableFuture<DiscogsResultDTO>> futures = createFuturesForQueries(discogsQueryDTOList);
+        List<DiscogsQueryDTO> normalizedList = discogsQueryDTOList.parallelStream()
+                .map(this::normalizeQuery)
+                .toList();
+        List<CompletableFuture<DiscogsResultDTO>> futures = createFuturesForQueries(normalizedList);
         return handleFuturesWithTimeout(futures, timeoutInSeconds);
+    }
+
+    private DiscogsQueryDTO normalizeQuery(final DiscogsQueryDTO query) {
+        return new DiscogsQueryDTO(
+                normalizationService.normalizeString(query.artist()),
+                normalizationService.normalizeString(query.album()),
+                normalizationService.normalizeString(query.track()),
+                query.format(),
+                query.country(),
+                query.types(),
+                query.barcode()
+        );
     }
 
     private List<CompletableFuture<DiscogsResultDTO>> createFuturesForQueries(

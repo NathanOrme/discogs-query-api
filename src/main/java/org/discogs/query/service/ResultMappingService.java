@@ -2,13 +2,13 @@ package org.discogs.query.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.discogs.query.domain.DiscogsEntry;
 import org.discogs.query.domain.DiscogsResult;
 import org.discogs.query.interfaces.DiscogsMappingService;
+import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsMapResultDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.record.RecordModule;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,26 +44,44 @@ public class ResultMappingService {
      * @return a {@link DiscogsResultDTO} object that corresponds to the
      * provided {@link DiscogsResult}
      */
-    public DiscogsResultDTO mapObjectToDTO(final DiscogsResult discogsResult,
-                                           final DiscogsQueryDTO discogsQueryDTO) {
-        log.debug("Starting mapping of DiscogsResult to DiscogsResultDTO for " +
-                "query: {}", discogsQueryDTO);
+    public DiscogsResultDTO mapObjectToDTO(final DiscogsResult discogsResult, final DiscogsQueryDTO discogsQueryDTO) {
+        log.debug("Starting mapping of DiscogsResult to DiscogsResultDTO for query: {}", discogsQueryDTO);
 
         try {
-            ModelMapper modelMapper = new ModelMapper().registerModule(new RecordModule());
-            var resultDTO = modelMapper.map(discogsResult, DiscogsResultDTO.class);
-
-            // Now, create a new instance of DiscogsResultDTO with the searchQuery set
+            var resultDTO = mapToResultDTO(discogsResult);
             resultDTO = new DiscogsResultDTO(discogsQueryDTO, resultDTO.results());
 
-            log.debug("Mapping completed successfully for query: {}",
-                    discogsQueryDTO);
+            log.debug("Mapping completed successfully for query: {}", discogsQueryDTO);
             return resultDTO;
         } catch (final Exception e) {
-            log.error("Error occurred while mapping DiscogsResult to " +
-                            "DiscogsResultDTO for query: {}",
+            log.error("Error occurred while mapping DiscogsResult to DiscogsResultDTO for query: {}",
                     discogsQueryDTO, e);
-            throw e;  // Re-throw the exception after logging
+            throw e;
         }
+    }
+
+    private DiscogsResultDTO mapToResultDTO(final DiscogsResult discogsResult) {
+        return new DiscogsResultDTO(null, convertEntriesToDTOs(discogsResult.getResults()));
+    }
+
+    private List<DiscogsEntryDTO> convertEntriesToDTOs(final List<DiscogsEntry> entries) {
+        return entries.parallelStream()
+                .map(ResultMappingService::convertEntryToEntryDTO)
+                .toList();
+    }
+
+    private static DiscogsEntryDTO convertEntryToEntryDTO(final DiscogsEntry entry) {
+        return new DiscogsEntryDTO(
+                entry.getId(),
+                entry.getTitle(),
+                entry.getFormat(),
+                entry.getUrl(),
+                entry.getUri(),
+                entry.getCountry(),
+                entry.getYear(),
+                entry.getIsOnMarketplace(),
+                entry.getLowestPrice(),
+                entry.getNumberForSale()
+        );
     }
 }

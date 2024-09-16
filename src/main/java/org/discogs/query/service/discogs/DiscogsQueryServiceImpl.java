@@ -54,6 +54,31 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
     }
 
     /**
+     * Updates the given {@link DiscogsEntry} with the lowest price and number for sale
+     * from the provided {@link DiscogsMarketplaceResult}.
+     *
+     * <p>This method sets the number of items for sale and the lowest price from the
+     * {@code DiscogsMarketplaceResult} to the corresponding fields in the {@code DiscogsEntry}.
+     * It also logs a debug message if a lowest price is set.</p>
+     *
+     * @param entry                    the {@link DiscogsEntry} object to be updated. It should be an instance
+     *                                 where the number of items for sale and the lowest price need to be set.
+     * @param discogsMarketplaceResult the {@link DiscogsMarketplaceResult} object containing
+     *                                 the number of items for sale and the lowest price result.
+     *                                 It should not be {@code null}. The lowest price is obtained
+     *                                 from the result inside this object.
+     */
+    private static void setLowestPriceResultAndNumberForSale(final DiscogsEntry entry,
+                                                             final DiscogsMarketplaceResult discogsMarketplaceResult) {
+        entry.setNumberForSale(discogsMarketplaceResult.getNumberForSale());
+        var lowestPriceResult = discogsMarketplaceResult.getResult();
+        if (lowestPriceResult != null) {
+            entry.setLowestPrice(lowestPriceResult.getValue());
+            log.debug("Amended lowest price for entry: {}", entry);
+        }
+    }
+
+    /**
      * Searches the Discogs database based on the provided query.
      *
      * @param discogsQueryDTO the search query containing artist, track, and optional format information
@@ -203,31 +228,6 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
                 log.error("Failed to process entry: {} due to {}", entry, e.getMessage(), e);
             }
         });
-    }
-
-    /**
-     * Updates the given {@link DiscogsEntry} with the lowest price and number for sale
-     * from the provided {@link DiscogsMarketplaceResult}.
-     *
-     * <p>This method sets the number of items for sale and the lowest price from the
-     * {@code DiscogsMarketplaceResult} to the corresponding fields in the {@code DiscogsEntry}.
-     * It also logs a debug message if a lowest price is set.</p>
-     *
-     * @param entry                    the {@link DiscogsEntry} object to be updated. It should be an instance
-     *                                 where the number of items for sale and the lowest price need to be set.
-     * @param discogsMarketplaceResult the {@link DiscogsMarketplaceResult} object containing
-     *                                 the number of items for sale and the lowest price result.
-     *                                 It should not be {@code null}. The lowest price is obtained
-     *                                 from the result inside this object.
-     */
-    private static void setLowestPriceResultAndNumberForSale(final DiscogsEntry entry,
-                                                             final DiscogsMarketplaceResult discogsMarketplaceResult) {
-        entry.setNumberForSale(discogsMarketplaceResult.getNumberForSale());
-        var lowestPriceResult = discogsMarketplaceResult.getResult();
-        if (lowestPriceResult != null) {
-            entry.setLowestPrice(lowestPriceResult.getValue());
-            log.debug("Amended lowest price for entry: {}", entry);
-        }
     }
 
 }

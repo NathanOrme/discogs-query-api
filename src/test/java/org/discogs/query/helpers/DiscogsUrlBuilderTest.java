@@ -15,12 +15,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 class DiscogsUrlBuilderTest {
 
-    private DiscogsUrlBuilder discogsUrlBuilder;
-
     // Hardcoded values for testing
     private final String discogsBaseUrl = "https://api.discogs.com";
     private final String releaseEndpoint = "/releases/";
     private final String token = "dummyToken";
+    private DiscogsUrlBuilder discogsUrlBuilder;
 
     @BeforeEach
     public void setUp() {

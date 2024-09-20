@@ -8,6 +8,8 @@ function getApiUrl() {
     return "https://discogs-query-api.onrender.com/discogs-query/search";
   } else if (hostname.includes("koyeb")) {
     return "https://discogs-query-api-rgbnathan.koyeb.app/discogs-query/search";
+  } else if (hostname.includes(".b4a.)) {
+    return "https://discogsqueryapi-hf0iibn8.b4a.run/discogs-query/search"
   } else {
     // Fallback or default URL
     return "http://localhost:9090/discogs-query/search";

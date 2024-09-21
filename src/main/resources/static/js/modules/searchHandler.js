@@ -4,17 +4,23 @@ import { displayCheapestItems } from './cheapestItem.js';
 function getApiUrl() {
   const hostname = window.location.hostname;
 
-  if (hostname.includes("render")) {
-    return "https://discogs-query-api.onrender.com/discogs-query/search";
-  } else if (hostname.includes("koyeb")) {
-    return "https://discogs-query-api-rgbnathan.koyeb.app/discogs-query/search";
-  } else if (hostname.includes(".b4a.")) {
-    return "https://discogsqueryapi1-fthsfv0p.b4a.run/discogs-query/search";
-  } else {
-    // Fallback or default URL
-    return "http://localhost:9090/discogs-query/search";
+  const urlMapping = {
+    render: "https://discogs-query-api.onrender.com/discogs-query/search",
+    koyeb: "https://discogs-query-api-rgbnathan.koyeb.app/discogs-query/search",
+    b4a: "https://discogsqueryapi1-fthsfv0p.b4a.run/discogs-query/search"
+  };
+
+  // Check for each key in the mapping
+  for (const [key, url] of Object.entries(urlMapping)) {
+    if (hostname.includes(key)) {
+      return url;
+    }
   }
+
+  // Fallback or default URL
+  return "http://localhost:9090/discogs-query/search";
 }
+
 
 function handleSearchFormSubmit(event) {
   event.preventDefault();

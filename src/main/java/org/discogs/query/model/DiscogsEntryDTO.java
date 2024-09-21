@@ -30,7 +30,7 @@ public record DiscogsEntryDTO(
         Boolean isOnMarketplace,
 
         Float lowestPrice,
-        
+
         Integer numberForSale
 ) {
 }

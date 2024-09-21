@@ -9,7 +9,7 @@ import java.util.Map;
  * match the search criteria.
  */
 public record DiscogsMapResultDTO(
-        
+
         DiscogsQueryDTO searchQuery,
 
         Map<String, List<DiscogsEntryDTO>> results,

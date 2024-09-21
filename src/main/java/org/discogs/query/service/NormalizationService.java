@@ -42,7 +42,7 @@ public class NormalizationService {
      * Normalizes the fields of the given {@link DiscogsQueryDTO} object.
      *
      * @param query the {@link DiscogsQueryDTO} object to be normalized; if {@code null}, this method returns {@code
-     * null}
+     *              null}
      * @return a new {@link DiscogsQueryDTO} object with normalized fields
      */
     public DiscogsQueryDTO normalizeQuery(final DiscogsQueryDTO query) {

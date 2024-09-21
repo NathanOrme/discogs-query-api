@@ -30,9 +30,8 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class DiscogsQueryServiceImpl implements DiscogsQueryService {
 
-    private static final String UNEXPECTED_ISSUE_OCCURRED = "Unexpected issue occurred";
     public static final String UNITED_KINGDOM_LOCATION = "United Kingdom";
-
+    private static final String UNEXPECTED_ISSUE_OCCURRED = "Unexpected issue occurred";
     private final DiscogsAPIClient discogsAPIClient;
     private final MappingService mappingService;
     private final DiscogsUrlBuilder discogsUrlBuilder;
@@ -77,6 +76,26 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
             entry.setLowestPrice(lowestPriceResult.getValue());
             log.debug("Amended lowest price for entry: {}", entry);
         }
+    }
+
+    private static Stream<DiscogsEntry> concatStreams(final DiscogsResult results, final DiscogsResult compResults) {
+        return Stream.concat(results.getResults().stream(), compResults.getResults().stream());
+    }
+
+    private static DiscogsEntry filterAndProcessEntry(final DiscogsEntry entry,
+                                                      final DiscogsMarketplaceResult discogsMarketplaceResult) {
+        if (discogsMarketplaceResult != null && isShipsFromContainingUK(discogsMarketplaceResult)) {
+            setLowestPriceResultAndNumberForSale(entry, discogsMarketplaceResult);
+            return entry;
+        } else {
+            log.warn("Entry {} does not ship from United Kingdom or marketplace result is null.",
+                    entry);
+            return null;
+        }
+    }
+
+    private static boolean isShipsFromContainingUK(final DiscogsMarketplaceResult discogsMarketplaceResult) {
+        return discogsMarketplaceResult.getShipsFromLocations().contains(UNITED_KINGDOM_LOCATION);
     }
 
     /**
@@ -174,10 +193,6 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
         log.debug("Merged results with compilation results. Total results: {}", results.getResults().size());
     }
 
-    private static Stream<DiscogsEntry> concatStreams(final DiscogsResult results, final DiscogsResult compResults) {
-        return Stream.concat(results.getResults().stream(), compResults.getResults().stream());
-    }
-
     /**
      * Corrects the URIs for result entries to ensure they are fully qualified.
      *
@@ -229,27 +244,11 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
         results.setResults(filteredResults);
     }
 
-    private static DiscogsEntry filterAndProcessEntry(final DiscogsEntry entry,
-                                                      final DiscogsMarketplaceResult discogsMarketplaceResult) {
-        if (discogsMarketplaceResult != null && isShipsFromContainingUK(discogsMarketplaceResult)) {
-            setLowestPriceResultAndNumberForSale(entry, discogsMarketplaceResult);
-            return entry;
-        } else {
-            log.warn("Entry {} does not ship from United Kingdom or marketplace result is null.",
-                    entry);
-            return null;
-        }
-    }
-
     private DiscogsMarketplaceResult getDiscogsMarketplaceResult(final DiscogsEntry entry) {
         log.debug("Generating marketplace URL for entry: {}", entry);
         String marketplaceUrl = discogsUrlBuilder.buildMarketplaceUrl(entry);
         log.debug("Getting marketplace result for entry: {}", entry);
         return discogsAPIClient.getMarketplaceResultForQuery(marketplaceUrl);
-    }
-
-    private static boolean isShipsFromContainingUK(final DiscogsMarketplaceResult discogsMarketplaceResult) {
-        return discogsMarketplaceResult.getShipsFromLocations().contains(UNITED_KINGDOM_LOCATION);
     }
 
 }

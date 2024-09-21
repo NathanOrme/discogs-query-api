@@ -2,8 +2,6 @@ package org.discogs.query.domain;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -19,7 +17,7 @@ class DiscogsMarketplaceResultTest {
     @Test
     void testAllArgsConstructor() {
         DiscogsLowestPriceResult lowestPrice = new DiscogsLowestPriceResult("USD", 9.99f);
-        DiscogsMarketplaceResult result = new DiscogsMarketplaceResult(lowestPrice, Collections.emptyList(), 15);
+        DiscogsMarketplaceResult result = new DiscogsMarketplaceResult(lowestPrice, 15);
 
         assertEquals(lowestPrice, result.getResult());
         assertEquals(15, result.getNumberForSale());
@@ -52,6 +50,6 @@ class DiscogsMarketplaceResultTest {
         assertEquals(lowestPrice, result.getResult());
         assertEquals(30, result.getNumberForSale());
     }
-    
+
 }
 

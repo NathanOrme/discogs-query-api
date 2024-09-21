@@ -84,7 +84,7 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
 
     private static DiscogsEntry filterAndProcessEntry(final DiscogsEntry entry,
                                                       final DiscogsMarketplaceResult discogsMarketplaceResult) {
-        if (discogsMarketplaceResult != null && isShipsFromContainingUK(discogsMarketplaceResult)) {
+        if (discogsMarketplaceResult != null) {
             setLowestPriceResultAndNumberForSale(entry, discogsMarketplaceResult);
             return entry;
         } else {
@@ -92,10 +92,6 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
                     entry);
             return null;
         }
-    }
-
-    private static boolean isShipsFromContainingUK(final DiscogsMarketplaceResult discogsMarketplaceResult) {
-        return discogsMarketplaceResult.getShipsFromLocations().contains(UNITED_KINGDOM_LOCATION);
     }
 
     /**

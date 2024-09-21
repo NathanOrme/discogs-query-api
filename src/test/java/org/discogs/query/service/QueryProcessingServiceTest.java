@@ -12,12 +12,17 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 class QueryProcessingServiceTest {
 
     @Mock
     private DiscogsQueryService discogsQueryService;
+
+    @Mock
+    private NormalizationService normalizationService;
 
     @InjectMocks
     private QueryProcessingService queryProcessingService;
@@ -32,7 +37,8 @@ class QueryProcessingServiceTest {
                 null, null, null);
         DiscogsResultDTO resultDTO = new DiscogsResultDTO(null, null);
 
-        when(discogsQueryService.searchBasedOnQuery(queryDTO)).thenReturn(resultDTO);
+        when(discogsQueryService.searchBasedOnQuery(any())).thenReturn(resultDTO);
+        when(normalizationService.normalizeString(anyString())).thenReturn(null);
 
         List<DiscogsResultDTO> results = queryProcessingService.processQueries(
                 Collections.singletonList(queryDTO), 5);

@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 /**
  * Represents the result of a query to the Discogs Marketplace API.
  * <p>
@@ -32,6 +34,13 @@ public class DiscogsMarketplaceResult {
      */
     @JsonProperty("lowest_price")
     private DiscogsLowestPriceResult result;
+
+
+    /**
+     * The list of locations the result ships from.
+     */
+    @JsonProperty("ships_from")
+    private List<String> shipsFromLocations;
 
     /**
      * The number of items available for sale.

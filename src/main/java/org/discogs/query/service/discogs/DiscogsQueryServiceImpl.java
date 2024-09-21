@@ -18,6 +18,7 @@ import org.discogs.query.service.MappingService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -30,6 +31,7 @@ import java.util.stream.Stream;
 public class DiscogsQueryServiceImpl implements DiscogsQueryService {
 
     private static final String UNEXPECTED_ISSUE_OCCURRED = "Unexpected issue occurred";
+    public static final String UNITED_KINGDOM_LOCATION = "United Kingdom";
 
     private final DiscogsAPIClient discogsAPIClient;
     private final MappingService mappingService;
@@ -209,23 +211,45 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
             log.warn("No results found in DiscogsResult.");
             return;
         }
+        // Filter out entries that don't have "United Kingdom" in the shipFromLocations and process valid ones
+        List<DiscogsEntry> filteredResults = results.getResults().parallelStream()
+                .map(entry -> {
+                    try {
+                        var discogsMarketplaceResult = getDiscogsMarketplaceResult(entry);
+                        return filterAndProcessEntry(entry, discogsMarketplaceResult);
+                    } catch (final Exception e) {
+                        log.error("Failed to process entry: {} due to {}", entry, e.getMessage(), e);
+                        return null; // Exclude entries that encounter an error
+                    }
+                })
+                .filter(Objects::nonNull) // Remove entries that were filtered out or caused an error
+                .toList();
 
-        results.getResults().parallelStream().forEach(entry -> {
-            try {
-                log.debug("Generating marketplace URL for entry: {}", entry);
-                String marketplaceUrl = discogsUrlBuilder.buildMarketplaceUrl(entry);
-                log.debug("Getting marketplace result for entry: {}", entry);
-                var discogsMarketplaceResult = discogsAPIClient.getMarketplaceResultForQuery(marketplaceUrl);
+        // Update results with filtered list
+        results.setResults(filteredResults);
+    }
 
-                if (discogsMarketplaceResult != null) {
-                    setLowestPriceResultAndNumberForSale(entry, discogsMarketplaceResult);
-                } else {
-                    log.warn("Marketplace result is null for entry: {}", entry);
-                }
-            } catch (final Exception e) {
-                log.error("Failed to process entry: {} due to {}", entry, e.getMessage(), e);
-            }
-        });
+    private static DiscogsEntry filterAndProcessEntry(final DiscogsEntry entry,
+                                                      final DiscogsMarketplaceResult discogsMarketplaceResult) {
+        if (discogsMarketplaceResult != null && isShipsFromContainingUK(discogsMarketplaceResult)) {
+            setLowestPriceResultAndNumberForSale(entry, discogsMarketplaceResult);
+            return entry;
+        } else {
+            log.warn("Entry {} does not ship from United Kingdom or marketplace result is null.",
+                    entry);
+            return null;
+        }
+    }
+
+    private DiscogsMarketplaceResult getDiscogsMarketplaceResult(final DiscogsEntry entry) {
+        log.debug("Generating marketplace URL for entry: {}", entry);
+        String marketplaceUrl = discogsUrlBuilder.buildMarketplaceUrl(entry);
+        log.debug("Getting marketplace result for entry: {}", entry);
+        return discogsAPIClient.getMarketplaceResultForQuery(marketplaceUrl);
+    }
+
+    private static boolean isShipsFromContainingUK(final DiscogsMarketplaceResult discogsMarketplaceResult) {
+        return discogsMarketplaceResult.getShipsFromLocations().contains(UNITED_KINGDOM_LOCATION);
     }
 
 }

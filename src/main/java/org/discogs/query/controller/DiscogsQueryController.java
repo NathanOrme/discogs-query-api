@@ -3,6 +3,7 @@ package org.discogs.query.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsMapResultDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
@@ -19,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Controller for handling Discogs query-related operations.
@@ -68,6 +71,47 @@ public class DiscogsQueryController {
 
         List<DiscogsMapResultDTO> resultMapDTOList = mappingService.mapResultsToDTO(resultDTOList);
 
+        filterDuplicateEntries(resultMapDTOList);
+
         return ResponseEntity.ok().body(resultMapDTOList);
     }
+
+
+    /**
+     * Filters duplicate entries from a list of DiscogsMapResultDTO.
+     *
+     * @param discogsMapResultDTOS the list of DiscogsMapResultDTO to filter
+     */
+    private void filterDuplicateEntries(final List<DiscogsMapResultDTO> discogsMapResultDTOS) {
+        for (final DiscogsMapResultDTO discogsMapResultDTO : discogsMapResultDTOS) {
+            for (final Map.Entry<String, List<DiscogsEntryDTO>> resultDTO : discogsMapResultDTO.results().entrySet()) {
+                List<DiscogsEntryDTO> entries = removeDuplicateEntries(resultDTO.getValue());
+                resultDTO.setValue(entries);
+            }
+        }
+    }
+
+    /**
+     * Removes duplicate entries from a list of DiscogsEntryDTO based on their IDs.
+     *
+     * @param values the list of DiscogsEntryDTO to filter
+     * @return a list of unique DiscogsEntryDTO without duplicates
+     */
+    private List<DiscogsEntryDTO> removeDuplicateEntries(final List<DiscogsEntryDTO> values) {
+        List<DiscogsEntryDTO> filterValues = new ArrayList<>();
+        for (final DiscogsEntryDTO discogsEntryDTO : values) {
+            boolean anyMatch = false;
+            for (final DiscogsEntryDTO valuesEntry : filterValues) {
+                if (valuesEntry.id() == discogsEntryDTO.id()) {
+                    anyMatch = true;
+                    break;
+                }
+            }
+            if (!anyMatch) {
+                filterValues.add(discogsEntryDTO); // Add to filterValues instead
+            }
+        }
+        return filterValues; // Return filterValues instead of values
+    }
+
 }

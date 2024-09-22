@@ -20,9 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Controller for handling Discogs query-related operations.
@@ -98,20 +99,10 @@ public class DiscogsQueryController {
      * @return a list of unique DiscogsEntryDTO without duplicates
      */
     private List<DiscogsEntryDTO> removeDuplicateEntries(final List<DiscogsEntryDTO> values) {
-        List<DiscogsEntryDTO> filterValues = new ArrayList<>();
-        for (final DiscogsEntryDTO discogsEntryDTO : values) {
-            boolean anyMatch = false;
-            for (final DiscogsEntryDTO valuesEntry : filterValues) {
-                if (valuesEntry.id() == discogsEntryDTO.id()) {
-                    anyMatch = true;
-                    break;
-                }
-            }
-            if (!anyMatch) {
-                filterValues.add(discogsEntryDTO); // Add to filterValues instead
-            }
-        }
-        return filterValues; // Return filterValues instead of values
+        Set<Integer> seenIds = new HashSet<>();
+        return values.stream()
+                .filter(entry -> seenIds.add(entry.id())) // add returns false if the id was already present
+                .toList();
     }
 
 }

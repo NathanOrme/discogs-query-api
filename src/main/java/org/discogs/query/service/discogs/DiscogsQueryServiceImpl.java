@@ -78,7 +78,7 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
     }
 
     private static Stream<DiscogsEntry> concatStreams(final DiscogsResult results, final DiscogsResult compResults) {
-        return Stream.concat(results.getResults().stream(), compResults.getResults().stream());
+        return Stream.concat(results.getResults().stream(), compResults.getResults().stream()).distinct();
     }
 
     private static DiscogsEntry filterAndProcessEntry(final DiscogsEntry entry,

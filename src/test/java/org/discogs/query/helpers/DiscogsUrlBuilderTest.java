@@ -47,6 +47,7 @@ class DiscogsUrlBuilderTest {
                 "Artist A", // artist
                 "Album A",  // album
                 "Track A",  // track
+                null,
                 "Format A", // format
                 null,       // country
                 null,       // types

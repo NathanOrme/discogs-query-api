@@ -66,6 +66,7 @@ class DiscogsFilterServiceImplTest {
                 "Artist",
                 "Track",
                 "Album",
+                null,
                 "Format",
                 DiscogCountries.UK,
                 DiscogsTypes.RELEASE,

@@ -29,6 +29,7 @@ class DiscogsQueryDTOTest {
         DiscogsQueryDTO queryDTO = new DiscogsQueryDTO(
                 "The Beatles",
                 "Hey Jude",
+                null,
                 null,  // Format can be null or empty
                 null,  // Country can be null
                 null,  // Barcode can be null
@@ -53,6 +54,7 @@ class DiscogsQueryDTOTest {
                 null,
                 null,
                 null,
+                null,
                 null
         );
 
@@ -73,6 +75,7 @@ class DiscogsQueryDTOTest {
                 "The Beatles",
                 "Hey Jude",
                 null,  // Format can be null
+                null,
                 null,
                 null,
                 null,

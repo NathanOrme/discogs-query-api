@@ -52,6 +52,7 @@ class DiscogsQueryServiceImplTest {
     void setUp() {
         // Initialize test data
         discogsQueryDTO = new DiscogsQueryDTO("Test Artist", null, "Test Track",
+                null,
                 DiscogsFormats.COMP.getFormat(), null, null, null);
 
         DiscogsEntry entry = new DiscogsEntry();

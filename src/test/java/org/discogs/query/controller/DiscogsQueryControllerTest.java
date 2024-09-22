@@ -40,6 +40,7 @@ class DiscogsQueryControllerTest {
             "War", // artist
             null,  // album
             "Low Rider", // track
+            null,
             null,  // format
             null,  // country
             null,  // types

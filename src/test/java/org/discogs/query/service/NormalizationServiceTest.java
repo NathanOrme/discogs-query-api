@@ -38,6 +38,7 @@ class NormalizationServiceTest {
                 "artist & album",
                 "album-title",
                 "track-name",
+                null,
                 "format",
                 DiscogCountries.COLOMBIA,
                 DiscogsTypes.LABEL,

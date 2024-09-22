@@ -33,8 +33,8 @@ class QueryProcessingServiceTest {
 
     @Test
     void processQueries_Success() {
-        DiscogsQueryDTO queryDTO = new DiscogsQueryDTO(null, null, null, null,
-                null, null, null);
+        DiscogsQueryDTO queryDTO = new DiscogsQueryDTO(null, null, null,
+                null, null, null, null, null);
         DiscogsResultDTO resultDTO = new DiscogsResultDTO(null, null);
 
         when(discogsQueryService.searchBasedOnQuery(any())).thenReturn(resultDTO);

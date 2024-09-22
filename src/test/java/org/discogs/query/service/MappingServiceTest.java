@@ -88,6 +88,6 @@ class MappingServiceTest {
 
     private DiscogsQueryDTO createDiscogsQueryDTO() {
         return new DiscogsQueryDTO("Artist", "Album", "Track",
-                "Format", null, null, "Barcode");
+                null, "Format", null, null, "Barcode");
     }
 }

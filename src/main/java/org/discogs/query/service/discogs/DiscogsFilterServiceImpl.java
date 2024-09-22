@@ -196,10 +196,11 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
      */
     private boolean filterArtists(final DiscogsQueryDTO discogsQueryDTO, final DiscogsRelease release) {
         log.debug("Filtering artists for release ID {}", release.getId());
-        boolean isArtistMatch = release.getArtists().parallelStream()
-                .anyMatch(artist -> isArtistNameMatching(discogsQueryDTO, artist.getName()));
-
-        if (!isArtistMatch && release.getExtraArtists() != null) {
+        boolean isArtistMatch = isArtistMatchNameOrAnyNameVariations(discogsQueryDTO, release);
+        if (isArtistMatch) {
+            return isArtistMatch;
+        }
+        if (release.getExtraArtists() != null) {
             log.debug("Checking extra artists for release ID {}", release.getId());
             isArtistMatch = release.getExtraArtists().parallelStream()
                     .anyMatch(artist -> isArtistNameMatching(discogsQueryDTO, artist.getName()));
@@ -207,6 +208,13 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
         log.debug("Artist match status for release ID {}: {}",
                 release.getId(), isArtistMatch);
         return isArtistMatch;
+    }
+
+    private boolean isArtistMatchNameOrAnyNameVariations(final DiscogsQueryDTO discogsQueryDTO,
+                                                         final DiscogsRelease release) {
+        return release.getArtists().parallelStream()
+                .anyMatch(artist -> isArtistNameMatching(discogsQueryDTO, artist.getName()) ||
+                        isArtistNameMatching(discogsQueryDTO, artist.getAnv()));
     }
 
     /**

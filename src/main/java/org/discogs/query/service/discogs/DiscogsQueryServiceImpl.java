@@ -30,7 +30,6 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class DiscogsQueryServiceImpl implements DiscogsQueryService {
 
-    public static final String UNITED_KINGDOM_LOCATION = "United Kingdom";
     private static final String UNEXPECTED_ISSUE_OCCURRED = "Unexpected issue occurred";
     private final DiscogsAPIClient discogsAPIClient;
     private final MappingService mappingService;

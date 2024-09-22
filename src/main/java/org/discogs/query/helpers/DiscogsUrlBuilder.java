@@ -198,8 +198,7 @@ public class DiscogsUrlBuilder {
      * Builds the search URL for a compilation album
      * based on the provided query parameters.
      *
-     * @param discogsQueryDTO the search query data transfer object
-     *                        containing the search criteria
+     * @param discogsQueryDTO the search query data transfer object containing the search criteria
      * @return the fully constructed search URL with query parameters
      */
     public String generateCompilationSearchUrl(final DiscogsQueryDTO discogsQueryDTO) {
@@ -207,7 +206,7 @@ public class DiscogsUrlBuilder {
                 discogsQueryDTO);
 
         DiscogsQueryDTO dtoForUrl = new DiscogsQueryDTO(
-                "Various",
+                null,
                 discogsQueryDTO.album(),
                 discogsQueryDTO.track(),
                 discogsQueryDTO.format().replace(" ", "+"),

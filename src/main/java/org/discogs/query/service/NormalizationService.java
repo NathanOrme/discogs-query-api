@@ -35,6 +35,7 @@ public class NormalizationService {
                 .replace("-", " ")
                 .replace("?", "")
                 .replaceAll("\\s+", " ")
+                .replace("*", "")
                 .trim();
     }
 

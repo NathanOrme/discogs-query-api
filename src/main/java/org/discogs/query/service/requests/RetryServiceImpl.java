@@ -26,8 +26,7 @@ public class RetryServiceImpl implements RetryService {
         int attempt = 1;
         while (isAttemptNumberLessThanMaximum(attempt)) {
             try {
-                log.info("Attempting {}. Attempt {} of {}", actionDescription
-                        , attempt, RETRY_COUNT);
+                log.info("Attempting {}. Attempt {} of {}", actionDescription, attempt, RETRY_COUNT);
                 return action.call();
             } catch (final Exception e) {
                 attempt = handleRetryCount(actionDescription, e, attempt);
@@ -39,9 +38,14 @@ public class RetryServiceImpl implements RetryService {
 
     private int handleRetryCount(final String actionDescription,
                                  final Exception e, int attempt) throws Exception {
-        log.warn("Error during {} on attempt {} of {}. Exception: {}",
-                actionDescription, attempt, RETRY_COUNT,
+        log.warn("Error during {} on attempt {} of {}. Exception: {}", actionDescription, attempt, RETRY_COUNT,
                 e.getMessage());
+        if (e.getCause() instanceof final HttpClientErrorException httpClientErrorException &&
+                httpClientErrorException.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+            log.debug("404 received, exiting retry logic");
+            throw e;
+        }
+
         if (attempt == RETRY_COUNT) {
             throw e;
         }

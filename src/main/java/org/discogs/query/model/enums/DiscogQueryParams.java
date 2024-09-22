@@ -22,6 +22,11 @@ public enum DiscogQueryParams {
     TRACK("track"),
 
     /**
+     * Represents the "title" query parameter.
+     */
+    TITLE("title"),
+
+    /**
      * Represents the "format" query parameter.
      */
     FORMAT("format"),

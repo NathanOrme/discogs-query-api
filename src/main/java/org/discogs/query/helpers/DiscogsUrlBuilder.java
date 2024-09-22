@@ -51,7 +51,8 @@ public class DiscogsUrlBuilder {
         return uriBuilder
                 .encode()
                 .toUriString()
-                .replace("%20", "+");
+                .replace("%20", "+")
+                .replace(" ", "+");
     }
 
     /**
@@ -173,6 +174,10 @@ public class DiscogsUrlBuilder {
                 discogsQueryDTO.album());
 
         uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
+                DiscogQueryParams.TITLE.getQueryType(),
+                discogsQueryDTO.title());
+
+        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
                 DiscogQueryParams.TRACK.getQueryType(),
                 discogsQueryDTO.track());
 
@@ -204,15 +209,7 @@ public class DiscogsUrlBuilder {
     public String generateCompilationSearchUrl(final DiscogsQueryDTO discogsQueryDTO) {
         log.debug("Building compilation search URL with parameters: {}",
                 discogsQueryDTO);
-
-        DiscogsQueryDTO dtoForUrl = new DiscogsQueryDTO(
-                null,
-                discogsQueryDTO.album(),
-                discogsQueryDTO.track(),
-                discogsQueryDTO.format().replace(" ", "+"),
-                discogsQueryDTO.country(),
-                discogsQueryDTO.types(),
-                discogsQueryDTO.barcode());
+        DiscogsQueryDTO dtoForUrl = generateDTOForSearching(discogsQueryDTO);
 
         UriComponentsBuilder uriBuilder =
                 UriComponentsBuilder.fromHttpUrl(discogsBaseUrl.concat(discogsSearchEndpoint))
@@ -222,8 +219,23 @@ public class DiscogsUrlBuilder {
 
         addQueryParams(uriBuilder, dtoForUrl);
         String compilationSearchUrl = getUrlString(uriBuilder);
+        compilationSearchUrl = compilationSearchUrl.replace(" ", "+");
 
         log.debug("Generated compilation search URL: {}", compilationSearchUrl);
         return compilationSearchUrl;
+    }
+
+    private static DiscogsQueryDTO generateDTOForSearching(final DiscogsQueryDTO discogsQueryDTO) {
+        String track = discogsQueryDTO.track().replace(" ", "+");
+        String artist = discogsQueryDTO.artist().replace(" ", "+");
+        return new DiscogsQueryDTO(
+                null,
+                discogsQueryDTO.album(),
+                null,
+                artist.concat("+-+").concat(track),
+                discogsQueryDTO.format().replace(" ", "+"),
+                discogsQueryDTO.country(),
+                discogsQueryDTO.types(),
+                discogsQueryDTO.barcode());
     }
 }

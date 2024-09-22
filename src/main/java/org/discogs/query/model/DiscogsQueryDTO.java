@@ -23,6 +23,8 @@ public record DiscogsQueryDTO(
 
         String track,
 
+        String title,
+
         String format,
 
         DiscogCountries country,

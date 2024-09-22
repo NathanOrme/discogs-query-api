@@ -53,6 +53,7 @@ public class NormalizationService {
                 normalizeString(query.artist()),
                 normalizeString(query.album()),
                 normalizeString(query.track()),
+                normalizeString(query.title()),
                 query.format(),
                 query.country(),
                 query.types(),

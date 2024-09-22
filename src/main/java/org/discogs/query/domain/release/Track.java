@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * Represents a track in the release. This includes details such as the
  * track title, duration, position, and type.
@@ -30,6 +32,8 @@ public class Track {
      * The title of the track.
      */
     private String title;
+
+    private List<Artist> artists;
 
     /**
      * The type of track (e.g., "track" for a standard track,

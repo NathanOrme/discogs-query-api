@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.domain.DiscogsEntry;
 import org.discogs.query.domain.DiscogsRelease;
 import org.discogs.query.domain.DiscogsResult;
+import org.discogs.query.domain.release.Artist;
 import org.discogs.query.domain.release.Track;
 import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.helpers.DiscogsUrlBuilder;
@@ -16,6 +17,7 @@ import org.discogs.query.service.NormalizationService;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -161,10 +163,11 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
                 log.error("No release details found for entry ID {}", discogsEntry.getId());
                 return false;
             }
+
             boolean isOnAlbum = !stringHelper.isNotVariousArtist(discogsQueryDTO.artist())
                     || filterArtists(discogsQueryDTO, release);
 
-            if (stringHelper.isNotNullOrBlank(discogsQueryDTO.track()) && isOnAlbum) {
+            if (stringHelper.isNotNullOrBlank(discogsQueryDTO.track())) {
                 log.info("Track specified in query. Applying filter and sorting results...");
                 isOnAlbum = filterTracks(discogsQueryDTO, release);
             }
@@ -229,7 +232,31 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
         log.debug("Filtering tracks for release ID {}", release.getId());
         boolean trackMatch = release.getTracklist().parallelStream()
                 .anyMatch(track -> isTrackEqualToOrContains(discogsQueryDTO, track));
+        if (trackMatch && isTrackListContainingArtists(release.getTracklist())) {
+            trackMatch = release.getTracklist().stream()
+                    .map(Track::getArtists)
+                    .filter(Objects::nonNull)
+                    .anyMatch(artists -> isArtistInTrackList(artists, discogsQueryDTO));
+        }
         log.debug("Track match status for release ID {}: {}", release.getId(), trackMatch);
         return trackMatch;
+    }
+
+    private boolean isTrackListContainingArtists(final List<Track> tracklist) {
+        return !tracklist.parallelStream().filter(track -> track.getArtists() != null).toList().isEmpty();
+    }
+
+    private boolean isArtistInTrackList(final List<Artist> artists, final DiscogsQueryDTO discogsQueryDTO) {
+        for (final Artist artist : artists) {
+            boolean match = isArtistNameMatching(discogsQueryDTO, artist.getName());
+            if (match) {
+                return true;
+            }
+            match = isArtistNameMatching(discogsQueryDTO, artist.getAnv());
+            if (match) {
+                return true;
+            }
+        }
+        return false;
     }
 }

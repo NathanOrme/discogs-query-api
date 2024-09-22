@@ -174,10 +174,6 @@ public class DiscogsUrlBuilder {
                 discogsQueryDTO.album());
 
         uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
-                DiscogQueryParams.TITLE.getQueryType(),
-                discogsQueryDTO.title());
-
-        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder,
                 DiscogQueryParams.TRACK.getQueryType(),
                 discogsQueryDTO.track());
 
@@ -216,8 +212,8 @@ public class DiscogsUrlBuilder {
                         .queryParam(PER_PAGE, pageSize)
                         .queryParam(PAGE, 1)
                         .queryParam(TOKEN, token);
-
         addQueryParams(uriBuilder, dtoForUrl);
+        uriBuilderHelper.addIfNotNullOrBlank(uriBuilder, DiscogQueryParams.Q.getQueryType(), dtoForUrl.title());
         String compilationSearchUrl = getUrlString(uriBuilder);
         compilationSearchUrl = compilationSearchUrl.replace(" ", "+");
 

@@ -39,7 +39,7 @@ discogs:
   search: database/search
   release: releases/
   marketplaceCheck: marketplace/stats/
-  agent: ${DISCOGS_AGENT}
+  agent: DiscogsQueryApplication/1.0 +https://github.com/NathanOrme/discogs-query-api
   page-size: 50
   rate-limit: 60
-  token: ${DISCOGS_TOKEN}
+  token: fXZuXsfLTsbwhcTYzgiPrjpzLPNPUXoGpSseGEXV

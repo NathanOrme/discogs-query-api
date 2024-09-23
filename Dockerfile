@@ -5,8 +5,8 @@ FROM maven:3-amazoncorretto-21 AS builder
 WORKDIR /app
 
 # Copy the Maven POM file and source code
-COPY pom.xml ./
-COPY src ./src
+COPY backend/pom.xml ./
+COPY backend/src ./src
 
 # Package the application (This will compile the code and build the JAR)
 RUN mvn clean package -DskipTests

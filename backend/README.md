@@ -103,7 +103,7 @@ discogs.token=YourAccessToken
     }
   ]
   ```
-- **Response**: An example response can be found [here](readme-resources/example-response.json)
+- **Response**: An example response can be found [here](../readme-resources/example-response.json)
 
 ### API Documentation
 

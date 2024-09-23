@@ -12,16 +12,12 @@ const Results = ({ response }) => {
       return displayError("No results found.");
     }
 
-    let hasResults = false;
-
     return response.map((queryResult, index) => {
       const results = queryResult.results;
 
       if (!results || Object.keys(results).length === 0) {
         return null; // Skip empty results
       }
-
-      hasResults = true; // Mark that we have valid results
 
       return (
         <div key={index}>
@@ -35,6 +31,24 @@ const Results = ({ response }) => {
 
             return (
               <div className="results-section" key={title}>
+                <div
+                  className="results-toggle-header"
+                  onClick={(e) => {
+                    const content = e.currentTarget.nextElementSibling;
+
+                    // Safety check
+                    if (content) {
+                      content.classList.toggle("hidden");
+                      e.currentTarget.textContent = content.classList.contains("hidden")
+                        ? `Show Results for ${title}`
+                        : `Hide Results for ${title}`;
+                    } else {
+                      console.error("Content not found for:", title);
+                    }
+                  }}
+                >
+                  Show Results for {title}
+                </div>
                 <div className="results-content hidden">
                   {entries.map((entry) => {
                     const id = entry.id || "N/A";
@@ -42,11 +56,6 @@ const Results = ({ response }) => {
                     const country = entry.country || "N/A";
                     const year = entry.year || "N/A";
                     const uri = entry.uri || "#";
-
-                    const numberForSale = entry.numberForSale ?? 0;
-                    const lowestPrice = entry.lowestPrice !== null && entry.lowestPrice !== undefined
-                      ? `£${parseFloat(entry.lowestPrice).toFixed(2)}`
-                      : "N/A";
 
                     return (
                       <div className="result-item" key={id}>
@@ -57,24 +66,12 @@ const Results = ({ response }) => {
                           <p><strong>Country:</strong> {country}</p>
                           <p><strong>Year:</strong> {year}</p>
                           <p><strong>URL:</strong> <a href={uri} target="_blank" rel="noopener noreferrer">{uri}</a></p>
-                          <p><strong>Number For Sale:</strong> {numberForSale}</p>
-                          <p><strong>Lowest Price:</strong> {lowestPrice}</p>
+                          <p><strong>Number For Sale:</strong> {entry.numberForSale || "N/A"}</p>
+                          <p><strong>Lowest Price:</strong> {entry.lowestPrice !== null ? `£${parseFloat(entry.lowestPrice).toFixed(2)}` : "N/A"}</p>
                         </div>
                       </div>
                     );
                   })}
-                </div>
-                <div
-                  className="results-toggle-header"
-                  onClick={(e) => {
-                    const content = e.currentTarget.nextElementSibling;
-                    content.classList.toggle("hidden");
-                    e.currentTarget.textContent = content.classList.contains("hidden")
-                      ? `Show Results for ${title}`
-                      : `Hide Results for ${title}`;
-                  }}
-                >
-                  Show Results for {title}
                 </div>
               </div>
             );

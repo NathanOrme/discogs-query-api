@@ -32,44 +32,44 @@ const SearchForm = ({ queries }) => {
 
     const apiUrl = getApiUrl();
     console.log("API URL:", apiUrl);
-    console.log("Queries to submit:", queries);
+    console.log("Queries to submit:", queries); // Log the queries here
 
     fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Basic dXNlcm5hbWU6cGFzc3dvcmQ=",
-      },
-      body: JSON.stringify(queries),
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: "Basic dXNlcm5hbWU6cGFzc3dvcmQ=",
+        },
+        body: JSON.stringify(queries), // Make sure queries are properly formatted
     })
-      .then((response) => {
+    .then((response) => {
         if (!response.ok) {
-          return response.text().then((errorMessage) => {
-            throw new Error(`Server responded with status ${response.status}: ${errorMessage}`);
-          });
+            return response.text().then((errorMessage) => {
+                throw new Error(`Server responded with status ${response.status}: ${errorMessage}`);
+            });
         }
         return response.json();
-      })
-      .then((data) => {
+    })
+    .then((data) => {
         setResultsData(data);
         console.log("Response data received:", data);
 
         if (Array.isArray(data) && data.length > 0) {
-          const cheapestItemsList = data.map(result => result.cheapestItem).filter(item => item !== null);
-          setCheapestItems(cheapestItemsList);
-          console.log("Cheapest items found:", cheapestItemsList);
+            const cheapestItemsList = data.map(result => result.cheapestItem).filter(item => item !== null);
+            setCheapestItems(cheapestItemsList);
+            console.log("Cheapest items found:", cheapestItemsList);
         } else {
-          setCheapestItems([]);
-          console.log("No cheapest items found.");
+            setCheapestItems([]);
+            console.log("No cheapest items found.");
         }
-      })
-      .catch((error) => {
+    })
+    .catch((error) => {
         console.error("Error:", error);
-      })
-      .finally(() => {
+    })
+    .finally(() => {
         setLoading(false);
-      });
-  };
+    });
+};
 
   return (
     <form onSubmit={handleSearchFormSubmit}>

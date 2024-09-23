@@ -33,8 +33,7 @@ FROM node:22 AS runtime
 WORKDIR /app
 
 # Install OpenJDK
-RUN apt-get update && apt-get upgrade -y && apt-cache search openjdk &&  apt-get install openjdk-21-jdk -y && apt-get \
-     clean
+RUN apt-get update && apt-get upgrade -y && apt-get install openjdk21 -y && apt-get clean
 
 # Install Serve globally
 RUN npm install -g serve

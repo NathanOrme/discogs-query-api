@@ -11,7 +11,7 @@ COPY backend/src ./src
 RUN mvn clean package -DskipTests
 
 # Stage 2: Build the frontend
-FROM node:18 AS frontend-builder
+FROM node:22 AS frontend-builder
 # Set the working directory for the frontend
 WORKDIR /app/frontend
 

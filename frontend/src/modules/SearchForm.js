@@ -1,13 +1,9 @@
 // src/modules/SearchForm.js
 
 import React, { useState } from 'react';
-import Results from './Results.js';
-import CheapestItem from './CheapestItem.js'; // Import the default export
 
-const SearchForm = ({ queries }) => {
+const SearchForm = ({ queries, setResponse, setCheapestItems }) => {
   const [loading, setLoading] = useState(false);
-  const [resultsData, setResultsData] = useState(null);
-  const [cheapestItems, setCheapestItems] = useState([]);
 
   const getApiUrl = () => {
     const hostname = window.location.hostname;
@@ -32,7 +28,7 @@ const SearchForm = ({ queries }) => {
 
     const apiUrl = getApiUrl();
     console.log("API URL:", apiUrl);
-    console.log("Queries to submit:", queries); // Log the queries here
+    console.log("Queries to submit:", queries);
 
     fetch(apiUrl, {
         method: "POST",
@@ -40,7 +36,7 @@ const SearchForm = ({ queries }) => {
             "Content-Type": "application/json",
             Authorization: "Basic dXNlcm5hbWU6cGFzc3dvcmQ=",
         },
-        body: JSON.stringify(queries), // Make sure queries are properly formatted
+        body: JSON.stringify(queries),
     })
     .then((response) => {
         if (!response.ok) {
@@ -51,12 +47,11 @@ const SearchForm = ({ queries }) => {
         return response.json();
     })
     .then((data) => {
-        setResultsData(data);
-        console.log("Response data received:", data);
+        setResponse(data); // Set response in App.js
 
         if (Array.isArray(data) && data.length > 0) {
             const cheapestItemsList = data.map(result => result.cheapestItem).filter(item => item !== null);
-            setCheapestItems(cheapestItemsList);
+            setCheapestItems(cheapestItemsList); // Set cheapest items in App.js
             console.log("Cheapest items found:", cheapestItemsList);
         } else {
             setCheapestItems([]);
@@ -74,8 +69,6 @@ const SearchForm = ({ queries }) => {
   return (
     <form onSubmit={handleSearchFormSubmit}>
       <button type="submit" disabled={loading}>{loading ? 'Loading...' : 'Search'}</button>
-      {resultsData && <Results response={resultsData} />}
-      {cheapestItems.length > 0 && <CheapestItem items={cheapestItems} />} {/* Use CheapestItem component */}
     </form>
   );
 };

@@ -1,31 +1,5 @@
 /* components.css */
 
-/* Instructions Section */
-.instructions {
-    background: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.instructions h2 {
-    margin-top: 0;
-}
-
-.instructions p {
-    margin-bottom: 10px;
-}
-
-.instructions ol {
-    margin: 0;
-    padding-left: 20px;
-}
-
-.instructions strong {
-    color: #333;
-}
-
 /* Form Container Styles */
 .form-container {
     background: #fff;
@@ -212,88 +186,6 @@ input[type="checkbox"] {
     margin-top: 20px;
     text-align: center;
     transition: background-color 0.3s, color 0.3s;
-}
-
-/* Cheapest Item Section Styles */
-#cheapest-item-section {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px; /* Add margin for spacing */
-}
-
-#cheapest-item-section h2 {
-    margin-top: 0;
-}
-
-/* Header for Cheapest Item Section */
-.cheapest-item-header {
-    cursor: pointer;
-    padding: 12px;
-    background-color: #007bff;
-    color: white;
-    border-radius: 4px;
-    font-weight: bold;
-    margin-bottom: 10px; /* Space below the header */
-    display: flex;
-    justify-content: space-between; /* Space between items */
-    align-items: center; /* Center items vertically */
-    overflow: hidden; /* Prevent overflow */
-}
-
-.cheapest-item-header:hover {
-    background-color: #0056b3;
-}
-
-/* Content for Cheapest Item Section */
-.cheapest-item-content {
-    border-top: 1px solid #ccc;
-    padding-top: 10px;
-}
-
-.cheapest-item {
-    margin-bottom: 20px; /* Increased space between items */
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: white;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s, border-color 0.3s;
-    color: #333; /* Default text color */
-}
-
-.cheapest-item h3 {
-    margin: 0 0 10px;
-    color: #333;
-}
-
-/* Details inside each Cheapest Item */
-.cheapest-item .details {
-    font-size: 14px;
-    color: #555;
-}
-
-.cheapest-item .details p {
-    margin: 5px 0;
-}
-
-.cheapest-item .details a {
-    color: #007bff;
-    text-decoration: none;
-}
-
-.cheapest-item .details a:hover {
-    text-decoration: underline;
-}
-
-/* Ensuring visibility and layout */
-.cheapest-item img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 4px;
-    display: block;
-    margin-bottom: 10px;
 }
 
 /* View Item Button Styles */

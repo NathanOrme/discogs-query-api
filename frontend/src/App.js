@@ -2,13 +2,17 @@
 import React, { useState } from 'react';
 import './css/base.css';
 import './css/components.css';
-import './css/layout.css';
 import './css/themes.css';
 import QueryFields from './modules/QueryFields';
 import SearchForm from './modules/SearchForm';
+import DarkModeToggle from './modules/DarkModeToggle';
+import CheapestItem from './modules/CheapestItem';
+import Results from './modules/Results';
 
 function App() {
-  const [queries, setQueries] = useState([{ id: 1 }]); // Manage queries here
+  const [queries, setQueries] = useState([{ id: 1 }]);
+  const [cheapestItems, setCheapestItems] = useState([]);
+  const [response, setResponse] = useState([]);
 
   const handleQueriesChange = (newQueries) => {
     setQueries(newQueries);
@@ -18,16 +22,27 @@ function App() {
     <div className="App">
       <header>
         <h1>Discogs Query App</h1>
-        <button id="toggleDarkMode">Toggle Dark Mode</button>
+        <DarkModeToggle />
+        {/* Instructions here */}
       </header>
       <main>
-        <div className="instructions">
-          {/* Instructions go here */}
+        <div className="query-section">
+          <QueryFields onQueriesChange={handleQueriesChange} />
         </div>
-        <QueryFields onQueriesChange={handleQueriesChange} /> {/* Pass handler */}
-        <SearchForm queries={queries} /> {/* Pass queries */}
+        <div className="results-section">
+          <SearchForm 
+            queries={queries} 
+            setResponse={setResponse} 
+            setCheapestItems={setCheapestItems} // Pass the handler
+          />
+        </div>
+        <div className="results-section">
+          <Results response={response} />
+        </div>
+        <div className="cheapest-item-section">
+          <CheapestItem items={cheapestItems} />
+        </div>
         <div id="loading" style={{ display: 'none' }}>Loading...</div>
-        <div id="results"></div>
       </main>
     </div>
   );

@@ -2,9 +2,9 @@ package org.discogs.query.service.discogs;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.discogs.query.domain.DiscogsEntry;
-import org.discogs.query.domain.DiscogsMarketplaceResult;
-import org.discogs.query.domain.DiscogsResult;
+import org.discogs.query.domain.api.DiscogsEntry;
+import org.discogs.query.domain.api.DiscogsMarketplaceResult;
+import org.discogs.query.domain.api.DiscogsResult;
 import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.helpers.DiscogsUrlBuilder;
 import org.discogs.query.helpers.StringHelper;

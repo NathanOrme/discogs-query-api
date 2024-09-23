@@ -1,4 +1,4 @@
-package org.discogs.query.domain;
+package org.discogs.query.domain.api;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,11 +8,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.discogs.query.domain.release.Artist;
-import org.discogs.query.domain.release.ExtraArtist;
-import org.discogs.query.domain.release.Format;
-import org.discogs.query.domain.release.Label;
-import org.discogs.query.domain.release.Track;
+import org.discogs.query.domain.api.release.Artist;
+import org.discogs.query.domain.api.release.ExtraArtist;
+import org.discogs.query.domain.api.release.Format;
+import org.discogs.query.domain.api.release.Label;
+import org.discogs.query.domain.api.release.Track;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
 package org.discogs.query.interfaces;
 
-import org.discogs.query.domain.DiscogsMarketplaceResult;
-import org.discogs.query.domain.DiscogsRelease;
-import org.discogs.query.domain.DiscogsResult;
+import org.discogs.query.domain.api.DiscogsMarketplaceResult;
+import org.discogs.query.domain.api.DiscogsRelease;
+import org.discogs.query.domain.api.DiscogsResult;
 
 /**
  * Interface for interacting with the Discogs API.

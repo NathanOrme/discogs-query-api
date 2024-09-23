@@ -1,4 +1,4 @@
-package org.discogs.query.domain.release;
+package org.discogs.query.domain.api.release;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

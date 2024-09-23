@@ -1,10 +1,10 @@
-package org.discogs.query.domain;
+package org.discogs.query.domain.api;
 
-import org.discogs.query.domain.release.Artist;
-import org.discogs.query.domain.release.ExtraArtist;
-import org.discogs.query.domain.release.Format;
-import org.discogs.query.domain.release.Label;
-import org.discogs.query.domain.release.Track;
+import org.discogs.query.domain.api.release.Artist;
+import org.discogs.query.domain.api.release.ExtraArtist;
+import org.discogs.query.domain.api.release.Format;
+import org.discogs.query.domain.api.release.Label;
+import org.discogs.query.domain.api.release.Track;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

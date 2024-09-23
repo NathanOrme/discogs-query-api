@@ -1,8 +1,8 @@
 package org.discogs.query.service.discogs;
 
-import org.discogs.query.domain.DiscogsEntry;
-import org.discogs.query.domain.DiscogsRelease;
-import org.discogs.query.domain.DiscogsResult;
+import org.discogs.query.domain.api.DiscogsEntry;
+import org.discogs.query.domain.api.DiscogsRelease;
+import org.discogs.query.domain.api.DiscogsResult;
 import org.discogs.query.helpers.DiscogsUrlBuilder;
 import org.discogs.query.interfaces.DiscogsAPIClient;
 import org.discogs.query.model.DiscogsQueryDTO;

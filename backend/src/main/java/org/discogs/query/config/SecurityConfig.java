@@ -24,6 +24,7 @@ public class SecurityConfig {
             "https://discogsqueryapi1-fthsfv0p.b4a.run",
             "https://discogs-query-api-rgbnathan.koyeb.app",
             "https://discogs-query-api.onrender.com",
+            "https://rgbnathan-discogs-api.netlify.app/",
             "https://rgbnathan.co.uk", "https://rgbnathan.uk");
 
     /**

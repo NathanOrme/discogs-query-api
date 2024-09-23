@@ -1,4 +1,4 @@
-package org.discogs.query.domain.release;
+package org.discogs.query.domain.api.release;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

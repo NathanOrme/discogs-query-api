@@ -3,7 +3,7 @@ package org.discogs.query.helpers;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.discogs.query.domain.DiscogsEntry;
+import org.discogs.query.domain.api.DiscogsEntry;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.enums.DiscogQueryParams;
 import org.discogs.query.model.enums.DiscogsTypes;

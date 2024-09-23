@@ -1,6 +1,6 @@
 package org.discogs.query.client;
 
-import org.discogs.query.domain.DiscogsResult;
+import org.discogs.query.domain.api.DiscogsResult;
 import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.interfaces.HttpRequestService;
 import org.discogs.query.interfaces.RateLimiterService;

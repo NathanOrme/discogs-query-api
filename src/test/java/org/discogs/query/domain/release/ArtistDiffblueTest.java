@@ -1,5 +1,6 @@
 package org.discogs.query.domain.release;
 
+import org.discogs.query.domain.api.release.Artist;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

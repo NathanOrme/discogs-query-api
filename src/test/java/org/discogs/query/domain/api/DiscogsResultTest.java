@@ -1,4 +1,4 @@
-package org.discogs.query.domain;
+package org.discogs.query.domain.api;
 
 import org.junit.jupiter.api.Test;
 

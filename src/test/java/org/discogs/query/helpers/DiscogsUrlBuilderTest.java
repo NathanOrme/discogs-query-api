@@ -1,6 +1,6 @@
 package org.discogs.query.helpers;
 
-import org.discogs.query.domain.DiscogsEntry;
+import org.discogs.query.domain.api.DiscogsEntry;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

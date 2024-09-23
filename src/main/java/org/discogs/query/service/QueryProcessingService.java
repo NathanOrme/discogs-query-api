@@ -3,6 +3,8 @@ package org.discogs.query.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.interfaces.DiscogsQueryService;
+import org.discogs.query.interfaces.DiscogsWebScraperClient;
+import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,7 @@ public class QueryProcessingService {
 
     private final DiscogsQueryService discogsQueryService;
     private final NormalizationService normalizationService;
+    private final DiscogsWebScraperClient discogsWebScraperClient;
 
     /**
      * Processes each query asynchronously and retrieves the results from the Discogs API.
@@ -41,6 +44,24 @@ public class QueryProcessingService {
         List<CompletableFuture<DiscogsResultDTO>> futures = createFuturesForQueries(normalizedList);
         return handleFuturesWithTimeout(futures, timeoutInSeconds);
     }
+
+    public List<DiscogsResultDTO> filterOutEntriesNotShippingFromUk(final List<DiscogsResultDTO> results) {
+        return results.stream()
+                .map(discogsResultDTO -> {
+                    // Filter out DiscogsEntryDTOs that do not have shipping results
+                    List<DiscogsEntryDTO> filteredEntries = discogsResultDTO.results().stream()
+                            .filter(discogsEntryDTO -> !discogsWebScraperClient
+                                    .getMarketplaceResultsForRelease(String.valueOf(discogsEntryDTO.id()))
+                                    .isEmpty())
+                            .toList();
+
+                    // Return a new DiscogsResultDTO with the filtered entries
+                    return new DiscogsResultDTO(discogsResultDTO.searchQuery(), filteredEntries);
+                })
+                .filter(discogsResultDTO -> !discogsResultDTO.results().isEmpty()) // Filter out empty result DTOs
+                .toList();
+    }
+
 
     private List<CompletableFuture<DiscogsResultDTO>> createFuturesForQueries(
             final List<DiscogsQueryDTO> discogsQueryDTOList) {

@@ -28,7 +28,7 @@ public class RateLimiter {
      * The scheduler resets the request count every minute.
      */
     public RateLimiter() {
-        log.info("Initializing RateLimiter with a maximum of {} requests per minute.", maxRequestsPerMinute);
+        log.debug("Initializing RateLimiter with a maximum of {} requests per minute.", maxRequestsPerMinute);
         scheduler.scheduleAtFixedRate(this::resetRequestCount, 1, 1, TimeUnit.MINUTES);
     }
 
@@ -37,7 +37,7 @@ public class RateLimiter {
      */
     private void resetRequestCount() {
         requestCount.set(0);
-        log.info("Request count reset. Ready for new requests.");
+        log.debug("Request count reset. Ready for new requests.");
     }
 
     /**
@@ -49,7 +49,7 @@ public class RateLimiter {
         int currentCount = requestCount.incrementAndGet();
         if (currentCount > maxRequestsPerMinute) {
             requestCount.decrementAndGet(); // Roll back increment if limit exceeded
-            log.warn("Rate limit exceeded. Current request count: {}", currentCount - 1);
+            log.debug("Rate limit exceeded. Current request count: {}", currentCount - 1);
             return false;
         }
         log.debug("Permit acquired. Current request count: {}", currentCount);

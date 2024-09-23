@@ -26,6 +26,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
 
+    public static final String ERROR_SCRAPING_THE_DISCOGS_MARKETPLACE_ATTEMPT = "Error scraping the Discogs " +
+            "Marketplace, attempt {}/{}";
     private final HttpConfig httpConfig;
 
     /**
@@ -37,7 +39,8 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
      */
     @Override
     public List<DiscogsWebsiteResult> getMarketplaceResultsForRelease(final String releaseId) {
-        String url = "https://www.discogs.com/sell/release/" + releaseId;
+        // Construct the URL with the filter for United Kingdom
+        String url = "https://www.discogs.com/sell/release/" + releaseId + "?ev=rb&ships_from=United+Kingdom";
         log.info("Fetching marketplace data for release ID: {}", releaseId);
 
         int maxRetries = 3; // Number of retry attempts
@@ -52,40 +55,26 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
                         .get();
                 Elements listings = doc.select(".shortcut_navigable");
 
-                // Filter the listings by 'Ships From: United Kingdom'
+                // Check if any listings exist
+                if (listings.isEmpty()) {
+                    log.info("No listings found for release ID: {}", releaseId);
+                    return new ArrayList<>(); // Return empty list if no listings
+                }
+
+                // Process each listing
                 List<DiscogsWebsiteResult> results = new ArrayList<>();
                 for (final Element listing : listings) {
-                    // Get seller information
-                    Element sellerInfo = listing.selectFirst(".seller_info");
-                    if (sellerInfo != null) {
-                        checkSellerInfo(listing, sellerInfo, results);
-                    }
+                    checkSellerInfo(listing, results);
                 }
                 return results;
             } catch (final HttpStatusException e) {
-                log.error("Error scraping the Discogs Marketplace, attempt {}/{}", retryCount + 1, maxRetries);
+                log.error(ERROR_SCRAPING_THE_DISCOGS_MARKETPLACE_ATTEMPT, retryCount + 1, maxRetries);
                 retryCount++;
-
-                // Wait before the next retry
-                try {
-                    Thread.sleep(delay);
-                } catch (final InterruptedException ie) {
-                    Thread.currentThread().interrupt(); // Restore interrupted status
-                    log.error("Thread was interrupted while waiting to retry", ie);
-                    return new ArrayList<>(); // Return empty list if interrupted
-                }
+                waitBeforeRetry(delay);
             } catch (final IOException e) {
-                log.error("Error scraping the Discogs Marketplace, attempt {}/{}", retryCount + 1, maxRetries);
+                log.error(ERROR_SCRAPING_THE_DISCOGS_MARKETPLACE_ATTEMPT, retryCount + 1, maxRetries);
                 retryCount++;
-
-                // Wait before the next retry
-                try {
-                    Thread.sleep(delay);
-                } catch (final InterruptedException ie) {
-                    Thread.currentThread().interrupt(); // Restore interrupted status
-                    log.error("Thread was interrupted while waiting to retry", ie);
-                    return new ArrayList<>(); // Return empty list if interrupted
-                }
+                waitBeforeRetry(delay);
             }
         }
 
@@ -93,37 +82,52 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
         return new ArrayList<>(); // Return empty list if all retries fail
     }
 
-
-    private void checkSellerInfo(final Element listing, final Element sellerInfo,
-                                 final List<DiscogsWebsiteResult> results) {
-        // Check if the listing ships from the United Kingdom
-        Element shippingInfo = sellerInfo.selectFirst("li:containsOwn(Ships From:)");
-        if (shippingInfo == null) {
-            log.debug("No Shipping Info Found");
-            return;
+    private void waitBeforeRetry(final long delay) {
+        try {
+            Thread.sleep(delay);
+        } catch (final InterruptedException ie) {
+            Thread.currentThread().interrupt(); // Restore interrupted status
+            log.error("Thread was interrupted while waiting to retry", ie);
         }
-        if (!shippingInfo.text().contains("United Kingdom")) {
-            log.debug("No Items shipping from the UK");
-        }
-        // Extract seller name
-        String sellerName = sellerInfo.selectFirst("strong > a").text();
+    }
 
-        // Extract seller rating
-        Element ratingElement = sellerInfo.selectFirst(".star_rating");
-        String sellerRating = ratingElement != null ? ratingElement.attr("aria-label") : "No rating";
+    private void checkSellerInfo(final Element listing, final List<DiscogsWebsiteResult> results) {
+        Elements sellerItems = listing.select("ul > li");
 
-        // Extract number of ratings
-        String ratingCount = sellerInfo.selectFirst("a.section_link").text();
-
-        // Extract price and condition
+        String sellerName = null;
+        String sellerRating = "No rating";
+        String ratingCount = "0 ratings";
         String price = listing.selectFirst(".price").text();
         String condition = listing.selectFirst(".item_condition span").text();
 
-        // Create and add the result
-        DiscogsWebsiteResult result = new DiscogsWebsiteResult(
-                price, condition, "United Kingdom", sellerName, sellerRating, ratingCount
-        );
-        results.add(result);
+        log.debug("Checking seller info for listing: {}", listing.html());
+
+        for (final Element item : sellerItems) {
+            if (item.selectFirst("span.mplabel.seller_label") != null) {
+                sellerName = item.selectFirst("strong > a").text();
+                log.debug("Found seller name: {}", sellerName);
+            } else if (item.selectFirst(".star_rating") != null) {
+                sellerRating = item.selectFirst(".star_rating").attr("aria-label");
+                ratingCount = item.selectFirst("a.section_link").text();
+                log.debug("Found seller rating: {} with count: {}", sellerRating, ratingCount);
+            } else if (item.text().contains("Ships From:")) {
+                if (!item.text().contains("United Kingdom")) {
+                    log.debug("No items shipping from the UK: {}", item.text());
+                    return; // Exit if not shipping from the UK
+                } else {
+                    log.debug("Item ships from the United Kingdom.");
+                }
+            }
+        }
+
+        if (sellerName != null) {
+            DiscogsWebsiteResult result = new DiscogsWebsiteResult(
+                    price, condition, "United Kingdom", sellerName, sellerRating, ratingCount
+            );
+            results.add(result);
+            log.info("Added result for seller: {}", sellerName);
+        } else {
+            log.debug("Seller information not found for listing.");
+        }
     }
 }
-

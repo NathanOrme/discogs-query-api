@@ -62,10 +62,12 @@ public class DiscogsQueryController {
 
         List<DiscogsResultDTO> resultDTOList = queryProcessingService.processQueries(discogsQueryDTO, timeoutInSeconds);
 
-        if (resultDTOList.isEmpty()) {
+        if (resultDTOList.isEmpty() || hasNoEntries(resultDTOList)) {
             log.warn("No results found for the provided queries");
             return ResponseEntity.noContent().build();
         }
+        log.info("Filtering results to show items that ship from the UK");
+        resultDTOList = queryProcessingService.filterOutEntriesNotShippingFromUk(resultDTOList);
 
         int size = resultCalculationService.calculateSizeOfResults(resultDTOList);
         log.info("Returning {} results: {}", size, resultDTOList);
@@ -75,6 +77,15 @@ public class DiscogsQueryController {
         filterDuplicateEntries(resultMapDTOList);
 
         return ResponseEntity.ok().body(resultMapDTOList);
+    }
+
+    private boolean hasNoEntries(final List<DiscogsResultDTO> resultDTOList) {
+        for (final DiscogsResultDTO discogsResultDTO : resultDTOList) {
+            if (!discogsResultDTO.results().isEmpty()) {
+                return false;
+            }
+        }
+        return true;
     }
 
 

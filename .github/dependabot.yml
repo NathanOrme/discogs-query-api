@@ -7,7 +7,7 @@ updates:
       interval: "weekly"
 
   - package-ecosystem: "maven"
-    directory: "/"
+    directory: "/backend"
     schedule:
       interval: "weekly"
 

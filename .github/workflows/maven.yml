@@ -89,7 +89,7 @@ jobs:
           DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Build Docker Image
         run: |

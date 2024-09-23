@@ -100,8 +100,6 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
         String price = listing.selectFirst(".price").text();
         String condition = listing.selectFirst(".item_condition span").text();
 
-        log.debug("Checking seller info for listing: {}", listing.html());
-
         for (final Element item : sellerItems) {
             if (item.selectFirst("span.mplabel.seller_label") != null) {
                 sellerName = item.selectFirst("strong > a").text();

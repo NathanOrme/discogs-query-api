@@ -1,132 +1,45 @@
-# Discogs Query
+# Discogs Query Application
 
-A Spring Boot application for querying the Discogs API. This project allows you to search for records in the Discogs
-database by specifying an artist, track, and optional format. It includes configuration for API documentation using
-Swagger and handles exceptions related to Discogs API interactions.
+## Overview
 
-<!-- TOC -->
+The Discogs Query Application is a Java-based backend service that allows users to query data from the Discogs API. The application is accompanied by a React frontend that provides a user-friendly interface for interacting with the backend.
 
-* [Discogs Query](#discogs-query)
-    * [Features](#features)
-    * [Architecture](#architecture)
-    * [Getting Started](#getting-started)
-        * [Prerequisites](#prerequisites)
-        * [Installation](#installation)
-        * [Configuration](#configuration)
-        * [Endpoints](#endpoints)
-            * [**Search Records**](#search-records)
-        * [API Documentation](#api-documentation)
-    * [Exception Handling](#exception-handling)
-    * [Development](#development)
-        * [Code Style](#code-style)
-        * [Running Tests](#running-tests)
+## Table of Contents
 
-<!-- TOC -->
+- [Features](#features)
+- [Technologies](#technologies)
+- [Getting Started](#getting-started)
+- [Running the Application](#running-the-application)
+- [API Endpoints](#api-endpoints)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Features
 
-- **Search Functionality**: Query the Discogs database using artist, track, and format information.
-- **Swagger API Documentation**: Automatically generates interactive API documentation.
-- **Exception Handling**: Custom exception handling for errors related to the Discogs API.
+- Query data from the Discogs API.
+- View results in a structured format.
+- Responsive design for desktop and mobile devices.
+- Dark mode support.
 
-## Architecture
+## Technologies
 
-- **Spring Boot**: The application is built using the Spring Boot framework for easy configuration and deployment.
-- **RestTemplate**: Used for making HTTP requests to the Discogs API.
-- **Swagger**: Integrated for API documentation.
-- **Custom Exceptions**: Handles internal server errors with a custom exception class.
+- **Backend**: Java, Spring Boot, Maven
+- **Frontend**: React, Node.js
+- **Testing**: Jest, React Testing Library
 
 ## Getting Started
 
+To get a copy of the project up and running on your local machine for development and testing purposes, follow these steps:
+
 ### Prerequisites
 
-- Java 17 or higher
-- Maven 3.6.0 or higher
+- [Docker](https://www.docker.com/get-started) installed on your machine.
+- [Node.js](https://nodejs.org/) installed (for the frontend).
+- [Maven](https://maven.apache.org/) installed (for the backend).
 
-### Installation
-
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/yourusername/discogs-query.git
-   cd discogs-query
-   ```
-2. **Build the Project**
+### Clone the Repository
 
 ```bash
-mvn clean install
-```
-
-3. **Run the Application**
-
-```bash
-mvn spring-boot:run
-```
-
-### Configuration
-
-The application requires certain configuration properties to interact with the Discogs API. These properties should be
-defined in the application.properties file:
-
-```properties
-discogs.url=https://api.discogs.com
-discogs.search=/database/search
-discogs.agent=YourUserAgent
-discogs.page-size=20
-discogs.token=YourAccessToken
-```
-
-### Endpoints
-
-#### **Search Records**
-
-**URL**: `/discogs-query/search`
-
-- **Method**: `POST`
-- **Request Body**:
-
-  ```json
-  [
-    {
-    "track": "Love Train",
-    "artist": "The O'Jays",
-    "format": "Compilation Vinyl"
-    },
-    {
-    "track": "A fifth of beethoven",
-    "artist": "Walter Murphy",
-    "format": "Compilation Vinyl"
-    },
-    {
-    "track": "In the summertime",
-    "artist": "Mungo Jerry",
-    "format": "Compilation Vinyl"
-    }
-  ]
-  ```
-- **Response**: An example response can be found [here](readme-resources/example-response.json)
-
-### API Documentation
-
-The API documentation is available via Swagger at:
-http://localhost:9090/swagger-ui.html
-
-## Exception Handling
-
-The application uses a custom exception handler for errors related to the Discogs API:
-
-- **`DiscogsAPIException`**: Thrown when an internal server error occurs. It maps to HTTP status code 500.
-
-## Development
-
-### Code Style
-
-- Java 17 or higher is required.
-- Follow standard Java coding conventions and use Javadoc for documentation.
-
-### Running Tests
-
-To run the unit tests, use:
-
-```bash
-mvn test
+git clone https://github.com/NathanOrme/discogs-query.git
+cd discogs-query
 ```

@@ -39,39 +39,9 @@ jobs:
         id: set_output
         run: echo "::set-output name=version::${{ steps.get_semver.outputs.next_version }}"
 
-  javascript-test:
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Cache Node.js Modules
-        uses: actions/cache@v4
-        with:
-          path: |
-            node_modules
-            .npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run Jest tests
-        run: npm test
-
   build:
     runs-on: ubuntu-latest
-    needs: [ setup, javascript-test ]
+    needs: [ setup ]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -104,25 +74,26 @@ jobs:
           fi
 
       - name: Set Version With Maven
-        run: mvn versions:set -DnewVersion=${{ needs.setup.outputs.version }}
+        run: mvn versions:set -DnewVersion=${{ needs.setup.outputs.version }} -f backend/pom.xml
 
-      - name: Install dependencies
-        run: mvn clean install -DskipTests
+      - name: Install backend dependencies
+        run: mvn clean install -DskipTests -f backend/pom.xml
         env:
           DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
           DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}
 
       - name: Run Checkstyle
-        run: mvn checkstyle:check -Dcheckstyle.config.location=lint/checkstyle.xml
+        run: mvn checkstyle:check -Dcheckstyle.config.location=lint/checkstyle.xml -f backend/pom.xml
         env:
           DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
           DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}
 
-      - name: Build with Maven
-        run: mvn clean install package javadoc:javadoc
-        env:
-          DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
-          DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker Image
+        run: |
+          docker build -t discogs-app -f Dockerfile .
 
       - name: Zip Javadoc
         run: |

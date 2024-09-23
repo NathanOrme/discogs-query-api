@@ -1,0 +1,173 @@
+/* base.css */
+
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+/* Layout Container */
+main {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; /* Space between the columns */
+}
+
+.instructions, .query-section, .results-section, .cheapest-item-section {
+    flex: 1;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+}
+
+/* Header for Cheapest Item Section */
+.cheapest-item-header {
+    cursor: pointer;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-bottom: 10px; /* Space below the header */
+    display: flex;
+    justify-content: space-between; /* Space between items */
+    align-items: center; /* Center items vertically */
+    overflow: hidden; /* Prevent overflow */
+}
+
+.cheapest-item-header:hover {
+    background-color: #0056b3;
+}
+
+/* Content for Cheapest Item Section */
+.cheapest-item-content {
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+}
+
+.cheapest-item h3 {
+    margin: 0 0 10px;
+    color: #333;
+}
+
+/* Details inside each Cheapest Item */
+.cheapest-item .details {
+    font-size: 14px;
+    color: #555;
+}
+
+.cheapest-item .details p {
+    margin: 5px 0;
+}
+
+.cheapest-item .details a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.cheapest-item .details a:hover {
+    text-decoration: underline;
+}
+
+/* Ensuring visibility and layout */
+.cheapest-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.query-section {
+    flex-basis: 20%; /* Queries section takes up 20% of the width */
+}
+
+.results-section {
+    flex-basis: 60%; /* Results section takes up the majority (60%) */
+}
+
+.cheapest-item-section {
+    flex-basis: 20%; /* CheapestItem section takes up 20% */
+}
+
+/* Header Styles */
+header {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items */
+    padding: 10px 0;
+}
+
+header h1 {
+    margin: 0;
+}
+
+#toggleDarkMode {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 20px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#toggleDarkMode:hover {
+    background-color: #0056b3;
+}
+
+/* Button Styles */
+button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+    transition: background-color 0.3s, color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Loading Spinner */
+#loading {
+    display: none;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 16px;
+    color: #007bff;
+}
+
+/* Responsive layout for mobile */
+@media (max-width: 768px) {
+    main {
+        flex-direction: column; /* Stack columns vertically on small screens */
+    }
+
+    .query-section, .results-section, .cheapest-item-section {
+        flex-basis: 100%; /* Take full width on small screens */
+    }
+}

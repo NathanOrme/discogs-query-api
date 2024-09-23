@@ -1,3 +1,4 @@
+// src/App.js
 import React, { useState } from 'react';
 import './css/base.css';
 import './css/components.css';
@@ -7,7 +8,11 @@ import QueryFields from './modules/QueryFields';
 import SearchForm from './modules/SearchForm';
 
 function App() {
-  const [queryCounter, setQueryCounter] = useState(1);
+  const [queries, setQueries] = useState([{ id: 1 }]); // Manage queries here
+
+  const handleQueriesChange = (newQueries) => {
+    setQueries(newQueries);
+  };
 
   return (
     <div className="App">
@@ -19,7 +24,8 @@ function App() {
         <div className="instructions">
           {/* Instructions go here */}
         </div>
-        <SearchForm />
+        <QueryFields onQueriesChange={handleQueriesChange} /> {/* Pass handler */}
+        <SearchForm queries={queries} /> {/* Pass queries */}
         <div id="loading" style={{ display: 'none' }}>Loading...</div>
         <div id="results"></div>
       </main>

@@ -1,43 +1,40 @@
 // src/modules/QueryFields.js
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { discogsTypes, discogFormats, discogCountries } from './DiscogsData';
 
-const QueryFields = () => {
+const QueryFields = ({ onQueriesChange }) => {
   const [queries, setQueries] = useState([{ id: 1 }]); // Initial state with one query
   const [queryCounter, setQueryCounter] = useState(1);
 
+  useEffect(() => {
+    onQueriesChange(queries);
+  }, [queries, onQueriesChange]);
+
   const addQuery = () => {
-    setQueries([...queries, { id: queryCounter + 1 }]);
+    const newQuery = { id: queryCounter + 1 };
+    setQueries([...queries, newQuery]);
     setQueryCounter(queryCounter + 1);
+    console.log("Added new query:", newQuery);
   };
 
   const removeQuery = (id) => {
-    setQueries(queries.filter(query => query.id !== id));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    for (const query of queries) {
-      const artistInput = e.target[`artist-${query.id}`].value.trim();
-      const barcodeInput = e.target[`barcode-${query.id}`].value.trim();
-      if (!artistInput && !barcodeInput) {
-        alert("Please provide either an artist name or a barcode.");
-        return;
-      }
-    }
-    // Submit logic here (e.g., API call)
+    const updatedQueries = queries.filter(query => query.id !== id);
+    setQueries(updatedQueries);
+    console.log("Removed query with id:", id, "Remaining queries:", updatedQueries);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form>
       {queries.map(query => (
         <div className="query" key={query.id}>
           <div className="query-header">
             <span>Query {query.id}</span>
-            <button type="button" className="delete-button" onClick={() => removeQuery(query.id)}>
-              {/* SVG for delete button */}
-            </button>
+            {queries.length > 1 && (
+              <button type="button" className="delete-button" onClick={() => removeQuery(query.id)}>
+                Remove
+              </button>
+            )}
           </div>
           <div className="query-content">
             <label htmlFor={`artist-${query.id}`}>Artist:</label>
@@ -76,7 +73,6 @@ const QueryFields = () => {
         </div>
       ))}
       <button type="button" onClick={addQuery}>Add Query</button>
-      <button type="submit">Submit</button>
     </form>
   );
 };

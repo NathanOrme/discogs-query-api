@@ -20,6 +20,9 @@ COPY frontend/package.json ./
 COPY frontend/package-lock.json ./ 
 RUN npm install
 
+# Install serve globally
+RUN npm install -g serve
+
 # Copy the rest of the frontend source code
 COPY frontend/src ./src
 COPY frontend/public ./public

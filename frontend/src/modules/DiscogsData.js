@@ -1,7 +1,5 @@
 // src/modules/discogsData.js
 
-import React from 'react';
-
   const discogsTypes = [
     { value: "RELEASE", text: "Release" },
     { value: "MASTER", text: "Master" },

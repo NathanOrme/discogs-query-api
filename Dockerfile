@@ -29,11 +29,11 @@ COPY backend/src ./src
 RUN mvn clean package -DskipTests
 
 # Stage 3: Create a runtime image with Node.js and OpenJDK
-FROM node:22 AS runtime
+FROM node:22-alpine AS runtime
 WORKDIR /app
 
 # Install OpenJDK
-RUN apt-get update && apt-get upgrade -y && apt-get install openjdk21 -y && apt-get clean
+RUN apk add --no-cache openjdk21
 
 # Install Serve globally
 RUN npm install -g serve

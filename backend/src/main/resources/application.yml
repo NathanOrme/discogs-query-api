@@ -40,6 +40,6 @@ discogs:
   release: releases/
   marketplaceCheck: marketplace/stats/
   agent: DiscogsQueryApplication/1.0 +https://github.com/NathanOrme/discogs-query-api
-  page-size: 50
+  page-size: 20
   rate-limit: 60
   token: fXZuXsfLTsbwhcTYzgiPrjpzLPNPUXoGpSseGEXV

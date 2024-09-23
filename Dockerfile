@@ -44,14 +44,14 @@ COPY --from=backend-builder /app/backend/target/discogs-query-1.0-SNAPSHOT.jar /
 # Copy the frontend build files
 COPY --from=frontend-builder /app/frontend/build ./frontend/build
 
-# Expose the ports
-EXPOSE 9090 3000
-
 # Add metadata labels
 LABEL org.opencontainers.image.title="Discogs Query Application" \
       org.opencontainers.image.version="1.0" \
       org.opencontainers.image.description="A Java application for querying Discogs" \
       org.opencontainers.image.authors="Nathan Orme"
+
+# Expose only the frontend port
+EXPOSE 3000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s \
@@ -59,3 +59,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=30s \
 
 # Run both the backend and frontend
 ENTRYPOINT ["sh", "-c", "java -jar /app/discogs-app.jar & serve -s frontend/build -l 3000"]
+

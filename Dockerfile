@@ -51,7 +51,7 @@ LABEL org.opencontainers.image.title="Discogs Query Application" \
       org.opencontainers.image.authors="Nathan Orme"
 
 # Expose only the frontend port
-EXPOSE 3000
+EXPOSE 3000 9090
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s \

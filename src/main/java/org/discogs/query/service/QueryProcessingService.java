@@ -49,10 +49,8 @@ public class QueryProcessingService {
         return results.stream()
                 .map(discogsResultDTO -> {
                     // Filter out DiscogsEntryDTOs that do not have shipping results
-                    List<DiscogsEntryDTO> filteredEntries = discogsResultDTO.results().stream()
-                            .filter(discogsEntryDTO -> !discogsWebScraperClient
-                                    .getMarketplaceResultsForRelease(String.valueOf(discogsEntryDTO.id()))
-                                    .isEmpty())
+                    List<DiscogsEntryDTO> filteredEntries = discogsResultDTO.results().parallelStream()
+                            .filter(this::isUKMarketplaceEntry)
                             .toList();
 
                     // Return a new DiscogsResultDTO with the filtered entries
@@ -60,6 +58,12 @@ public class QueryProcessingService {
                 })
                 .filter(discogsResultDTO -> !discogsResultDTO.results().isEmpty()) // Filter out empty result DTOs
                 .toList();
+    }
+
+    private boolean isUKMarketplaceEntry(final DiscogsEntryDTO discogsEntryDTO) {
+        return !discogsWebScraperClient
+                .getMarketplaceResultsForRelease(String.valueOf(discogsEntryDTO.id()))
+                .isEmpty();
     }
 
 

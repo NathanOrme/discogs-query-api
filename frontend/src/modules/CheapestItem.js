@@ -1,4 +1,4 @@
-// src/components/CheapestItem.js
+// src/modules/CheapestItem.js
 
 import React from 'react';
 import PropTypes from 'prop-types';

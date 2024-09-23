@@ -33,11 +33,9 @@ function App() {
           <SearchForm 
             queries={queries} 
             setResponse={setResponse} 
-            setCheapestItems={setCheapestItems} // Pass the handler
+            onCheapestItemsChange={setCheapestItems} // Correctly pass the handler
           />
-        </div>
-        <div className="results-section">
-          <Results response={response} />
+          {response.length > 0 && <Results response={response} />}
         </div>
         <div className="cheapest-item-section">
           <CheapestItem items={cheapestItems} />

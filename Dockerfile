@@ -3,16 +3,16 @@ FROM node:22 AS frontend-builder
 WORKDIR /app/frontend
 
 # Copy package.json and install dependencies
-COPY frontend/package.json ./
-COPY frontend/package-lock.json ./
+COPY package.json ./
+COPY package-lock.json ./
 RUN npm install
 
 # Install serve globally
 RUN npm install -g serve
 
 # Copy the rest of the frontend source code
-COPY frontend/src ./src
-COPY frontend/public ./public
+COPY src ./src
+COPY public ./public
 
 # Build the frontend
 RUN npm run build
@@ -22,8 +22,8 @@ FROM maven:3-amazoncorretto-21 AS backend-builder
 WORKDIR /app/backend
 
 # Copy the Maven POM file and source code for the backend
-COPY backend/pom.xml ./
-COPY backend/src ./src
+COPY pom.xml ./
+COPY src ./src
 
 # Package the backend application (This will compile the code and build the JAR)
 RUN mvn clean package -DskipTests

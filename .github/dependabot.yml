@@ -7,12 +7,12 @@ updates:
       interval: "weekly"
 
   - package-ecosystem: "maven"
-    directory: "/backend"
+    directory: "/"
     schedule:
       interval: "weekly"
 
   - package-ecosystem: "npm"
-    directory: "/frontend"
+    directory: "/"
     schedule:
       interval: "weekly"
 

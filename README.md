@@ -1,8 +1,9 @@
 # Discogs Query
 
-A Spring Boot application for querying the Discogs API. This project allows you to search for records in the Discogs
-database by specifying an artist, track, and optional format. It includes configuration for API documentation using
-Swagger and handles exceptions related to Discogs API interactions.
+A full-stack application for querying the Discogs API. Built using Spring Boot for the backend and React for the
+frontend, this project allows you to search for records in the Discogs database by specifying an artist, track, and
+optional format. It includes configuration for API documentation using Swagger and handles exceptions related to Discogs
+API interactions.
 
 <!-- TOC -->
 
@@ -13,10 +14,9 @@ Swagger and handles exceptions related to Discogs API interactions.
         * [Prerequisites](#prerequisites)
         * [Installation](#installation)
         * [Configuration](#configuration)
-        * [Endpoints](#endpoints)
-            * [**Search Records**](#search-records)
-        * [API Documentation](#api-documentation)
-    * [Exception Handling](#exception-handling)
+        * [Running Locally](#running-locally)
+            * [Run the Backend](#run-the-backend)
+            * [Run the Frontend](#run-the-frontend)
     * [Development](#development)
         * [Code Style](#code-style)
         * [Running Tests](#running-tests)
@@ -28,44 +28,46 @@ Swagger and handles exceptions related to Discogs API interactions.
 - **Search Functionality**: Query the Discogs database using artist, track, and format information.
 - **Swagger API Documentation**: Automatically generates interactive API documentation.
 - **Exception Handling**: Custom exception handling for errors related to the Discogs API.
+- **React Frontend**: A modern UI built with React to perform searches and display results.
+- **Docker Support**: Build and deploy the application with Docker.
 
 ## Architecture
 
-- **Spring Boot**: The application is built using the Spring Boot framework for easy configuration and deployment.
+- **Spring Boot**: Used for the backend with REST APIs to handle Discogs queries.
+- **React**: Frontend built with React, providing a search form and displaying results.
 - **RestTemplate**: Used for making HTTP requests to the Discogs API.
 - **Swagger**: Integrated for API documentation.
 - **Custom Exceptions**: Handles internal server errors with a custom exception class.
+- **Docker**: Multi-stage Dockerfile for building both frontend and backend in a single image.
 
 ## Getting Started
 
 ### Prerequisites
 
-- Java 17 or higher
+- Java 21 or higher
 - Maven 3.6.0 or higher
+- Node.js 22 or higher
+- Docker (optional, for containerized deployment)
 
 ### Installation
 
-1. **Clone the Repository**
+1. Clone the Repository
    ```bash
    git clone https://github.com/yourusername/discogs-query.git
    cd discogs-query
-   ```
-2. **Build the Project**
-
-```bash
-mvn clean install
-```
-
-3. **Run the Application**
-
-```bash
-mvn spring-boot:run
-```
+2. Install Backend Dependencies
+    ```bash
+    mvn clean install
+    ```
+3. Install Frontend Dependencies
+    ```bash
+    npm install
+    ```
 
 ### Configuration
 
 The application requires certain configuration properties to interact with the Discogs API. These properties should be
-defined in the application.properties file:
+defined in the application.properties file for the backend:
 
 ```properties
 discogs.url=https://api.discogs.com
@@ -75,58 +77,51 @@ discogs.page-size=20
 discogs.token=YourAccessToken
 ```
 
-### Endpoints
+### Running Locally
 
-#### **Search Records**
+You can run both the backend and frontend locally as follows:
 
-**URL**: `/discogs-query/search`
+#### Run the Backend
 
-- **Method**: `POST`
-- **Request Body**:
+```bash
+mvn spring-boot:run
+```
 
-  ```json
-  [
-    {
-    "track": "Love Train",
-    "artist": "The O'Jays",
-    "format": "Compilation Vinyl"
-    },
-    {
-    "track": "A fifth of beethoven",
-    "artist": "Walter Murphy",
-    "format": "Compilation Vinyl"
-    },
-    {
-    "track": "In the summertime",
-    "artist": "Mungo Jerry",
-    "format": "Compilation Vinyl"
-    }
-  ]
-  ```
-- **Response**: An example response can be found [here](../readme-resources/example-response.json)
+#### Run the Frontend
 
-### API Documentation
+```bash
+npm start
+```
 
-The API documentation is available via Swagger at:
-http://localhost:9090/swagger-ui.html
-
-## Exception Handling
-
-The application uses a custom exception handler for errors related to the Discogs API:
-
-- **`DiscogsAPIException`**: Thrown when an internal server error occurs. It maps to HTTP status code 500.
+This will start the backend on http://localhost:9090 and the frontend on http://localhost:3000.
 
 ## Development
 
 ### Code Style
 
-- Java 17 or higher is required.
-- Follow standard Java coding conventions and use Javadoc for documentation.
+- Java: Follow standard Java coding conventions and use Javadoc for documentation.
+- JavaScript: Adhere to standard JavaScript/React best practices.
 
 ### Running Tests
 
-To run the unit tests, use:
+To run the backend unit tests, use:
 
 ```bash
 mvn test
 ```
+
+For frontend tests, run:
+
+```bash
+npm test
+```
+
+Both frontend and backend tests are crucial to maintain code quality and robustness.
+
+This updated README reflects the new structure and provides additional details for Docker and deployment steps. Let me
+know if you'd like to add or modify anything!
+
+
+
+
+

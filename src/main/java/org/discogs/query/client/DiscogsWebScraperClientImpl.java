@@ -5,14 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.config.HttpConfig;
 import org.discogs.query.domain.website.DiscogsWebsiteResult;
 import org.discogs.query.interfaces.DiscogsWebScraperClient;
-import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +37,7 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
      * @return a list of {@link DiscogsWebsiteResult} containing marketplace listings
      */
     @Override
+    @Cacheable(value = "discogsWebsite", key = "#releaseId")
     public List<DiscogsWebsiteResult> getMarketplaceResultsForRelease(final String releaseId) {
         // Construct the URL with the filter for United Kingdom
         String url = "https://www.discogs.com/sell/release/" + releaseId + "?ev=rb&ships_from=United+Kingdom";
@@ -45,7 +45,6 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
 
         int maxRetries = 3; // Number of retry attempts
         int retryCount = 0; // Current retry count
-        long delay = 2000; // Delay in milliseconds (2 seconds)
 
         while (retryCount < maxRetries) {
             try {
@@ -62,19 +61,10 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
                 }
 
                 // Process each listing
-                List<DiscogsWebsiteResult> results = new ArrayList<>();
-                for (final Element listing : listings) {
-                    checkSellerInfo(listing, results);
-                }
-                return results;
-            } catch (final HttpStatusException e) {
+                return processListings(listings);
+            } catch (final Exception e) {
                 log.error(ERROR_SCRAPING_THE_DISCOGS_MARKETPLACE_ATTEMPT, retryCount + 1, maxRetries);
                 retryCount++;
-                waitBeforeRetry(delay);
-            } catch (final IOException e) {
-                log.error(ERROR_SCRAPING_THE_DISCOGS_MARKETPLACE_ATTEMPT, retryCount + 1, maxRetries);
-                retryCount++;
-                waitBeforeRetry(delay);
             }
         }
 
@@ -82,13 +72,12 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
         return new ArrayList<>(); // Return empty list if all retries fail
     }
 
-    private void waitBeforeRetry(final long delay) {
-        try {
-            Thread.sleep(delay);
-        } catch (final InterruptedException ie) {
-            Thread.currentThread().interrupt(); // Restore interrupted status
-            log.error("Thread was interrupted while waiting to retry", ie);
+    private List<DiscogsWebsiteResult> processListings(final Elements listings) {
+        List<DiscogsWebsiteResult> results = new ArrayList<>();
+        for (final Element listing : listings) {
+            checkSellerInfo(listing, results);
         }
+        return results;
     }
 
     private void checkSellerInfo(final Element listing, final List<DiscogsWebsiteResult> results) {

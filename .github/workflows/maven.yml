@@ -74,16 +74,16 @@ jobs:
           fi
 
       - name: Set Version With Maven
-        run: mvn versions:set -DnewVersion=${{ needs.setup.outputs.version }} -f backend/pom.xml
+        run: mvn versions:set -DnewVersion=${{ needs.setup.outputs.version }}
 
       - name: Install backend dependencies
-        run: mvn clean install -DskipTests -f backend/pom.xml
+        run: mvn clean install -DskipTests
         env:
           DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
           DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}
 
       - name: Run Checkstyle
-        run: mvn checkstyle:check -Dcheckstyle.config.location=lint/checkstyle.xml -f backend/pom.xml
+        run: mvn checkstyle:check -Dcheckstyle.config.location=lint/checkstyle.xml
         env:
           DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
           DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}

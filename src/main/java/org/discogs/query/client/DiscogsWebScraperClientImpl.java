@@ -44,23 +44,35 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
         String url = "https://www.discogs.com/sell/release/" + releaseId + "?ev=rb&ships_from=United+Kingdom";
         log.info("Fetching marketplace data for release ID: {}", releaseId);
 
+        Document doc = fetchDocumentWithRetry(url); // Call the refactored retry logic for jsoupHelper
+
+        // Process the document if it was fetched successfully
+        Elements listings = doc.select(".shortcut_navigable");
+
+        // Check if any listings exist
+        if (listings.isEmpty()) {
+            log.info("No listings found for release ID: {}", releaseId);
+            return new ArrayList<>(); // Return empty list if no listings
+        }
+
+        // Process each listing
+        return processListings(listings);
+    }
+
+    /**
+     * Tries to fetch the HTML document from the given URL with retries.
+     *
+     * @param url the URL to fetch
+     * @return the fetched Document
+     */
+    private Document fetchDocumentWithRetry(final String url) {
         int maxRetries = 3; // Number of retry attempts
         int retryCount = 0; // Current retry count
 
         while (retryCount < maxRetries) {
             try {
-                // Fetch and parse the HTML from the Discogs marketplace page
-                Document doc = jsoupHelper.connect(url, httpConfig.buildHeaders().toSingleValueMap());
-                Elements listings = doc.select(".shortcut_navigable");
-
-                // Check if any listings exist
-                if (listings.isEmpty()) {
-                    log.info("No listings found for release ID: {}", releaseId);
-                    return new ArrayList<>(); // Return empty list if no listings
-                }
-
-                // Process each listing
-                return processListings(listings);
+                // Fetch and parse the HTML from the Discogs marketplace page using JsoupHelper
+                return jsoupHelper.connect(url, httpConfig.buildHeaders().toSingleValueMap());
             } catch (final Exception e) {
                 log.error(ERROR_SCRAPING_THE_DISCOGS_MARKETPLACE_ATTEMPT, retryCount + 1, maxRetries);
                 retryCount++;
@@ -89,7 +101,7 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
         }
         return results;
     }
-    
+
     private void checkSellerInfo(final Element listing, final List<DiscogsWebsiteResult> results) {
         Elements sellerItems = listing.select("ul > li");
 

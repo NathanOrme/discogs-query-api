@@ -2,6 +2,7 @@ package org.discogs.query.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.discogs.query.exceptions.NoMarketplaceListingsException;
 import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.interfaces.DiscogsWebScraperClient;
 import org.discogs.query.model.DiscogsEntryDTO;
@@ -61,9 +62,14 @@ public class QueryProcessingService {
     }
 
     private boolean isUKMarketplaceEntry(final DiscogsEntryDTO discogsEntryDTO) {
-        return !discogsWebScraperClient
-                .getMarketplaceResultsForRelease(String.valueOf(discogsEntryDTO.id()))
-                .isEmpty();
+        try {
+            return !discogsWebScraperClient
+                    .getMarketplaceResultsForRelease(String.valueOf(discogsEntryDTO.id()))
+                    .isEmpty();
+        } catch (final NoMarketplaceListingsException e) {
+            log.error(e.getMessage());
+            return false;
+        }
     }
 
 

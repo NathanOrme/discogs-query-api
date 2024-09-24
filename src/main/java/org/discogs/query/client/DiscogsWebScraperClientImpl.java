@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.config.HttpConfig;
 import org.discogs.query.domain.website.DiscogsWebsiteResult;
+import org.discogs.query.exceptions.NoMarketplaceListingsException;
 import org.discogs.query.interfaces.DiscogsWebScraperClient;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -37,6 +38,7 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
      * @return a list of {@link DiscogsWebsiteResult} containing marketplace listings
      */
     @Override
+    @Cacheable(value = "discogsResults", key = "#searchUrl")
     public List<DiscogsWebsiteResult> getMarketplaceResultsForRelease(final String releaseId) {
         // Construct the URL with the filter for United Kingdom
         String url = "https://www.discogs.com/sell/release/" + releaseId + "?ev=rb&ships_from=United+Kingdom";
@@ -64,17 +66,18 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
             } catch (final Exception e) {
                 log.error(ERROR_SCRAPING_THE_DISCOGS_MARKETPLACE_ATTEMPT, retryCount + 1, maxRetries);
                 retryCount++;
-                waitBeforeRetry(100);
+                waitBeforeRetry();
             }
         }
 
-        log.error("Failed to scrape data from Discogs Marketplace after {} attempts", maxRetries);
-        return new ArrayList<>(); // Return empty list if all retries fail
+        String errorMessage = "Failed to scrape data from Discogs Marketplace after %s attempts".formatted(maxRetries);
+        log.error(errorMessage);
+        throw new NoMarketplaceListingsException(errorMessage);
     }
 
-    private void waitBeforeRetry(final long delay) {
+    private void waitBeforeRetry() {
         try {
-            Thread.sleep(delay);
+            Thread.sleep(500);
         } catch (final InterruptedException ie) {
             Thread.currentThread().interrupt(); // Restore interrupted status
             log.error("Thread was interrupted while waiting to retry", ie);

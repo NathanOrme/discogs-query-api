@@ -1,8 +1,6 @@
 // src/App.js
 import React, { useState } from 'react';
 import './css/base.css';
-import './css/components.css';
-import './css/themes.css';
 import QueryFields from './modules/QueryFields';
 import SearchForm from './modules/SearchForm';
 import DarkModeToggle from './modules/DarkModeToggle';

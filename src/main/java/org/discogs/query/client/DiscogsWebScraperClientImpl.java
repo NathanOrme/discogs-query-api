@@ -39,7 +39,6 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
      * @return a list of {@link DiscogsWebsiteResult} containing marketplace listings
      */
     @Override
-    @Cacheable(value = "discogsResults", key = "#searchUrl")
     public List<DiscogsWebsiteResult> getMarketplaceResultsForRelease(final String releaseId) {
         // Construct the URL with the filter for United Kingdom
         String url = "https://www.discogs.com/sell/release/" + releaseId + "?ev=rb&ships_from=United+Kingdom";

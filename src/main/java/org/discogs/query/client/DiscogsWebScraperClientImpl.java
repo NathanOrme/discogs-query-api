@@ -64,11 +64,21 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
             } catch (final Exception e) {
                 log.error(ERROR_SCRAPING_THE_DISCOGS_MARKETPLACE_ATTEMPT, retryCount + 1, maxRetries);
                 retryCount++;
+                waitBeforeRetry(100);
             }
         }
 
         log.error("Failed to scrape data from Discogs Marketplace after {} attempts", maxRetries);
         return new ArrayList<>(); // Return empty list if all retries fail
+    }
+
+    private void waitBeforeRetry(final long delay) {
+        try {
+            Thread.sleep(delay);
+        } catch (final InterruptedException ie) {
+            Thread.currentThread().interrupt(); // Restore interrupted status
+            log.error("Thread was interrupted while waiting to retry", ie);
+        }
     }
 
     private List<DiscogsWebsiteResult> processListings(final Elements listings) {

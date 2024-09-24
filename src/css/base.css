@@ -223,6 +223,11 @@ body.dark-mode a:hover {
     color: #80b3ff;
 }
 
+/* Hidden class */
+.hidden {
+    display: none;
+}
+
 /* Responsive layout */
 @media (max-width: 768px) {
     main {

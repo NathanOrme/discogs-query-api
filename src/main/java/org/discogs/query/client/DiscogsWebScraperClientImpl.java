@@ -89,7 +89,7 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
         }
         return results;
     }
-
+    
     private void checkSellerInfo(final Element listing, final List<DiscogsWebsiteResult> results) {
         Elements sellerItems = listing.select("ul > li");
 

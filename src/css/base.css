@@ -1,3 +1,5 @@
+/* Combined CSS */
+
 /* General Styles */
 body {
     font-family: Arial, sans-serif;
@@ -175,19 +177,29 @@ body.dark-mode header, .dark-mode #toggleDarkMode {
     color: #e0e0e0;
 }
 
-body.dark-mode .instructions, .dark-mode .form-container, .dark-mode .results-container,
-.dark-mode .result-item, .dark-mode .cheapest-item-section, .dark-mode .query-section,
-.dark-mode .results-section {
+body.dark-mode .instructions,
+body.dark-mode .form-container,
+body.dark-mode .results-container,
+body.dark-mode .result-item,
+body.dark-mode .cheapest-item-section,
+body.dark-mode .query-section,
+body.dark-mode .query,
+body.dark-mode .results-section {
     background-color: #1e1e1e;
     border-color: #333;
+    color: #e0e0e0;
 }
 
-body.dark-mode .query-header, .dark-mode .results-toggle-header, .dark-mode .cheapest-item-header {
+body.dark-mode .query-header,
+body.dark-mode .results-toggle-header,
+body.dark-mode .cheapest-item-header {
     background-color: #1e1e1e;
     color: #e0e0e0;
 }
 
-body.dark-mode input, .dark-mode textarea, .dark-mode select {
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
     background-color: #2c2c2c;
     color: #e0e0e0;
     border: 1px solid #555;

@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.config.HttpConfig;
 import org.discogs.query.domain.website.DiscogsWebsiteResult;
 import org.discogs.query.exceptions.NoMarketplaceListingsException;
+import org.discogs.query.helpers.JsoupHelper;
 import org.discogs.query.interfaces.DiscogsWebScraperClient;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -29,6 +29,7 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
     public static final String ERROR_SCRAPING_THE_DISCOGS_MARKETPLACE_ATTEMPT = "Error scraping the Discogs " +
             "Marketplace, attempt {}/{}";
     private final HttpConfig httpConfig;
+    private final JsoupHelper jsoupHelper;
 
     /**
      * Scrapes the Discogs Marketplace website for listings of a given release ID and filters them by country (United
@@ -50,9 +51,7 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
         while (retryCount < maxRetries) {
             try {
                 // Fetch and parse the HTML from the Discogs marketplace page
-                Document doc = Jsoup.connect(url)
-                        .headers(httpConfig.buildHeaders().toSingleValueMap())
-                        .get();
+                Document doc = jsoupHelper.connect(url, httpConfig.buildHeaders().toSingleValueMap());
                 Elements listings = doc.select(".shortcut_navigable");
 
                 // Check if any listings exist

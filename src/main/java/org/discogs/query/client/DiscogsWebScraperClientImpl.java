@@ -87,7 +87,7 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
 
     private void waitBeforeRetry() {
         try {
-            Thread.sleep(500);
+            Thread.sleep(200);
         } catch (final InterruptedException ie) {
             Thread.currentThread().interrupt(); // Restore interrupted status
             log.error("Thread was interrupted while waiting to retry", ie);

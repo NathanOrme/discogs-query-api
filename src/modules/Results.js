@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getApiUrl } from './Api'; // Import the getApiUrl function
 
 // Function to download JSON data
 const exportToJson = (data, filename) => {
@@ -26,7 +27,8 @@ const Results = ({ response }) => {
     setError(null);
 
     try {
-      const apiResponse = await fetch('/discogs-query/filter-uk', {
+      const apiUrl = `${getApiUrl()}/filter-uk`; // Construct the new endpoint using getApiUrl
+      const apiResponse = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

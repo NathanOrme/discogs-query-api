@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 // Function to download JSON data
 const exportToJson = (data, filename) => {
@@ -17,12 +17,42 @@ export const displayError = (message) => {
 };
 
 const Results = ({ response }) => {
-  const renderResults = () => {
-    if (!Array.isArray(response) || response.length === 0) {
-      return displayError("No results found.");
+  const [filteredResponse, setFilteredResponse] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const callFilterUkMarketplace = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/discogs-query/filter-uk', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(response), // Send original results to be filtered
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to filter results');
+      }
+
+      const filteredData = await response.json();
+      setFilteredResponse(filteredData); // Update state with filtered results
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const renderResults = (data) => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return displayError('No results found.');
     }
 
-    return response.map((queryResult, index) => {
+    return data.map((queryResult, index) => {
       const results = queryResult.results;
 
       if (!results || Object.keys(results).length === 0) {
@@ -48,12 +78,12 @@ const Results = ({ response }) => {
 
                     // Safety check
                     if (content) {
-                      content.classList.toggle("hidden");
-                      e.currentTarget.textContent = content.classList.contains("hidden")
+                      content.classList.toggle('hidden');
+                      e.currentTarget.textContent = content.classList.contains('hidden')
                         ? `Show Results for ${title}`
                         : `Hide Results for ${title}`;
                     } else {
-                      console.error("Content not found for:", title);
+                      console.error('Content not found for:', title);
                     }
                   }}
                 >
@@ -61,11 +91,11 @@ const Results = ({ response }) => {
                 </div>
                 <div className="results-content hidden">
                   {entries.map((entry) => {
-                    const id = entry.id || "N/A";
-                    const format = entry.format ? entry.format.join(", ") : "N/A";
-                    const country = entry.country || "N/A";
-                    const year = entry.year || "N/A";
-                    const uri = entry.uri || "#";
+                    const id = entry.id || 'N/A';
+                    const format = entry.format ? entry.format.join(', ') : 'N/A';
+                    const country = entry.country || 'N/A';
+                    const year = entry.year || 'N/A';
+                    const uri = entry.uri || '#';
 
                     return (
                       <div className="result-item" key={id}>
@@ -76,8 +106,8 @@ const Results = ({ response }) => {
                           <p><strong>Country:</strong> {country}</p>
                           <p><strong>Year:</strong> {year}</p>
                           <p><strong>URL:</strong> <a href={uri} target="_blank" rel="noopener noreferrer">{uri}</a></p>
-                          <p><strong>Number For Sale:</strong> {entry.numberForSale || "N/A"}</p>
-                          <p><strong>Lowest Price:</strong> {entry.lowestPrice !== null ? `£${parseFloat(entry.lowestPrice).toFixed(2)}` : "N/A"}</p>
+                          <p><strong>Number For Sale:</strong> {entry.numberForSale || 'N/A'}</p>
+                          <p><strong>Lowest Price:</strong> {entry.lowestPrice !== null ? `£${parseFloat(entry.lowestPrice).toFixed(2)}` : 'N/A'}</p>
                         </div>
                       </div>
                     );
@@ -99,7 +129,19 @@ const Results = ({ response }) => {
       >
         Export Results to JSON
       </button>
-      {renderResults()}
+
+      {/* Button to call the UK marketplace filter */}
+      <button
+        onClick={callFilterUkMarketplace}
+        className="filter-button"
+        disabled={loading}
+      >
+        {loading ? 'Filtering...' : 'Filter UK Marketplace'}
+      </button>
+
+      {/* Render original or filtered results */}
+      {error && displayError(error)}
+      {filteredResponse ? renderResults(filteredResponse) : renderResults(response)}
     </div>
   );
 };

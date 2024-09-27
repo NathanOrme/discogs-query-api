@@ -66,7 +66,7 @@ public class QueryProcessingService {
             return !discogsWebScraperClient
                     .getMarketplaceResultsForRelease(String.valueOf(discogsEntryDTO.id()))
                     .isEmpty();
-        } catch (final NoMarketplaceListingsException e) {
+        } catch (final Exception e) {
             log.error(e.getMessage());
             return false;
         }

@@ -10,7 +10,8 @@ const SearchForm = ({ queries, setResponse, onCheapestItemsChange }) => {
     event.preventDefault();
     setLoading(true);
 
-    const apiUrl = getApiUrl();
+    // Use the search API URL
+    const apiUrl = getApiUrl('search');
     console.log("API URL:", apiUrl);
     console.log("Queries to submit:", queries);
 

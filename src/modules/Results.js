@@ -1,3 +1,5 @@
+// src/modules/Results.js
+
 import React, { useState } from 'react';
 import { getApiUrl } from './Api'; // Import the getApiUrl function
 
@@ -26,8 +28,10 @@ const Results = ({ response }) => {
     setLoading(true);
     setError(null);
 
+    const apiUrl = getApiUrl('filterUk'); // Get the filter UK endpoint
+    console.log("Filtering UK marketplace with API URL:", apiUrl);
+
     try {
-      const apiUrl = `${getApiUrl()}/filter-uk`; // Construct the new endpoint using getApiUrl
       const apiResponse = await fetch(apiUrl, {
         method: 'POST',
         headers: {

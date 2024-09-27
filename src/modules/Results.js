@@ -26,7 +26,7 @@ const Results = ({ response }) => {
     setError(null);
 
     try {
-      const response = await fetch('/discogs-query/filter-uk', {
+      const apiResponse = await fetch('/discogs-query/filter-uk', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -34,11 +34,11 @@ const Results = ({ response }) => {
         body: JSON.stringify(response), // Send original results to be filtered
       });
 
-      if (!response.ok) {
+      if (!apiResponse.ok) {
         throw new Error('Failed to filter results');
       }
 
-      const filteredData = await response.json();
+      const filteredData = await apiResponse.json();
       setFilteredResponse(filteredData); // Update state with filtered results
     } catch (err) {
       setError(err.message);

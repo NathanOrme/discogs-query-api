@@ -84,7 +84,7 @@ input[type="text"], select, textarea {
 }
 
 /* Button Styles */
-button, .export-btn, .uk-marketplace-btn {
+button, .export-btn {
     display: block;
     width: 100%;
     padding: 12px;
@@ -98,20 +98,11 @@ button, .export-btn, .uk-marketplace-btn {
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* Filter UK Marketplace Button */
-.uk-marketplace-btn {
-    background-color: #28a745; /* Green color for UK button */
+button:hover, .export-btn:hover {
+    background-color: #0056b3;
 }
 
-button:hover, .export-btn:hover, .uk-marketplace-btn:hover {
-    background-color: #0056b3; /* Hover for existing buttons */
-}
-
-.uk-marketplace-btn:hover {
-    background-color: #218838; /* Darker green for UK button hover */
-}
-
-button:disabled, .uk-marketplace-btn:disabled {
+button:disabled {
     background-color: #6c757d;
     cursor: not-allowed;
 }
@@ -213,16 +204,14 @@ body.dark-mode select {
 }
 
 body.dark-mode button,
-body.dark-mode .export-btn,
-body.dark-mode .uk-marketplace-btn {
+body.dark-mode .export-btn {
     background-color: #444;
     color: #e0e0e0;
     border: 1px solid #555;
 }
 
 body.dark-mode button:hover,
-body.dark-mode .export-btn:hover,
-body.dark-mode .uk-marketplace-btn:hover {
+body.dark-mode .export-btn:hover {
     background-color: #666;
 }
 

@@ -14,7 +14,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashSet;
 import java.util.List;
@@ -23,6 +27,8 @@ import java.util.Set;
 
 /**
  * Controller for handling Discogs query-related operations.
+ * This controller provides an API endpoint for searching Discogs based on
+ * user queries.
  */
 @Slf4j
 @RestController
@@ -42,8 +48,10 @@ public class DiscogsQueryController {
     /**
      * Searches Discogs using the provided query data.
      *
-     * @param discogsQueryDTO the data transfer objects containing the search query details
+     * @param discogsQueryDTO the data transfer objects containing the search
+     *                        query details
      * @return a {@link ResponseEntity} containing a list of {@link DiscogsMapResultDTO}
+     * wrapped in {@link HttpStatus#OK} if results are found, or an empty list if no results are found
      */
     @ResponseStatus(HttpStatus.OK)
     @PostMapping(value = "/search", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
@@ -58,40 +66,13 @@ public class DiscogsQueryController {
             log.warn("No results found for the provided queries");
             return ResponseEntity.noContent().build();
         }
+        log.info("Filtering results to show items that ship from the UK");
+        resultDTOList = queryProcessingService.filterOutEntriesNotShippingFromUk(resultDTOList);
 
         int size = resultCalculationService.calculateSizeOfResults(resultDTOList);
         log.info("Returning {} results: {}", size, resultDTOList);
 
         List<DiscogsMapResultDTO> resultMapDTOList = mappingService.mapResultsToDTO(resultDTOList);
-
-        filterDuplicateEntries(resultMapDTOList);
-
-        return ResponseEntity.ok().body(resultMapDTOList);
-    }
-
-    /**
-     * Filters Discogs results to only include items shipping from the UK.
-     *
-     * @param discogsResultDTOList the list of {@link DiscogsResultDTO} to filter
-     * @return a {@link ResponseEntity} containing the filtered list of {@link DiscogsMapResultDTO}
-     */
-    @ResponseStatus(HttpStatus.OK)
-    @PostMapping(value = "/filter-uk", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<DiscogsMapResultDTO>> filterUkMarketplace(
-            @RequestBody @Valid final List<DiscogsResultDTO> discogsResultDTOList) {
-
-        if (discogsResultDTOList.isEmpty() || hasNoEntries(discogsResultDTOList)) {
-            log.warn("No results found to filter for UK shipping");
-            return ResponseEntity.noContent().build();
-        }
-
-        log.info("Filtering results to show items that ship from the UK");
-        List<DiscogsResultDTO> filteredResultDTOList = queryProcessingService.filterOutEntriesNotShippingFromUk(discogsResultDTOList);
-
-        int size = resultCalculationService.calculateSizeOfResults(filteredResultDTOList);
-        log.info("Returning {} filtered results: {}", size, filteredResultDTOList);
-
-        List<DiscogsMapResultDTO> resultMapDTOList = mappingService.mapResultsToDTO(filteredResultDTOList);
 
         filterDuplicateEntries(resultMapDTOList);
 
@@ -107,6 +88,12 @@ public class DiscogsQueryController {
         return true;
     }
 
+
+    /**
+     * Filters duplicate entries from a list of DiscogsMapResultDTO.
+     *
+     * @param discogsMapResultDTOS the list of DiscogsMapResultDTO to filter
+     */
     private void filterDuplicateEntries(final List<DiscogsMapResultDTO> discogsMapResultDTOS) {
         for (final DiscogsMapResultDTO discogsMapResultDTO : discogsMapResultDTOS) {
             for (final Map.Entry<String, List<DiscogsEntryDTO>> resultDTO : discogsMapResultDTO.results().entrySet()) {
@@ -116,10 +103,17 @@ public class DiscogsQueryController {
         }
     }
 
+    /**
+     * Removes duplicate entries from a list of DiscogsEntryDTO based on their IDs.
+     *
+     * @param values the list of DiscogsEntryDTO to filter
+     * @return a list of unique DiscogsEntryDTO without duplicates
+     */
     private List<DiscogsEntryDTO> removeDuplicateEntries(final List<DiscogsEntryDTO> values) {
         Set<Integer> seenIds = new HashSet<>();
         return values.stream()
-                .filter(entry -> seenIds.add(entry.id()))
+                .filter(entry -> seenIds.add(entry.id())) // add returns false if the id was already present
                 .toList();
     }
+
 }

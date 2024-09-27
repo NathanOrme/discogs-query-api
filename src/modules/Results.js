@@ -1,7 +1,4 @@
-// src/modules/Results.js
-
-import React, { useState } from 'react';
-import { getApiUrl } from './Api'; // Import the getApiUrl function
+import React from 'react';
 
 // Function to download JSON data
 const exportToJson = (data, filename) => {
@@ -20,56 +17,15 @@ export const displayError = (message) => {
 };
 
 const Results = ({ response }) => {
-  const [filteredResponse, setFilteredResponse] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const callFilterUkMarketplace = async () => {
-    setLoading(true);
-    setError(null);
-
-    const apiUrl = getApiUrl('filterUk'); // Get the filter UK endpoint
-    console.log("Filtering UK marketplace with API URL:", apiUrl);
-
-    try {
-      const apiResponse = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(Array.isArray(response) ? response : [response]), // Convert response to an array
-      });
-
-      if (!apiResponse.ok) {
-        throw new Error('Failed to filter results');
-      }
-
-      const filteredData = await apiResponse.json();
-      console.log("Filtered data:", filteredData);
-
-      // Convert filteredData to an array if it's not already
-      const filteredArray = Array.isArray(filteredData) ? filteredData : [filteredData];
-      setFilteredResponse(filteredArray); // Update state with filtered results
-    } catch (err) {
-      setError(err.message);
-      console.error("Error during API call:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const renderResults = (data) => {
-    // Ensure data is an array
-    const resultsArray = Array.isArray(data) ? data : [data];
-
-    if (resultsArray.length === 0) {
-      return displayError('No results found.');
+  const renderResults = () => {
+    if (!Array.isArray(response) || response.length === 0) {
+      return displayError("No results found.");
     }
 
-    return resultsArray.map((queryResult, index) => {
+    return response.map((queryResult, index) => {
       const results = queryResult.results;
 
-      if (!results || results.length === 0) {
+      if (!results || Object.keys(results).length === 0) {
         return null; // Skip empty results
       }
 
@@ -92,12 +48,12 @@ const Results = ({ response }) => {
 
                     // Safety check
                     if (content) {
-                      content.classList.toggle('hidden');
-                      e.currentTarget.textContent = content.classList.contains('hidden')
+                      content.classList.toggle("hidden");
+                      e.currentTarget.textContent = content.classList.contains("hidden")
                         ? `Show Results for ${title}`
                         : `Hide Results for ${title}`;
                     } else {
-                      console.error('Content not found for:', title);
+                      console.error("Content not found for:", title);
                     }
                   }}
                 >
@@ -105,11 +61,11 @@ const Results = ({ response }) => {
                 </div>
                 <div className="results-content hidden">
                   {entries.map((entry) => {
-                    const id = entry.id || 'N/A';
-                    const format = entry.format ? entry.format.join(', ') : 'N/A';
-                    const country = entry.country || 'N/A';
-                    const year = entry.year || 'N/A';
-                    const uri = entry.uri || '#';
+                    const id = entry.id || "N/A";
+                    const format = entry.format ? entry.format.join(", ") : "N/A";
+                    const country = entry.country || "N/A";
+                    const year = entry.year || "N/A";
+                    const uri = entry.uri || "#";
 
                     return (
                       <div className="result-item" key={id}>
@@ -120,8 +76,8 @@ const Results = ({ response }) => {
                           <p><strong>Country:</strong> {country}</p>
                           <p><strong>Year:</strong> {year}</p>
                           <p><strong>URL:</strong> <a href={uri} target="_blank" rel="noopener noreferrer">{uri}</a></p>
-                          <p><strong>Number For Sale:</strong> {entry.numberForSale || 'N/A'}</p>
-                          <p><strong>Lowest Price:</strong> {entry.lowestPrice !== null ? `£${parseFloat(entry.lowestPrice).toFixed(2)}` : 'N/A'}</p>
+                          <p><strong>Number For Sale:</strong> {entry.numberForSale || "N/A"}</p>
+                          <p><strong>Lowest Price:</strong> {entry.lowestPrice !== null ? `£${parseFloat(entry.lowestPrice).toFixed(2)}` : "N/A"}</p>
                         </div>
                       </div>
                     );
@@ -143,19 +99,7 @@ const Results = ({ response }) => {
       >
         Export Results to JSON
       </button>
-
-      {/* Button to call the UK marketplace filter */}
-      <button
-        onClick={callFilterUkMarketplace}
-        className="filter-button"
-        disabled={loading}
-      >
-        {loading ? 'Filtering...' : 'Filter UK Marketplace'}
-      </button>
-
-      {/* Render original or filtered results */}
-      {error && displayError(error)}
-      {filteredResponse.length > 0 ? renderResults(filteredResponse) : renderResults(response)}
+      {renderResults()}
     </div>
   );
 };

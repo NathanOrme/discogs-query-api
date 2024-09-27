@@ -1,17 +1,33 @@
 // src/modules/SearchForm.js
 
 import React, { useState } from 'react';
-import { getApiUrl } from './Api'; // Import the getApiUrl function
 
 const SearchForm = ({ queries, setResponse, onCheapestItemsChange }) => {
   const [loading, setLoading] = useState(false);
+
+  const getApiUrl = () => {
+    const hostname = window.location.hostname;
+    const urlMapping = {
+      render: "https://discogs-query-api.onrender.com/discogs-query/search",
+      koyeb: "https://discogs-query-api-rgbnathan.koyeb.app/discogs-query/search",
+      b4a: "https://discogsqueryapi1-fthsfv0p.b4a.run/discogs-query/search",
+      netlify: "https://discogsqueryapi1-fthsfv0p.b4a.run/discogs-query/search"
+    };
+
+    for (const [key, url] of Object.entries(urlMapping)) {
+      if (hostname.includes(key)) {
+        return url;
+      }
+    }
+
+    return "http://localhost:9090/discogs-query/search";
+  };
 
   const handleSearchFormSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
 
-    // Use the search API URL
-    const apiUrl = getApiUrl('search');
+    const apiUrl = getApiUrl();
     console.log("API URL:", apiUrl);
     console.log("Queries to submit:", queries);
 

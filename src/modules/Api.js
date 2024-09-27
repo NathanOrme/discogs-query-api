@@ -37,5 +37,3 @@ export const getApiUrl = (endpoint) => {
     ? "http://localhost:9090/discogs-query/filter-uk"
     : "http://localhost:9090/discogs-query/search";
 };
-
-};

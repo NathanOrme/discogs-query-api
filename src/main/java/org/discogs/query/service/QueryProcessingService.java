@@ -50,7 +50,7 @@ public class QueryProcessingService {
         return results.stream()
                 .map(discogsResultDTO -> {
                     // Filter out DiscogsEntryDTOs that do not have shipping results
-                    List<DiscogsEntryDTO> filteredEntries = discogsResultDTO.results().parallelStream()
+                    List<DiscogsEntryDTO> filteredEntries = discogsResultDTO.results().stream()
                             .filter(this::isUKMarketplaceEntry)
                             .toList();
 

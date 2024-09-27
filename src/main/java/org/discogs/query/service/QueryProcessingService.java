@@ -68,7 +68,7 @@ public class QueryProcessingService {
                     .isEmpty();
         } catch (final Exception e) {
             log.error(e.getMessage());
-            return false;
+            return true;
         }
     }
 

@@ -31,27 +31,22 @@ const Results = ({ response }) => {
     const apiUrl = getApiUrl('filterUk'); // Get the filter UK endpoint
     console.log("Filtering UK marketplace with API URL:", apiUrl);
 
-    // Log the response being sent
-    console.log("Data being sent to filter UK marketplace:", JSON.stringify(response, null, 2));
-
     try {
       const apiResponse = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(response), // Send original results to be filtered
+        body: JSON.stringify(response.results), // Send response.results to be filtered
       });
 
       if (!apiResponse.ok) {
-        const errorDetails = await apiResponse.text(); // Get the error details from response
-        throw new Error(`Failed to filter results: ${errorDetails}`);
+        throw new Error('Failed to filter results');
       }
 
       const filteredData = await apiResponse.json();
       setFilteredResponse(filteredData); // Update state with filtered results
     } catch (err) {
-      console.error("Error during API call:", err);
       setError(err.message);
     } finally {
       setLoading(false);

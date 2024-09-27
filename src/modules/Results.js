@@ -16,19 +16,17 @@ const exportToJson = (data, filename) => {
 };
 
 export const displayError = (message) => {
-  console.error("Display Error:", message);
   return <p className="error-message">{message}</p>;
 };
 
 const Results = ({ response }) => {
-  const [filteredResponse, setFilteredResponse] = useState(null);
+  const [filteredResponse, setFilteredResponse] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const callFilterUkMarketplace = async () => {
     setLoading(true);
     setError(null);
-    console.log("Starting UK marketplace filter...");
 
     const apiUrl = getApiUrl('filterUk'); // Get the filter UK endpoint
     console.log("Filtering UK marketplace with API URL:", apiUrl);
@@ -39,42 +37,39 @@ const Results = ({ response }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(response.results), // Send response.results to be filtered
+        body: JSON.stringify(Array.isArray(response) ? response : [response]), // Convert response to an array
       });
-      console.log("API Response Status:", apiResponse.status);
 
       if (!apiResponse.ok) {
-        const errorDetails = await apiResponse.text(); // Get error details from the response
-        console.error("API Error Details:", errorDetails);
         throw new Error('Failed to filter results');
       }
 
       const filteredData = await apiResponse.json();
-      console.log("Filtered Data Received:", filteredData);
-      setFilteredResponse(filteredData); // Update state with filtered results
+      console.log("Filtered data:", filteredData);
+
+      // Convert filteredData to an array if it's not already
+      const filteredArray = Array.isArray(filteredData) ? filteredData : [filteredData];
+      setFilteredResponse(filteredArray); // Update state with filtered results
     } catch (err) {
-      console.error("Error during API call:", err);
       setError(err.message);
+      console.error("Error during API call:", err);
     } finally {
       setLoading(false);
-      console.log("Finished filtering UK marketplace.");
     }
   };
 
   const renderResults = (data) => {
-    console.log("Rendering results...");
+    // Ensure data is an array
+    const resultsArray = Array.isArray(data) ? data : [data];
 
-    if (!Array.isArray(data) || data.length === 0) {
-      console.warn("No results found, returning error message.");
+    if (resultsArray.length === 0) {
       return displayError('No results found.');
     }
 
-    return data.map((queryResult, index) => {
+    return resultsArray.map((queryResult, index) => {
       const results = queryResult.results;
-      console.log(`Results for Query ${index + 1}:`, results);
 
-      if (!results || Object.keys(results).length === 0) {
-        console.warn(`Skipping Query ${index + 1} due to empty results.`);
+      if (!results || results.length === 0) {
         return null; // Skip empty results
       }
 
@@ -85,7 +80,6 @@ const Results = ({ response }) => {
             const entries = results[title];
 
             if (!Array.isArray(entries) || entries.length === 0) {
-              console.warn(`Skipping title "${title}" due to empty entries.`);
               return null; // Skip empty entries
             }
 
@@ -102,7 +96,6 @@ const Results = ({ response }) => {
                       e.currentTarget.textContent = content.classList.contains('hidden')
                         ? `Show Results for ${title}`
                         : `Hide Results for ${title}`;
-                      console.log(`Toggled results visibility for "${title}".`);
                     } else {
                       console.error('Content not found for:', title);
                     }
@@ -117,8 +110,6 @@ const Results = ({ response }) => {
                     const country = entry.country || 'N/A';
                     const year = entry.year || 'N/A';
                     const uri = entry.uri || '#';
-
-                    console.log(`Rendering entry: ${id}, Title: ${entry.title || title}`);
 
                     return (
                       <div className="result-item" key={id}>
@@ -164,7 +155,7 @@ const Results = ({ response }) => {
 
       {/* Render original or filtered results */}
       {error && displayError(error)}
-      {filteredResponse ? renderResults(filteredResponse) : renderResults(response)}
+      {filteredResponse.length > 0 ? renderResults(filteredResponse) : renderResults(response)}
     </div>
   );
 };

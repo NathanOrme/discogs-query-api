@@ -2,7 +2,6 @@ package org.discogs.query.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.discogs.query.exceptions.NoMarketplaceListingsException;
 import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.interfaces.DiscogsWebScraperClient;
 import org.discogs.query.model.DiscogsEntryDTO;
@@ -19,7 +18,7 @@ import java.util.concurrent.TimeoutException;
 
 /**
  * Service for processing Discogs queries using asynchronous tasks.
- * Handles query processing with timeout management and cancellation.
+ * This service handles query processing, result filtering, and timeout management.
  */
 @Slf4j
 @Service
@@ -31,11 +30,12 @@ public class QueryProcessingService {
     private final DiscogsWebScraperClient discogsWebScraperClient;
 
     /**
-     * Processes each query asynchronously and retrieves the results from the Discogs API.
+     * Processes each Discogs query asynchronously, normalizes the queries, and retrieves the results from the
+     * Discogs API.
      *
      * @param discogsQueryDTOList the list of {@link DiscogsQueryDTO} objects to process
-     * @param timeoutInSeconds    the timeout in seconds for each query
-     * @return a list of {@link DiscogsResultDTO} objects
+     * @param timeoutInSeconds    the timeout in seconds for each query to be processed
+     * @return a list of {@link DiscogsResultDTO} objects containing the query results
      */
     public List<DiscogsResultDTO> processQueries(final List<DiscogsQueryDTO> discogsQueryDTOList,
                                                  final long timeoutInSeconds) {
@@ -46,10 +46,16 @@ public class QueryProcessingService {
         return handleFuturesWithTimeout(futures, timeoutInSeconds);
     }
 
+    /**
+     * Filters out Discogs entries that are not shipping from the UK marketplace.
+     *
+     * @param results the list of {@link DiscogsResultDTO} objects containing search results
+     * @return a filtered list of {@link DiscogsResultDTO} objects where only UK-shipping entries remain
+     */
     public List<DiscogsResultDTO> filterOutEntriesNotShippingFromUk(final List<DiscogsResultDTO> results) {
         return results.stream()
                 .map(discogsResultDTO -> {
-                    // Filter out DiscogsEntryDTOs that do not have shipping results
+                    // Filter out DiscogsEntryDTOs that do not have UK marketplace listings
                     List<DiscogsEntryDTO> filteredEntries = discogsResultDTO.results().parallelStream()
                             .filter(this::isUKMarketplaceEntry)
                             .toList();
@@ -61,6 +67,12 @@ public class QueryProcessingService {
                 .toList();
     }
 
+    /**
+     * Checks if a {@link DiscogsEntryDTO} has marketplace listings in the UK.
+     *
+     * @param discogsEntryDTO the entry to check
+     * @return {@code true} if the entry has UK marketplace listings, {@code false} otherwise
+     */
     private boolean isUKMarketplaceEntry(final DiscogsEntryDTO discogsEntryDTO) {
         try {
             return !discogsWebScraperClient
@@ -68,11 +80,16 @@ public class QueryProcessingService {
                     .isEmpty();
         } catch (final Exception e) {
             log.error(e.getMessage());
-            return true;
+            return true; // Treat as valid if an exception occurs to avoid excluding entries.
         }
     }
 
-
+    /**
+     * Creates a list of asynchronous tasks (futures) for each query.
+     *
+     * @param discogsQueryDTOList the list of {@link DiscogsQueryDTO} objects to process
+     * @return a list of {@link CompletableFuture} objects for each query
+     */
     private List<CompletableFuture<DiscogsResultDTO>> createFuturesForQueries(
             final List<DiscogsQueryDTO> discogsQueryDTOList) {
         return discogsQueryDTOList.stream()
@@ -83,6 +100,14 @@ public class QueryProcessingService {
                 .toList();
     }
 
+    /**
+     * Handles the completion of asynchronous tasks, enforcing a timeout for each query.
+     * If a query times out, the task is canceled.
+     *
+     * @param futures          the list of {@link CompletableFuture} objects to process
+     * @param timeoutInSeconds the timeout in seconds for each query
+     * @return a list of {@link DiscogsResultDTO} objects, or an empty list if none are completed within the timeout
+     */
     private List<DiscogsResultDTO> handleFuturesWithTimeout(
             final List<CompletableFuture<DiscogsResultDTO>> futures,
             final long timeoutInSeconds) {
@@ -93,6 +118,14 @@ public class QueryProcessingService {
                 .toList();
     }
 
+    /**
+     * Retrieves the result of a {@link CompletableFuture} with a specified timeout.
+     * If the future does not complete within the timeout, the task is canceled.
+     *
+     * @param future           the {@link CompletableFuture} to retrieve the result from
+     * @param timeoutInSeconds the timeout in seconds
+     * @return the {@link DiscogsResultDTO} result, or {@code null} if the task was canceled or failed
+     */
     private DiscogsResultDTO getFutureResultWithTimeout(
             final CompletableFuture<DiscogsResultDTO> future, final long timeoutInSeconds) {
         try {

@@ -18,7 +18,7 @@ COPY public ./public
 RUN npm run build
 
 # Stage 2: Build the backend
-FROM maven:3-amazoncorretto-21 AS backend-builder
+FROM maven:3-amazoncorretto-23 AS backend-builder
 WORKDIR /app/backend
 
 # Copy the Maven POM file and source code for the backend

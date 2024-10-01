@@ -1,4 +1,4 @@
-name: Java and Jest CI with Maven
+name: Java CI with Maven
 
 on:
   pull_request:
@@ -87,13 +87,6 @@ jobs:
         env:
           DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
           DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build Docker Image
-        run: |
-          docker build -t discogs-app -f Dockerfile .
 
       - name: Zip Javadoc
         run: |

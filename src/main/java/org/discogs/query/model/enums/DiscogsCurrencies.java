@@ -1,7 +1,7 @@
 package org.discogs.query.model.enums;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Enum representing different currencies used in the Discogs Marketplace.
@@ -12,7 +12,7 @@ import lombok.Getter;
  * its name in the Discogs API.
  */
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public enum DiscogsCurrencies {
 
     /**

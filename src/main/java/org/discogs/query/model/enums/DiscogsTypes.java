@@ -1,7 +1,7 @@
 package org.discogs.query.model.enums;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Enum representing different types of resources available in the Discogs API.
@@ -24,7 +24,7 @@ import lombok.Getter;
  * the provided type string does not match any of the defined constants.
  */
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public enum DiscogsTypes {
 
     /**

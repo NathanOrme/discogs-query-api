@@ -1,7 +1,7 @@
 package org.discogs.query.model.enums;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Enum representing various artist-related strings in the Discogs database.
@@ -9,7 +9,7 @@ import lombok.Getter;
  * artists."
  */
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public enum DiscogsVarious {
 
     /**

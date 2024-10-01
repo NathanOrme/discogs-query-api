@@ -1,7 +1,7 @@
 package org.discogs.query.model.enums;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Enum representing different query parameters available for searching in
@@ -13,7 +13,7 @@ import lombok.Getter;
  * name in the Discogs API.
  */
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public enum DiscogQueryParams {
 
     /**

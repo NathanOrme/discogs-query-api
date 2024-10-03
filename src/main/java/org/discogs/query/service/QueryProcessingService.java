@@ -80,7 +80,7 @@ public class QueryProcessingService {
                     .isEmpty();
         } catch (final Exception e) {
             log.error(e.getMessage());
-            return true; // Treat as valid if an exception occurs to avoid excluding entries.
+            return false;
         }
     }
 

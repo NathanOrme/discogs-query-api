@@ -66,8 +66,9 @@ public class DiscogsQueryController {
             log.warn("No results found for the provided queries");
             return ResponseEntity.noContent().build();
         }
-        log.info("Filtering results to show items that ship from the UK");
-        resultDTOList = queryProcessingService.filterOutEntriesNotShippingFromUk(resultDTOList);
+        //UNCOMMENT CODE IF UK FILTERING IS NEEDED
+        //log.info("Filtering results to show items that ship from the UK");
+        //resultDTOList = queryProcessingService.filterOutEntriesNotShippingFromUk(resultDTOList);
 
         int size = resultCalculationService.calculateSizeOfResults(resultDTOList);
         log.info("Returning {} results: {}", size, resultDTOList);

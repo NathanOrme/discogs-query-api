@@ -89,7 +89,7 @@ jobs:
           DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}
 
       - name: Run tests and build site
-        run: mvn clean install site
+        run: mvn clean install site javadoc:javadoc
         env:
           DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
           DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}

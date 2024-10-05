@@ -9,7 +9,7 @@ import java.text.Normalizer;
  * Service for normalizing strings by performing the following transformations:
  * <ul>
  *     <li>Removing diacritical marks (accents, etc.) from characters.</li>
- *     <li>Replacing occurrences of " and " with " &".</li>
+ *     <li>Replacing occurrences of " and " with " ampersand".</li>
  *     <li>Removing apostrophes.</li>
  *     <li>Replacing hyphens with spaces.</li>
  *     <li>Replacing multiple whitespace characters with a single space.</li>

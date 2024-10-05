@@ -88,6 +88,12 @@ jobs:
           DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
           DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}
 
+      - name: Run tests and build site
+        run: mvn clean install site
+        env:
+          DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
+          DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}
+
       - name: Zip Javadoc
         run: |
           mkdir -p target/site/apidocs

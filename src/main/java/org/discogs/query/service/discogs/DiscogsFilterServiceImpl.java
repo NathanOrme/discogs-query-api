@@ -79,7 +79,7 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
      */
     @Override
     public void filterAndSortResults(final DiscogsQueryDTO discogsQueryDTO, final DiscogsResult results) {
-        LogHelper.info(log, () -> "Filtering and sorting results for query: {}", discogsQueryDTO);
+        LogHelper.info(() -> "Filtering and sorting results for query: {}", discogsQueryDTO);
 
         var filteredAndSortedResults = results.getResults().parallelStream()
                 .filter(entry -> filterIfTrackOnAlbum(entry, discogsQueryDTO))
@@ -88,7 +88,7 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
                         e2.getLowestPrice()))
                 .toList();
 
-        LogHelper.info(log, () -> "Filtered and sorted {} results out of {}", filteredAndSortedResults.size(),
+        LogHelper.info(() -> "Filtered and sorted {} results out of {}", filteredAndSortedResults.size(),
                 results.getResults().size());
         results.setResults(filteredAndSortedResults);
     }
@@ -109,12 +109,12 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
     public DiscogsRelease getReleaseDetails(final DiscogsEntry discogsEntry) {
         try {
             String releaseUrl = discogsUrlBuilder.buildReleaseUrl(discogsEntry);
-            LogHelper.debug(log, () -> "Retrieving release details from URL: {}", releaseUrl);
+            LogHelper.debug(() -> "Retrieving release details from URL: {}", releaseUrl);
             DiscogsRelease release = discogsAPIClient.getRelease(releaseUrl);
-            LogHelper.info(log, () -> "Retrieved release details for entry ID {}", discogsEntry.getId());
+            LogHelper.info(() -> "Retrieved release details for entry ID {}", discogsEntry.getId());
             return release;
         } catch (final Exception e) {
-            LogHelper.error(log, () -> "Error retrieving release details for entry ID {}", discogsEntry.getId(), e);
+            LogHelper.error(() -> "Error retrieving release details for entry ID {}", discogsEntry.getId(), e);
             throw new DiscogsSearchException("Failed to retrieve release details for entry ID "
                     + discogsEntry.getId(), e);
         }
@@ -159,10 +159,10 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
      */
     private boolean filterIfTrackOnAlbum(final DiscogsEntry discogsEntry, final DiscogsQueryDTO discogsQueryDTO) {
         try {
-            LogHelper.debug(log, () -> "Filtering track on album for entry ID {}", discogsEntry.getId());
+            LogHelper.debug(() -> "Filtering track on album for entry ID {}", discogsEntry.getId());
             DiscogsRelease release = getReleaseDetails(discogsEntry);
             if (release == null) {
-                LogHelper.error(log, () -> "No release details found for entry ID {}", discogsEntry.getId());
+                LogHelper.error(() -> "No release details found for entry ID {}", discogsEntry.getId());
                 return false;
             }
 
@@ -170,19 +170,19 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
                     || filterArtists(discogsQueryDTO, release);
 
             if (stringHelper.isNotNullOrBlank(discogsQueryDTO.track())) {
-                LogHelper.info(log, () -> "Track specified in query. Applying filter and sorting results...");
+                LogHelper.info(() -> "Track specified in query. Applying filter and sorting results...");
                 isOnAlbum = filterTracks(discogsQueryDTO, release);
             }
 
             if (isOnAlbum) {
-                LogHelper.debug(log, () -> "Entry ID {} is on the album and matches the filters", discogsEntry.getId());
+                LogHelper.debug(() -> "Entry ID {} is on the album and matches the filters", discogsEntry.getId());
                 discogsEntry.setLowestPrice((float) release.getLowestPrice());
             } else {
-                LogHelper.debug(log, () -> "Entry ID {} does not match album filters", discogsEntry.getId());
+                LogHelper.debug(() -> "Entry ID {} does not match album filters", discogsEntry.getId());
             }
             return isOnAlbum;
         } catch (final Exception e) {
-            LogHelper.error(log, () -> "Error filtering track on album for entry ID {}", discogsEntry.getId(), e);
+            LogHelper.error(() -> "Error filtering track on album for entry ID {}", discogsEntry.getId(), e);
             return false;
         }
     }
@@ -200,17 +200,17 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
      * @return {@code true} if the artist matches, otherwise {@code false}.
      */
     private boolean filterArtists(final DiscogsQueryDTO discogsQueryDTO, final DiscogsRelease release) {
-        LogHelper.debug(log, () -> "Filtering artists for release ID {}", release.getId());
+        LogHelper.debug(() -> "Filtering artists for release ID {}", release.getId());
         boolean isArtistMatch = isArtistMatchNameOrAnyNameVariations(discogsQueryDTO, release);
         if (isArtistMatch) {
             return isArtistMatch;
         }
         if (release.getExtraArtists() != null) {
-            LogHelper.debug(log, () -> "Checking extra artists for release ID {}", release.getId());
+            LogHelper.debug(() -> "Checking extra artists for release ID {}", release.getId());
             isArtistMatch = release.getExtraArtists().parallelStream()
                     .anyMatch(artist -> isArtistNameMatching(discogsQueryDTO, artist.getName()));
         }
-        LogHelper.debug(log, () -> "Artist match status for release ID {}: {}", release.getId(), isArtistMatch);
+        LogHelper.debug(() -> "Artist match status for release ID {}: {}", release.getId(), isArtistMatch);
         return isArtistMatch;
     }
 
@@ -230,7 +230,7 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
      * @return {@code true} if the track matches, otherwise {@code false}.
      */
     private boolean filterTracks(final DiscogsQueryDTO discogsQueryDTO, final DiscogsRelease release) {
-        LogHelper.debug(log, () -> "Filtering tracks for release ID {}", release.getId());
+        LogHelper.debug(() -> "Filtering tracks for release ID {}", release.getId());
         boolean trackMatch = release.getTracklist().parallelStream()
                 .anyMatch(track -> isTrackEqualToOrContains(discogsQueryDTO, track));
         if (trackMatch && isTrackListContainingArtists(release.getTracklist())) {
@@ -239,7 +239,7 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
                     .filter(Objects::nonNull)
                     .anyMatch(artists -> isArtistInTrackList(artists, discogsQueryDTO));
         }
-        LogHelper.debug(log, () -> "Track match status for release ID {}: {}", release.getId(), trackMatch);
+        LogHelper.debug(() -> "Track match status for release ID {}: {}", release.getId(), trackMatch);
         return trackMatch;
     }
 

@@ -24,7 +24,7 @@ class LogHelperTest {
         when(mockLogger.isDebugEnabled()).thenReturn(true);
         Supplier<String> messageSupplier = () -> "Debug message with args: {} and {}";
 
-        assertDoesNotThrow(() -> LogHelper.debug(mockLogger, messageSupplier, "arg1", "arg2"));
+        assertDoesNotThrow(() -> LogHelper.debug(messageSupplier, "arg1", "arg2"));
     }
 
     @Test
@@ -32,7 +32,7 @@ class LogHelperTest {
         when(mockLogger.isInfoEnabled()).thenReturn(true);
         Supplier<String> messageSupplier = () -> "Info message with args: {}";
 
-        assertDoesNotThrow(() -> LogHelper.info(mockLogger, messageSupplier, "arg1"));
+        assertDoesNotThrow(() -> LogHelper.info(messageSupplier, "arg1"));
     }
 
     @Test
@@ -40,7 +40,7 @@ class LogHelperTest {
         when(mockLogger.isWarnEnabled()).thenReturn(true);
         Supplier<String> messageSupplier = () -> "Warn message";
 
-        assertDoesNotThrow(() -> LogHelper.warn(mockLogger, messageSupplier));
+        assertDoesNotThrow(() -> LogHelper.warn(messageSupplier));
     }
 
     @Test
@@ -48,7 +48,7 @@ class LogHelperTest {
         when(mockLogger.isErrorEnabled()).thenReturn(true);
         Supplier<String> messageSupplier = () -> "Error message";
 
-        assertDoesNotThrow(() -> LogHelper.error(mockLogger, messageSupplier));
+        assertDoesNotThrow(() -> LogHelper.error(messageSupplier));
     }
 
 }

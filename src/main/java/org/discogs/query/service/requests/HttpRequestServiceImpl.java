@@ -24,23 +24,23 @@ public class HttpRequestServiceImpl implements HttpRequestService {
 
     @Override
     public <T> T executeRequest(final String url, final Class<T> responseType) {
-        LogHelper.info(log, () -> "Executing HTTP request to URL: {}", url);
-        LogHelper.debug(log, () -> "HTTP headers built: {}", headers);
+        LogHelper.info(() -> "Executing HTTP request to URL: {}", url);
+        LogHelper.debug(() -> "HTTP headers built: {}", headers);
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
-        LogHelper.debug(log, () -> "HTTP entity created with headers");
+        LogHelper.debug(() -> "HTTP entity created with headers");
 
         try {
             return processRequestExchange(url, responseType, entity);
         } catch (final Exception e) {
-            LogHelper.error(log, () -> "Error executing HTTP request to URL: {}", url, e);
+            LogHelper.error(() -> "Error executing HTTP request to URL: {}", url, e);
             throw new DiscogsSearchException("HTTP request failed", e);
         }
     }
 
     private <T> T processRequestExchange(final String url, final Class<T> responseType, final HttpEntity<Void> entity) {
         ResponseEntity<T> response = restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
-        LogHelper.info(log, () -> "Received HTTP response with status code: {}", response.getStatusCode());
+        LogHelper.info(() -> "Received HTTP response with status code: {}", response.getStatusCode());
         logApiResponse(response);
 
         return Optional.ofNullable(response.getBody()).orElseThrow(() ->
@@ -49,10 +49,10 @@ public class HttpRequestServiceImpl implements HttpRequestService {
 
     private void logApiResponse(final ResponseEntity<?> response) {
         if (response.getBody() != null) {
-            LogHelper.info(log, () -> "Discogs API response body: {}", response.getBody());
+            LogHelper.info(() -> "Discogs API response body: {}", response.getBody());
         } else {
-            LogHelper.warn(log, () -> "Discogs API response body is empty.");
+            LogHelper.warn(() -> "Discogs API response body is empty.");
         }
-        LogHelper.debug(log, () -> "Discogs API response status: {}", response.getStatusCode());
+        LogHelper.debug(() -> "Discogs API response status: {}", response.getStatusCode());
     }
 }

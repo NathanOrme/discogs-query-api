@@ -66,16 +66,16 @@ public class DiscogsQueryController {
         List<DiscogsResultDTO> resultDTOList = queryProcessingService.processQueries(discogsQueryDTO, timeoutInSeconds);
 
         if (resultDTOList.isEmpty() || hasNoEntries(resultDTOList)) {
-            LogHelper.warn(log, () -> "No results found for the provided queries");
+            LogHelper.warn(() -> "No results found for the provided queries");
             return ResponseEntity.noContent().build();
         }
         if (isFilterForUk) {
-            LogHelper.info(log, () -> "Filtering results to show items that ship from the UK");
+            LogHelper.info(() -> "Filtering results to show items that ship from the UK");
             resultDTOList = queryProcessingService.filterOutEntriesNotShippingFromUk(resultDTOList);
         }
 
         int size = resultCalculationService.calculateSizeOfResults(resultDTOList);
-        LogHelper.info(log, () -> "Returning {} results: {}", size, resultDTOList);
+        LogHelper.info(() -> "Returning {} results: {}", size, resultDTOList);
 
         List<DiscogsMapResultDTO> resultMapDTOList = mappingService.mapResultsToDTO(resultDTOList);
 

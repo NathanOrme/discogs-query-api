@@ -50,7 +50,7 @@ public class MappingService {
     DiscogsMapResultDTO convertEntriesToMapByTitle(final DiscogsResultDTO discogsResultDTO) {
         Objects.requireNonNull(discogsResultDTO, "DiscogsResultDTO must not be null");
 
-        LogHelper.info(log, () -> "Converting Discogs entries to map by title");
+        LogHelper.info(() -> "Converting Discogs entries to map by title");
 
         DiscogsEntryDTO cheapestItem = discogsResultDTO.results().stream()
                 .min(Comparator.comparing(DiscogsEntryDTO::lowestPrice))
@@ -83,14 +83,14 @@ public class MappingService {
      * @return a {@link DiscogsResultDTO} corresponding to the {@link DiscogsResult}
      */
     public DiscogsResultDTO mapObjectToDTO(final DiscogsResult discogsResult, final DiscogsQueryDTO discogsQueryDTO) {
-        LogHelper.debug(log, () -> "Mapping DiscogsResult to DiscogsResultDTO for query: {}", discogsQueryDTO);
+        LogHelper.debug(() -> "Mapping DiscogsResult to DiscogsResultDTO for query: {}", discogsQueryDTO);
 
         try {
             var resultDTO = new DiscogsResultDTO(discogsQueryDTO, convertEntriesToDTOs(discogsResult.getResults()));
-            LogHelper.debug(log, () -> "Mapping completed for query: {}", discogsQueryDTO);
+            LogHelper.debug(() -> "Mapping completed for query: {}", discogsQueryDTO);
             return resultDTO;
         } catch (final Exception e) {
-            LogHelper.error(log, () -> "Error mapping DiscogsResult to DiscogsResultDTO for query: {}",
+            LogHelper.error(() -> "Error mapping DiscogsResult to DiscogsResultDTO for query: {}",
                     discogsQueryDTO, e);
             throw e;
         }

@@ -42,7 +42,7 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
     public List<DiscogsWebsiteResult> getMarketplaceResultsForRelease(final String releaseId) {
         // Construct the URL with the filter for United Kingdom
         String url = "https://www.discogs.com/sell/release/" + releaseId + "?ev=rb&ships_from=United+Kingdom";
-        LogHelper.info(log, () -> "Fetching marketplace data for release ID: {}", releaseId);
+        LogHelper.info(() -> "Fetching marketplace data for release ID: {}", releaseId);
 
         Document doc = fetchDocumentWithRetry(url); // Call the refactored retry logic for jsoupHelper
 
@@ -51,7 +51,7 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
 
         // Check if any listings exist
         if (listings.isEmpty()) {
-            LogHelper.info(log, () -> "No listings found for release ID: {}", releaseId);
+            LogHelper.info(() -> "No listings found for release ID: {}", releaseId);
             return new ArrayList<>(); // Return empty list if no listings
         }
 
@@ -74,14 +74,14 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
                 // Fetch and parse the HTML from the Discogs marketplace page using JsoupHelper
                 return jsoupHelper.connect(url, httpConfig.buildHeaders().toSingleValueMap());
             } catch (final Exception e) {
-                LogHelper.error(log, () -> ERROR_SCRAPING_THE_DISCOGS_MARKETPLACE_ATTEMPT, retryCount + 1, maxRetries);
+                LogHelper.error(() -> ERROR_SCRAPING_THE_DISCOGS_MARKETPLACE_ATTEMPT, retryCount + 1, maxRetries);
                 retryCount++;
                 waitBeforeRetry();
             }
         }
 
         String errorMessage = "Failed to scrape data from Discogs Marketplace after %s attempts".formatted(maxRetries);
-        LogHelper.info(log, () -> errorMessage);
+        LogHelper.info(() -> errorMessage);
         throw new NoMarketplaceListingsException(errorMessage);
     }
 
@@ -90,7 +90,7 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
             Thread.sleep(200);
         } catch (final InterruptedException ie) {
             Thread.currentThread().interrupt();
-            LogHelper.info(log, () -> "Thread was interrupted while waiting to retry", ie);
+            LogHelper.info(() -> "Thread was interrupted while waiting to retry", ie);
         }
     }
 
@@ -114,17 +114,17 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
         for (final Element item : sellerItems) {
             if (item.selectFirst("span.mplabel.seller_label") != null) {
                 sellerName = item.selectFirst("strong > a").text();
-                LogHelper.debug(log, () -> "Found seller name: {}", sellerName);
+                LogHelper.debug(() -> "Found seller name: {}", sellerName);
             } else if (item.selectFirst(".star_rating") != null) {
                 sellerRating = item.selectFirst(".star_rating").attr("aria-label");
                 ratingCount = item.selectFirst("a.section_link").text();
-                LogHelper.debug(log, () -> "Found seller rating: {} with count: {}", sellerRating, ratingCount);
+                LogHelper.debug(() -> "Found seller rating: {} with count: {}", sellerRating, ratingCount);
             } else if (item.text().contains("Ships From:")) {
                 if (!item.text().contains("United Kingdom")) {
-                    LogHelper.debug(log, () -> "No items shipping from the UK: {}", item.text());
+                    LogHelper.debug(() -> "No items shipping from the UK: {}", item.text());
                     return; // Exit if not shipping from the UK
                 } else {
-                    LogHelper.debug(log, () -> "Item ships from the United Kingdom.");
+                    LogHelper.debug(() -> "Item ships from the United Kingdom.");
                 }
             }
         }
@@ -134,9 +134,9 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
                     price, condition, "United Kingdom", sellerName, sellerRating, ratingCount
             );
             results.add(result);
-            LogHelper.info(log, () -> "Added result for seller: {}", sellerName);
+            LogHelper.info(() -> "Added result for seller: {}", sellerName);
         } else {
-            LogHelper.debug(log, () -> "Seller information not found for listing.");
+            LogHelper.debug(() -> "Seller information not found for listing.");
         }
     }
 }

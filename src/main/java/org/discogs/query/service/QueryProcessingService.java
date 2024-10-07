@@ -136,7 +136,7 @@ public class QueryProcessingService {
         return futures.stream()
                 .map(future -> getFutureResultWithTimeout(future, timeoutInSeconds))
                 .filter(Objects::nonNull)
-                .peek(result -> LogHelper.debug(log, () -> "Received result: {}", result))
+                .peek(result -> LogHelper.debug(() -> "Received result: {}", result))
                 .toList();
     }
 
@@ -153,10 +153,10 @@ public class QueryProcessingService {
         try {
             return future.get(timeoutInSeconds, TimeUnit.SECONDS);
         } catch (final InterruptedException | ExecutionException e) {
-            LogHelper.error(log, () -> "Error processing query", e);
+            LogHelper.error(() -> "Error processing query", e);
             return null;
         } catch (final TimeoutException e) {
-            LogHelper.warn(log, () -> "Query processing timed out");
+            LogHelper.warn(() -> "Query processing timed out");
             future.cancel(true); // Cancel the task if it times out
             return null;
         }

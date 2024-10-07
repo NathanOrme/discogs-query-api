@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
 // Function to download JSON data
 const exportToJson = (data, filename) => {
   const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(
-    JSON.stringify(data, null, 2)
+    JSON.stringify(data, null, 2),
   )}`;
-  const link = document.createElement('a');
+  const link = document.createElement("a");
   link.href = jsonString;
   link.download = `${filename}.json`;
 
@@ -49,7 +49,9 @@ const Results = ({ response }) => {
                     // Safety check
                     if (content) {
                       content.classList.toggle("hidden");
-                      e.currentTarget.textContent = content.classList.contains("hidden")
+                      e.currentTarget.textContent = content.classList.contains(
+                        "hidden",
+                      )
                         ? `Show Results for ${title}`
                         : `Hide Results for ${title}`;
                     } else {
@@ -62,7 +64,9 @@ const Results = ({ response }) => {
                 <div className="results-content hidden">
                   {entries.map((entry) => {
                     const id = entry.id || "N/A";
-                    const format = entry.format ? entry.format.join(", ") : "N/A";
+                    const format = entry.format
+                      ? entry.format.join(", ")
+                      : "N/A";
                     const country = entry.country || "N/A";
                     const year = entry.year || "N/A";
                     const uri = entry.uri || "#";
@@ -71,13 +75,38 @@ const Results = ({ response }) => {
                       <div className="result-item" key={id}>
                         <h3>{entry.title || title}</h3>
                         <div className="details">
-                          <p><strong>ID:</strong> {id}</p>
-                          <p><strong>Formats:</strong> {format}</p>
-                          <p><strong>Country:</strong> {country}</p>
-                          <p><strong>Year:</strong> {year}</p>
-                          <p><strong>URL:</strong> <a href={uri} target="_blank" rel="noopener noreferrer">{uri}</a></p>
-                          <p><strong>Number For Sale:</strong> {entry.numberForSale || "N/A"}</p>
-                          <p><strong>Lowest Price:</strong> {entry.lowestPrice !== null ? `£${parseFloat(entry.lowestPrice).toFixed(2)}` : "N/A"}</p>
+                          <p>
+                            <strong>ID:</strong> {id}
+                          </p>
+                          <p>
+                            <strong>Formats:</strong> {format}
+                          </p>
+                          <p>
+                            <strong>Country:</strong> {country}
+                          </p>
+                          <p>
+                            <strong>Year:</strong> {year}
+                          </p>
+                          <p>
+                            <strong>URL:</strong>{" "}
+                            <a
+                              href={uri}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {uri}
+                            </a>
+                          </p>
+                          <p>
+                            <strong>Number For Sale:</strong>{" "}
+                            {entry.numberForSale || "N/A"}
+                          </p>
+                          <p>
+                            <strong>Lowest Price:</strong>{" "}
+                            {entry.lowestPrice !== null
+                              ? `£${parseFloat(entry.lowestPrice).toFixed(2)}`
+                              : "N/A"}
+                          </p>
                         </div>
                       </div>
                     );
@@ -94,7 +123,7 @@ const Results = ({ response }) => {
   return (
     <div id="results">
       <button
-        onClick={() => exportToJson(response, 'results')}
+        onClick={() => exportToJson(response, "results")}
         className="export-button"
       >
         Export Results to JSON

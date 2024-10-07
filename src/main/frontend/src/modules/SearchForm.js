@@ -1,6 +1,6 @@
 // src/modules/SearchForm.js
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const SearchForm = ({ queries, setResponse, onCheapestItemsChange }) => {
   const [loading, setLoading] = useState(false);
@@ -9,9 +9,10 @@ const SearchForm = ({ queries, setResponse, onCheapestItemsChange }) => {
     const hostname = window.location.hostname;
     const urlMapping = {
       render: "https://discogs-query-api.onrender.com/discogs-query/search",
-      koyeb: "https://discogs-query-api-rgbnathan.koyeb.app/discogs-query/search",
+      koyeb:
+        "https://discogs-query-api-rgbnathan.koyeb.app/discogs-query/search",
       b4a: "https://discogsqueryapi1-fthsfv0p.b4a.run/discogs-query/search",
-      netlify: "https://discogsqueryapi1-fthsfv0p.b4a.run/discogs-query/search"
+      netlify: "https://discogsqueryapi1-fthsfv0p.b4a.run/discogs-query/search",
     };
 
     for (const [key, url] of Object.entries(urlMapping)) {
@@ -42,7 +43,9 @@ const SearchForm = ({ queries, setResponse, onCheapestItemsChange }) => {
       .then((response) => {
         if (!response.ok) {
           return response.text().then((errorMessage) => {
-            throw new Error(`Server responded with status ${response.status}: ${errorMessage}`);
+            throw new Error(
+              `Server responded with status ${response.status}: ${errorMessage}`,
+            );
           });
         }
         return response.json();
@@ -52,7 +55,9 @@ const SearchForm = ({ queries, setResponse, onCheapestItemsChange }) => {
         console.log("Response data received:", data);
 
         if (Array.isArray(data) && data.length > 0) {
-          const cheapestItemsList = data.map(result => result.cheapestItem).filter(item => item !== null);
+          const cheapestItemsList = data
+            .map((result) => result.cheapestItem)
+            .filter((item) => item !== null);
           onCheapestItemsChange(cheapestItemsList); // Update cheapest items in App.js
           console.log("Cheapest items found:", cheapestItemsList);
         } else {
@@ -70,7 +75,9 @@ const SearchForm = ({ queries, setResponse, onCheapestItemsChange }) => {
 
   return (
     <form onSubmit={handleSearchFormSubmit}>
-      <button type="submit" disabled={loading}>{loading ? 'Loading...' : 'Search'}</button>
+      <button type="submit" disabled={loading}>
+        {loading ? "Loading..." : "Search"}
+      </button>
     </form>
   );
 };

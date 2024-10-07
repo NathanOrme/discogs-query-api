@@ -113,17 +113,15 @@ const renderQueryResults = (queryResult, index) => {
                   e.currentTarget.textContent = content.classList.contains(
                     "hidden",
                   )
-                    ? `Show Results for ${title} (${format})`
-                    : `Hide Results for ${title} (${format})`;
+                    ? `Show Results for ${title}`
+                    : `Hide Results for ${title}`;
                 } else {
                   console.error("Content not found for:", title);
                 }
               }}
             >
-              Show Results for {title})
+              Show Results for {title}
             </div>
-
-            {/* Results content, initially hidden */}
             <div className="results-content hidden">
               {entries.map((entry) => renderEntry(entry))}
             </div>

@@ -8,12 +8,11 @@ WORKDIR /app/frontend
 COPY src/main/frontend/package.json ./
 COPY src/main/frontend/package-lock.json ./
 
-# Install frontend dependencies and serve globally
-RUN npm install && npm install -g serve
+# Install frontend dependencies (using npm ci for consistency)
+RUN npm ci && npm install -g serve
 
 # Copy the rest of the frontend source code
-COPY src/main/frontend/src ./src
-COPY src/main/frontend/public ./public
+COPY src/main/frontend/ ./
 
 # Build the frontend application
 RUN npm run build
@@ -25,8 +24,13 @@ FROM maven:3-amazoncorretto-21 AS backend-builder
 # Set the working directory for the backend build
 WORKDIR /app/backend
 
-# Copy the Maven POM file and backend source code
+# Copy only the POM file first for efficient caching of dependencies
 COPY pom.xml ./
+
+# Cache Maven dependencies
+RUN mvn dependency:go-offline
+
+# Copy the backend source code
 COPY src ./src
 
 # Package the backend application, skipping tests for faster build time

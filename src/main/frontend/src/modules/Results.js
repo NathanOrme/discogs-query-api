@@ -120,7 +120,7 @@ const renderQueryResults = (queryResult, index) => {
                 }
               }}
             >
-              Show Results for {title} ({format})
+              Show Results for {title})
             </div>
 
             {/* Results content, initially hidden */}

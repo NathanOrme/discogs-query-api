@@ -8,7 +8,7 @@ import React from "react";
  */
 const exportToJson = (data, filename) => {
   const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(
-    JSON.stringify(data, null, 2)
+    JSON.stringify(data, null, 2),
   )}`;
   const link = document.createElement("a");
   link.href = jsonString;
@@ -111,7 +111,7 @@ const renderQueryResults = (queryResult, index) => {
                 if (content) {
                   content.classList.toggle("hidden");
                   e.currentTarget.textContent = content.classList.contains(
-                    "hidden"
+                    "hidden",
                   )
                     ? `Show Results for ${title}`
                     : `Hide Results for ${title}`;
@@ -145,7 +145,9 @@ const Results = ({ response }) => {
       return displayError("No results found.");
     }
 
-    return response.map((queryResult, index) => renderQueryResults(queryResult, index));
+    return response.map((queryResult, index) =>
+      renderQueryResults(queryResult, index),
+    );
   };
 
   return (

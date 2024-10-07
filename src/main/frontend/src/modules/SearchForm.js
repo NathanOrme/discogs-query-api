@@ -23,7 +23,8 @@ const SearchForm = ({ queries, setResponse, onCheapestItemsChange }) => {
     const hostname = window.location.hostname;
     const urlMapping = {
       render: "https://discogs-query-api.onrender.com/discogs-query/search",
-      koyeb: "https://discogs-query-api-rgbnathan.koyeb.app/discogs-query/search",
+      koyeb:
+        "https://discogs-query-api-rgbnathan.koyeb.app/discogs-query/search",
       b4a: "https://discogsqueryapi1-fthsfv0p.b4a.run/discogs-query/search",
       netlify: "https://discogsqueryapi1-fthsfv0p.b4a.run/discogs-query/search",
     };
@@ -62,7 +63,7 @@ const SearchForm = ({ queries, setResponse, onCheapestItemsChange }) => {
         if (!response.ok) {
           return response.text().then((errorMessage) => {
             throw new Error(
-              `Server responded with status ${response.status}: ${errorMessage}`
+              `Server responded with status ${response.status}: ${errorMessage}`,
             );
           });
         }

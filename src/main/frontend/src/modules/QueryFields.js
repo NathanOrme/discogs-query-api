@@ -106,9 +106,27 @@ const QueryFields = ({ onQueriesChange }) => {
         {renderInputField("Barcode:", "barcode", query.barcode, index)}
         {renderInputField("Album (optional):", "album", query.album, index)}
         {renderInputField("Track (optional):", "track", query.track, index)}
-        {renderSelectField("Format (optional):", "format", query.format, discogFormats, index)}
-        {renderSelectField("Country (optional):", "country", query.country, discogCountries, index)}
-        {renderSelectField("Types (optional):", "types", query.types, discogsTypes, index)}
+        {renderSelectField(
+          "Format (optional):",
+          "format",
+          query.format,
+          discogFormats,
+          index,
+        )}
+        {renderSelectField(
+          "Country (optional):",
+          "country",
+          query.country,
+          discogCountries,
+          index,
+        )}
+        {renderSelectField(
+          "Types (optional):",
+          "types",
+          query.types,
+          discogsTypes,
+          index,
+        )}
       </div>
     </div>
   );

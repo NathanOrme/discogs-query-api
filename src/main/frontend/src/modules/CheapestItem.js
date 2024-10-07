@@ -72,7 +72,7 @@ CheapestItem.propTypes = {
       numberForSale: PropTypes.number,
       country: PropTypes.string,
       uri: PropTypes.string,
-    })
+    }),
   ).isRequired,
 };
 

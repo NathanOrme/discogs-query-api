@@ -50,7 +50,8 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
         String title = normalizationService.normalizeString(track.getTitle().toLowerCase(Locale.ENGLISH));
         String normalizedQueryTrack = normalizationService.normalizeString(discogsQueryDTO.track());
 
-        return title.equalsIgnoreCase(normalizedQueryTrack) || title.contains(normalizedQueryTrack.toLowerCase(Locale.ENGLISH));
+        return title.equalsIgnoreCase(normalizedQueryTrack) || title.contains(normalizedQueryTrack
+                .toLowerCase(Locale.ENGLISH));
     }
 
     /**

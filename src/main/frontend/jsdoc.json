@@ -3,17 +3,13 @@
     "include": [
       "./src"
     ],
-    // Specify your source files
     "includePattern": ".+\\.js(doc|x)?$",
     "excludePattern": "(node_modules|\\.git)"
   },
   "opts": {
     "destination": "./docs",
-    // Destination folder for generated docs
     "template": "node_modules/docdash",
-    // Specify the template if you're using one
     "css": "./css/jsdoc.css"
-    // Path to your custom CSS file
   },
   "templates": {
     "cleverLinks": false,

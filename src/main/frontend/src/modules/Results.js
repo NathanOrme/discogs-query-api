@@ -92,6 +92,7 @@ const renderQueryResults = (queryResult, index) => {
 
   return (
     <div key={index}>
+    <h2>Results for Query {index + 1}</h2>
       {Object.keys(results).map((title) => {
         const entries = results[title];
 
@@ -99,19 +100,8 @@ const renderQueryResults = (queryResult, index) => {
           return null; // Skip empty entries
         }
 
-        // Fetch format from the first entry
-        const format = entries[0]?.format
-          ? entries[0].format.join(", ")
-          : "N/A";
-
         return (
           <div className="results-section" key={title}>
-            {/* H2 heading with Title and Format */}
-            <h2>
-              Results for {title} ({format})
-            </h2>
-
-            {/* Toggle functionality to show/hide results */}
             <div
               className="results-toggle-header"
               onClick={(e) => {

@@ -1,21 +1,20 @@
 // src/modules/SearchForm.tsx
 
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent } from 'react'
 
 interface SearchFormProps {
   queries: Array<{
-    artist?: string;   // Change to optional
-    barcode?: string;  // Change to optional
-    album?: string;    // Change to optional
-    track?: string;    // Change to optional
-    format?: string;   // Change to optional
-    country?: string;  // Change to optional
-    types?: string;    // Change to optional
-  }>;
-  setResponse: (response: any) => void;
-  onCheapestItemsChange: (cheapestItems: Array<any>) => void;
+    artist?: string // Change to optional
+    barcode?: string // Change to optional
+    album?: string // Change to optional
+    track?: string // Change to optional
+    format?: string // Change to optional
+    country?: string // Change to optional
+    types?: string // Change to optional
+  }>
+  setResponse: (response: any) => void
+  onCheapestItemsChange: (cheapestItems: Array<any>) => void
 }
-
 
 /**
  * SearchForm component for submitting queries and handling responses.
@@ -29,9 +28,9 @@ interface SearchFormProps {
 const SearchForm: React.FC<SearchFormProps> = ({
   queries,
   setResponse,
-  onCheapestItemsChange,
+  onCheapestItemsChange
 }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   /**
    * Gets the API URL based on the current hostname.
@@ -39,19 +38,19 @@ const SearchForm: React.FC<SearchFormProps> = ({
    * @returns {string} The API URL.
    */
   const getApiUrl = (): string => {
-    const hostname = window.location.hostname;
+    const hostname = window.location.hostname
     const urlMapping: Record<string, string> = {
-      netlify: "https://discogsqueryapi1-fthsfv0p.b4a.run/discogs-query/search",
-    };
+      netlify: 'https://discogsqueryapi1-fthsfv0p.b4a.run/discogs-query/search'
+    }
 
     for (const [key, url] of Object.entries(urlMapping)) {
       if (hostname.includes(key)) {
-        return url;
+        return url
       }
     }
 
-    return "http://localhost:9090/discogs-query/search";
-  };
+    return 'http://localhost:9090/discogs-query/search'
+  }
 
   /**
    * Handles the submission of the search form.
@@ -59,60 +58,60 @@ const SearchForm: React.FC<SearchFormProps> = ({
    * @param {FormEvent<HTMLFormElement>} event - The form submit event.
    */
   const handleSearchFormSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoading(true);
+    event.preventDefault()
+    setLoading(true)
 
-    const apiUrl = getApiUrl();
-    console.log("API URL:", apiUrl);
-    console.log("Queries to submit:", queries);
+    const apiUrl = getApiUrl()
+    console.log('API URL:', apiUrl)
+    console.log('Queries to submit:', queries)
 
     fetch(apiUrl, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(queries),
+      body: JSON.stringify(queries)
     })
-      .then((response) => {
+      .then(response => {
         if (!response.ok) {
-          return response.text().then((errorMessage) => {
+          return response.text().then(errorMessage => {
             throw new Error(
               `Server responded with status ${response.status}: ${errorMessage}`
-            );
-          });
+            )
+          })
         }
-        return response.json();
+        return response.json()
       })
-      .then((data) => {
-        setResponse(data); // Pass response back to App.tsx
-        console.log("Response data received:", data);
+      .then(data => {
+        setResponse(data) // Pass response back to App.tsx
+        console.log('Response data received:', data)
 
         if (Array.isArray(data) && data.length > 0) {
           const cheapestItemsList = data
             .map((result: any) => result.cheapestItem)
-            .filter((item: any) => item !== null);
-          onCheapestItemsChange(cheapestItemsList); // Update cheapest items in App.tsx
-          console.log("Cheapest items found:", cheapestItemsList);
+            .filter((item: any) => item !== null)
+          onCheapestItemsChange(cheapestItemsList) // Update cheapest items in App.tsx
+          console.log('Cheapest items found:', cheapestItemsList)
         } else {
-          onCheapestItemsChange([]); // Clear cheapest items if none found
-          console.log("No cheapest items found.");
+          onCheapestItemsChange([]) // Clear cheapest items if none found
+          console.log('No cheapest items found.')
         }
       })
-      .catch((error) => {
-        console.error("Error:", error);
+      .catch(error => {
+        console.error('Error:', error)
       })
       .finally(() => {
-        setLoading(false);
-      });
-  };
+        setLoading(false)
+      })
+  }
 
   return (
     <form onSubmit={handleSearchFormSubmit}>
-      <button type="submit" disabled={loading}>
-        {loading ? "Loading..." : "Search"}
+      <button type='submit' disabled={loading}>
+        {loading ? 'Loading...' : 'Search'}
       </button>
     </form>
-  );
-};
+  )
+}
 
-export default SearchForm;
+export default SearchForm

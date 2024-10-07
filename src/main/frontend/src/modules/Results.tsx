@@ -1,24 +1,24 @@
 // src/modules/Results.tsx
 
-import React from "react";
+import React from 'react'
 
 interface Entry {
-  id?: string;
-  format?: string[];
-  country?: string;
-  year?: string;
-  uri?: string;
-  numberForSale?: number;
-  lowestPrice?: number | null;
-  title?: string;
+  id?: string
+  format?: string[]
+  country?: string
+  year?: string
+  uri?: string
+  numberForSale?: number
+  lowestPrice?: number | null
+  title?: string
 }
 
 interface QueryResult {
-  results: Record<string, Entry[]>;
+  results: Record<string, Entry[]>
 }
 
 interface ResultsProps {
-  response: QueryResult[];
+  response: QueryResult[]
 }
 
 /**
@@ -30,13 +30,13 @@ interface ResultsProps {
 const exportToJson = (data: any, filename: string) => {
   const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(
     JSON.stringify(data, null, 2)
-  )}`;
-  const link = document.createElement("a");
-  link.href = jsonString;
-  link.download = `${filename}.json`;
+  )}`
+  const link = document.createElement('a')
+  link.href = jsonString
+  link.download = `${filename}.json`
 
-  link.click();
-};
+  link.click()
+}
 
 /**
  * Displays an error message.
@@ -45,8 +45,8 @@ const exportToJson = (data: any, filename: string) => {
  * @returns {JSX.Element} The error message element.
  */
 export const displayError = (message: string): JSX.Element => {
-  return <p className="error-message">{message}</p>;
-};
+  return <p className='error-message'>{message}</p>
+}
 
 /**
  * Renders the details of a single result entry.
@@ -55,16 +55,16 @@ export const displayError = (message: string): JSX.Element => {
  * @returns {JSX.Element} The JSX element representing the result entry.
  */
 const renderEntry = (entry: Entry): JSX.Element => {
-  const id = entry.id || "N/A";
-  const format = entry.format ? entry.format.join(", ") : "N/A";
-  const country = entry.country || "N/A";
-  const year = entry.year || "N/A";
-  const uri = entry.uri || "#";
+  const id = entry.id || 'N/A'
+  const format = entry.format ? entry.format.join(', ') : 'N/A'
+  const country = entry.country || 'N/A'
+  const year = entry.year || 'N/A'
+  const uri = entry.uri || '#'
 
   return (
-    <div className="result-item" key={id}>
-      <h3>{entry.title || "Untitled"}</h3>
-      <div className="details">
+    <div className='result-item' key={id}>
+      <h3>{entry.title || 'Untitled'}</h3>
+      <div className='details'>
         <p>
           <strong>ID:</strong> {id}
         </p>
@@ -78,24 +78,24 @@ const renderEntry = (entry: Entry): JSX.Element => {
           <strong>Year:</strong> {year}
         </p>
         <p>
-          <strong>URL:</strong>{" "}
-          <a href={uri} target="_blank" rel="noopener noreferrer">
+          <strong>URL:</strong>{' '}
+          <a href={uri} target='_blank' rel='noopener noreferrer'>
             {uri}
           </a>
         </p>
         <p>
-          <strong>Number For Sale:</strong> {entry.numberForSale || "N/A"}
+          <strong>Number For Sale:</strong> {entry.numberForSale || 'N/A'}
         </p>
         <p>
-        <strong>Lowest Price:</strong>{" "}
+          <strong>Lowest Price:</strong>{' '}
           {entry.lowestPrice != null
             ? `£${entry.lowestPrice.toFixed(2)}`
-            : "N/A"}
+            : 'N/A'}
         </p>
       </div>
     </div>
-  );
-};
+  )
+}
 
 /**
  * Renders the results for a specific query.
@@ -108,53 +108,53 @@ const renderQueryResults = (
   queryResult: QueryResult,
   index: number
 ): JSX.Element | null => {
-  const { results } = queryResult;
+  const { results } = queryResult
 
   if (!results || Object.keys(results).length === 0) {
-    return null; // Skip empty results
+    return null // Skip empty results
   }
 
   return (
     <div key={index}>
       <h2>Results for Query {index + 1}</h2>
-      {Object.keys(results).map((title) => {
-        const entries = results[title];
+      {Object.keys(results).map(title => {
+        const entries = results[title]
 
         if (!Array.isArray(entries) || entries.length === 0) {
-          return null; // Skip empty entries
+          return null // Skip empty entries
         }
 
         return (
-          <div className="results-section" key={title}>
+          <div className='results-section' key={title}>
             <div
-              className="results-toggle-header"
-              onClick={(e) => {
-                const content = e.currentTarget.nextElementSibling;
+              className='results-toggle-header'
+              onClick={e => {
+                const content = e.currentTarget.nextElementSibling
 
                 // Safety check
                 if (content) {
-                  content.classList.toggle("hidden");
+                  content.classList.toggle('hidden')
                   e.currentTarget.textContent = content.classList.contains(
-                    "hidden"
+                    'hidden'
                   )
                     ? `Show Results for ${title}`
-                    : `Hide Results for ${title}`;
+                    : `Hide Results for ${title}`
                 } else {
-                  console.error("Content not found for:", title);
+                  console.error('Content not found for:', title)
                 }
               }}
             >
               Show Results for {title}
             </div>
-            <div className="results-content hidden">
-              {entries.map((entry) => renderEntry(entry))}
+            <div className='results-content hidden'>
+              {entries.map(entry => renderEntry(entry))}
             </div>
           </div>
-        );
+        )
       })}
     </div>
-  );
-};
+  )
+}
 
 /**
  * The Results component displays query results and allows exporting them as JSON.
@@ -165,7 +165,7 @@ const renderQueryResults = (
 const Results: React.FC<ResultsProps> = ({ response }) => {
   const renderResults = (): JSX.Element | null => {
     if (!Array.isArray(response) || response.length === 0) {
-      return displayError("No results found.");
+      return displayError('No results found.')
     }
 
     return (
@@ -174,20 +174,20 @@ const Results: React.FC<ResultsProps> = ({ response }) => {
           renderQueryResults(queryResult, index)
         )}
       </>
-    );
-  };
+    )
+  }
 
   return (
-    <div id="results">
+    <div id='results'>
       <button
-        onClick={() => exportToJson(response, "results")}
-        className="export-button"
+        onClick={() => exportToJson(response, 'results')}
+        className='export-button'
       >
         Export Results to JSON
       </button>
       {renderResults()}
     </div>
-  );
-};
+  )
+}
 
-export default Results;
+export default Results

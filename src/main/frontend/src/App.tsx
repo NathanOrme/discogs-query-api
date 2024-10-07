@@ -1,18 +1,18 @@
 // src/App.tsx
 
-import React, { useState } from "react";
-import "./css/base.css";
-import QueryFields from "./modules/QueryFields";
-import SearchForm from "./modules/SearchForm";
-import DarkModeToggle from "./modules/DarkModeToggle";
-import CheapestItem from "./modules/CheapestItem";
-import Results from "./modules/Results";
-import { Query, QueryResult } from "./modules/types"; // Import the necessary types
+import React, { useState } from 'react'
+import './css/base.css'
+import QueryFields from './modules/QueryFields'
+import SearchForm from './modules/SearchForm'
+import DarkModeToggle from './modules/DarkModeToggle'
+import CheapestItem from './modules/CheapestItem'
+import Results from './modules/Results'
+import { Query, QueryResult } from './modules/types' // Import the necessary types
 
 const App: React.FC = () => {
-  const [queries, setQueries] = useState<Query[]>([{ id: 1 }]);
-  const [cheapestItems, setCheapestItems] = useState<any[]>([]);
-  const [response, setResponse] = useState<QueryResult[]>([]); // Change type to QueryResult[]
+  const [queries, setQueries] = useState<Query[]>([{ id: 1 }])
+  const [cheapestItems, setCheapestItems] = useState<any[]>([])
+  const [response, setResponse] = useState<QueryResult[]>([]) // Change type to QueryResult[]
 
   /**
    * Handles changes to the queries.
@@ -20,15 +20,15 @@ const App: React.FC = () => {
    * @param {Array} newQueries - The updated array of queries.
    */
   const handleQueriesChange = (newQueries: Query[]) => {
-    setQueries(newQueries);
-  };
+    setQueries(newQueries)
+  }
 
   return (
-    <div className="App">
+    <div className='App'>
       <header>
         <h1>Discogs Query App</h1>
         <DarkModeToggle />
-        <div className="instructions">
+        <div className='instructions'>
           <h2>How to Use This Search Tool</h2>
           <p>
             This tool allows you to search for music releases from the Discogs
@@ -80,10 +80,10 @@ const App: React.FC = () => {
         </div>
       </header>
       <main>
-        <div className="query-section">
+        <div className='query-section'>
           <QueryFields onQueriesChange={handleQueriesChange} />
         </div>
-        <div className="results-section">
+        <div className='results-section'>
           <SearchForm
             queries={queries}
             setResponse={setResponse}
@@ -91,15 +91,15 @@ const App: React.FC = () => {
           />
           {response.length > 0 && <Results response={response} />}
         </div>
-        <div className="cheapest-item-section">
+        <div className='cheapest-item-section'>
           <CheapestItem items={cheapestItems} />
         </div>
-        <div id="loading" style={{ display: "none" }}>
+        <div id='loading' style={{ display: 'none' }}>
           Loading...
         </div>
       </main>
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App

@@ -17,6 +17,6 @@ public interface DiscogsMappingService {
      * @param discogsResultDTO the {@link DiscogsResultDTO} containing the list of Discogs entries to be converted
      * @return a {@link DiscogsMapResultDTO} containing the search query and the converted map of entries
      */
-    DiscogsMapResultDTO convertEntriesToMapByTitle(final DiscogsResultDTO discogsResultDTO);
+    DiscogsMapResultDTO convertEntriesToMapByTitle(DiscogsResultDTO discogsResultDTO);
 }
 

@@ -14,6 +14,13 @@ API interactions.
         * [Prerequisites](#prerequisites)
         * [Installation](#installation)
         * [Configuration](#configuration)
+            * [Server Settings](#server-settings)
+            * [Management Endpoints](#management-endpoints)
+            * [OpenAPI Documentation](#openapi-documentation)
+            * [Security](#security)
+            * [Logging](#logging)
+            * [Query Settings](#query-settings)
+            * [Discogs API Configuration](#discogs-api-configuration)
         * [Running Locally](#running-locally)
             * [Run the Backend](#run-the-backend)
             * [Run the Frontend](#run-the-frontend)
@@ -66,15 +73,128 @@ API interactions.
 
 ### Configuration
 
-The application requires certain configuration properties to interact with the Discogs API. These properties should be
-defined in the application.properties file for the backend:
+#### Server Settings
 
-```properties
-discogs.url=https://api.discogs.com
-discogs.search=/database/search
-discogs.agent=YourUserAgent
-discogs.page-size=20
-discogs.token=YourAccessToken
+- **Port:**  
+  The application is set to run on port `9090`.
+
+```yaml
+server:
+port: 9090
+```
+
+#### Management Endpoints
+
+- **Management Endpoints:**  
+  Actuator endpoint mappings are exposed for management via `/mappings`.
+
+```yaml
+management:
+endpoints:
+web:
+exposure:
+include: mappings
+```
+
+#### OpenAPI Documentation
+
+- **API Docs Path:**  
+  OpenAPI documentation is available at `/api-docs`.
+
+- **Show Actuator:**  
+  Actuator endpoints are visible in the API documentation.
+
+```yaml
+springdoc:
+api-docs:
+path: /api-docs
+show-actuator: true
+```
+
+#### Security
+
+- **Default User Credentials:**
+    - Username: `username`
+    - Password: `password`
+
+```yaml
+spring:
+security:
+user:
+name: username
+password: password
+```
+
+#### Logging
+
+- **Log Output:**  
+  Colored output is enabled in the console.
+
+- **Log Levels:**
+    - `INFO` for web requests.
+    - `WARN` for Hibernate.
+    - `DEBUG` for custom Discogs query logging.
+
+```yaml
+spring:
+output:
+ansi:
+enabled: always # Enable colored output in the console
+
+logging:
+level:
+root: INFO
+org.springframework.web: INFO # Enable INFO logging for web requests
+org.hibernate: WARN # Reduce verbosity of Hibernate logs
+org.discogs.query: DEBUG
+```
+
+#### Query Settings
+
+- **Timeout:**  
+  Queries timeout after 59 seconds.
+
+- **UK Filter:**  
+  UK filtering for queries is disabled.
+
+```yaml
+queries:
+timeout: 59
+filterForUk: false
+```
+
+#### Discogs API Configuration
+
+- **Base URL:**  
+  Discogs API URL: `https://api.discogs.com/`
+
+- **Endpoints:**
+    - Search: `database/search`
+    - Release: `releases/`
+    - Marketplace Check: `marketplace/stats/`
+
+- **Agent & Token:**  
+  These are configured via environment variables:
+    - Agent: `${DISCOGS_AGENT}`
+    - Token: `${DISCOGS_TOKEN}`
+
+- **Page Size:**  
+  Pagination is set to 20 items per page.
+
+- **Rate Limit:**  
+  The rate limit is set to 60 requests per minute.
+
+```yaml
+discogs:
+url: https://api.discogs.com/
+baseUrl: https://www.discogs.com
+search: database/search
+release: releases/
+marketplaceCheck: marketplace/stats/
+agent: ${DISCOGS_AGENT}
+page-size: 20
+rate-limit: 60
+token: ${DISCOGS_TOKEN}
 ```
 
 ### Running Locally

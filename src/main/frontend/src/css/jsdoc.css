@@ -1,0 +1,46 @@
+/* jsdoc.css */
+
+/* General styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4; /* Light gray background */
+  color: #333; /* Dark text color */
+  line-height: 1.6; /* Improve readability */
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+  color: #007bff; /* Blue color for headings */
+}
+
+/* Preformatted text */
+pre {
+  background-color: #fff; /* White background for code blocks */
+  border: 1px solid #ddd; /* Light gray border */
+  padding: 10px; /* Padding inside code blocks */
+  border-radius: 5px; /* Rounded corners */
+  overflow-x: auto; /* Scrollbar for long lines */
+}
+
+/* Links */
+a {
+  color: #007bff; /* Blue color for links */
+}
+
+a:hover {
+  text-decoration: underline; /* Underline on hover */
+}
+
+/* Footer */
+.footer {
+  text-align: center; /* Center align footer text */
+  padding: 20px; /* Padding around footer */
+  background-color: #007bff; /* Blue background for footer */
+  color: white; /* White text color */
+}
+
+/* Navbar */
+.navbar {
+  background-color: #007bff; /* Blue background for navbar */
+  color: white; /* White text color */
+}

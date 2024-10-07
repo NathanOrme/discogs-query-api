@@ -1,4 +1,5 @@
 // src/App.js
+
 import React, { useState } from "react";
 import "./css/base.css";
 import QueryFields from "./modules/QueryFields";
@@ -7,11 +8,21 @@ import DarkModeToggle from "./modules/DarkModeToggle";
 import CheapestItem from "./modules/CheapestItem";
 import Results from "./modules/Results";
 
+/**
+ * Main application component for the Discogs Query App.
+ *
+ * @returns {JSX.Element} The App component.
+ */
 function App() {
   const [queries, setQueries] = useState([{ id: 1 }]);
   const [cheapestItems, setCheapestItems] = useState([]);
   const [response, setResponse] = useState([]);
 
+  /**
+   * Handles changes to the queries.
+   *
+   * @param {Array} newQueries - The updated array of queries.
+   */
   const handleQueriesChange = (newQueries) => {
     setQueries(newQueries);
   };
@@ -21,7 +32,7 @@ function App() {
       <header>
         <h1>Discogs Query App</h1>
         <DarkModeToggle />
-        <div class="instructions">
+        <div className="instructions">
           <h2>How to Use This Search Tool</h2>
           <p>
             This tool allows you to search for music releases from the Discogs

@@ -1,7 +1,10 @@
-// src/modules/DarkModeToggle.js
-
 import React, { useEffect, useState } from "react";
 
+/**
+ * A component that toggles dark mode on and off.
+ *
+ * @returns {JSX.Element} The rendered toggle button.
+ */
 const DarkModeToggle = () => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
     // Check for user preference in localStorage
@@ -20,6 +23,9 @@ const DarkModeToggle = () => {
     localStorage.setItem("dark-mode", isDarkMode ? "enabled" : "disabled");
   }, [isDarkMode]);
 
+  /**
+   * Toggles the dark mode state.
+   */
   const toggleDarkMode = () => {
     setIsDarkMode((prevMode) => !prevMode);
   };

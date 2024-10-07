@@ -1,4 +1,4 @@
-// src/App.js
+// src/App.tsx
 
 import React, { useState } from "react";
 import "./css/base.css";
@@ -7,23 +7,19 @@ import SearchForm from "./modules/SearchForm";
 import DarkModeToggle from "./modules/DarkModeToggle";
 import CheapestItem from "./modules/CheapestItem";
 import Results from "./modules/Results";
+import { Query, QueryResult } from "./modules/types"; // Import the necessary types
 
-/**
- * Main application component for the Discogs Query App.
- *
- * @returns {JSX.Element} The App component.
- */
-function App() {
-  const [queries, setQueries] = useState([{ id: 1 }]);
-  const [cheapestItems, setCheapestItems] = useState([]);
-  const [response, setResponse] = useState([]);
+const App: React.FC = () => {
+  const [queries, setQueries] = useState<Query[]>([{ id: 1 }]);
+  const [cheapestItems, setCheapestItems] = useState<any[]>([]);
+  const [response, setResponse] = useState<QueryResult[]>([]); // Change type to QueryResult[]
 
   /**
    * Handles changes to the queries.
    *
    * @param {Array} newQueries - The updated array of queries.
    */
-  const handleQueriesChange = (newQueries) => {
+  const handleQueriesChange = (newQueries: Query[]) => {
     setQueries(newQueries);
   };
 
@@ -104,6 +100,6 @@ function App() {
       </main>
     </div>
   );
-}
+};
 
 export default App;

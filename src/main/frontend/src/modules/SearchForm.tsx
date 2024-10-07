@@ -1,6 +1,21 @@
-// src/modules/SearchForm.js
+// src/modules/SearchForm.tsx
 
-import React, { useState } from "react";
+import React, { useState, FormEvent } from "react";
+
+interface SearchFormProps {
+  queries: Array<{
+    artist?: string;   // Change to optional
+    barcode?: string;  // Change to optional
+    album?: string;    // Change to optional
+    track?: string;    // Change to optional
+    format?: string;   // Change to optional
+    country?: string;  // Change to optional
+    types?: string;    // Change to optional
+  }>;
+  setResponse: (response: any) => void;
+  onCheapestItemsChange: (cheapestItems: Array<any>) => void;
+}
+
 
 /**
  * SearchForm component for submitting queries and handling responses.
@@ -11,7 +26,11 @@ import React, { useState } from "react";
  * @param {Function} props.onCheapestItemsChange - Function to handle changes in the cheapest items.
  * @returns {JSX.Element} The SearchForm component.
  */
-const SearchForm = ({ queries, setResponse, onCheapestItemsChange }) => {
+const SearchForm: React.FC<SearchFormProps> = ({
+  queries,
+  setResponse,
+  onCheapestItemsChange,
+}) => {
   const [loading, setLoading] = useState(false);
 
   /**
@@ -19,12 +38,11 @@ const SearchForm = ({ queries, setResponse, onCheapestItemsChange }) => {
    *
    * @returns {string} The API URL.
    */
-  const getApiUrl = () => {
+  const getApiUrl = (): string => {
     const hostname = window.location.hostname;
-    const urlMapping = {
+    const urlMapping: Record<string, string> = {
       render: "https://discogs-query-api.onrender.com/discogs-query/search",
-      koyeb:
-        "https://discogs-query-api-rgbnathan.koyeb.app/discogs-query/search",
+      koyeb: "https://discogs-query-api-rgbnathan.koyeb.app/discogs-query/search",
       b4a: "https://discogsqueryapi1-fthsfv0p.b4a.run/discogs-query/search",
       netlify: "https://discogsqueryapi1-fthsfv0p.b4a.run/discogs-query/search",
     };
@@ -41,9 +59,9 @@ const SearchForm = ({ queries, setResponse, onCheapestItemsChange }) => {
   /**
    * Handles the submission of the search form.
    *
-   * @param {Event} event - The form submit event.
+   * @param {FormEvent<HTMLFormElement>} event - The form submit event.
    */
-  const handleSearchFormSubmit = (event) => {
+  const handleSearchFormSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
 
@@ -62,21 +80,21 @@ const SearchForm = ({ queries, setResponse, onCheapestItemsChange }) => {
         if (!response.ok) {
           return response.text().then((errorMessage) => {
             throw new Error(
-              `Server responded with status ${response.status}: ${errorMessage}`,
+              `Server responded with status ${response.status}: ${errorMessage}`
             );
           });
         }
         return response.json();
       })
       .then((data) => {
-        setResponse(data); // Pass response back to App.js
+        setResponse(data); // Pass response back to App.tsx
         console.log("Response data received:", data);
 
         if (Array.isArray(data) && data.length > 0) {
           const cheapestItemsList = data
-            .map((result) => result.cheapestItem)
-            .filter((item) => item !== null);
-          onCheapestItemsChange(cheapestItemsList); // Update cheapest items in App.js
+            .map((result: any) => result.cheapestItem)
+            .filter((item: any) => item !== null);
+          onCheapestItemsChange(cheapestItemsList); // Update cheapest items in App.tsx
           console.log("Cheapest items found:", cheapestItemsList);
         } else {
           onCheapestItemsChange([]); // Clear cheapest items if none found

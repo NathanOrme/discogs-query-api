@@ -1,3 +1,5 @@
+//src/modules/DarkModeToggle.js
+
 import React, { useEffect, useState } from "react";
 
 /**
@@ -5,8 +7,8 @@ import React, { useEffect, useState } from "react";
  *
  * @returns {JSX.Element} The rendered toggle button.
  */
-const DarkModeToggle = () => {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
+const DarkModeToggle: React.FC = () => {
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     // Check for user preference in localStorage
     return localStorage.getItem("dark-mode") === "enabled";
   });

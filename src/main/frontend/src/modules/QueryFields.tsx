@@ -4,14 +4,34 @@ import React, { useState, useEffect } from "react";
 import { discogsTypes, discogFormats, discogCountries } from "./DiscogsData";
 
 /**
+ * Type definition for a single query object.
+ */
+interface Query {
+  artist: string;
+  barcode: string;
+  album: string;
+  track: string;
+  format: string;
+  country: string;
+  types: string;
+}
+
+/**
+ * Props definition for QueryFields component.
+ */
+interface QueryFieldsProps {
+  onQueriesChange: (queries: Query[]) => void;
+}
+
+/**
  * QueryFields component allows users to input multiple queries
  * for searching Discogs.
  *
- * @param {Function} onQueriesChange - Callback function to handle queries change.
+ * @param {QueryFieldsProps} props - The props for the component.
  * @returns {JSX.Element} The rendered QueryFields component.
  */
-const QueryFields = ({ onQueriesChange }) => {
-  const [queries, setQueries] = useState([
+const QueryFields: React.FC<QueryFieldsProps> = ({ onQueriesChange }) => {
+  const [queries, setQueries] = useState<Query[]>([
     {
       artist: "",
       barcode: "",
@@ -23,7 +43,7 @@ const QueryFields = ({ onQueriesChange }) => {
     },
   ]);
 
-  const [queryCounter, setQueryCounter] = useState(1);
+  const [queryCounter, setQueryCounter] = useState<number>(1);
 
   useEffect(() => {
     onQueriesChange(queries);
@@ -33,10 +53,10 @@ const QueryFields = ({ onQueriesChange }) => {
    * Handles input changes in the query fields.
    *
    * @param {number} index - The index of the query being updated.
-   * @param {string} field - The field that is being updated.
+   * @param {keyof Query} field - The field that is being updated.
    * @param {string} value - The new value for the field.
    */
-  const handleInputChange = (index, field, value) => {
+  const handleInputChange = (index: number, field: keyof Query, value: string) => {
     const updatedQueries = queries.map((query, i) => {
       if (i === index) {
         return { ...query, [field]: value }; // Update the specific field
@@ -50,7 +70,7 @@ const QueryFields = ({ onQueriesChange }) => {
    * Adds a new query to the list of queries.
    */
   const addQuery = () => {
-    const newQuery = {
+    const newQuery: Query = {
       artist: "",
       barcode: "",
       album: "",
@@ -69,25 +89,25 @@ const QueryFields = ({ onQueriesChange }) => {
    *
    * @param {number} index - The index of the query to be removed.
    */
-  const removeQuery = (index) => {
+  const removeQuery = (index: number) => {
     const updatedQueries = queries.filter((_, i) => i !== index);
     setQueries(updatedQueries);
     console.log(
       "Removed query at index:",
       index,
       "Remaining queries:",
-      updatedQueries,
+      updatedQueries
     );
   };
 
   /**
    * Renders input fields for a single query.
    *
-   * @param {Object} query - The query object to render.
+   * @param {Query} query - The query object to render.
    * @param {number} index - The index of the query being rendered.
    * @returns {JSX.Element} The rendered query input fields.
    */
-  const renderQueryFields = (query, index) => (
+  const renderQueryFields = (query: Query, index: number): JSX.Element => (
     <div className="query" key={index}>
       <div className="query-header">
         <span>Query {index + 1}</span>
@@ -111,21 +131,21 @@ const QueryFields = ({ onQueriesChange }) => {
           "format",
           query.format,
           discogFormats,
-          index,
+          index
         )}
         {renderSelectField(
           "Country (optional):",
           "country",
           query.country,
           discogCountries,
-          index,
+          index
         )}
         {renderSelectField(
           "Types (optional):",
           "types",
           query.types,
           discogsTypes,
-          index,
+          index
         )}
       </div>
     </div>
@@ -135,12 +155,17 @@ const QueryFields = ({ onQueriesChange }) => {
    * Renders a text input field.
    *
    * @param {string} label - The label for the input field.
-   * @param {string} field - The field name.
+   * @param {keyof Query} field - The field name.
    * @param {string} value - The current value of the field.
    * @param {number} index - The index of the query.
    * @returns {JSX.Element} The rendered input field.
    */
-  const renderInputField = (label, field, value, index) => (
+  const renderInputField = (
+    label: string,
+    field: keyof Query,
+    value: string,
+    index: number
+  ): JSX.Element => (
     <>
       <label htmlFor={`${field}-${index}`}>{label}</label>
       <input
@@ -157,13 +182,19 @@ const QueryFields = ({ onQueriesChange }) => {
    * Renders a select dropdown field.
    *
    * @param {string} label - The label for the select field.
-   * @param {string} field - The field name.
+   * @param {keyof Query} field - The field name.
    * @param {string} value - The current value of the field.
-   * @param {Array} options - The options for the select dropdown.
+   * @param {FilterOption[]} options - The options for the select dropdown.
    * @param {number} index - The index of the query.
    * @returns {JSX.Element} The rendered select dropdown.
    */
-  const renderSelectField = (label, field, value, options, index) => (
+  const renderSelectField = (
+    label: string,
+    field: keyof Query,
+    value: string,
+    options: { value: string; text: string }[],
+    index: number
+  ): JSX.Element => (
     <>
       <label htmlFor={`${field}-${index}`}>{label}</label>
       <select

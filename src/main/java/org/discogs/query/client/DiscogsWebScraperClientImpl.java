@@ -10,7 +10,6 @@ import org.discogs.query.interfaces.DiscogsWebScraperClient;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -74,7 +73,9 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
                 // Fetch and parse the HTML from the Discogs marketplace page using JsoupHelper
                 return jsoupHelper.connect(url, httpConfig.buildHeaders().toSingleValueMap());
             } catch (final Exception e) {
-                log.error(ERROR_SCRAPING_THE_DISCOGS_MARKETPLACE_ATTEMPT, retryCount + 1, maxRetries);
+                if (log.isErrorEnabled()) {
+                    log.error(ERROR_SCRAPING_THE_DISCOGS_MARKETPLACE_ATTEMPT, retryCount + 1, maxRetries);
+                }
                 retryCount++;
                 waitBeforeRetry();
             }
@@ -89,8 +90,10 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
         try {
             Thread.sleep(200);
         } catch (final InterruptedException ie) {
-            Thread.currentThread().interrupt(); // Restore interrupted status
-            log.error("Thread was interrupted while waiting to retry", ie);
+            Thread.currentThread().interrupt();
+            if (log.isErrorEnabled()) {
+                log.error("Thread was interrupted while waiting to retry", ie);
+            }
         }
     }
 
@@ -114,14 +117,20 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
         for (final Element item : sellerItems) {
             if (item.selectFirst("span.mplabel.seller_label") != null) {
                 sellerName = item.selectFirst("strong > a").text();
-                log.debug("Found seller name: {}", sellerName);
+                if (log.isDebugEnabled()) {
+                    log.debug("Found seller name: {}", sellerName);
+                }
             } else if (item.selectFirst(".star_rating") != null) {
                 sellerRating = item.selectFirst(".star_rating").attr("aria-label");
                 ratingCount = item.selectFirst("a.section_link").text();
-                log.debug("Found seller rating: {} with count: {}", sellerRating, ratingCount);
+                if (log.isDebugEnabled()) {
+                    log.debug("Found seller rating: {} with count: {}", sellerRating, ratingCount);
+                }
             } else if (item.text().contains("Ships From:")) {
                 if (!item.text().contains("United Kingdom")) {
-                    log.debug("No items shipping from the UK: {}", item.text());
+                    if (log.isDebugEnabled()) {
+                        log.debug("No items shipping from the UK: {}", item.text());
+                    }
                     return; // Exit if not shipping from the UK
                 } else {
                     log.debug("Item ships from the United Kingdom.");
@@ -136,7 +145,9 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
             results.add(result);
             log.info("Added result for seller: {}", sellerName);
         } else {
-            log.debug("Seller information not found for listing.");
+            if (log.isDebugEnabled()) {
+                log.debug("Seller information not found for listing.");
+            }
         }
     }
 }

@@ -27,7 +27,7 @@ public class RetryServiceImpl implements RetryService {
         int attempt = 1;
         while (isAttemptNumberLessThanMaximum(attempt)) {
             try {
-                LogHelper.info(log, () -> "Attempting {}. Attempt {} of {}", actionDescription, attempt, RETRY_COUNT);
+                LogHelper.info(() -> "Attempting {}. Attempt {} of {}", actionDescription, attempt, RETRY_COUNT);
                 return action.call();
             } catch (final Exception e) {
                 attempt = handleRetryCount(actionDescription, e, attempt);
@@ -39,11 +39,11 @@ public class RetryServiceImpl implements RetryService {
 
     private int handleRetryCount(final String actionDescription,
                                  final Exception e, int attempt) throws Exception {
-        LogHelper.warn(log, () -> "Error during {} on attempt {} of {}. Exception: {}",
+        LogHelper.warn(() -> "Error during {} on attempt {} of {}. Exception: {}",
                 actionDescription, attempt, RETRY_COUNT, e.getMessage());
         if (e.getCause() instanceof final HttpClientErrorException httpClientErrorException &&
                 httpClientErrorException.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-            LogHelper.debug(log, () -> "404 received, exiting retry logic");
+            LogHelper.debug(() -> "404 received, exiting retry logic");
             throw e;
         }
 
@@ -56,10 +56,10 @@ public class RetryServiceImpl implements RetryService {
 
     private void delayThreadBasedOnStatusCode(final Exception e) throws InterruptedException {
         if (is429StatusCodeException(e)) {
-            LogHelper.info(log, () -> "429 Status Code Received - Sleeping for 30 seconds");
+            LogHelper.info(() -> "429 Status Code Received - Sleeping for 30 seconds");
             TimeUnit.SECONDS.sleep(30);
         } else {
-            LogHelper.info(log, () -> "Sleeping for {} seconds", RETRY_DELAY);
+            LogHelper.info(() -> "Sleeping for {} seconds", RETRY_DELAY);
             TimeUnit.SECONDS.sleep(RETRY_DELAY);
         }
     }

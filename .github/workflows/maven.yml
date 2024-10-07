@@ -94,6 +94,12 @@ jobs:
           DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
           DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}
 
+      - name: Install NPM project
+        run: cd src/main/frontend && npm install
+
+      - name: Generate NPM Documents
+        run: cd src/main/frontend &&  npx jsdoc src -c jsdoc.json -d docs -r
+
       - name: Zip Javadoc
         run: |
           mkdir -p target/site/apidocs

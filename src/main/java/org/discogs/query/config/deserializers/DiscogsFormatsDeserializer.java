@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import org.discogs.query.model.enums.DiscogsFormats;
 
 import java.io.IOException;
+import java.util.Locale;
 
 /**
  * Custom deserializer for {@link DiscogsFormats} enum using Jackson.
@@ -42,7 +43,7 @@ public class DiscogsFormatsDeserializer extends JsonDeserializer<DiscogsFormats>
             return null;
         }
         try {
-            return DiscogsFormats.valueOf(value.toUpperCase());
+            return DiscogsFormats.valueOf(value.toUpperCase(Locale.ENGLISH));
         } catch (final IllegalArgumentException e) {
             return null;
         }

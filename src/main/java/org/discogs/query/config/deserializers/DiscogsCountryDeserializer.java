@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import org.discogs.query.model.enums.DiscogCountries;
 
 import java.io.IOException;
+import java.util.Locale;
 
 /**
  * Custom deserializer for {@link DiscogCountries} enum using Jackson.
@@ -39,7 +40,7 @@ public class DiscogsCountryDeserializer extends JsonDeserializer<DiscogCountries
             return null;
         }
         try {
-            return DiscogCountries.valueOf(value.toUpperCase());
+            return DiscogCountries.valueOf(value.toUpperCase(Locale.ENGLISH));
         } catch (final IllegalArgumentException e) {
             return null;
         }

@@ -39,13 +39,10 @@ public class UriBuilderHelper {
                                     final String paramValue) {
         if (stringHelper.isNotNullOrBlank(paramValue)) {
             uriBuilder.queryParam(paramName, paramValue);
-            if (log.isDebugEnabled()) {
-                log.debug("Added query parameter: {}={}", paramName, paramValue);
-            }
+            LogHelper.debug(log, () -> "Added query parameter: {}={}", paramName, paramValue);
+
         } else {
-            if (log.isDebugEnabled()) {
-                log.debug("Skipped adding query parameter: {} (value is null or blank)", paramName);
-            }
+            LogHelper.debug(log, () -> "Skipped adding query parameter: {} (value is null or blank)", paramName);
         }
     }
 
@@ -67,13 +64,9 @@ public class UriBuilderHelper {
                              final String paramName, final String paramValue) {
         if (paramValue != null) {
             uriBuilder.queryParam(paramName, paramValue);
-            if (log.isDebugEnabled()) {
-                log.debug("Added query parameter: {}={}", paramName, paramValue);
-            }
+            LogHelper.debug(log, () -> "Added query parameter: {}={}", paramName, paramValue);
         } else {
-            if (log.isDebugEnabled()) {
-                log.debug("Skipped adding query parameter: {} (value is null)", paramName);
-            }
+            LogHelper.debug(log, () -> "Skipped adding query parameter: {} (value is null)", paramName);
         }
     }
 }

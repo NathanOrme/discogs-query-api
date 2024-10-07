@@ -7,6 +7,7 @@ import org.discogs.query.domain.api.DiscogsRelease;
 import org.discogs.query.domain.api.DiscogsResult;
 import org.discogs.query.exceptions.DiscogsMarketplaceException;
 import org.discogs.query.exceptions.DiscogsSearchException;
+import org.discogs.query.helpers.LogHelper;
 import org.discogs.query.interfaces.DiscogsAPIClient;
 import org.discogs.query.interfaces.HttpRequestService;
 import org.discogs.query.interfaces.RateLimiterService;
@@ -51,7 +52,7 @@ public class DiscogsAPIClientImpl implements DiscogsAPIClient {
     @Cacheable(value = "discogsResults", key = "#searchUrl")
     @Override
     public DiscogsResult getResultsForQuery(final String searchUrl) {
-        log.info(CACHE_MISS_FOR_SEARCH_URL, searchUrl);
+        LogHelper.info(log, () -> CACHE_MISS_FOR_SEARCH_URL, searchUrl);
         return executeWithRateLimitAndRetry(() -> httpRequestService.executeRequest(searchUrl, DiscogsResult.class),
                 "Discogs Search API Request");
     }
@@ -68,7 +69,7 @@ public class DiscogsAPIClientImpl implements DiscogsAPIClient {
     @Cacheable(value = "stringResults", key = "#searchUrl")
     @Override
     public String getStringResultForQuery(final String searchUrl) {
-        log.info(CACHE_MISS_FOR_SEARCH_URL, searchUrl);
+        LogHelper.info(log, () -> CACHE_MISS_FOR_SEARCH_URL, searchUrl);
         return executeWithRateLimitAndRetry(() -> httpRequestService.executeRequest(searchUrl, String.class),
                 "Discogs Search API Request");
     }
@@ -86,7 +87,7 @@ public class DiscogsAPIClientImpl implements DiscogsAPIClient {
     @Cacheable(value = "marketplaceResults", key = "#url")
     @Override
     public DiscogsMarketplaceResult getMarketplaceResultForQuery(final String url) {
-        log.info("Cache miss for url: {}", url);
+        LogHelper.info(log, () -> "Cache miss for url: {}", url);
         return executeWithRateLimitAndRetry(() -> httpRequestService.executeRequest(url,
                 DiscogsMarketplaceResult.class), "Discogs Marketplace API Request");
     }
@@ -105,7 +106,7 @@ public class DiscogsAPIClientImpl implements DiscogsAPIClient {
     @Cacheable(value = "marketplaceResults", key = "#url")
     @Override
     public DiscogsRelease getRelease(final String url) {
-        log.info("Cache miss for url: {}", url);
+        LogHelper.info(log, () -> "Cache miss for url: {}", url);
         return executeWithRateLimitAndRetry(() -> httpRequestService.executeRequest(url, DiscogsRelease.class),
                 "Discogs Release API Request");
     }

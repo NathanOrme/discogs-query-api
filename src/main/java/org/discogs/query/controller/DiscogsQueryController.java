@@ -3,6 +3,7 @@ package org.discogs.query.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.discogs.query.helpers.LogHelper;
 import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsMapResultDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
@@ -65,18 +66,16 @@ public class DiscogsQueryController {
         List<DiscogsResultDTO> resultDTOList = queryProcessingService.processQueries(discogsQueryDTO, timeoutInSeconds);
 
         if (resultDTOList.isEmpty() || hasNoEntries(resultDTOList)) {
-            if (log.isWarnEnabled()) {
-                log.warn("No results found for the provided queries");
-            }
+            LogHelper.warn(log, () -> "No results found for the provided queries");
             return ResponseEntity.noContent().build();
         }
         if (isFilterForUk) {
-            log.info("Filtering results to show items that ship from the UK");
+            LogHelper.info(log, () -> "Filtering results to show items that ship from the UK");
             resultDTOList = queryProcessingService.filterOutEntriesNotShippingFromUk(resultDTOList);
         }
 
         int size = resultCalculationService.calculateSizeOfResults(resultDTOList);
-        log.info("Returning {} results: {}", size, resultDTOList);
+        LogHelper.info(log, () -> "Returning {} results: {}", size, resultDTOList);
 
         List<DiscogsMapResultDTO> resultMapDTOList = mappingService.mapResultsToDTO(resultDTOList);
 

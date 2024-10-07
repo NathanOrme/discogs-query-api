@@ -1,6 +1,7 @@
 package org.discogs.query.limits;
 
 import lombok.extern.slf4j.Slf4j;
+import org.discogs.query.helpers.LogHelper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -28,9 +29,8 @@ public class RateLimiter {
      * The scheduler resets the request count every minute.
      */
     public RateLimiter() {
-        if (log.isDebugEnabled()) {
-            log.debug("Initializing RateLimiter with a maximum of {} requests per minute.", maxRequestsPerMinute);
-        }
+        LogHelper.debug(log, () -> "Initializing RateLimiter with a maximum of {} requests per minute.",
+                maxRequestsPerMinute);
         scheduler.scheduleAtFixedRate(this::resetRequestCount, 1, 1, TimeUnit.MINUTES);
     }
 
@@ -39,9 +39,7 @@ public class RateLimiter {
      */
     private void resetRequestCount() {
         requestCount.set(0);
-        if (log.isDebugEnabled()) {
-            log.debug("Request count reset. Ready for new requests.");
-        }
+        LogHelper.debug(log, () -> "Request count reset. Ready for new requests.");
     }
 
     /**
@@ -53,14 +51,10 @@ public class RateLimiter {
         int currentCount = requestCount.incrementAndGet();
         if (currentCount > maxRequestsPerMinute) {
             requestCount.decrementAndGet(); // Roll back increment if limit exceeded
-            if (log.isDebugEnabled()) {
-                log.debug("Rate limit exceeded. Current request count: {}", currentCount - 1);
-            }
+            LogHelper.debug(log, () -> "Rate limit exceeded. Current request count: {}", currentCount - 1);
             return false;
         }
-        if (log.isDebugEnabled()) {
-            log.debug("Permit acquired. Current request count: {}", currentCount);
-        }
+        LogHelper.debug(log, () -> "Permit acquired. Current request count: {}", currentCount);
         return true;
     }
 
@@ -72,18 +66,14 @@ public class RateLimiter {
         scheduler.shutdown();
         try {
             if (!scheduler.awaitTermination(1, TimeUnit.MINUTES)) {
-                if (log.isWarnEnabled()) {
-                    log.warn("Forcing shutdown of the scheduler...");
-                }
+                LogHelper.warn(log, () -> "Forcing shutdown of the scheduler...");
                 scheduler.shutdownNow();
             }
         } catch (final InterruptedException e) {
             Thread.currentThread().interrupt();
-            if (log.isErrorEnabled()) {
-                log.error("Shutdown interrupted. Forcing shutdown now.", e);
-            }
+            LogHelper.error(log, () -> "Shutdown interrupted. Forcing shutdown now.", e);
             scheduler.shutdownNow();
         }
-        log.info("RateLimiter scheduler shutdown completed.");
+        LogHelper.info(log, () -> "RateLimiter scheduler shutdown completed.");
     }
 }

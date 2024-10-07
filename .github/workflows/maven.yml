@@ -39,9 +39,24 @@ jobs:
         id: set_output
         run: echo "::set-output name=version::${{ steps.get_semver.outputs.next_version }}"
 
+
+  docker:
+    name: Build Docker Images
+    runs-on: self-hosted
+    needs: [ setup ]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Build the Docker image
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag $DOCKER_IMAGE_NAME:${{ needs.setup.outputs.version }}
+
+
   build:
     runs-on: ubuntu-latest
-    needs: [ setup ]
+    needs: [ setup, docker ]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4

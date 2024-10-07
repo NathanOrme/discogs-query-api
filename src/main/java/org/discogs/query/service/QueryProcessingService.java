@@ -3,6 +3,7 @@ package org.discogs.query.service;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.discogs.query.helpers.LogHelper;
 import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.interfaces.DiscogsWebScraperClient;
 import org.discogs.query.model.DiscogsEntryDTO;
@@ -135,7 +136,7 @@ public class QueryProcessingService {
         return futures.stream()
                 .map(future -> getFutureResultWithTimeout(future, timeoutInSeconds))
                 .filter(Objects::nonNull)
-                .peek(result -> log.debug("Received result: {}", result))
+                .peek(result -> LogHelper.debug(log, () -> "Received result: {}", result))
                 .toList();
     }
 
@@ -152,10 +153,10 @@ public class QueryProcessingService {
         try {
             return future.get(timeoutInSeconds, TimeUnit.SECONDS);
         } catch (final InterruptedException | ExecutionException e) {
-            log.error("Error processing query", e);
+            LogHelper.error(log, () -> "Error processing query", e);
             return null;
         } catch (final TimeoutException e) {
-            log.warn("Query processing timed out");
+            LogHelper.warn(log, () -> "Query processing timed out");
             future.cancel(true); // Cancel the task if it times out
             return null;
         }

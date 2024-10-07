@@ -72,8 +72,8 @@ public class DiscogsQueryControllerAdvice {
      */
     @ExceptionHandler(TimeoutException.class)
     public ResponseEntity<ErrorMessageDTO> handleTimeoutException(final TimeoutException ex) {
-        return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body(new ErrorMessageDTO("Request took too long to " +
-                "process."));
+        return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body(new ErrorMessageDTO(
+                "Request took too long to process."));
     }
 
     /**
@@ -97,7 +97,7 @@ public class DiscogsQueryControllerAdvice {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessageDTO> handleException(final Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessageDTO("An unexpected " +
-                "error occurred: %s".formatted(ex.getMessage())));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessageDTO(
+                "An unexpected error occurred: %s".formatted(ex.getMessage())));
     }
 }

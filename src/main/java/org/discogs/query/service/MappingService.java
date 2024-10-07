@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.domain.api.DiscogsEntry;
 import org.discogs.query.domain.api.DiscogsResult;
+import org.discogs.query.helpers.LogHelper;
 import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsMapResultDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
@@ -49,7 +50,7 @@ public class MappingService {
     DiscogsMapResultDTO convertEntriesToMapByTitle(final DiscogsResultDTO discogsResultDTO) {
         Objects.requireNonNull(discogsResultDTO, "DiscogsResultDTO must not be null");
 
-        log.info("Converting Discogs entries to map by title");
+        LogHelper.info(log, () -> "Converting Discogs entries to map by title");
 
         DiscogsEntryDTO cheapestItem = discogsResultDTO.results().stream()
                 .min(Comparator.comparing(DiscogsEntryDTO::lowestPrice))
@@ -82,14 +83,15 @@ public class MappingService {
      * @return a {@link DiscogsResultDTO} corresponding to the {@link DiscogsResult}
      */
     public DiscogsResultDTO mapObjectToDTO(final DiscogsResult discogsResult, final DiscogsQueryDTO discogsQueryDTO) {
-        log.debug("Mapping DiscogsResult to DiscogsResultDTO for query: {}", discogsQueryDTO);
+        LogHelper.debug(log, () -> "Mapping DiscogsResult to DiscogsResultDTO for query: {}", discogsQueryDTO);
 
         try {
             var resultDTO = new DiscogsResultDTO(discogsQueryDTO, convertEntriesToDTOs(discogsResult.getResults()));
-            log.debug("Mapping completed for query: {}", discogsQueryDTO);
+            LogHelper.debug(log, () -> "Mapping completed for query: {}", discogsQueryDTO);
             return resultDTO;
         } catch (final Exception e) {
-            log.error("Error mapping DiscogsResult to DiscogsResultDTO for query: {}", discogsQueryDTO, e);
+            LogHelper.error(log, () -> "Error mapping DiscogsResult to DiscogsResultDTO for query: {}",
+                    discogsQueryDTO, e);
             throw e;
         }
     }

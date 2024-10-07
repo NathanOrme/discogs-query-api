@@ -63,7 +63,9 @@ public class DiscogsUrlBuilder {
      * @return the fully constructed search URL with query parameters
      */
     public String buildSearchUrl(final DiscogsQueryDTO discogsQueryDTO) {
-        log.debug("Building search URL with parameters: {}", discogsQueryDTO);
+        if (log.isDebugEnabled()) {
+            log.debug("Building search URL with parameters: {}", discogsQueryDTO);
+        }
 
         UriComponentsBuilder uriBuilder =
                 UriComponentsBuilder.fromHttpUrl(discogsBaseUrl.concat(discogsSearchEndpoint))
@@ -73,8 +75,9 @@ public class DiscogsUrlBuilder {
 
         addQueryParams(uriBuilder, discogsQueryDTO);
         String searchUrl = getUrlString(uriBuilder);
-
-        log.debug("Generated search URL: {}", searchUrl);
+        if (log.isDebugEnabled()) {
+            log.debug("Generated search URL: {}", searchUrl);
+        }
         return searchUrl;
     }
 
@@ -85,8 +88,10 @@ public class DiscogsUrlBuilder {
      * @return the fully constructed release URL
      */
     public String buildReleaseUrl(final DiscogsEntry discogsEntry) {
-        log.debug("Building release URL for DiscogsEntry ID: {}",
-                discogsEntry.getId());
+        if (log.isDebugEnabled()) {
+            log.debug("Building release URL for DiscogsEntry ID: {}",
+                    discogsEntry.getId());
+        }
 
         String releaseUrl =
                 UriComponentsBuilder.fromHttpUrl(discogsBaseUrl.concat(releaseEndpoint)
@@ -94,8 +99,9 @@ public class DiscogsUrlBuilder {
                         .queryParam(TOKEN, token)
                         .queryParam("curr_abbr", "GBP")
                         .toUriString();
-
-        log.debug("Generated release URL: {}", releaseUrl);
+        if (log.isDebugEnabled()) {
+            log.debug("Generated release URL: {}", releaseUrl);
+        }
         return releaseUrl;
     }
 
@@ -106,7 +112,9 @@ public class DiscogsUrlBuilder {
      * @return the fully constructed release URL
      */
     public String buildMarketplaceUrl(final DiscogsEntry discogsEntry) {
-        log.debug("Building marketplace URL for DiscogsEntry ID: {}", discogsEntry.getId());
+        if (log.isDebugEnabled()) {
+            log.debug("Building marketplace URL for DiscogsEntry ID: {}", discogsEntry.getId());
+        }
 
         String releaseUrl =
                 UriComponentsBuilder.fromHttpUrl(discogsBaseUrl.concat(marketplaceUrl)
@@ -114,8 +122,9 @@ public class DiscogsUrlBuilder {
                         .queryParam(TOKEN, token)
                         .queryParam("curr_abbr", "GBP")
                         .toUriString();
-
-        log.debug("Generated marketplace URL: {}", releaseUrl);
+        if (log.isDebugEnabled()) {
+            log.debug("Generated marketplace URL: {}", releaseUrl);
+        }
         return releaseUrl;
     }
 
@@ -129,7 +138,9 @@ public class DiscogsUrlBuilder {
      * @param discogsQueryDTO the data transfer object containing query parameters
      */
     private void addQueryParams(final UriComponentsBuilder uriBuilder, final DiscogsQueryDTO discogsQueryDTO) {
-        log.debug("Adding query parameters to URL: {}", discogsQueryDTO);
+        if (log.isDebugEnabled()) {
+            log.debug("Adding query parameters to URL: {}", discogsQueryDTO);
+        }
 
         if (handleBarcodeParam(uriBuilder, discogsQueryDTO)) {
             return;
@@ -203,8 +214,10 @@ public class DiscogsUrlBuilder {
      * @return the fully constructed search URL with query parameters
      */
     public String generateCompilationSearchUrl(final DiscogsQueryDTO discogsQueryDTO) {
-        log.debug("Building compilation search URL with parameters: {}",
-                discogsQueryDTO);
+        if (log.isDebugEnabled()) {
+            log.debug("Building compilation search URL with parameters: {}",
+                    discogsQueryDTO);
+        }
         DiscogsQueryDTO dtoForUrl = generateDTOForSearching(discogsQueryDTO);
 
         UriComponentsBuilder uriBuilder =
@@ -216,8 +229,9 @@ public class DiscogsUrlBuilder {
         uriBuilderHelper.addIfNotNullOrBlank(uriBuilder, DiscogQueryParams.Q.getQueryType(), dtoForUrl.title());
         String compilationSearchUrl = getUrlString(uriBuilder);
         compilationSearchUrl = compilationSearchUrl.replace(" ", "+");
-
-        log.debug("Generated compilation search URL: {}", compilationSearchUrl);
+        if (log.isDebugEnabled()) {
+            log.debug("Generated compilation search URL: {}", compilationSearchUrl);
+        }
         return compilationSearchUrl;
     }
 

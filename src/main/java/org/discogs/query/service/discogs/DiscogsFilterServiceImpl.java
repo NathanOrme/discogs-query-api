@@ -106,13 +106,17 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
     public DiscogsRelease getReleaseDetails(final DiscogsEntry discogsEntry) {
         try {
             String releaseUrl = discogsUrlBuilder.buildReleaseUrl(discogsEntry);
-            log.debug("Retrieving release details from URL: {}", releaseUrl);
+            if (log.isDebugEnabled()) {
+                log.debug("Retrieving release details from URL: {}", releaseUrl);
+            }
             DiscogsRelease release = discogsAPIClient.getRelease(releaseUrl);
             log.info("Retrieved release details for entry ID {}",
                     discogsEntry.getId());
             return release;
         } catch (final Exception e) {
-            log.error("Error retrieving release details for entry ID {}", discogsEntry.getId(), e);
+            if (log.isErrorEnabled()) {
+                log.error("Error retrieving release details for entry ID {}", discogsEntry.getId(), e);
+            }
             throw new DiscogsSearchException("Failed to retrieve release details for entry ID "
                     + discogsEntry.getId(), e);
         }
@@ -157,10 +161,14 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
      */
     private boolean filterIfTrackOnAlbum(final DiscogsEntry discogsEntry, final DiscogsQueryDTO discogsQueryDTO) {
         try {
-            log.debug("Filtering track on album for entry ID {}", discogsEntry.getId());
+            if (log.isDebugEnabled()) {
+                log.debug("Filtering track on album for entry ID {}", discogsEntry.getId());
+            }
             DiscogsRelease release = getReleaseDetails(discogsEntry);
             if (release == null) {
-                log.error("No release details found for entry ID {}", discogsEntry.getId());
+                if (log.isErrorEnabled()) {
+                    log.error("No release details found for entry ID {}", discogsEntry.getId());
+                }
                 return false;
             }
 
@@ -173,14 +181,20 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
             }
 
             if (isOnAlbum) {
-                log.debug("Entry ID {} is on the album and matches the filters", discogsEntry.getId());
+                if (log.isDebugEnabled()) {
+                    log.debug("Entry ID {} is on the album and matches the filters", discogsEntry.getId());
+                }
                 discogsEntry.setLowestPrice((float) release.getLowestPrice());
             } else {
-                log.debug("Entry ID {} does not match album filters", discogsEntry.getId());
+                if (log.isDebugEnabled()) {
+                    log.debug("Entry ID {} does not match album filters", discogsEntry.getId());
+                }
             }
             return isOnAlbum;
         } catch (final Exception e) {
-            log.error("Error filtering track on album for entry ID {}", discogsEntry.getId(), e);
+            if (log.isErrorEnabled()) {
+                log.error("Error filtering track on album for entry ID {}", discogsEntry.getId(), e);
+            }
             return false;
         }
     }
@@ -198,18 +212,23 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
      * @return {@code true} if the artist matches, otherwise {@code false}.
      */
     private boolean filterArtists(final DiscogsQueryDTO discogsQueryDTO, final DiscogsRelease release) {
-        log.debug("Filtering artists for release ID {}", release.getId());
+        if (log.isDebugEnabled()) {
+            log.debug("Filtering artists for release ID {}", release.getId());
+        }
         boolean isArtistMatch = isArtistMatchNameOrAnyNameVariations(discogsQueryDTO, release);
         if (isArtistMatch) {
             return isArtistMatch;
         }
         if (release.getExtraArtists() != null) {
-            log.debug("Checking extra artists for release ID {}", release.getId());
+            if (log.isDebugEnabled()) {
+                log.debug("Checking extra artists for release ID {}", release.getId());
+            }
             isArtistMatch = release.getExtraArtists().parallelStream()
                     .anyMatch(artist -> isArtistNameMatching(discogsQueryDTO, artist.getName()));
         }
-        log.debug("Artist match status for release ID {}: {}",
-                release.getId(), isArtistMatch);
+        if (log.isDebugEnabled()) {
+            log.debug("Artist match status for release ID {}: {}", release.getId(), isArtistMatch);
+        }
         return isArtistMatch;
     }
 
@@ -229,7 +248,9 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
      * @return {@code true} if the track matches, otherwise {@code false}.
      */
     private boolean filterTracks(final DiscogsQueryDTO discogsQueryDTO, final DiscogsRelease release) {
-        log.debug("Filtering tracks for release ID {}", release.getId());
+        if (log.isDebugEnabled()) {
+            log.debug("Filtering tracks for release ID {}", release.getId());
+        }
         boolean trackMatch = release.getTracklist().parallelStream()
                 .anyMatch(track -> isTrackEqualToOrContains(discogsQueryDTO, track));
         if (trackMatch && isTrackListContainingArtists(release.getTracklist())) {
@@ -238,7 +259,9 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
                     .filter(Objects::nonNull)
                     .anyMatch(artists -> isArtistInTrackList(artists, discogsQueryDTO));
         }
-        log.debug("Track match status for release ID {}: {}", release.getId(), trackMatch);
+        if (log.isDebugEnabled()) {
+            log.debug("Track match status for release ID {}: {}", release.getId(), trackMatch);
+        }
         return trackMatch;
     }
 

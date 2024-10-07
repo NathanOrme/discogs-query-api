@@ -65,7 +65,9 @@ public class DiscogsQueryController {
         List<DiscogsResultDTO> resultDTOList = queryProcessingService.processQueries(discogsQueryDTO, timeoutInSeconds);
 
         if (resultDTOList.isEmpty() || hasNoEntries(resultDTOList)) {
-            log.warn("No results found for the provided queries");
+            if (log.isWarnEnabled()) {
+                log.warn("No results found for the provided queries");
+            }
             return ResponseEntity.noContent().build();
         }
         if (isFilterForUk) {

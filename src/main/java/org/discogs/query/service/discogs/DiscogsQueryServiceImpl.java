@@ -48,7 +48,9 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
         String compFormat = DiscogsFormats.COMP.getFormat();
         String vinylCompFormat = DiscogsFormats.VINYL_COMPILATION.getFormat();
         boolean isCompilation = compFormat.equalsIgnoreCase(format) || vinylCompFormat.equalsIgnoreCase(format);
-        log.debug("Checking if format is compilation: {}. Result: {}", format, isCompilation);
+        if (log.isDebugEnabled()) {
+            log.debug("Checking if format is compilation: {}. Result: {}", format, isCompilation);
+        }
         return isCompilation;
     }
 
@@ -73,7 +75,9 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
         var lowestPriceResult = discogsMarketplaceResult.getResult();
         if (lowestPriceResult != null) {
             entry.setLowestPrice(lowestPriceResult.getValue());
-            log.debug("Amended lowest price for entry: {}", entry);
+            if (log.isDebugEnabled()) {
+                log.debug("Amended lowest price for entry: {}", entry);
+            }
         }
     }
 
@@ -87,8 +91,7 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
             setLowestPriceResultAndNumberForSale(entry, discogsMarketplaceResult);
             return entry;
         } else {
-            log.warn("Entry {} does not ship from United Kingdom or marketplace result is null.",
-                    entry);
+            log.warn("Entry {} does not ship from United Kingdom or marketplace result is null.", entry);
             return null;
         }
     }
@@ -105,7 +108,9 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
             log.info("Starting search for query: {}", discogsQueryDTO);
 
             String searchUrl = discogsUrlBuilder.buildSearchUrl(discogsQueryDTO);
-            log.debug("Built search URL: {}", searchUrl);
+            if (log.isDebugEnabled()) {
+                log.debug("Built search URL: {}", searchUrl);
+            }
 
             DiscogsResult results = performSearch(searchUrl);
             log.info("Received {} results from Discogs API", results.getResults().size());
@@ -121,7 +126,9 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
             }
 
             correctUriForResultEntries(results);
-            log.debug("URIs for result entries corrected");
+            if (log.isDebugEnabled()) {
+                log.debug("URIs for result entries corrected");
+            }
 
             filterAndSortResults(discogsQueryDTO, results);
 
@@ -133,12 +140,16 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
 
             return resultDTO;
         } catch (final DiscogsSearchException e) {
-            log.error("DiscogsSearchException while processing query: {}. Error: {}", discogsQueryDTO, e.getMessage()
-                    , e);
+            if (log.isErrorEnabled()) {
+                log.error("DiscogsSearchException while processing query: {}. Error: {}",
+                        discogsQueryDTO, e.getMessage(), e);
+            }
             return new DiscogsResultDTO(null, null);
         } catch (final Exception e) {
-            log.error(UNEXPECTED_ISSUE_OCCURRED + " while processing query: {}. Error: {}", discogsQueryDTO,
-                    e.getMessage(), e);
+            if (log.isErrorEnabled()) {
+                log.error(UNEXPECTED_ISSUE_OCCURRED + " while processing query: {}. Error: {}",
+                        discogsQueryDTO, e.getMessage(), e);
+            }
             throw new DiscogsSearchException(UNEXPECTED_ISSUE_OCCURRED, e);
         }
     }
@@ -173,9 +184,13 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
      * @param results         the original search results
      */
     private void processCompilationSearch(final DiscogsQueryDTO discogsQueryDTO, final DiscogsResult results) {
-        log.debug("Generating compilation search URL for query: {}", discogsQueryDTO);
+        if (log.isDebugEnabled()) {
+            log.debug("Generating compilation search URL for query: {}", discogsQueryDTO);
+        }
         String searchUrl = discogsUrlBuilder.generateCompilationSearchUrl(discogsQueryDTO);
-        log.debug("Compilation search URL: {}", searchUrl);
+        if (log.isDebugEnabled()) {
+            log.debug("Compilation search URL: {}", searchUrl);
+        }
 
         DiscogsResult compResults = discogsAPIClient.getResultsForQuery(searchUrl);
         log.info("Received {} compilation results from Discogs API", compResults.getResults().size());
@@ -184,8 +199,9 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
 
         results.setResults(mergedResults);
 
-
-        log.debug("Merged results with compilation results. Total results: {}", results.getResults().size());
+        if (log.isDebugEnabled()) {
+            log.debug("Merged results with compilation results. Total results: {}", results.getResults().size());
+        }
     }
 
     /**
@@ -194,11 +210,15 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
      * @param results the search results containing entries with URIs
      */
     private void correctUriForResultEntries(final DiscogsResult results) {
-        log.debug("Correcting URIs for result entries");
+        if (log.isDebugEnabled()) {
+            log.debug("Correcting URIs for result entries");
+        }
         results.getResults().parallelStream()
                 .filter(entry -> !entry.getUri().contains(discogsUrlBuilder.getDiscogsWebsiteBaseUrl()))
                 .forEach(entry -> entry.setUri(buildCorrectUri(entry)));
-        log.debug("URI correction completed");
+        if (log.isDebugEnabled()) {
+            log.debug("URI correction completed");
+        }
     }
 
     /**
@@ -218,7 +238,9 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
      */
     private void getLowestPriceOnMarketplace(final DiscogsResult results) {
         if (results == null || results.getResults().isEmpty()) {
-            log.warn("No results found in DiscogsResult.");
+            if (log.isWarnEnabled()) {
+                log.warn("No results found in DiscogsResult.");
+            }
             return;
         }
         // Filter out entries that don't have "United Kingdom" in the shipFromLocations and process valid ones
@@ -240,9 +262,13 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
     }
 
     private DiscogsMarketplaceResult getDiscogsMarketplaceResult(final DiscogsEntry entry) {
-        log.debug("Generating marketplace URL for entry: {}", entry);
+        if (log.isDebugEnabled()) {
+            log.debug("Generating marketplace URL for entry: {}", entry);
+        }
         String marketplaceUrl = discogsUrlBuilder.buildMarketplaceUrl(entry);
-        log.debug("Getting marketplace result for entry: {}", entry);
+        if (log.isDebugEnabled()) {
+            log.debug("Getting marketplace result for entry: {}", entry);
+        }
         return discogsAPIClient.getMarketplaceResultForQuery(marketplaceUrl);
     }
 

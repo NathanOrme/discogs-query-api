@@ -28,7 +28,9 @@ public class RateLimiter {
      * The scheduler resets the request count every minute.
      */
     public RateLimiter() {
-        log.debug("Initializing RateLimiter with a maximum of {} requests per minute.", maxRequestsPerMinute);
+        if (log.isDebugEnabled()) {
+            log.debug("Initializing RateLimiter with a maximum of {} requests per minute.", maxRequestsPerMinute);
+        }
         scheduler.scheduleAtFixedRate(this::resetRequestCount, 1, 1, TimeUnit.MINUTES);
     }
 
@@ -37,7 +39,9 @@ public class RateLimiter {
      */
     private void resetRequestCount() {
         requestCount.set(0);
-        log.debug("Request count reset. Ready for new requests.");
+        if (log.isDebugEnabled()) {
+            log.debug("Request count reset. Ready for new requests.");
+        }
     }
 
     /**
@@ -49,10 +53,14 @@ public class RateLimiter {
         int currentCount = requestCount.incrementAndGet();
         if (currentCount > maxRequestsPerMinute) {
             requestCount.decrementAndGet(); // Roll back increment if limit exceeded
-            log.debug("Rate limit exceeded. Current request count: {}", currentCount - 1);
+            if (log.isDebugEnabled()) {
+                log.debug("Rate limit exceeded. Current request count: {}", currentCount - 1);
+            }
             return false;
         }
-        log.debug("Permit acquired. Current request count: {}", currentCount);
+        if (log.isDebugEnabled()) {
+            log.debug("Permit acquired. Current request count: {}", currentCount);
+        }
         return true;
     }
 
@@ -64,12 +72,16 @@ public class RateLimiter {
         scheduler.shutdown();
         try {
             if (!scheduler.awaitTermination(1, TimeUnit.MINUTES)) {
-                log.warn("Forcing shutdown of the scheduler...");
+                if (log.isWarnEnabled()) {
+                    log.warn("Forcing shutdown of the scheduler...");
+                }
                 scheduler.shutdownNow();
             }
         } catch (final InterruptedException e) {
             Thread.currentThread().interrupt();
-            log.error("Shutdown interrupted. Forcing shutdown now.", e);
+            if (log.isErrorEnabled()) {
+                log.error("Shutdown interrupted. Forcing shutdown now.", e);
+            }
             scheduler.shutdownNow();
         }
         log.info("RateLimiter scheduler shutdown completed.");

@@ -12,7 +12,6 @@ import org.discogs.query.model.enums.DiscogsFormats;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -20,6 +19,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 
 /**
  * Service for processing Discogs queries using asynchronous tasks.
@@ -45,16 +45,9 @@ public class QueryProcessingService {
     public List<DiscogsResultDTO> processQueries(final List<DiscogsQueryDTO> discogsQueryDTOList,
                                                  final long timeoutInSeconds) {
         // Using a Set to avoid duplicates
-        Set<DiscogsQueryDTO> uniqueQueries = new HashSet<>();
-
-        // Generate queries based on format and add them to the Set
-        for (final DiscogsQueryDTO discogsQueryDTO : discogsQueryDTOList) {
-            List<DiscogsQueryDTO> queriesForFormat =
-                    DiscogsFormats.ALL_VINYLS.getFormat().equalsIgnoreCase(discogsQueryDTO.format())
-                            ? generateQueriesBasedOnFormat(discogsQueryDTO)
-                            : Collections.singletonList(discogsQueryDTO);
-            uniqueQueries.addAll(queriesForFormat);
-        }
+        Set<DiscogsQueryDTO> uniqueQueries = discogsQueryDTOList.parallelStream()
+                .flatMap(discogsQueryDTO -> checkFormatOfQueryAndGenerateList(discogsQueryDTO).stream())
+                .collect(Collectors.toSet());
 
         // Normalize the unique queries
         List<DiscogsQueryDTO> normalizedList = uniqueQueries.parallelStream()
@@ -66,6 +59,12 @@ public class QueryProcessingService {
 
         // Handle futures with timeout and return the results
         return handleFuturesWithTimeout(futures, timeoutInSeconds);
+    }
+
+    private List<DiscogsQueryDTO> checkFormatOfQueryAndGenerateList(final DiscogsQueryDTO discogsQueryDTO) {
+        return DiscogsFormats.ALL_VINYLS.getFormat().equalsIgnoreCase(discogsQueryDTO.format())
+                ? generateQueriesBasedOnFormat(discogsQueryDTO)
+                : Collections.singletonList(discogsQueryDTO);
     }
 
     /**

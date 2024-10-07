@@ -1,0 +1,132 @@
+/* custom.css */
+
+/* General styles */
+body {
+  font-family: Arial, sans-serif; /* Consistent font */
+  background-color: #f8f9fa; /* Light gray background */
+  color: #343a40; /* Dark text color */
+  line-height: 1.6; /* Improve readability */
+  margin: 0; /* Remove default margin */
+  padding: 20px; /* Padding around the body */
+}
+
+/* Main container for documentation */
+.container {
+  max-width: 1200px; /* Limit the width of the documentation */
+  margin: 0 auto; /* Center the container */
+  padding: 20px; /* Padding inside the container */
+  background-color: white; /* White background for content */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Headings */
+h1 {
+  color: #007bff; /* Blue color for main heading */
+  border-bottom: 2px solid #007bff; /* Underline for main heading */
+  padding-bottom: 10px; /* Padding below the heading */
+}
+
+h2 {
+  color: #0056b3; /* Darker blue for section headings */
+  margin-top: 30px; /* Margin above section headings */
+  border-bottom: 1px solid #ddd; /* Light gray underline */
+  padding-bottom: 5px; /* Padding below section headings */
+}
+
+h3 {
+  color: #003d7a; /* Even darker blue for subsections */
+  margin-top: 20px; /* Margin above subsections */
+}
+
+/* Method and Property Sections */
+.method, .property {
+  background-color: #e7f3ff; /* Light blue background */
+  border-left: 4px solid #007bff; /* Blue left border */
+  padding: 10px; /* Padding inside the section */
+  margin-bottom: 15px; /* Space below each method/property */
+  border-radius: 4px; /* Rounded corners */
+}
+
+/* Highlight Method Names */
+.method-title {
+  font-weight: bold; /* Bold method names */
+  color: #0056b3; /* Darker blue for method names */
+}
+
+/* Preformatted text */
+pre {
+  background-color: #f9f9f9; /* Light gray background for code blocks */
+  border: 1px solid #ddd; /* Light gray border */
+  padding: 10px; /* Padding inside code blocks */
+  border-radius: 4px; /* Rounded corners */
+  overflow-x: auto; /* Scrollbar for long lines */
+}
+
+/* Links */
+a {
+  color: #007bff; /* Blue color for links */
+  text-decoration: none; /* No underline by default */
+}
+
+a:hover {
+  text-decoration: underline; /* Underline on hover */
+}
+
+/* Lists */
+ul, ol {
+  margin-left: 20px; /* Indent unordered and ordered lists */
+}
+
+li {
+  margin-bottom: 5px; /* Space between list items */
+}
+
+/* Footer */
+.footer {
+  text-align: center; /* Center align footer text */
+  padding: 20px; /* Padding around footer */
+  background-color: #007bff; /* Blue background for footer */
+  color: white; /* White text color */
+}
+
+/* Navbar */
+.navbar {
+  background-color: #007bff; /* Blue background for navbar */
+  color: white; /* White text color */
+  padding: 10px; /* Padding around navbar */
+}
+
+/* Table Styles */
+table {
+  width: 100%; /* Full-width tables */
+  border-collapse: collapse; /* Collapse borders */
+  margin: 20px 0; /* Margin above and below tables */
+}
+
+th, td {
+  padding: 10px; /* Padding inside table cells */
+  border: 1px solid #ddd; /* Light gray borders */
+  text-align: left; /* Left-align text */
+}
+
+th {
+  background-color: #f8f9fa; /* Light gray background for headers */
+}
+
+/* File Hierarchy Styles */
+.file {
+  font-weight: bold; /* Bold file names */
+  color: #007bff; /* Blue color for file names */
+  margin-top: 30px; /* Margin above file names */
+}
+
+.method-group {
+  margin-top: 20px; /* Space above method groups */
+}
+
+/* Additional styling for properties */
+.property-title {
+  font-weight: bold; /* Bold property titles */
+  color: #5a6268; /* Dark gray for property titles */
+}

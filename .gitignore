@@ -40,6 +40,7 @@ build/
 **/webapp/frontend/node/
 **/node_modules/
 src/main/frontend/build/
+src/main/frontend/docs/
 
 
 # Logs

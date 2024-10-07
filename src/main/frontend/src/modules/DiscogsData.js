@@ -1,11 +1,18 @@
 // src/modules/discogsData.js
-
+/**
+ * An array of Discogs types for filtering items.
+ * @type {Array<{ value: string, text: string }>}
+ */
 const discogsTypes = [
   { value: "RELEASE", text: "Release" },
   { value: "MASTER", text: "Master" },
   { value: "", text: "Select a type" },
 ];
 
+/**
+ * An array of Discogs formats for filtering items.
+ * @type {Array<{ value: string, text: string }>}
+ */
 const discogFormats = [
   { value: "", text: "Any Format" },
   { value: "vinyl", text: "Vinyl" },
@@ -15,8 +22,13 @@ const discogFormats = [
   { value: "compilation", text: "Compilation" },
   { value: "album vinyl", text: "Album Vinyl" },
   { value: "compilation vinyl", text: "Compilation Vinyl" },
+  { value: "all vinyls", text: "All Vinyl Options" },
 ];
 
+/**
+ * An array of countries for filtering items on Discogs.
+ * @type {Array<{ value: string, text: string }>}
+ */
 const discogCountries = [
   { value: "", text: "Any Country" },
   { value: "EUROPE", text: "Europe" },

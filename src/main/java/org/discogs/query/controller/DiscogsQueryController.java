@@ -45,6 +45,9 @@ public class DiscogsQueryController {
     @Value("${queries.timeout:59}")
     private int timeoutInSeconds;
 
+    @Value("${queries.filterForUk:true}")
+    private boolean isFilterForUk;
+
     /**
      * Searches Discogs using the provided query data.
      *
@@ -59,16 +62,16 @@ public class DiscogsQueryController {
             @RequestBody @Valid final List<DiscogsQueryDTO> discogsQueryDTO) {
 
         log.info("Received search request with {} queries", discogsQueryDTO.size());
-
         List<DiscogsResultDTO> resultDTOList = queryProcessingService.processQueries(discogsQueryDTO, timeoutInSeconds);
 
         if (resultDTOList.isEmpty() || hasNoEntries(resultDTOList)) {
             log.warn("No results found for the provided queries");
             return ResponseEntity.noContent().build();
         }
-        //UNCOMMENT CODE IF UK FILTERING IS NEEDED
-        //log.info("Filtering results to show items that ship from the UK");
-        //resultDTOList = queryProcessingService.filterOutEntriesNotShippingFromUk(resultDTOList);
+        if (isFilterForUk) {
+            log.info("Filtering results to show items that ship from the UK");
+            resultDTOList = queryProcessingService.filterOutEntriesNotShippingFromUk(resultDTOList);
+        }
 
         int size = resultCalculationService.calculateSizeOfResults(resultDTOList);
         log.info("Returning {} results: {}", size, resultDTOList);

@@ -118,11 +118,23 @@ jobs:
           DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
           DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}
 
+      - name: Install NPM project
+        run: cd src/main/frontend && npm install
+
+      - name: Generate NPM Documents
+        run: cd src/main/frontend &&  npx jsdoc src -c jsdoc.json -d docs -r
+
       - name: Zip Javadoc
         run: |
           mkdir -p target/site/apidocs
           zip -r target/site/apidocs.zip target/site/apidocs || exit 1
           echo "Javadoc zip created."
+
+      - name: Zip JSDoc
+        run: |
+          mkdir -p src/main/frontend/docs
+          zip -r src/main/frontend/docs/jsdocs.zip src/main/frontend/docs || exit 1
+          echo "JSDoc zip created."
 
       - name: Generate Changelog
         uses: Bullrich/generate-release-changelog@master
@@ -138,5 +150,7 @@ jobs:
           tag_name: ${{ needs.setup.outputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
           generate_release_notes: true
-          files: target/site/apidocs.zip
+          files: |
+            target/site/apidocs.zip
+            src/main/frontend/docs/jsdocs.zip
           body: ${{ steps.Changelog.outputs.changelog }}

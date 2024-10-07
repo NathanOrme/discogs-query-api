@@ -39,6 +39,7 @@ build/
 **/webapp/frontend/build/
 **/webapp/frontend/node/
 **/node_modules/
+src/main/frontend/build/
 
 
 # Logs

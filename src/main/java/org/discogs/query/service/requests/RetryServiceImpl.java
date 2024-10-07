@@ -1,6 +1,7 @@
 package org.discogs.query.service.requests;
 
 import lombok.extern.slf4j.Slf4j;
+import org.discogs.query.helpers.LogHelper;
 import org.discogs.query.interfaces.RetryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -26,7 +27,7 @@ public class RetryServiceImpl implements RetryService {
         int attempt = 1;
         while (isAttemptNumberLessThanMaximum(attempt)) {
             try {
-                log.info("Attempting {}. Attempt {} of {}", actionDescription, attempt, RETRY_COUNT);
+                LogHelper.info(log, () -> "Attempting {}. Attempt {} of {}", actionDescription, attempt, RETRY_COUNT);
                 return action.call();
             } catch (final Exception e) {
                 attempt = handleRetryCount(actionDescription, e, attempt);
@@ -38,15 +39,11 @@ public class RetryServiceImpl implements RetryService {
 
     private int handleRetryCount(final String actionDescription,
                                  final Exception e, int attempt) throws Exception {
-        if (log.isWarnEnabled()) {
-            log.warn("Error during {} on attempt {} of {}. Exception: {}", actionDescription, attempt, RETRY_COUNT,
-                    e.getMessage());
-        }
+        LogHelper.warn(log, () -> "Error during {} on attempt {} of {}. Exception: {}",
+                actionDescription, attempt, RETRY_COUNT, e.getMessage());
         if (e.getCause() instanceof final HttpClientErrorException httpClientErrorException &&
                 httpClientErrorException.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-            if (log.isDebugEnabled()) {
-                log.debug("404 received, exiting retry logic");
-            }
+            LogHelper.debug(log, () -> "404 received, exiting retry logic");
             throw e;
         }
 
@@ -59,10 +56,10 @@ public class RetryServiceImpl implements RetryService {
 
     private void delayThreadBasedOnStatusCode(final Exception e) throws InterruptedException {
         if (is429StatusCodeException(e)) {
-            log.info("429 Status Code Received - Sleeping for 30 seconds");
+            LogHelper.info(log, () -> "429 Status Code Received - Sleeping for 30 seconds");
             TimeUnit.SECONDS.sleep(30);
         } else {
-            log.info("Sleeping for {} seconds", RETRY_DELAY);
+            LogHelper.info(log, () -> "Sleeping for {} seconds", RETRY_DELAY);
             TimeUnit.SECONDS.sleep(RETRY_DELAY);
         }
     }

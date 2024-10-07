@@ -13,6 +13,9 @@ API interactions.
     * [Getting Started](#getting-started)
         * [Prerequisites](#prerequisites)
         * [Installation](#installation)
+        * [Running Locally](#running-locally)
+            * [Run the Backend](#run-the-backend)
+            * [Run the Frontend](#run-the-frontend)
         * [Configuration](#configuration)
             * [Server Settings](#server-settings)
             * [Management Endpoints](#management-endpoints)
@@ -21,9 +24,6 @@ API interactions.
             * [Logging](#logging)
             * [Query Settings](#query-settings)
             * [Discogs API Configuration](#discogs-api-configuration)
-        * [Running Locally](#running-locally)
-            * [Run the Backend](#run-the-backend)
-            * [Run the Frontend](#run-the-frontend)
     * [Development](#development)
         * [Code Style](#code-style)
         * [Running Tests](#running-tests)
@@ -55,6 +55,7 @@ API interactions.
 - Maven 3.6.0 or higher
 - Node.js 22 or higher
 - Docker (optional, for containerized deployment)
+-
 
 ### Installation
 
@@ -70,6 +71,24 @@ API interactions.
     ```bash
     npm install
     ```
+
+### Running Locally
+
+You can run both the backend and frontend locally as follows:
+
+#### Run the Backend
+
+```bash
+mvn spring-boot:run
+```
+
+#### Run the Frontend
+
+```bash
+npm start
+```
+
+This will start the backend on http://localhost:9090 and the frontend on http://localhost:3000.
 
 ### Configuration
 
@@ -196,24 +215,6 @@ page-size: 20
 rate-limit: 60
 token: ${DISCOGS_TOKEN}
 ```
-
-### Running Locally
-
-You can run both the backend and frontend locally as follows:
-
-#### Run the Backend
-
-```bash
-mvn spring-boot:run
-```
-
-#### Run the Frontend
-
-```bash
-npm start
-```
-
-This will start the backend on http://localhost:9090 and the frontend on http://localhost:3000.
 
 ## Development
 

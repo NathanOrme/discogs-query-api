@@ -52,6 +52,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Run apt-get update and install required packages
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libc6
+
       # Build the Docker image
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag $DOCKER_IMAGE_NAME:${{ needs.setup.outputs.version }}

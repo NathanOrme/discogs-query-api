@@ -11,7 +11,7 @@ RUN npm install
 RUN npm install -g serve
 
 # Copy the rest of the frontend source code
-COPY src ./src
+COPY src/main/frontend/src ./src
 COPY src/main/frontend/public ./public
 
 # Build the frontend

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -46,10 +47,11 @@ public class DiscogsFilterServiceImpl implements DiscogsFilterService {
      * {@code false}.
      */
     private boolean isTrackEqualToOrContains(final DiscogsQueryDTO discogsQueryDTO, final Track track) {
-        String title = normalizationService.normalizeString(track.getTitle().toLowerCase());
+        String title = normalizationService.normalizeString(track.getTitle().toLowerCase(Locale.ENGLISH));
         String normalizedQueryTrack = normalizationService.normalizeString(discogsQueryDTO.track());
 
-        return title.equalsIgnoreCase(normalizedQueryTrack) || title.contains(normalizedQueryTrack.toLowerCase());
+        return title.equalsIgnoreCase(normalizedQueryTrack) || title.contains(normalizedQueryTrack
+                .toLowerCase(Locale.ENGLISH));
     }
 
     /**

@@ -3,8 +3,8 @@ FROM node:22 AS frontend-builder
 WORKDIR /app/frontend
 
 # Copy package.json and install dependencies
-COPY package.json ./
-COPY package-lock.json ./
+COPY src/main/frontend/package.json ./
+COPY src/main/frontend/package-lock.json ./
 RUN npm install
 
 # Install serve globally
@@ -12,7 +12,7 @@ RUN npm install -g serve
 
 # Copy the rest of the frontend source code
 COPY src ./src
-COPY public ./public
+COPY src/main/frontend/public ./public
 
 # Build the frontend
 RUN npm run build

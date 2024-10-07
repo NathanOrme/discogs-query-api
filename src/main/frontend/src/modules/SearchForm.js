@@ -55,7 +55,6 @@ const SearchForm = ({ queries, setResponse, onCheapestItemsChange }) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Basic dXNlcm5hbWU6cGFzc3dvcmQ=",
       },
       body: JSON.stringify(queries),
     })

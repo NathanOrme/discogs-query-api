@@ -51,6 +51,11 @@ public enum DiscogsFormats {
     VINYL_ALBUM("album vinyl"),
 
     /**
+     * Represents all vinyl options
+     */
+    ALL_VINYLS("all vinyls"),
+
+    /**
      * Represents an unknown or unspecified type.
      * <p>
      * This type is used when the input type string does not match any

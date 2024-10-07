@@ -18,13 +18,13 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Prettier JS
-        run: npx prettier --write **/*.js
+      - name: Prettier TS
+        run: npx prettier --write **/*.ts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Prettier Test JS
-        run: npx prettier --write **/*.test.js
+      - name: Prettier TSX
+        run: npx prettier --write **/*.tsx
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

@@ -99,11 +99,15 @@ const renderQueryResults = (queryResult, index) => {
           return null; // Skip empty entries
         }
 
-        // Assuming format is consistent across entries, fetch the format from the first entry
+        // Fetch format from the first entry
         const format = entries[0]?.format ? entries[0].format.join(", ") : "N/A";
 
         return (
           <div className="results-section" key={title}>
+            {/* H2 heading with Title and Format */}
+            <h2>Results for {title} ({format})</h2>
+
+            {/* Toggle functionality to show/hide results */}
             <div
               className="results-toggle-header"
               onClick={(e) => {
@@ -124,6 +128,8 @@ const renderQueryResults = (queryResult, index) => {
             >
               Show Results for {title} ({format})
             </div>
+
+            {/* Results content, initially hidden */}
             <div className="results-content hidden">
               {entries.map((entry) => renderEntry(entry))}
             </div>

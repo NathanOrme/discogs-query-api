@@ -38,6 +38,7 @@ build/
 **/webapp/frontend/node_modules/
 **/webapp/frontend/build/
 **/webapp/frontend/node/
+**/node_modules/
 
 
 # Logs

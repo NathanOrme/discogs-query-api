@@ -24,15 +24,21 @@ public class HttpRequestServiceImpl implements HttpRequestService {
     @Override
     public <T> T executeRequest(final String url, final Class<T> responseType) {
         log.info("Executing HTTP request to URL: {}", url);
-        log.debug("HTTP headers built: {}", headers);
+        if (log.isDebugEnabled()) {
+            log.debug("HTTP headers built: {}", headers);
+        }
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
-        log.debug("HTTP entity created with headers");
+        if (log.isDebugEnabled()) {
+            log.debug("HTTP entity created with headers");
+        }
 
         try {
             return processRequestExchange(url, responseType, entity);
         } catch (final Exception e) {
-            log.error("Error executing HTTP request to URL: {}", url, e);
+            if (log.isErrorEnabled()) {
+                log.error("Error executing HTTP request to URL: {}", url, e);
+            }
             throw new DiscogsSearchException("HTTP request failed", e);
         }
     }
@@ -50,7 +56,9 @@ public class HttpRequestServiceImpl implements HttpRequestService {
         if (response.getBody() != null) {
             log.info("Discogs API response body: {}", response.getBody());
         } else {
-            log.warn("Discogs API response body is empty.");
+            if (log.isWarnEnabled()) {
+                log.warn("Discogs API response body is empty.");
+            }
         }
         log.info("Discogs API response status: {}", response.getStatusCode());
     }

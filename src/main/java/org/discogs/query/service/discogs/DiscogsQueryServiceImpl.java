@@ -250,7 +250,9 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
                         var discogsMarketplaceResult = getDiscogsMarketplaceResult(entry);
                         return filterAndProcessEntry(entry, discogsMarketplaceResult);
                     } catch (final Exception e) {
-                        log.error("Failed to process entry: {} due to {}", entry, e.getMessage(), e);
+                        if (log.isErrorEnabled()) {
+                            log.error("Failed to process entry: {} due to {}", entry, e.getMessage(), e);
+                        }
                         return null; // Exclude entries that encounter an error
                     }
                 })

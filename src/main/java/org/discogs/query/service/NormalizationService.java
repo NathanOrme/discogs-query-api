@@ -26,7 +26,9 @@ public class NormalizationService {
      * @return the normalized string
      */
     public String normalizeString(final String input) {
-        if (input == null) return null;
+        if (input == null) {
+            return null;
+        }
 
         return Normalizer.normalize(input, Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}", "")
@@ -48,7 +50,9 @@ public class NormalizationService {
      * @return a new {@link DiscogsQueryDTO} object with normalized fields
      */
     public DiscogsQueryDTO normalizeQuery(final DiscogsQueryDTO query) {
-        if (query == null) return null;
+        if (query == null) {
+            return null;
+        }
 
         return new DiscogsQueryDTO(
                 normalizeString(query.artist()),

@@ -38,11 +38,15 @@ public class RetryServiceImpl implements RetryService {
 
     private int handleRetryCount(final String actionDescription,
                                  final Exception e, int attempt) throws Exception {
-        log.warn("Error during {} on attempt {} of {}. Exception: {}", actionDescription, attempt, RETRY_COUNT,
-                e.getMessage());
+        if (log.isWarnEnabled()) {
+            log.warn("Error during {} on attempt {} of {}. Exception: {}", actionDescription, attempt, RETRY_COUNT,
+                    e.getMessage());
+        }
         if (e.getCause() instanceof final HttpClientErrorException httpClientErrorException &&
                 httpClientErrorException.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-            log.debug("404 received, exiting retry logic");
+            if (log.isDebugEnabled()) {
+                log.debug("404 received, exiting retry logic");
+            }
             throw e;
         }
 

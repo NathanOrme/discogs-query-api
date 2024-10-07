@@ -15,7 +15,7 @@ COPY src/main/frontend/src ./src
 COPY src/main/frontend/public ./public
 
 # Build the frontend
-RUN npm run build
+# RUN npm run build
 
 # Stage 2: Build the backend
 FROM maven:3-amazoncorretto-21 AS backend-builder

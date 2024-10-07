@@ -22,6 +22,7 @@ const discogFormats = [
   { value: "compilation", text: "Compilation" },
   { value: "album vinyl", text: "Album Vinyl" },
   { value: "compilation vinyl", text: "Compilation Vinyl" },
+  { value: "all vinyls", text: "All Vinyl Options" },
 ];
 
 /**

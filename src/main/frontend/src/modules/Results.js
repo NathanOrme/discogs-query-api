@@ -92,7 +92,7 @@ const renderQueryResults = (queryResult, index) => {
 
   return (
     <div key={index}>
-    <h2>Results for Query {index + 1}</h2>
+      <h2>Results for Query {index + 1}</h2>
       {Object.keys(results).map((title) => {
         const entries = results[title];
 

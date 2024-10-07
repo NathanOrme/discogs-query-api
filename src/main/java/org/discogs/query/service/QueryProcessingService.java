@@ -1,5 +1,6 @@
 package org.discogs.query.service;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.interfaces.DiscogsQueryService;
@@ -7,10 +8,14 @@ import org.discogs.query.interfaces.DiscogsWebScraperClient;
 import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
+import org.discogs.query.model.enums.DiscogsFormats;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -39,10 +44,27 @@ public class QueryProcessingService {
      */
     public List<DiscogsResultDTO> processQueries(final List<DiscogsQueryDTO> discogsQueryDTOList,
                                                  final long timeoutInSeconds) {
-        List<DiscogsQueryDTO> normalizedList = discogsQueryDTOList.parallelStream()
+        // Using a Set to avoid duplicates
+        Set<DiscogsQueryDTO> uniqueQueries = new HashSet<>();
+
+        // Generate queries based on format and add them to the Set
+        for (final DiscogsQueryDTO discogsQueryDTO : discogsQueryDTOList) {
+            List<DiscogsQueryDTO> queriesForFormat =
+                    DiscogsFormats.ALL_VINYLS.getFormat().equalsIgnoreCase(discogsQueryDTO.format())
+                            ? generateQueriesBasedOnFormat(discogsQueryDTO)
+                            : Collections.singletonList(discogsQueryDTO);
+            uniqueQueries.addAll(queriesForFormat);
+        }
+
+        // Normalize the unique queries
+        List<DiscogsQueryDTO> normalizedList = uniqueQueries.parallelStream()
                 .map(normalizationService::normalizeQuery)
                 .toList();
+
+        // Create futures for the normalized queries
         List<CompletableFuture<DiscogsResultDTO>> futures = createFuturesForQueries(normalizedList);
+
+        // Handle futures with timeout and return the results
         return handleFuturesWithTimeout(futures, timeoutInSeconds);
     }
 
@@ -138,5 +160,25 @@ public class QueryProcessingService {
             future.cancel(true); // Cancel the task if it times out
             return null;
         }
+    }
+
+    private List<DiscogsQueryDTO> generateQueriesBasedOnFormat(final @Valid DiscogsQueryDTO discogsQueryDTO) {
+        return List.of(generateQueryForFormat(discogsQueryDTO, DiscogsFormats.LP.getFormat()),
+                generateQueryForFormat(discogsQueryDTO, DiscogsFormats.VINYL_COMPILATION.getFormat()),
+                generateQueryForFormat(discogsQueryDTO, DiscogsFormats.VINYL.getFormat())
+        );
+    }
+
+    private DiscogsQueryDTO generateQueryForFormat(final DiscogsQueryDTO discogsQueryDTO, final String format) {
+        return new DiscogsQueryDTO(
+                discogsQueryDTO.artist(),
+                discogsQueryDTO.album(),
+                discogsQueryDTO.track(),
+                discogsQueryDTO.title(),
+                format,
+                discogsQueryDTO.country(),
+                discogsQueryDTO.types(),
+                discogsQueryDTO.barcode()
+        );
     }
 }

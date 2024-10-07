@@ -59,7 +59,6 @@ public class DiscogsQueryController {
             @RequestBody @Valid final List<DiscogsQueryDTO> discogsQueryDTO) {
 
         log.info("Received search request with {} queries", discogsQueryDTO.size());
-
         List<DiscogsResultDTO> resultDTOList = queryProcessingService.processQueries(discogsQueryDTO, timeoutInSeconds);
 
         if (resultDTOList.isEmpty() || hasNoEntries(resultDTOList)) {

@@ -40,7 +40,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
   const getApiUrl = (): string => {
     const hostname = window.location.hostname;
     const urlMapping: Record<string, string> = {
-      netlify: "https://discogsqueryapi1-fthsfv0p.b4a.run/discogs-query/search",
+      netlify: "https://discogs-query-api.koyeb.app/discogs-query/search",
     };
 
     for (const [key, url] of Object.entries(urlMapping)) {

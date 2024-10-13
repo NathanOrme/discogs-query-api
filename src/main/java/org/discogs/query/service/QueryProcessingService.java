@@ -69,10 +69,9 @@ public class QueryProcessingService {
      */
     public List<DiscogsResultDTO> processQueries(final List<DiscogsQueryDTO> discogsQueryDTOList,
                                                  final long timeoutInSeconds) {
-
         Map<DiscogsQueryDTO, Set<DiscogsEntryDTO>> queryResultsMap = new HashMap<>();
 
-        for (final DiscogsQueryDTO originalQuery : discogsQueryDTOList) {
+        discogsQueryDTOList.parallelStream().forEach(originalQuery -> {
             List<DiscogsQueryDTO> expandedQueries = checkFormatOfQueryAndGenerateList(originalQuery);
 
             List<DiscogsQueryDTO> normalizedQueries = expandedQueries.stream()
@@ -83,18 +82,15 @@ public class QueryProcessingService {
 
             List<DiscogsResultDTO> combinedResults = handleFuturesWithTimeout(futures, timeoutInSeconds);
 
-            // Step 7: Aggregate the unique DiscogsEntryDTO results for this query
             Set<DiscogsEntryDTO> uniqueResults = combinedResults.stream()
                     .flatMap(result -> result.results().stream())
                     .collect(Collectors.toSet());
 
             queryResultsMap.put(originalQuery, uniqueResults);
-        }
+        });
 
-        // Step 8: Flatten the results into a single list of DiscogsResultDTO, ensuring each result
-        // is tied to the original query.
         return queryResultsMap.entrySet().stream()
-                .map(result -> new DiscogsResultDTO(result.getKey(), new ArrayList<>(result.getValue())))
+                .map(entry -> new DiscogsResultDTO(entry.getKey(), new ArrayList<>(entry.getValue())))
                 .toList();
     }
 

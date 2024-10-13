@@ -144,13 +144,6 @@ const QueryFields: React.FC<QueryFieldsProps> = ({ onQueriesChange }) => {
           discogCountries,
           index,
         )}
-        {renderSelectField(
-          "Types (optional):",
-          "types",
-          query.types,
-          discogsTypes,
-          index,
-        )}
       </div>
     </div>
   );

@@ -14,13 +14,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.stream.Collectors;
 
 /**
  * Service for processing Discogs queries using asynchronous tasks.
@@ -35,32 +35,65 @@ public class QueryProcessingService {
     private final NormalizationService normalizationService;
     private final DiscogsWebScraperClient discogsWebScraperClient;
 
+
+    private List<DiscogsQueryDTO> generateQueriesBasedOnFormat(final @Valid DiscogsQueryDTO discogsQueryDTO) {
+        return List.of(generateQueryForFormat(discogsQueryDTO, DiscogsFormats.LP.getFormat()),
+                generateQueryForFormat(discogsQueryDTO, DiscogsFormats.VINYL_COMPILATION.getFormat()),
+                generateQueryForFormat(discogsQueryDTO, DiscogsFormats.VINYL.getFormat())
+        );
+    }
+
+    private DiscogsQueryDTO generateQueryForFormat(final DiscogsQueryDTO discogsQueryDTO, final String format) {
+        return new DiscogsQueryDTO(
+                discogsQueryDTO.artist(),
+                discogsQueryDTO.album(),
+                discogsQueryDTO.track(),
+                discogsQueryDTO.title(),
+                format,
+                discogsQueryDTO.country(),
+                discogsQueryDTO.types(),
+                discogsQueryDTO.barcode()
+        );
+    }
+
     /**
      * Processes each Discogs query asynchronously, normalizes the queries, and retrieves the results from the
      * Discogs API.
      *
      * @param discogsQueryDTOList the list of {@link DiscogsQueryDTO} objects to process
      * @param timeoutInSeconds    the timeout in seconds for each query to be processed
-     * @return a list of {@link DiscogsResultDTO} objects containing the query results
+     * @return a map of {@link DiscogsResultDTO} objects containing the query results
      */
-    public List<DiscogsResultDTO> processQueries(final List<DiscogsQueryDTO> discogsQueryDTOList,
-                                                 final long timeoutInSeconds) {
-        // Using a Set to avoid duplicates
-        Set<DiscogsQueryDTO> uniqueQueries = discogsQueryDTOList.parallelStream()
-                .flatMap(discogsQueryDTO -> checkFormatOfQueryAndGenerateList(discogsQueryDTO).stream())
-                .collect(Collectors.toSet());
+    public Map<DiscogsQueryDTO, List<DiscogsResultDTO>> processQueries(final List<DiscogsQueryDTO> discogsQueryDTOList,
+                                                                       final long timeoutInSeconds) {
+        // Create a map to store the original queries and their corresponding results
+        Map<DiscogsQueryDTO, List<DiscogsResultDTO>> queryResultsMap = new ConcurrentHashMap<>();
 
-        // Normalize the unique queries
-        List<DiscogsQueryDTO> normalizedList = uniqueQueries.parallelStream()
-                .map(normalizationService::normalizeQuery)
-                .toList();
+        // Process each original query
+        discogsQueryDTOList.parallelStream()
+                .forEach(originalQuery -> {
+                    // Generate a list of expanded queries from the original one
+                    List<DiscogsQueryDTO> generatedQueries = checkFormatOfQueryAndGenerateList(originalQuery);
 
-        // Create futures for the normalized queries
-        List<CompletableFuture<DiscogsResultDTO>> futures = createFuturesForQueries(normalizedList);
+                    // Normalize the generated queries
+                    List<DiscogsQueryDTO> normalizedList = generatedQueries.parallelStream()
+                            .map(normalizationService::normalizeQuery)
+                            .toList();
 
-        // Handle futures with timeout and return the results
-        return handleFuturesWithTimeout(futures, timeoutInSeconds);
+                    // Create futures for the normalized queries
+                    List<CompletableFuture<DiscogsResultDTO>> futures = createFuturesForQueries(normalizedList);
+
+                    // Handle futures with timeout and gather results
+                    List<DiscogsResultDTO> results = handleFuturesWithTimeout(futures, timeoutInSeconds);
+
+                    // Store the results in the map, mapping them back to the original query
+                    queryResultsMap.put(originalQuery, results);
+                });
+
+        // Return the map where each original query is mapped to its corresponding results
+        return queryResultsMap;
     }
+
 
     private List<DiscogsQueryDTO> checkFormatOfQueryAndGenerateList(final DiscogsQueryDTO discogsQueryDTO) {
         return DiscogsFormats.ALL_VINYLS.getFormat().equalsIgnoreCase(discogsQueryDTO.format())
@@ -160,25 +193,5 @@ public class QueryProcessingService {
             future.cancel(true); // Cancel the task if it times out
             return null;
         }
-    }
-
-    private List<DiscogsQueryDTO> generateQueriesBasedOnFormat(final @Valid DiscogsQueryDTO discogsQueryDTO) {
-        return List.of(generateQueryForFormat(discogsQueryDTO, DiscogsFormats.LP.getFormat()),
-                generateQueryForFormat(discogsQueryDTO, DiscogsFormats.VINYL_COMPILATION.getFormat()),
-                generateQueryForFormat(discogsQueryDTO, DiscogsFormats.VINYL.getFormat())
-        );
-    }
-
-    private DiscogsQueryDTO generateQueryForFormat(final DiscogsQueryDTO discogsQueryDTO, final String format) {
-        return new DiscogsQueryDTO(
-                discogsQueryDTO.artist(),
-                discogsQueryDTO.album(),
-                discogsQueryDTO.track(),
-                discogsQueryDTO.title(),
-                format,
-                discogsQueryDTO.country(),
-                discogsQueryDTO.types(),
-                discogsQueryDTO.barcode()
-        );
     }
 }

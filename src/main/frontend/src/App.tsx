@@ -61,10 +61,6 @@ const App: React.FC = () => {
               Vinyl, Compilation). This is optional.
             </li>
             <li>
-              <strong>Types:</strong> Select the type of release you are looking
-              for (e.g., Release, Master). This is optional.
-            </li>
-            <li>
               <strong>Country:</strong> Select the country of release you are
               looking for (e.g., UK, US). This is optional.
             </li>

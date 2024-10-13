@@ -1,7 +1,7 @@
 // src/modules/QueryFields.js
 
 import React, { useState, useEffect } from "react";
-import { discogsTypes, discogFormats, discogCountries } from "./DiscogsData";
+import { discogFormats, discogCountries } from "./DiscogsData";
 
 /**
  * Type definition for a single query object.

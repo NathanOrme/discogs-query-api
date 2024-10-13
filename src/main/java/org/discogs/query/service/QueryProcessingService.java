@@ -12,15 +12,18 @@ import org.discogs.query.model.DiscogsResultDTO;
 import org.discogs.query.model.enums.DiscogsFormats;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 
 /**
  * Service for processing Discogs queries using asynchronous tasks.
@@ -66,34 +69,32 @@ public class QueryProcessingService {
      */
     public List<DiscogsResultDTO> processQueries(final List<DiscogsQueryDTO> discogsQueryDTOList,
                                                  final long timeoutInSeconds) {
-        // Step 1: Initialize a map to store results for each original query
-        Map<DiscogsQueryDTO, List<DiscogsResultDTO>> queryResultsMap = new HashMap<>();
 
-        // Step 2: Iterate over the list of original queries
+        Map<DiscogsQueryDTO, Set<DiscogsEntryDTO>> queryResultsMap = new HashMap<>();
+
         for (final DiscogsQueryDTO originalQuery : discogsQueryDTOList) {
-            // Step 3: Generate the list of queries (expanded if necessary)
             List<DiscogsQueryDTO> expandedQueries = checkFormatOfQueryAndGenerateList(originalQuery);
 
-            // Step 4: Normalize each expanded query
             List<DiscogsQueryDTO> normalizedQueries = expandedQueries.stream()
                     .map(normalizationService::normalizeQuery)
                     .toList();
 
-            // Step 5: Create futures for each normalized query
             List<CompletableFuture<DiscogsResultDTO>> futures = createFuturesForQueries(normalizedQueries);
 
-            // Step 6: Handle futures with timeout and collect the results
             List<DiscogsResultDTO> combinedResults = handleFuturesWithTimeout(futures, timeoutInSeconds);
 
-            // Step 7: Store the combined results for the original query in the map
-            queryResultsMap.put(originalQuery, combinedResults);
+            // Step 7: Aggregate the unique DiscogsEntryDTO results for this query
+            Set<DiscogsEntryDTO> uniqueResults = combinedResults.stream()
+                    .flatMap(result -> result.results().stream())
+                    .collect(Collectors.toSet());
+
+            queryResultsMap.put(originalQuery, uniqueResults);
         }
 
         // Step 8: Flatten the results into a single list of DiscogsResultDTO, ensuring each result
         // is tied to the original query.
         return queryResultsMap.entrySet().stream()
-                .flatMap(entry -> entry.getValue().stream())
-                .map(result -> new DiscogsResultDTO(result.searchQuery(), result.results()))
+                .map(result -> new DiscogsResultDTO(result.getKey(), new ArrayList<>(result.getValue())))
                 .toList();
     }
 

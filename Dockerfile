@@ -1,5 +1,5 @@
 # Stage 1: Build the frontend
-FROM node:22 AS frontend-builder
+FROM node:23 AS frontend-builder
 
 # Set the working directory for the frontend build
 WORKDIR /app/frontend
@@ -38,7 +38,7 @@ RUN mvn clean package -DskipTests
 
 
 # Stage 3: Create a lightweight runtime image
-FROM node:22-alpine AS runtime
+FROM node:23-alpine AS runtime
 
 # Set the working directory for the runtime environment
 WORKDIR /app

@@ -1,7 +1,7 @@
 // src/modules/QueryFields.js
 
 import React, { useState, useEffect } from "react";
-import { discogFormats, discogCountries } from "./DiscogsData";
+import { discogFormats } from "./DiscogsData";
 
 /**
  * Type definition for a single query object.
@@ -12,7 +12,6 @@ interface Query {
   album: string;
   track: string;
   format: string;
-  country: string;
   types: string;
 }
 
@@ -38,7 +37,6 @@ const QueryFields: React.FC<QueryFieldsProps> = ({ onQueriesChange }) => {
       album: "",
       track: "",
       format: "",
-      country: "",
       types: "",
     },
   ]);
@@ -80,7 +78,6 @@ const QueryFields: React.FC<QueryFieldsProps> = ({ onQueriesChange }) => {
       album: "",
       track: "",
       format: "",
-      country: "",
       types: "",
     };
     setQueries([...queries, newQuery]);
@@ -135,13 +132,6 @@ const QueryFields: React.FC<QueryFieldsProps> = ({ onQueriesChange }) => {
           "format",
           query.format,
           discogFormats,
-          index,
-        )}
-        {renderSelectField(
-          "Country (optional):",
-          "country",
-          query.country,
-          discogCountries,
           index,
         )}
       </div>

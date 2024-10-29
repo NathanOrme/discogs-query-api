@@ -34,15 +34,4 @@ const discogFormats: FilterOption[] = [
   { value: "all vinyls", text: "All Vinyl Options" },
 ];
 
-/**
- * An array of countries for filtering items on Discogs.
- * @type {FilterOption[]}
- */
-const discogCountries: FilterOption[] = [
-  { value: "", text: "Any Country" },
-  { value: "EUROPE", text: "Europe" },
-  { value: "UK", text: "UK" },
-  { value: "US", text: "US" },
-];
-
-export { discogsTypes, discogFormats, discogCountries };
+export { discogsTypes, discogFormats };

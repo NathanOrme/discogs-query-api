@@ -61,10 +61,6 @@ const App: React.FC = () => {
               Vinyl, Compilation). This is optional.
             </li>
             <li>
-              <strong>Country:</strong> Select the country of release you are
-              looking for (e.g., UK, US). This is optional.
-            </li>
-            <li>
               Click the <strong>Add Another Query</strong> button to add more
               search criteria. Each query will be processed separately.
             </li>

@@ -9,7 +9,6 @@ interface SearchFormProps {
     album?: string; // Change to optional
     track?: string; // Change to optional
     format?: string; // Change to optional
-    country?: string; // Change to optional
     types?: string; // Change to optional
   }>;
   setResponse: (response: any) => void;

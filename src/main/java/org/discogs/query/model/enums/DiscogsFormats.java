@@ -81,7 +81,7 @@ public enum DiscogsFormats {
      * or {@link #UNKNOWN} if no match is found
      */
     public static DiscogsFormats fromString(final String format) {
-        for (final DiscogsFormats t : DiscogsFormats.values()) {
+        for (final DiscogsFormats t : values()) {
             if (t.getFormat().equalsIgnoreCase(format)) {
                 return t;
             }

@@ -1,7 +1,5 @@
 package org.discogs.query;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
@@ -17,7 +15,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @SpringBootApplication
 @EnableAspectJAutoProxy
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DiscogsApplication {
 
     /**

@@ -1,5 +1,7 @@
 package org.discogs.query.helpers;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.function.Supplier;
@@ -10,6 +12,7 @@ import java.util.function.Supplier;
  * while ensuring that the log level is enabled before evaluating the log message.
  */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LogHelper {
 
     /**

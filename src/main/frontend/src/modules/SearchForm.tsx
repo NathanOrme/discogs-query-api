@@ -38,14 +38,15 @@ const SearchForm: React.FC<SearchFormProps> = ({
    */
   const getApiUrl = (): string => {
     // Check if window is defined (for environments where it might not be)
-    if (typeof window === 'undefined') {
-      throw new Error('window is not defined');
+    if (typeof window === "undefined") {
+      throw new Error("window is not defined");
     }
 
     const hostname = window.location.hostname;
     const urlMapping: Record<string, string> = {
       netlify: "https://discogs-query-api.koyeb.app/discogs-query/search",
-      "rgbnathan-discogs-api": "https://discogs-query-api.koyeb.app/discogs-query/search",
+      "rgbnathan-discogs-api":
+        "https://discogs-query-api.koyeb.app/discogs-query/search",
     };
 
     for (const [key, url] of Object.entries(urlMapping)) {
@@ -56,7 +57,6 @@ const SearchForm: React.FC<SearchFormProps> = ({
 
     return "http://localhost:9090/discogs-query/search";
   };
-
 
   /**
    * Handles the submission of the search form.

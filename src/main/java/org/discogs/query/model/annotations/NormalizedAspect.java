@@ -3,6 +3,7 @@ package org.discogs.query.model.annotations;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.discogs.query.exceptions.NormalizedException;
 import org.discogs.query.service.NormalizationService;
 import org.springframework.stereotype.Component;
 
@@ -21,22 +22,47 @@ public class NormalizedAspect {
     private final NormalizationService normalizationService;
 
     /**
-     * Applies normalization to fields annotated with @Normalized and of type String.
-     * This method is executed before the constructor of the target object.
+     * Intercepts the constructor execution of target objects to normalize
+     * fields annotated with @Normalized.
      *
      * @param obj the object being constructed
-     * @throws IllegalAccessException if the field cannot be accessed
      */
     @Before("execution(* *.new(..)) && target(obj)")
-    public void normalizeFields(final Object obj) throws IllegalAccessException {
+    public void normalizeFields(final Object obj) {
         for (final Field field : obj.getClass().getDeclaredFields()) {
-            if (field.isAnnotationPresent(Normalized.class) && field.getType() == String.class) {
-                field.setAccessible(true);
-                String value = (String) field.get(obj);
-                if (value != null) {
-                    field.set(obj, normalizationService.normalizeString(value));
-                }
+            if (shouldNormalizeField(field)) {
+                normalizeField(field, obj);
             }
+        }
+    }
+
+    /**
+     * Checks if a field is annotated with @Normalized and is of type String.
+     *
+     * @param field the field to check
+     * @return true if the field should be normalized, false otherwise
+     */
+    private boolean shouldNormalizeField(final Field field) {
+        return field.isAnnotationPresent(Normalized.class) && field.getType() == String.class;
+    }
+
+    /**
+     * Normalizes the value of a given field for the specified object.
+     *
+     * @param field the field to normalize
+     * @param obj   the object containing the field
+     */
+    private void normalizeField(final Field field, final Object obj) {
+        try {
+            field.setAccessible(true);
+            String value = (String) field.get(obj);
+            if (value != null) {
+                field.set(obj, normalizationService.normalizeString(value));
+            }
+        } catch (final IllegalAccessException e) {
+            throw new NormalizedException("Failed to normalize field: " + field.getName(), e);
+        } finally {
+            field.setAccessible(false);
         }
     }
 }

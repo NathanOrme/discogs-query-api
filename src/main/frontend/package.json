@@ -21,7 +21,7 @@
     "react-scripts": "5.0.1",
     "rollup": "^4.24.3",
     "serve": "^14.0.1",
-    "web-vitals": "^4.2.3"
+    "web-vitals": "^4.2.4"
   },
   "devDependencies": {
     "@babel/core": "^7.22.0",

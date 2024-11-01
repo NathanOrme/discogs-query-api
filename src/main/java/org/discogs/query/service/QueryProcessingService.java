@@ -134,7 +134,7 @@ public class QueryProcessingService {
                     .getMarketplaceResultsForRelease(String.valueOf(discogsEntryDTO.id()))
                     .isEmpty();
         } catch (final Exception e) {
-            log.error(e.getMessage());
+            LogHelper.error(() -> e.getMessage());
             return false;
         }
     }

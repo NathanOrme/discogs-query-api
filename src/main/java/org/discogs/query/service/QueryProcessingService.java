@@ -134,7 +134,7 @@ public class QueryProcessingService {
                     .getMarketplaceResultsForRelease(String.valueOf(discogsEntryDTO.id()))
                     .isEmpty();
         } catch (final Exception e) {
-            LogHelper.error(() -> e.getMessage());
+            LogHelper.error(e::getMessage);
             return false;
         }
     }
@@ -149,7 +149,7 @@ public class QueryProcessingService {
             final List<DiscogsQueryDTO> discogsQueryDTOList) {
         return discogsQueryDTOList.stream()
                 .map(query -> CompletableFuture.supplyAsync(() -> {
-                    log.debug("Processing query: {}", query);
+                    LogHelper.debug(() -> "Processing query: {}", query);
                     return discogsQueryService.searchBasedOnQuery(query);
                 }))
                 .toList();

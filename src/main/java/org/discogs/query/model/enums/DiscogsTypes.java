@@ -75,7 +75,7 @@ public enum DiscogsTypes {
      * or {@link #UNKNOWN} if no match is found
      */
     public static DiscogsTypes fromString(final String type) {
-        for (final DiscogsTypes t : values()) {
+        for (final DiscogsTypes t : DiscogsTypes.values()) {
             if (t.getType().equalsIgnoreCase(type)) {
                 return t;
             }

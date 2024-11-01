@@ -10,6 +10,7 @@ import org.discogs.query.helpers.LogHelper;
 import org.discogs.query.interfaces.DiscogsWebScraperClient;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
         Document doc = fetchDocumentWithRetry(url); // Call the refactored retry logic for jsoupHelper
 
         // Process the document if it was fetched successfully
-        List<Element> listings = doc.select(".shortcut_navigable");
+        Elements listings = doc.select(".shortcut_navigable");
 
         // Check if any listings exist
         if (listings.isEmpty()) {
@@ -93,7 +94,7 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
         }
     }
 
-    private List<DiscogsWebsiteResult> processListings(final List<Element> listings) {
+    private List<DiscogsWebsiteResult> processListings(final Elements listings) {
         List<DiscogsWebsiteResult> results = new ArrayList<>();
         for (final Element listing : listings) {
             checkSellerInfo(listing, results);
@@ -102,7 +103,7 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
     }
 
     private void checkSellerInfo(final Element listing, final List<DiscogsWebsiteResult> results) {
-        List<Element> sellerItems = listing.select("ul > li");
+        Elements sellerItems = listing.select("ul > li");
 
         String sellerName = null;
         String sellerRating = "No rating";

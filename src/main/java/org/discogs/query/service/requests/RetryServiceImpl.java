@@ -65,10 +65,8 @@ public class RetryServiceImpl implements RetryService {
     }
 
     boolean is429StatusCodeException(final Exception e) {
-        if (!(e.getCause() instanceof final HttpClientErrorException httpClientErrorException)) {
-            return false;
-        }
-
-        return httpClientErrorException.getStatusCode().equals(HttpStatus.TOO_MANY_REQUESTS);
+        return e.getCause() instanceof HttpClientErrorException httpClientErrorException
+                && httpClientErrorException.getStatusCode() == HttpStatus.TOO_MANY_REQUESTS;
     }
+
 }

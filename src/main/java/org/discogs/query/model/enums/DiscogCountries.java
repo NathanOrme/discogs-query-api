@@ -383,7 +383,7 @@ public enum DiscogCountries {
      * or {@link #UNKNOWN} if no match is found
      */
     public static DiscogCountries fromString(final String country) {
-        for (final DiscogCountries t : DiscogCountries.values()) {
+        for (final DiscogCountries t : values()) {
             if (t.getCountryName().equalsIgnoreCase(country)) {
                 return t;
             }

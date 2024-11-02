@@ -63,7 +63,7 @@ public class DiscogsQueryController {
             @RequestBody @Valid final List<DiscogsQueryDTO> discogsQueryDTO) {
 
         log.info("Received search request with {} queries", discogsQueryDTO.size());
-        log.debug("Queries received: {}", discogsQueryDTO); // Debug log to capture full query details
+        log.debug("Queries received: {}", discogsQueryDTO);
 
         List<DiscogsResultDTO> resultDTOList = queryProcessingService.processQueries(discogsQueryDTO, timeoutInSeconds);
 
@@ -74,7 +74,7 @@ public class DiscogsQueryController {
         if (isFilterForUk) {
             LogHelper.info(() -> "Filtering results to show items that ship from the UK");
             resultDTOList = queryProcessingService.filterOutEntriesNotShippingFromUk(resultDTOList);
-            log.debug("Results after UK filter applied: {}", resultDTOList); // Debug log for filtered results
+            LogHelper.debug(() -> "Results after UK filter applied: {}", resultDTOList);
         }
 
         int size = resultCalculationService.calculateSizeOfResults(resultDTOList);

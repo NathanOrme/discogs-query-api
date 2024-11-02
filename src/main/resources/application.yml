@@ -32,7 +32,7 @@ logging:
 
 queries:
   timeout: 59
-  filterForUk: false
+  filterForUk: true
 
 discogs:
   url: https://api.discogs.com/

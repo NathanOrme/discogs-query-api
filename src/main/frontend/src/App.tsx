@@ -32,11 +32,10 @@ const App: React.FC = () => {
           <h2>How to Use This Search Tool</h2>
           <p>
             This tool allows you to search for music releases from the Discogs
-            database. It will filter the results to show any that are sold in the UK.
+            database. It will filter the results to show any that are sold in
+            the UK.
           </p>
-          <p>
-          Follow these steps to get started:
-          </p>
+          <p>Follow these steps to get started:</p>
           <p>
             <strong>
               Note that you must supply at least the barcode or the artist

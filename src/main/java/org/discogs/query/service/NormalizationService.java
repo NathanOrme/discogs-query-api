@@ -6,6 +6,7 @@ import org.discogs.query.model.DiscogsQueryDTO;
 import org.springframework.stereotype.Service;
 
 import java.text.Normalizer;
+import java.util.Map;
 
 /**
  * Service for normalizing strings by performing the following transformations:
@@ -21,6 +22,17 @@ import java.text.Normalizer;
 @Slf4j
 @Service
 public class NormalizationService {
+
+    private static final Map<String, String> replacements = Map.of(
+            " & ", " and ",
+            "'", "",
+            "-", " ",
+            "?", "",
+            "/", " ",
+            "\\", " ",
+            "*", "",
+            "!", ""
+    );
 
     /**
      * Normalizes the input string by:
@@ -40,22 +52,14 @@ public class NormalizationService {
         LogHelper.debug(() -> "Normalizing input: {}", input);
 
         // Step 1: Remove diacritical marks (accents)
-        String noDiacritics = Normalizer.normalize(input, Normalizer.Form.NFD)
+        String cleaned = Normalizer.normalize(input, Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}", "");
 
         // Step 2: Perform specific character replacements and removals
-        String cleaned = noDiacritics
-                .replace(" & ", " and ")
-                .replace("'", "")
-                .replace("-", " ")
-                .replace("?", "")
-                .replace("/", "") // Remove forward slashes
-                .replace("\\", "") // Remove backward slashes
-                .replaceAll("\\s+", " ")
-                .replace("*", "")
-                .replace("!", "")
-                .trim();
-
+        for (final Map.Entry<String, String> entry : replacements.entrySet()) {
+            cleaned = cleaned.replace(entry.getKey(), entry.getValue());
+        }
+        cleaned = cleaned.replaceAll("\\s+", " ").trim();
         LogHelper.debug(() -> "Normalized result: {}", cleaned);
         return cleaned;
     }

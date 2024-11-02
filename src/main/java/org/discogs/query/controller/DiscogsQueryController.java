@@ -63,6 +63,8 @@ public class DiscogsQueryController {
             @RequestBody @Valid final List<DiscogsQueryDTO> discogsQueryDTO) {
 
         log.info("Received search request with {} queries", discogsQueryDTO.size());
+        log.debug("Queries received: {}", discogsQueryDTO); // Debug log to capture full query details
+
         List<DiscogsResultDTO> resultDTOList = queryProcessingService.processQueries(discogsQueryDTO, timeoutInSeconds);
 
         if (resultDTOList.isEmpty() || hasNoEntries(resultDTOList)) {
@@ -72,6 +74,7 @@ public class DiscogsQueryController {
         if (isFilterForUk) {
             LogHelper.info(() -> "Filtering results to show items that ship from the UK");
             resultDTOList = queryProcessingService.filterOutEntriesNotShippingFromUk(resultDTOList);
+            log.debug("Results after UK filter applied: {}", resultDTOList); // Debug log for filtered results
         }
 
         int size = resultCalculationService.calculateSizeOfResults(resultDTOList);
@@ -84,15 +87,15 @@ public class DiscogsQueryController {
         return ResponseEntity.ok().body(resultMapDTOList);
     }
 
+    /**
+     * Checks if there are any entries in the provided result list.
+     *
+     * @param resultDTOList List of {@link DiscogsResultDTO} objects.
+     * @return true if all result lists are empty, false otherwise.
+     */
     private boolean hasNoEntries(final List<DiscogsResultDTO> resultDTOList) {
-        for (final DiscogsResultDTO discogsResultDTO : resultDTOList) {
-            if (!discogsResultDTO.results().isEmpty()) {
-                return false;
-            }
-        }
-        return true;
+        return resultDTOList.stream().allMatch(dto -> dto.results().isEmpty());
     }
-
 
     /**
      * Filters duplicate entries from a list of DiscogsMapResultDTO.

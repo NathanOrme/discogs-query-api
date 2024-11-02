@@ -1,5 +1,7 @@
 package org.discogs.query.service;
 
+import lombok.extern.slf4j.Slf4j;
+import org.discogs.query.helpers.LogHelper;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.springframework.stereotype.Service;
 
@@ -16,30 +18,46 @@ import java.text.Normalizer;
  *     <li>Trimming leading and trailing whitespace.</li>
  * </ul>
  */
+@Slf4j
 @Service
 public class NormalizationService {
 
     /**
-     * Normalizes the input string based on the transformations defined in this service.
+     * Normalizes the input string by:
+     * - Removing diacritical marks (e.g., accents)
+     * - Removing forward and backward slashes and other specific characters as per requirements
+     * - Trimming whitespace at the ends
      *
-     * @param input the string to be normalized; if {@code null}, this method returns {@code null}
-     * @return the normalized string
+     * @param input the string to be normalized
+     * @return the normalized string, or null if the input is null
      */
     public String normalizeString(final String input) {
         if (input == null) {
+            LogHelper.warn(() -> "Input is null, returning null as normalized result.");
             return null;
         }
 
-        return Normalizer.normalize(input, Normalizer.Form.NFD)
-                .replaceAll("\\p{InCombiningDiacriticalMarks}", "")
+        LogHelper.debug(() -> "Normalizing input: {}", input);
+
+        // Step 1: Remove diacritical marks (accents)
+        String noDiacritics = Normalizer.normalize(input, Normalizer.Form.NFD)
+                .replaceAll("\\p{InCombiningDiacriticalMarks}", "");
+
+        // Step 2: Perform specific character replacements and removals
+        String cleaned = noDiacritics
                 .replace(" & ", " and ")
                 .replace("'", "")
                 .replace("-", " ")
                 .replace("?", "")
+                .replace("/", "") // Remove forward slashes
+                .replace("\\", "") // Remove backward slashes
                 .replaceAll("\\s+", " ")
                 .replace("*", "")
                 .replace("!", "")
                 .trim();
+
+        LogHelper.debug(() -> "Normalized result: {}", cleaned);
+        return cleaned;
     }
 
     /**

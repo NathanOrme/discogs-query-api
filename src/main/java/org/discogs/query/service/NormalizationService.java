@@ -1,7 +1,6 @@
 package org.discogs.query.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.discogs.query.helpers.LogHelper;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.springframework.stereotype.Service;
 
@@ -45,11 +44,8 @@ public class NormalizationService {
      */
     public String normalizeString(final String input) {
         if (input == null) {
-            LogHelper.warn(() -> "Input is null, returning null as normalized result.");
             return null;
         }
-
-        LogHelper.debug(() -> "Normalizing input: {}", input);
 
         // Step 1: Remove diacritical marks (accents)
         String cleaned = Normalizer.normalize(input, Normalizer.Form.NFD)
@@ -60,7 +56,6 @@ public class NormalizationService {
             cleaned = cleaned.replace(entry.getKey(), entry.getValue());
         }
         cleaned = cleaned.replaceAll("\\s+", " ").trim();
-        LogHelper.debug(() -> "Normalized result: {}", cleaned);
         return cleaned;
     }
 

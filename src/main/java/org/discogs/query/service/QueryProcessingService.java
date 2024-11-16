@@ -96,7 +96,7 @@ public class QueryProcessingService {
                 .map(entry -> new DiscogsResultDTO(entry.getKey(), new ArrayList<>(entry.getValue())))
                 .toList();
 
-        if (!discogsRequestDTO.username().isBlank()) {
+        if (discogsRequestDTO.username() != null && !discogsRequestDTO.username().isBlank()) {
             discogsCollectionService.filterOwnedReleases(discogsRequestDTO.username(), discogsResultDTOS);
         }
         return discogsResultDTOS;

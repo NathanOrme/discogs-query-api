@@ -8,10 +8,12 @@ import org.discogs.query.helpers.LogHelper;
 import org.discogs.query.interfaces.DiscogsAPIClient;
 import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class DiscogsCollectionService {
 

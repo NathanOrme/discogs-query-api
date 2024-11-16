@@ -8,6 +8,7 @@ import org.discogs.query.helpers.LogHelper;
 import org.discogs.query.interfaces.DiscogsAPIClient;
 import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class DiscogsCollectionService {
+
+    @Value("${queries.searchCollection")
+    private boolean searchCollection;
 
     private final DiscogsUrlBuilder discogsUrlBuilder;
     private final DiscogsAPIClient discogsAPIClient;
@@ -27,6 +31,9 @@ public class DiscogsCollectionService {
      * @param entries  List of Discogs search results to filter, using their IDs.
      */
     public void filterOwnedReleases(final String username, final List<DiscogsResultDTO> entries) {
+        if (!searchCollection) {
+            return;
+        }
         if (entries == null || entries.isEmpty()) {
             LogHelper.warn(() -> "No entries provided for filtering.");
             return;

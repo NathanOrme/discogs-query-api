@@ -67,6 +67,10 @@ const App: React.FC = () => {
               search criteria. Each query will be processed separately.
             </li>
             <li>
+              Add your username to the search, if your discogs collection is
+              public, so that the API can cross reference it.
+            </li>
+            <li>
               Click the <strong>Search</strong> button to submit your queries
               and see the results.
             </li>

@@ -1,6 +1,6 @@
 // src/modules/Results.tsx
 
-import React from "react";
+import React from 'react';
 
 interface Entry {
   id?: string;
@@ -29,9 +29,9 @@ interface ResultsProps {
  */
 const exportToJson = (data: any, filename: string) => {
   const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(
-    JSON.stringify(data, null, 2),
+    JSON.stringify(data, null, 2)
   )}`;
-  const link = document.createElement("a");
+  const link = document.createElement('a');
   link.href = jsonString;
   link.download = `${filename}.json`;
 
@@ -55,15 +55,15 @@ export const displayError = (message: string): JSX.Element => {
  * @returns {JSX.Element} The JSX element representing the result entry.
  */
 const renderEntry = (entry: Entry): JSX.Element => {
-  const id = entry.id || "N/A";
-  const format = entry.format ? entry.format.join(", ") : "N/A";
-  const country = entry.country || "N/A";
-  const year = entry.year || "N/A";
-  const uri = entry.uri || "#";
+  const id = entry.id || 'N/A';
+  const format = entry.format ? entry.format.join(', ') : 'N/A';
+  const country = entry.country || 'N/A';
+  const year = entry.year || 'N/A';
+  const uri = entry.uri || '#';
 
   return (
     <div className="result-item" key={id}>
-      <h3>{entry.title || "Untitled"}</h3>
+      <h3>{entry.title || 'Untitled'}</h3>
       <div className="details">
         <p>
           <strong>ID:</strong> {id}
@@ -78,19 +78,19 @@ const renderEntry = (entry: Entry): JSX.Element => {
           <strong>Year:</strong> {year}
         </p>
         <p>
-          <strong>URL:</strong>{" "}
+          <strong>URL:</strong>{' '}
           <a href={uri} target="_blank" rel="noopener noreferrer">
             {uri}
           </a>
         </p>
         <p>
-          <strong>Number For Sale:</strong> {entry.numberForSale || "N/A"}
+          <strong>Number For Sale:</strong> {entry.numberForSale || 'N/A'}
         </p>
         <p>
-          <strong>Lowest Price:</strong>{" "}
+          <strong>Lowest Price:</strong>{' '}
           {entry.lowestPrice != null
             ? `£${entry.lowestPrice.toFixed(2)}`
-            : "N/A"}
+            : 'N/A'}
         </p>
       </div>
     </div>
@@ -106,7 +106,7 @@ const renderEntry = (entry: Entry): JSX.Element => {
  */
 const renderQueryResults = (
   queryResult: QueryResult,
-  index: number,
+  index: number
 ): JSX.Element | null => {
   const { results } = queryResult;
 
@@ -133,14 +133,14 @@ const renderQueryResults = (
 
                 // Safety check
                 if (content) {
-                  content.classList.toggle("hidden");
+                  content.classList.toggle('hidden');
                   e.currentTarget.textContent = content.classList.contains(
-                    "hidden",
+                    'hidden'
                   )
                     ? `Show Results for ${title}`
                     : `Hide Results for ${title}`;
                 } else {
-                  console.error("Content not found for:", title);
+                  console.error('Content not found for:', title);
                 }
               }}
             >
@@ -165,13 +165,13 @@ const renderQueryResults = (
 const Results: React.FC<ResultsProps> = ({ response }) => {
   const renderResults = (): JSX.Element | null => {
     if (!Array.isArray(response) || response.length === 0) {
-      return displayError("No results found.");
+      return displayError('No results found.');
     }
 
     return (
       <>
         {response.map((queryResult, index) =>
-          renderQueryResults(queryResult, index),
+          renderQueryResults(queryResult, index)
         )}
       </>
     );
@@ -180,7 +180,7 @@ const Results: React.FC<ResultsProps> = ({ response }) => {
   return (
     <div id="results">
       <button
-        onClick={() => exportToJson(response, "results")}
+        onClick={() => exportToJson(response, 'results')}
         className="export-button"
       >
         Export Results to JSON

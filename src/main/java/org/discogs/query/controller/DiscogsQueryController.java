@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.helpers.LogHelper;
 import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsMapResultDTO;
-import org.discogs.query.model.DiscogsQueryDTO;
+import org.discogs.query.model.DiscogsRequestDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.discogs.query.service.MappingService;
 import org.discogs.query.service.QueryProcessingService;
@@ -52,20 +52,20 @@ public class DiscogsQueryController {
     /**
      * Searches Discogs using the provided query data.
      *
-     * @param discogsQueryDTO the data transfer objects containing the search
-     *                        query details
+     * @param discogsRequestDTO the data transfer objects containing the request
      * @return a {@link ResponseEntity} containing a list of {@link DiscogsMapResultDTO}
      * wrapped in {@link HttpStatus#OK} if results are found, or an empty list if no results are found
      */
     @ResponseStatus(HttpStatus.OK)
     @PostMapping(value = "/search", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<DiscogsMapResultDTO>> search(
-            @RequestBody @Valid final List<DiscogsQueryDTO> discogsQueryDTO) {
+            @RequestBody @Valid final DiscogsRequestDTO discogsRequestDTO) {
 
-        log.info("Received search request with {} queries", discogsQueryDTO.size());
-        log.debug("Queries received: {}", discogsQueryDTO);
+        LogHelper.info(() -> "Received search request with {} queries", discogsRequestDTO.queries().size());
+        LogHelper.debug(() -> "Queries received: {}", discogsRequestDTO.queries());
 
-        List<DiscogsResultDTO> resultDTOList = queryProcessingService.processQueries(discogsQueryDTO, timeoutInSeconds);
+        List<DiscogsResultDTO> resultDTOList = queryProcessingService.processQueries(discogsRequestDTO,
+                timeoutInSeconds);
 
         if (resultDTOList.isEmpty() || hasNoEntries(resultDTOList)) {
             LogHelper.warn(() -> "No results found for the provided queries");

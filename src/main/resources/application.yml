@@ -40,6 +40,7 @@ discogs:
   search: database/search
   release: releases/
   marketplaceCheck: marketplace/stats/
+  collection: /users/%s/collection/releases/%s
   agent: ${DISCOGS_AGENT}
   page-size: 20
   rate-limit: 60

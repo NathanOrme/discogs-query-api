@@ -103,12 +103,12 @@ public class DiscogsAPIClientImpl implements DiscogsAPIClient {
      * @throws DiscogsSearchException if an error occurs while fetching data
      *                                from the Discogs API
      */
-    @Cacheable(value = "marketplaceResults", key = "#url")
+    @Cacheable(value = "collectionReleases", key = "#url")
     @Override
     public DiscogsRelease getCollectionReleases(final String url) {
         LogHelper.info(() -> "Cache miss for url: {}", url);
         return executeWithRateLimitAndRetry(() -> httpRequestService.executeRequest(url, DiscogsRelease.class),
-                "Discogs Release API Request");
+                "Discogs Collections Release API Request");
     }
 
     /**

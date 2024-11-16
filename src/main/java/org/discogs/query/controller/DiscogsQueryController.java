@@ -61,8 +61,8 @@ public class DiscogsQueryController {
     public ResponseEntity<List<DiscogsMapResultDTO>> search(
             @RequestBody @Valid final DiscogsRequestDTO discogsRequestDTO) {
 
-        log.info("Received search request with {} queries", discogsRequestDTO.queries().size());
-        log.debug("Queries received: {}", discogsRequestDTO.queries());
+        LogHelper.info(() -> "Received search request with {} queries", discogsRequestDTO.queries().size());
+        LogHelper.debug(() -> "Queries received: {}", discogsRequestDTO.queries());
 
         List<DiscogsResultDTO> resultDTOList = queryProcessingService.processQueries(discogsRequestDTO,
                 timeoutInSeconds);

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.domain.api.DiscogsRelease;
 import org.discogs.query.helpers.DiscogsUrlBuilder;
+import org.discogs.query.helpers.LogHelper;
 import org.discogs.query.interfaces.DiscogsAPIClient;
 import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
@@ -25,13 +26,13 @@ public class DiscogsCollectionService {
      */
     public void filterOwnedReleases(final String username, final List<DiscogsResultDTO> entries) {
         if (entries == null || entries.isEmpty()) {
-            log.warn("No entries provided for filtering.");
+            LogHelper.warn(() -> "No entries provided for filtering.");
             return;
         }
 
         for (final DiscogsResultDTO entry : entries) {
             if (entry.results() == null || entry.results().isEmpty()) {
-                log.warn("Skipping empty results for entry: {}", entry.searchQuery());
+                LogHelper.warn(() -> "Skipping empty results for entry: {}", entry.searchQuery());
                 continue;
             }
 
@@ -59,11 +60,11 @@ public class DiscogsCollectionService {
             DiscogsRelease ownedRelease = discogsAPIClient.getCollectionReleases(collectionUrl);
 
             if (ownedRelease != null && ownedRelease.getId() == releaseId) {
-                log.info("Release ID {} is owned by user {}", releaseId, username);
+                LogHelper.info(() -> "Release ID {} is owned by user {}", releaseId, username);
                 return true;
             }
         } catch (final Exception e) {
-            log.error("Error checking ownership for release ID {} and username {}: {}", releaseId, username,
+            LogHelper.error(() -> "Error checking ownership for release ID {} and username {}: {}", releaseId, username,
                     e.getMessage(), e);
         }
         return false;

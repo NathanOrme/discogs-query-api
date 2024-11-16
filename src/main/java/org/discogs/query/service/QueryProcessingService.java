@@ -8,8 +8,10 @@ import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.interfaces.DiscogsWebScraperClient;
 import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
+import org.discogs.query.model.DiscogsRequestDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.discogs.query.model.enums.DiscogsFormats;
+import org.discogs.query.service.discogs.DiscogsCollectionService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,6 +39,7 @@ public class QueryProcessingService {
     private final DiscogsQueryService discogsQueryService;
     private final NormalizationService normalizationService;
     private final DiscogsWebScraperClient discogsWebScraperClient;
+    private final DiscogsCollectionService discogsCollectionService;
 
 
     private List<DiscogsQueryDTO> generateQueriesBasedOnFormat(final @Valid DiscogsQueryDTO discogsQueryDTO) {
@@ -63,15 +66,15 @@ public class QueryProcessingService {
      * Processes each Discogs query asynchronously, normalizes the queries, and retrieves the results from the
      * Discogs API.
      *
-     * @param discogsQueryDTOList the list of {@link DiscogsQueryDTO} objects to process
-     * @param timeoutInSeconds    the timeout in seconds for each query to be processed
+     * @param discogsRequestDTO the {@link DiscogsRequestDTO} objects to process
+     * @param timeoutInSeconds  the timeout in seconds for each query to be processed
      * @return a list of {@link DiscogsResultDTO} objects containing the query results
      */
-    public List<DiscogsResultDTO> processQueries(final List<DiscogsQueryDTO> discogsQueryDTOList,
+    public List<DiscogsResultDTO> processQueries(final DiscogsRequestDTO discogsRequestDTO,
                                                  final long timeoutInSeconds) {
         Map<DiscogsQueryDTO, Set<DiscogsEntryDTO>> queryResultsMap = new HashMap<>();
 
-        discogsQueryDTOList.parallelStream().forEach(originalQuery -> {
+        discogsRequestDTO.queries().parallelStream().forEach(originalQuery -> {
             List<DiscogsQueryDTO> expandedQueries = checkFormatOfQueryAndGenerateList(originalQuery);
 
             List<DiscogsQueryDTO> normalizedQueries = expandedQueries.stream()
@@ -89,9 +92,14 @@ public class QueryProcessingService {
             queryResultsMap.put(originalQuery, uniqueResults);
         });
 
-        return queryResultsMap.entrySet().stream()
+        List<DiscogsResultDTO> discogsResultDTOS = queryResultsMap.entrySet().stream()
                 .map(entry -> new DiscogsResultDTO(entry.getKey(), new ArrayList<>(entry.getValue())))
                 .toList();
+
+        if (!discogsRequestDTO.username().isBlank()) {
+            discogsCollectionService.filterOwnedReleases(discogsRequestDTO.username(), discogsResultDTOS);
+        }
+        return discogsResultDTOS;
     }
 
 

@@ -30,6 +30,8 @@ public class DiscogsUrlBuilder {
     String discogsBaseUrl;
     @Value("${discogs.search}")
     String discogsSearchEndpoint;
+    @Value("${discogs.collection}")
+    String discogsCollectionEndpoint;
     @Value("${discogs.release}")
     String releaseEndpoint;
     @Value("${discogs.page-size}")
@@ -94,6 +96,24 @@ public class DiscogsUrlBuilder {
                         .toUriString();
         LogHelper.debug(() -> "Generated release URL: {}", releaseUrl);
         return releaseUrl;
+    }
+
+    /**
+     * Generates a URL to search against a user's discogs collection
+     *
+     * @param username  Username to use
+     * @param releaseId Release to use
+     * @return A built URL
+     */
+    public String buildCollectionSearchUrl(final String username, final String releaseId) {
+        LogHelper.debug(() -> "Building collection URL for Release ID: {}", releaseId);
+        String collectionsUrl = discogsCollectionEndpoint.formatted(username, releaseId);
+        collectionsUrl = UriComponentsBuilder.fromHttpUrl(discogsBaseUrl.concat(collectionsUrl))
+                .queryParam(TOKEN, token)
+                .queryParam("curr_abbr", "GBP")
+                .toUriString();
+        LogHelper.debug(() -> "Generated collection URL: {}", collectionsUrl);
+        return collectionsUrl;
     }
 
     /**

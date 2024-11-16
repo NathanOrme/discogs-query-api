@@ -4,6 +4,7 @@ import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.interfaces.DiscogsWebScraperClient;
 import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
+import org.discogs.query.model.DiscogsRequestDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.discogs.query.model.enums.DiscogCountries;
 import org.discogs.query.model.enums.DiscogsFormats;
@@ -58,7 +59,8 @@ class QueryProcessingServiceTest {
         when(discogsQueryService.searchBasedOnQuery(any())).thenReturn(resultDTO);
 
         List<DiscogsQueryDTO> queryDTOList = List.of(queryDTO);
-        List<DiscogsResultDTO> results = queryProcessingService.processQueries(queryDTOList, 5);
+        DiscogsRequestDTO discogsRequestDTO = new DiscogsRequestDTO(queryDTOList, null);
+        List<DiscogsResultDTO> results = queryProcessingService.processQueries(discogsRequestDTO, 5);
 
         assertFalse(results.isEmpty());
         verify(discogsQueryService, times(1)).searchBasedOnQuery(any());

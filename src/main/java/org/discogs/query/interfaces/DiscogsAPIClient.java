@@ -41,6 +41,14 @@ public interface DiscogsAPIClient {
     DiscogsRelease getRelease(String searchUrl);
 
     /**
+     * Searches the website to see if a release exists ina  user's collection
+     *
+     * @param searchUrl URL to use
+     * @return a {@link DiscogsResult} result if found on the website.
+     */
+    DiscogsRelease getCollectionReleases(String searchUrl);
+
+    /**
      * Searches marketplace to see if release is on marketplace
      *
      * @param url URL to use for search

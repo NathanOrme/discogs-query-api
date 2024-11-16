@@ -105,6 +105,25 @@ public class DiscogsAPIClientImpl implements DiscogsAPIClient {
      */
     @Cacheable(value = "marketplaceResults", key = "#url")
     @Override
+    public DiscogsRelease getCollectionReleases(final String url) {
+        LogHelper.info(() -> "Cache miss for url: {}", url);
+        return executeWithRateLimitAndRetry(() -> httpRequestService.executeRequest(url, DiscogsRelease.class),
+                "Discogs Release API Request");
+    }
+
+    /**
+     * Checks whether the given item is listed on the Discogs Marketplace.
+     * <p>
+     * This method is cached using Spring's caching abstraction with Caffeine.
+     *
+     * @param url the URL pointing to the item on the Discogs Marketplace
+     * @return a {@link DiscogsRelease} object containing the details of the
+     * item on the marketplace
+     * @throws DiscogsSearchException if an error occurs while fetching data
+     *                                from the Discogs API
+     */
+    @Cacheable(value = "marketplaceResults", key = "#url")
+    @Override
     public DiscogsRelease getRelease(final String url) {
         LogHelper.info(() -> "Cache miss for url: {}", url);
         return executeWithRateLimitAndRetry(() -> httpRequestService.executeRequest(url, DiscogsRelease.class),

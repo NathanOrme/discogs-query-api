@@ -47,7 +47,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
 
     const apiUrl = getApiUrl();
     const payload = {
-      username, // Include the username
+      username: username || undefined, // Only include username if provided
       queries,
     };
 
@@ -94,7 +94,6 @@ const SearchForm: React.FC<SearchFormProps> = ({
         placeholder="Enter your username"
         value={username}
         onChange={(e) => setUsername(e.target.value)} // Update username state
-        required
       />
       <button type="submit" disabled={loading}>
         {loading ? 'Loading...' : 'Search'}

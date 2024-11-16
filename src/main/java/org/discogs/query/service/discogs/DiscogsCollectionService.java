@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DiscogsCollectionService {
 
-    @Value("${queries.searchCollection")
+    @Value("${queries.searchCollection}")
     private boolean searchCollection;
 
     private final DiscogsUrlBuilder discogsUrlBuilder;

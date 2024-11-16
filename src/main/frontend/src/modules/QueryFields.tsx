@@ -1,7 +1,7 @@
 // src/modules/QueryFields.js
 
-import React, { useState, useEffect } from "react";
-import { discogFormats } from "./DiscogsData";
+import React, { useState, useEffect } from 'react';
+import { discogFormats } from './DiscogsData';
 
 /**
  * Type definition for a single query object.
@@ -32,12 +32,12 @@ interface QueryFieldsProps {
 const QueryFields: React.FC<QueryFieldsProps> = ({ onQueriesChange }) => {
   const [queries, setQueries] = useState<Query[]>([
     {
-      artist: "",
-      barcode: "",
-      album: "",
-      track: "",
-      format: "",
-      types: "",
+      artist: '',
+      barcode: '',
+      album: '',
+      track: '',
+      format: '',
+      types: '',
     },
   ]);
 
@@ -57,7 +57,7 @@ const QueryFields: React.FC<QueryFieldsProps> = ({ onQueriesChange }) => {
   const handleInputChange = (
     index: number,
     field: keyof Query,
-    value: string,
+    value: string
   ) => {
     const updatedQueries = queries.map((query, i) => {
       if (i === index) {
@@ -73,16 +73,16 @@ const QueryFields: React.FC<QueryFieldsProps> = ({ onQueriesChange }) => {
    */
   const addQuery = () => {
     const newQuery: Query = {
-      artist: "",
-      barcode: "",
-      album: "",
-      track: "",
-      format: "",
-      types: "",
+      artist: '',
+      barcode: '',
+      album: '',
+      track: '',
+      format: '',
+      types: '',
     };
     setQueries([...queries, newQuery]);
     setQueryCounter(queryCounter + 1);
-    console.log("Added new query:", newQuery);
+    console.log('Added new query:', newQuery);
   };
 
   /**
@@ -94,10 +94,10 @@ const QueryFields: React.FC<QueryFieldsProps> = ({ onQueriesChange }) => {
     const updatedQueries = queries.filter((_, i) => i !== index);
     setQueries(updatedQueries);
     console.log(
-      "Removed query at index:",
+      'Removed query at index:',
       index,
-      "Remaining queries:",
-      updatedQueries,
+      'Remaining queries:',
+      updatedQueries
     );
   };
 
@@ -123,16 +123,16 @@ const QueryFields: React.FC<QueryFieldsProps> = ({ onQueriesChange }) => {
         )}
       </div>
       <div className="query-content">
-        {renderInputField("Artist:", "artist", query.artist, index)}
-        {renderInputField("Barcode:", "barcode", query.barcode, index)}
-        {renderInputField("Album (optional):", "album", query.album, index)}
-        {renderInputField("Track (optional):", "track", query.track, index)}
+        {renderInputField('Artist:', 'artist', query.artist, index)}
+        {renderInputField('Barcode:', 'barcode', query.barcode, index)}
+        {renderInputField('Album (optional):', 'album', query.album, index)}
+        {renderInputField('Track (optional):', 'track', query.track, index)}
         {renderSelectField(
-          "Format (optional):",
-          "format",
+          'Format (optional):',
+          'format',
           query.format,
           discogFormats,
-          index,
+          index
         )}
       </div>
     </div>
@@ -151,7 +151,7 @@ const QueryFields: React.FC<QueryFieldsProps> = ({ onQueriesChange }) => {
     label: string,
     field: keyof Query,
     value: string,
-    index: number,
+    index: number
   ): JSX.Element => (
     <>
       <label htmlFor={`${field}-${index}`}>{label}</label>
@@ -180,7 +180,7 @@ const QueryFields: React.FC<QueryFieldsProps> = ({ onQueriesChange }) => {
     field: keyof Query,
     value: string,
     options: { value: string; text: string }[],
-    index: number,
+    index: number
   ): JSX.Element => (
     <>
       <label htmlFor={`${field}-${index}`}>{label}</label>

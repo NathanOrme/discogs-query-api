@@ -1,6 +1,6 @@
 //src/modules/CheapestItem.tsx
 
-import React from "react";
+import React from 'react';
 
 /**
  * Interface for item details.
@@ -59,17 +59,17 @@ const renderItem = (item: Item, index: number) => (
     <h3>{item.title}</h3>
     <div className="details">
       <p>
-        <strong>Price:</strong>{" "}
-        {item.lowestPrice !== null ? `£${item.lowestPrice?.toFixed(2)}` : "N/A"}
+        <strong>Price:</strong>{' '}
+        {item.lowestPrice !== null ? `£${item.lowestPrice?.toFixed(2)}` : 'N/A'}
       </p>
       <p>
-        <strong>Number For Sale:</strong>{" "}
-        {item.numberForSale !== null ? item.numberForSale : "N/A"}
+        <strong>Number For Sale:</strong>{' '}
+        {item.numberForSale !== null ? item.numberForSale : 'N/A'}
       </p>
       <p>
-        <strong>Country:</strong> {item.country || "N/A"}
+        <strong>Country:</strong> {item.country || 'N/A'}
       </p>
-      <a href={item.uri || "#"} target="_blank" rel="noopener noreferrer">
+      <a href={item.uri || '#'} target="_blank" rel="noopener noreferrer">
         View Item
       </a>
     </div>

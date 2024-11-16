@@ -1,7 +1,7 @@
-import { onCLS, onFID, onFCP, onLCP, onTTFB } from "web-vitals";
+import { onCLS, onFID, onFCP, onLCP, onTTFB } from 'web-vitals';
 
 const reportWebVitals = (onPerfEntry?: (entry: any) => void) => {
-  if (onPerfEntry && typeof onPerfEntry === "function") {
+  if (onPerfEntry && typeof onPerfEntry === 'function') {
     onCLS(onPerfEntry);
     onFID(onPerfEntry);
     onFCP(onPerfEntry);

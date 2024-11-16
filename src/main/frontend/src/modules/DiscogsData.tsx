@@ -13,9 +13,9 @@ interface FilterOption {
  * @type {FilterOption[]}
  */
 const discogsTypes: FilterOption[] = [
-  { value: "RELEASE", text: "Release" },
-  { value: "MASTER", text: "Master" },
-  { value: "", text: "Select a type" },
+  { value: 'RELEASE', text: 'Release' },
+  { value: 'MASTER', text: 'Master' },
+  { value: '', text: 'Select a type' },
 ];
 
 /**
@@ -23,15 +23,15 @@ const discogsTypes: FilterOption[] = [
  * @type {FilterOption[]}
  */
 const discogFormats: FilterOption[] = [
-  { value: "", text: "Any Format" },
-  { value: "vinyl", text: "Vinyl" },
-  { value: "album", text: "Album" },
-  { value: "cd", text: "CD" },
-  { value: "lp", text: "LP" },
-  { value: "compilation", text: "Compilation" },
-  { value: "album vinyl", text: "Album Vinyl" },
-  { value: "compilation vinyl", text: "Compilation Vinyl" },
-  { value: "all vinyls", text: "All Vinyl Options" },
+  { value: '', text: 'Any Format' },
+  { value: 'vinyl', text: 'Vinyl' },
+  { value: 'album', text: 'Album' },
+  { value: 'cd', text: 'CD' },
+  { value: 'lp', text: 'LP' },
+  { value: 'compilation', text: 'Compilation' },
+  { value: 'album vinyl', text: 'Album Vinyl' },
+  { value: 'compilation vinyl', text: 'Compilation Vinyl' },
+  { value: 'all vinyls', text: 'All Vinyl Options' },
 ];
 
 export { discogsTypes, discogFormats };

@@ -1,0 +1,33 @@
+# Ignore build artifacts
+build/
+dist/
+
+# Ignore dependency directories
+node_modules/
+
+# Ignore environment files
+.env
+.env.*
+
+# Ignore coverage reports
+coverage/
+
+# Ignore lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Ignore generated files
+*.min.js
+*.map
+*.log
+
+# Ignore public assets
+public/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore Prettier config overrides for specific files
+src/some-folder-or-file-to-ignore.js

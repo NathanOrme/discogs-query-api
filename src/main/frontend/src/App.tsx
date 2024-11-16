@@ -1,13 +1,13 @@
 // src/App.tsx
 
-import React, { useState } from "react";
-import "./css/base.css";
-import QueryFields from "./modules/QueryFields";
-import SearchForm from "./modules/SearchForm";
-import DarkModeToggle from "./modules/DarkModeToggle";
-import CheapestItem from "./modules/CheapestItem";
-import Results from "./modules/Results";
-import { Query, QueryResult } from "./modules/types"; // Import the necessary types
+import React, { useState } from 'react';
+import './css/base.css';
+import QueryFields from './modules/QueryFields';
+import SearchForm from './modules/SearchForm';
+import DarkModeToggle from './modules/DarkModeToggle';
+import CheapestItem from './modules/CheapestItem';
+import Results from './modules/Results';
+import { Query, QueryResult } from './modules/types'; // Import the necessary types
 
 const App: React.FC = () => {
   const [queries, setQueries] = useState<Query[]>([{ id: 1 }]);
@@ -88,7 +88,7 @@ const App: React.FC = () => {
         <div className="cheapest-item-section">
           <CheapestItem items={cheapestItems} />
         </div>
-        <div id="loading" style={{ display: "none" }}>
+        <div id="loading" style={{ display: 'none' }}>
           Loading...
         </div>
       </main>

@@ -97,7 +97,7 @@ public class QueryProcessingService {
                 .toList();
 
         if (discogsRequestDTO.username() != null && !discogsRequestDTO.username().isBlank()) {
-            discogsCollectionService.filterOwnedReleases(discogsRequestDTO.username(), discogsResultDTOS);
+            return discogsCollectionService.filterOwnedReleases(discogsRequestDTO.username(), discogsResultDTOS);
         }
         return discogsResultDTOS;
     }

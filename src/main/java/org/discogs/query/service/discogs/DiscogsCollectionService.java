@@ -2,7 +2,7 @@ package org.discogs.query.service.discogs;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.discogs.query.domain.api.DiscogsRelease;
+import org.discogs.query.domain.api.DiscogsCollectionRelease;
 import org.discogs.query.helpers.DiscogsUrlBuilder;
 import org.discogs.query.helpers.LogHelper;
 import org.discogs.query.interfaces.DiscogsAPIClient;
@@ -11,7 +11,9 @@ import org.discogs.query.model.DiscogsResultDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -30,16 +32,21 @@ public class DiscogsCollectionService {
      * @param username Username to search against.
      * @param entries  List of Discogs search results to filter, using their IDs.
      */
-    public void filterOwnedReleases(final String username, final List<DiscogsResultDTO> entries) {
+    public List<DiscogsResultDTO> filterOwnedReleases(final String username, final List<DiscogsResultDTO> entries) {
         if (!searchCollection) {
-            return;
+            return entries;
         }
         if (entries == null || entries.isEmpty()) {
             LogHelper.warn(() -> "No entries provided for filtering.");
-            return;
+            return entries;
         }
 
-        for (final DiscogsResultDTO entry : entries) {
+        // Create a mutable copy of the list if it's immutable
+        List<DiscogsResultDTO> mutableEntries = new ArrayList<>(entries);
+
+        for (int i = 0; i < mutableEntries.size(); i++) {
+            final DiscogsResultDTO entry = mutableEntries.get(i);
+
             if (entry.results() == null || entry.results().isEmpty()) {
                 LogHelper.warn(() -> "Skipping empty results for entry: {}", entry.searchQuery());
                 continue;
@@ -50,10 +57,18 @@ public class DiscogsCollectionService {
                     .filter(release -> !isReleaseOwnedByUser(username, release.id()))
                     .toList();
 
+            // Log the index and the filtered results for debugging
+            LogHelper.info(() -> "Updating entry at index {} with filtered results: {}", i, filteredResults);
+
             // Update the results in-place with filtered results
-            entries.set(entries.indexOf(entry), new DiscogsResultDTO(entry.searchQuery(), filteredResults));
+            mutableEntries.set(i, new DiscogsResultDTO(entry.searchQuery(), filteredResults));
+
+            LogHelper.info(() -> "Filtered results for Result: {}", filteredResults);
         }
+
+        return mutableEntries;
     }
+
 
     /**
      * Checks if a specific release is owned by the given user.
@@ -66,9 +81,17 @@ public class DiscogsCollectionService {
         try {
             // Build the URL to check the specific release
             String collectionUrl = discogsUrlBuilder.buildCollectionSearchUrl(username, String.valueOf(releaseId));
-            DiscogsRelease ownedRelease = discogsAPIClient.getCollectionReleases(collectionUrl);
+            DiscogsCollectionRelease ownedRelease = discogsAPIClient.getCollectionReleases(collectionUrl);
+            Optional<Long> ownedReleaseID = Optional.ofNullable(ownedRelease.releases()) // Safely wrap the releases
+                    // list in an Optional
+                    .stream()
+                    .flatMap(List::stream)
+                    .map(DiscogsCollectionRelease.Release::id)
+                    .filter(foundReleaseId -> isMatchingId(releaseId, foundReleaseId))
+                    .findFirst();
 
-            if (ownedRelease != null && ownedRelease.getId() == releaseId) {
+
+            if (ownedReleaseID.isPresent()) {
                 LogHelper.info(() -> "Release ID {} is owned by user {}", releaseId, username);
                 return true;
             }
@@ -77,5 +100,9 @@ public class DiscogsCollectionService {
                     e.getMessage(), e);
         }
         return false;
+    }
+
+    private static boolean isMatchingId(final int releaseId, final Long foundReleaseId) {
+        return foundReleaseId != null && releaseId == foundReleaseId;
     }
 }

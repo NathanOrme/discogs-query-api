@@ -109,8 +109,6 @@ public class DiscogsUrlBuilder {
         LogHelper.debug(() -> "Building collection URL for Release ID: {}", releaseId);
         String collectionsUrl = discogsCollectionEndpoint.formatted(username, releaseId);
         collectionsUrl = UriComponentsBuilder.fromHttpUrl(discogsBaseUrl.concat(collectionsUrl))
-                .queryParam(TOKEN, token)
-                .queryParam("curr_abbr", "GBP")
                 .toUriString();
         LogHelper.debug(() -> "Generated collection URL: {}", collectionsUrl);
         return collectionsUrl;

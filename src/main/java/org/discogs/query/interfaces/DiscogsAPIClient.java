@@ -1,5 +1,6 @@
 package org.discogs.query.interfaces;
 
+import org.discogs.query.domain.api.DiscogsCollectionRelease;
 import org.discogs.query.domain.api.DiscogsMarketplaceResult;
 import org.discogs.query.domain.api.DiscogsRelease;
 import org.discogs.query.domain.api.DiscogsResult;
@@ -36,7 +37,7 @@ public interface DiscogsAPIClient {
      * Searches the website to see if a release exists
      *
      * @param searchUrl URL to use
-     * @return a {@link DiscogsResult} result if found on the website.
+     * @return a {@link DiscogsRelease} result if found on the website.
      */
     DiscogsRelease getRelease(String searchUrl);
 
@@ -44,9 +45,9 @@ public interface DiscogsAPIClient {
      * Searches the website to see if a release exists ina  user's collection
      *
      * @param searchUrl URL to use
-     * @return a {@link DiscogsResult} result if found on the website.
+     * @return a {@link DiscogsCollectionRelease} result if found on the website.
      */
-    DiscogsRelease getCollectionReleases(String searchUrl);
+    DiscogsCollectionRelease getCollectionReleases(String searchUrl);
 
     /**
      * Searches marketplace to see if release is on marketplace

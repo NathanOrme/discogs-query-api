@@ -2,6 +2,7 @@ package org.discogs.query.client;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.discogs.query.domain.api.DiscogsCollectionRelease;
 import org.discogs.query.domain.api.DiscogsMarketplaceResult;
 import org.discogs.query.domain.api.DiscogsRelease;
 import org.discogs.query.domain.api.DiscogsResult;
@@ -98,16 +99,17 @@ public class DiscogsAPIClientImpl implements DiscogsAPIClient {
      * This method is cached using Spring's caching abstraction with Caffeine.
      *
      * @param url the URL pointing to the item on the Discogs Marketplace
-     * @return a {@link DiscogsRelease} object containing the details of the
+     * @return a {@link DiscogsCollectionRelease} object containing the details of the
      * item on the marketplace
      * @throws DiscogsSearchException if an error occurs while fetching data
      *                                from the Discogs API
      */
     @Cacheable(value = "collectionReleases", key = "#url")
     @Override
-    public DiscogsRelease getCollectionReleases(final String url) {
+    public DiscogsCollectionRelease getCollectionReleases(final String url) {
         LogHelper.info(() -> "Cache miss for url: {}", url);
-        return executeWithRateLimitAndRetry(() -> httpRequestService.executeRequest(url, DiscogsRelease.class),
+        return executeWithRateLimitAndRetry(() -> httpRequestService.executeRequest(url,
+                        DiscogsCollectionRelease.class),
                 "Discogs Collections Release API Request");
     }
 

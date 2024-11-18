@@ -45,7 +45,7 @@ const QueryFields: React.FC<QueryFieldsProps> = ({ onQueriesChange }) => {
         renderQueryFields(query, index, handleInputChange, removeQuery, queries.length)
       )}
       <button type="button" onClick={addQuery}>
-        Add Query
+        Add Another Query
       </button>
     </form>
   );

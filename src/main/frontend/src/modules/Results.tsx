@@ -5,8 +5,12 @@ import exportToJson from './utils/exportToJson';
 import QueryResults from './results/QueryResults';
 import ErrorMessage from './utils/ErrorMessage';
 
+interface QueryResult {
+  results: Record<string, Entry[]>;
+}
+
 interface ResultsProps {
-  response: QueryResults[];
+  response: QueryResult[];
 }
 
 const Results: React.FC<ResultsProps> = ({ response }) => {

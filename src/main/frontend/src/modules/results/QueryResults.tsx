@@ -1,3 +1,5 @@
+//src/modules/results/QueryResults.tsx
+
 import React from 'react';
 import Entry from './Entry';
 

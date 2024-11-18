@@ -4,7 +4,7 @@ import React from 'react';
 import exportToJson from './utils/exportToJson';
 import QueryResults from './results/QueryResults';
 import ErrorMessage from './utils/ErrorMessage';
-import Entry from './results/Entry.tsx'
+import Entry from './results/Entry'
 
 interface QueryResult {
   results: Record<string, Entry[]>;

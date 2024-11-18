@@ -6,7 +6,7 @@ import QueryResults from './results/QueryResults';
 import ErrorMessage from './utils/ErrorMessage';
 
 interface ResultsProps {
-  response: QueryResult[];
+  response: QueryResults[];
 }
 
 const Results: React.FC<ResultsProps> = ({ response }) => {

@@ -21,7 +21,11 @@ const QueryFields: React.FC<QueryFieldsProps> = ({ onQueriesChange }) => {
     onQueriesChange(queries);
   }, [queries, onQueriesChange]);
 
-  const handleInputChange = (index: number, field: keyof Query, value: string) => {
+  const handleInputChange = (
+    index: number,
+    field: keyof Query,
+    value: string
+  ) => {
     const updatedQueries = queries.map((query, i) =>
       i === index ? { ...query, [field]: value } : query
     );
@@ -29,7 +33,14 @@ const QueryFields: React.FC<QueryFieldsProps> = ({ onQueriesChange }) => {
   };
 
   const addQuery = () => {
-    const newQuery: Query = { artist: '', barcode: '', album: '', track: '', format: '', types: '' };
+    const newQuery: Query = {
+      artist: '',
+      barcode: '',
+      album: '',
+      track: '',
+      format: '',
+      types: '',
+    };
     setQueries([...queries, newQuery]);
     setQueryCounter(queryCounter + 1);
   };
@@ -42,7 +53,13 @@ const QueryFields: React.FC<QueryFieldsProps> = ({ onQueriesChange }) => {
   return (
     <form>
       {queries.map((query, index) =>
-        renderQueryFields(query, index, handleInputChange, removeQuery, queries.length)
+        renderQueryFields(
+          query,
+          index,
+          handleInputChange,
+          removeQuery,
+          queries.length
+        )
       )}
       <button type="button" onClick={addQuery}>
         Add Another Query

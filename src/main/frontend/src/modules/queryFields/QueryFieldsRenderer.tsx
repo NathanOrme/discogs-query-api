@@ -15,16 +15,44 @@ export const renderQueryFields = (
     <div className="query-header">
       <span>Query {index + 1}</span>
       {queryCount > 1 && (
-        <button type="button" className="delete-button" onClick={() => removeQuery(index)}>
+        <button
+          type="button"
+          className="delete-button"
+          onClick={() => removeQuery(index)}
+        >
           Remove
         </button>
       )}
     </div>
     <div className="query-content">
-      {renderInputField('Artist:', 'artist', query.artist, index, handleInputChange)}
-      {renderInputField('Barcode:', 'barcode', query.barcode, index, handleInputChange)}
-      {renderInputField('Album (optional):', 'album', query.album, index, handleInputChange)}
-      {renderInputField('Track (optional):', 'track', query.track, index, handleInputChange)}
+      {renderInputField(
+        'Artist:',
+        'artist',
+        query.artist,
+        index,
+        handleInputChange
+      )}
+      {renderInputField(
+        'Barcode:',
+        'barcode',
+        query.barcode,
+        index,
+        handleInputChange
+      )}
+      {renderInputField(
+        'Album (optional):',
+        'album',
+        query.album,
+        index,
+        handleInputChange
+      )}
+      {renderInputField(
+        'Track (optional):',
+        'track',
+        query.track,
+        index,
+        handleInputChange
+      )}
       {renderSelectField(
         'Format (optional):',
         'format',

@@ -1,10 +1,21 @@
 import React from 'react';
 
-interface EntryProps {
-  entry: Entry;
+interface EntryData {
+  id?: string;
+  title?: string;
+  format?: string[];
+  country?: string;
+  year?: string;
+  uri?: string;
+  numberForSale?: number;
+  lowestPrice?: number;
 }
 
-const Entry: React.FC<EntryProps> = ({ entry }) => {
+interface EntryProps {
+  entry: EntryData;
+}
+
+const EntryComponent: React.FC<EntryProps> = ({ entry }) => {
   const id = entry.id || 'N/A';
   const format = entry.format ? entry.format.join(', ') : 'N/A';
   const country = entry.country || 'N/A';
@@ -47,4 +58,5 @@ const Entry: React.FC<EntryProps> = ({ entry }) => {
   );
 };
 
-export default Entry;
+export default EntryComponent;
+export type { EntryData };

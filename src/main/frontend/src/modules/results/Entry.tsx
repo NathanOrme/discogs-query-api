@@ -1,18 +1,8 @@
 import React from 'react';
-
-interface EntryData {
-  id?: string;
-  title?: string;
-  format?: string[];
-  country?: string;
-  year?: string;
-  uri?: string;
-  numberForSale?: number;
-  lowestPrice?: number;
-}
+import { Entry } from '../types';
 
 interface EntryProps {
-  entry: EntryData;
+  entry: Entry;
 }
 
 const EntryComponent: React.FC<EntryProps> = ({ entry }) => {
@@ -59,4 +49,4 @@ const EntryComponent: React.FC<EntryProps> = ({ entry }) => {
 };
 
 export default EntryComponent;
-export type { EntryData };
+export type { Entry };

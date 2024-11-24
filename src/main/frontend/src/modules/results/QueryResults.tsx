@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Entry from './Entry';
+import { QueryResult } from './../types';
 
 interface QueryResultsProps {
   queryResult: QueryResult;

@@ -27,9 +27,9 @@ const SearchForm: React.FC<SearchFormProps> = ({
     }
     const hostname = window.location.hostname;
     const urlMapping: Record<string, string> = {
-      netlify: 'https://discogs-query-api.koyeb.app/discogs-query/search',
+      netlify: 'https://rgbnathan-discogs-api.co.uk/discogs-query/search',
       'rgbnathan-discogs-api':
-        'https://discogs-query-api.koyeb.app/discogs-query/search',
+        'https://rgbnathan-discogs-api.co.uk/discogs-query/search',
     };
 
     for (const [key, url] of Object.entries(urlMapping)) {

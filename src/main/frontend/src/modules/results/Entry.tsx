@@ -1,10 +1,11 @@
 import React from 'react';
+import { Entry } from '../types';
 
 interface EntryProps {
   entry: Entry;
 }
 
-const Entry: React.FC<EntryProps> = ({ entry }) => {
+const EntryComponent: React.FC<EntryProps> = ({ entry }) => {
   const id = entry.id || 'N/A';
   const format = entry.format ? entry.format.join(', ') : 'N/A';
   const country = entry.country || 'N/A';
@@ -47,4 +48,5 @@ const Entry: React.FC<EntryProps> = ({ entry }) => {
   );
 };
 
-export default Entry;
+export default EntryComponent;
+export type { Entry };

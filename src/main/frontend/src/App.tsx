@@ -7,12 +7,12 @@ import SearchForm from './modules/SearchForm';
 import DarkModeToggle from './modules/DarkModeToggle';
 import CheapestItem from './modules/CheapestItem';
 import Results from './modules/Results';
-import { Query, QueryResult } from './modules/types'; // Import the necessary types
+import { Query, QueryResult } from './modules/types';
 
 const App: React.FC = () => {
   const [queries, setQueries] = useState<Query[]>([{ id: 1 }]);
   const [cheapestItems, setCheapestItems] = useState<any[]>([]);
-  const [response, setResponse] = useState<QueryResult[]>([]); // Change type to QueryResult[]
+  const [response, setResponse] = useState<QueryResult[]>([]);
 
   /**
    * Handles changes to the queries.

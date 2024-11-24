@@ -15,18 +15,19 @@ export interface Query {
 }
 
 /**
- * Type definition for a single entry in the results.
+ * Unified type for a single entry in the results.
  */
 export interface Entry {
   id?: string;
+  title?: string;
   format?: string[];
   country?: string;
   year?: string;
   uri?: string;
   numberForSale?: number;
   lowestPrice?: number | null;
-  title?: string;
 }
+
 
 /**
  * Type definition for the query results.

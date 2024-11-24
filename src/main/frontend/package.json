@@ -43,8 +43,7 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "test": "jest",
     "serve": "serve -s build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

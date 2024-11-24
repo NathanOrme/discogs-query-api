@@ -28,7 +28,6 @@ export interface Entry {
   lowestPrice?: number | null;
 }
 
-
 /**
  * Type definition for the query results.
  */

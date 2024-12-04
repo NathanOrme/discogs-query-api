@@ -62,11 +62,11 @@ LABEL org.opencontainers.image.title="Discogs Query Application" \
       org.opencontainers.image.authors="Nathan Orme"
 
 # Expose ports for frontend and backend
-EXPOSE 3000 9090
+EXPOSE 9090
 
 # Configure health check for the application
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s \
   CMD wget --quiet --spider http://localhost:9090/actuator/health || exit 1
 
 # Set the entry point to run both backend and frontend
-ENTRYPOINT ["sh", "-c", "java -jar /app/discogs-app.jar & serve -s frontend/build -l 3000"]
+ENTRYPOINT ["sh", "-c", "java -jar /app/discogs-app.jar"]

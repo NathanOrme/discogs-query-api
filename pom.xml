@@ -278,7 +278,7 @@
             <plugin>
                 <groupId>org.openhab.tools.sat</groupId>
                 <artifactId>sat-plugin</artifactId>
-                <version>0.16.0</version>
+                <version>0.17.0</version>
                 <executions>
                     <execution>
                         <phase>verify</phase>

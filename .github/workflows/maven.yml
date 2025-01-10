@@ -166,6 +166,15 @@ jobs:
       - name: Run Frontend Build
         run: cd src/main/frontend && yarn run build
 
+      - name: Generate NPM Documents
+        run: cd src/main/frontend &&  npx jsdoc src -c jsdoc.json -d docs -r
+
+      - name: Zip JSDoc
+        run: |
+          mkdir -p src/main/frontend/docs
+          zip -r src/main/frontend/docs.zip src/main/frontend/docs || exit 1
+          echo "JSDoc zip created."
+
 
   release:
     name: Create Release

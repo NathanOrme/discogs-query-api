@@ -32,7 +32,7 @@
     "jest-environment-jsdom": "^29.5.0",
     "jsdoc": "^4.0.4",
     "prettier": "^3.4.2",
-    "typescript": "^5.7.2",
+    "typescript": "^5.7.3",
     "@svgr/core": "^8.1.0",
     "@svgr/plugin-jsx": "^8.1.0",
     "@types/node": "^22.10.5",

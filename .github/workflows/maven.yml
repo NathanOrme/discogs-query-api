@@ -143,6 +143,12 @@ jobs:
           zip -r target/site/apidocs.zip target/site/apidocs || exit 1
           echo "Javadoc zip created."
 
+      - name: Upload Javadoc Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: javadoc.zip
+          path: target/site/apidocs.zip
+
   build-frontend:
     name: Build Frontend
     runs-on: ubuntu-latest
@@ -184,6 +190,12 @@ jobs:
           zip -r src/main/frontend/docs.zip src/main/frontend/docs || exit 1
           echo "JSDoc zip created."
 
+      - name: Upload JSDoc Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: jsdoc.zip
+          path: src/main/frontend/docs.zip
+
 
   release:
     name: Create Release
@@ -200,6 +212,18 @@ jobs:
         env:
           REPO: ${{ github.repository }}
 
+      - name: Download Javadoc Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: javadoc.zip
+          path: target/site
+
+      - name: Download JSDoc Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: jsdoc.zip
+          path: src/main/frontend
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
@@ -208,5 +232,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           generate_release_notes: true
           files: |
-            target/site/apidocs.zip
+            target/site/javadoc.zip
+            src/main/frontend/jsdoc.zip
           body: ${{ steps.Changelog.outputs.changelog }}

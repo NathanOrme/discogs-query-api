@@ -206,12 +206,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Generate Changelog
-        uses: Bullrich/generate-release-changelog@master
-        id: Changelog
-        env:
-          REPO: ${{ github.repository }}
-
       - name: Download Javadoc Artifact
         uses: actions/download-artifact@v3
         with:
@@ -224,6 +218,11 @@ jobs:
           name: jsdoc.zip
           path: src/main/frontend
 
+      - name: Generate Changelog
+        uses: Bullrich/generate-release-changelog@master
+        id: Changelog
+        env:
+          REPO: ${{ github.repository }}
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:

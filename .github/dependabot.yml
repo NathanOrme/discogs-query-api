@@ -5,18 +5,26 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    assignees:
+      - "NathanOrme"
 
   - package-ecosystem: "maven"
     directory: "/"
     schedule:
       interval: "daily"
+    assignees:
+      - "NathanOrme"
 
   - package-ecosystem: "npm"
     directory: "/src/main/frontend/"
     schedule:
       interval: "daily"
+    assignees:
+      - "NathanOrme"
 
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
       interval: "daily"
+    assignees:
+      - "NathanOrme"

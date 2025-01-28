@@ -75,11 +75,11 @@ const renderInputField = (
   handleInputChange: (index: number, field: keyof Query, value: string) => void
 ): JSX.Element => (
   <>
-    <label htmlFor={'' + field + '-' + index}>{label}</label>
+    <label htmlFor={String(field) + '-' + index}>{label}</label>
     <input
       type="text"
       className={field}
-      name={'' + field + '-' + index}
+      name={String(field) + '-' + index}
       value={value}
       onChange={(e) => {
         handleInputChange(index, field, e.target.value);

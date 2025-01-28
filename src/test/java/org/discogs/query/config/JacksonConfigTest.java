@@ -9,13 +9,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 /**
  * Test class for {@link JacksonConfig}.
  */
-public class JacksonConfigTest {
+class JacksonConfigTest {
 
     /**
      * Test that the {@link ObjectMapper} bean is correctly configured.
      */
     @Test
-    public void testObjectMapperConfiguration() {
+    void testObjectMapperConfiguration() {
         // Initialize the Spring application context with the configuration
         // class
         try (AnnotationConfigApplicationContext context =

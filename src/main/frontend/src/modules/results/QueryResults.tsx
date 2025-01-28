@@ -35,8 +35,8 @@ const QueryResults: React.FC<QueryResultsProps> = ({ queryResult, index }) => {
                   e.currentTarget.textContent = content.classList.contains(
                     'hidden'
                   )
-                    ? "Show Results for "+title
-                    : "Hide Results for "+title;
+                    ? 'Show Results for ' + title
+                    : 'Hide Results for ' + title;
                 }
               }}
             >

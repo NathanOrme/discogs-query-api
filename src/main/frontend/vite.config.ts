@@ -197,7 +197,6 @@ function htmlPlugin(mode: string): Plugin {
   };
 }
 
-
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   setEnv(mode);
@@ -216,4 +215,3 @@ export default defineConfig(({ mode }) => {
     ],
   };
 });
-

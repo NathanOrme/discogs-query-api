@@ -4,7 +4,7 @@ const exportToJson = (data: unknown, filename: string): void => {
   )}`;
   const link = document.createElement('a');
   link.href = jsonString;
-  link.download = ""+filename+".json";
+  link.download = '' + filename + '.json';
   link.click();
 };
 

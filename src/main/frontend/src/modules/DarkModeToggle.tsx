@@ -29,11 +29,17 @@ const DarkModeToggle: React.FC = () => {
    * Toggles the dark mode state.
    */
   const toggleDarkMode = () => {
-    setIsDarkMode(function(prevMode) { return !prevMode });
+    setIsDarkMode(function (prevMode) {
+      return !prevMode;
+    });
   };
 
   return (
-    <button data-test-id="Ekr8zas9W0-gcuF8US8_-" id="toggleDarkMode" onClick={toggleDarkMode}>
+    <button
+      data-test-id="Ekr8zas9W0-gcuF8US8_-"
+      id="toggleDarkMode"
+      onClick={toggleDarkMode}
+    >
       Toggle Dark Mode
     </button>
   );

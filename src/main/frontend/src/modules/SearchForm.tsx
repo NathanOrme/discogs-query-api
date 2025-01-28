@@ -48,7 +48,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
     const apiUrl = getApiUrl();
     const payload = {
       username: username || undefined, // Only include username if provided
-      queries,
+      queries: queries,
     };
 
     fetch(apiUrl, {
@@ -79,7 +79,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
           onCheapestItemsChange([]);
         }
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.error('Error:', error);
       })
       .finally(() => {
@@ -93,7 +93,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
         type="text"
         placeholder="Enter your username"
         value={username}
-        onChange={(e) => setUsername(e.target.value)} // Update username state
+        onChange={(e) => { setUsername(e.target.value); }} // Update username state
       />
       <button type="submit" disabled={loading}>
         {loading ? 'Loading...' : 'Search'}

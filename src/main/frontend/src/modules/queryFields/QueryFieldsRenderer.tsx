@@ -18,7 +18,7 @@ export const renderQueryFields = (
         <button
           type="button"
           className="delete-button"
-          onClick={() => removeQuery(index)}
+          onClick={() => { removeQuery(index); }}
         >
           Remove
         </button>
@@ -73,13 +73,13 @@ const renderInputField = (
   handleInputChange: (index: number, field: keyof Query, value: string) => void
 ): JSX.Element => (
   <>
-    <label htmlFor={`${field}-${index}`}>{label}</label>
+    <label htmlFor={""+field+"-"+index}>{label}</label>
     <input
       type="text"
       className={field}
-      name={`${field}-${index}`}
+      name={""+field+"-"+index}
       value={value}
-      onChange={(e) => handleInputChange(index, field, e.target.value)}
+      onChange={(e) => { handleInputChange(index, field, e.target.value); }}
     />
   </>
 );

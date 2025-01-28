@@ -21,9 +21,9 @@ const renderItem = (item: Item, index: number): JSX.Element => (
         {item.numberForSale !== null ? item.numberForSale : 'N/A'}
       </p>
       <p>
-        <strong>Country:</strong> {item.country || 'N/A'}
+        <strong>Country:</strong> {item.country ?? 'N/A'}
       </p>
-      <a href={item.uri || '#'} target="_blank" rel="noopener noreferrer">
+      <a href={item.uri ?? '#'} target="_blank" rel="noopener noreferrer">
         View Item
       </a>
     </div>

@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import {
   defineConfig,
   loadEnv,
@@ -9,25 +9,6 @@ import {
 } from 'vite';
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
-
-// https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
-  setEnv(mode);
-  return {
-    plugins: [
-      react(),
-      tsconfigPaths(),
-      envPlugin(),
-      devServerPlugin(),
-      sourcemapPlugin(),
-      buildPathPlugin(),
-      basePlugin(),
-      importPrefixPlugin(),
-      htmlPlugin(mode),
-      svgrPlugin(),
-    ],
-  };
-});
 
 function setEnv(mode: string) {
   Object.assign(
@@ -215,3 +196,24 @@ function htmlPlugin(mode: string): Plugin {
     },
   };
 }
+
+
+// https://vitejs.dev/config/
+export default defineConfig(({ mode }) => {
+  setEnv(mode);
+  return {
+    plugins: [
+      react(),
+      tsconfigPaths(),
+      envPlugin(),
+      devServerPlugin(),
+      sourcemapPlugin(),
+      buildPathPlugin(),
+      basePlugin(),
+      importPrefixPlugin(),
+      htmlPlugin(mode),
+      svgrPlugin(),
+    ],
+  };
+});
+

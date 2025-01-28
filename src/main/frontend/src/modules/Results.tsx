@@ -20,7 +20,7 @@ const Results: React.FC<ResultsProps> = ({ response }) => {
   return (
     <div id="results">
       <button
-        onClick={() => exportToJson(response, 'results')}
+        onClick={function() { return exportToJson(response, 'results') }}
         className="export-button"
       >
         Export Results to JSON

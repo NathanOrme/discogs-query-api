@@ -15,7 +15,7 @@ const renderContent = (items: Item[]): JSX.Element => {
 
   return (
     <div className="cheapest-item-content">
-      {items.map((item, index) => renderItem(item, index))}
+      {items.map(function(item, index) { return renderItem(item, index) })}
     </div>
   );
 };

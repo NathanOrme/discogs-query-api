@@ -7,26 +7,26 @@ API interactions.
 
 <!-- TOC -->
 
-* [Discogs Query](#discogs-query)
-    * [Features](#features)
-    * [Architecture](#architecture)
-    * [Getting Started](#getting-started)
-        * [Prerequisites](#prerequisites)
-        * [Installation](#installation)
-        * [Running Locally](#running-locally)
-            * [Run the Backend](#run-the-backend)
-            * [Run the Frontend](#run-the-frontend)
-        * [Configuration](#configuration)
-            * [Server Settings](#server-settings)
-            * [Management Endpoints](#management-endpoints)
-            * [OpenAPI Documentation](#openapi-documentation)
-            * [Security](#security)
-            * [Logging](#logging)
-            * [Query Settings](#query-settings)
-            * [Discogs API Configuration](#discogs-api-configuration)
-    * [Development](#development)
-        * [Code Style](#code-style)
-        * [Running Tests](#running-tests)
+- [Discogs Query](#discogs-query)
+  - [Features](#features)
+  - [Architecture](#architecture)
+  - [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+    - [Running Locally](#running-locally)
+      - [Run the Backend](#run-the-backend)
+      - [Run the Frontend](#run-the-frontend)
+    - [Configuration](#configuration)
+      - [Server Settings](#server-settings)
+      - [Management Endpoints](#management-endpoints)
+      - [OpenAPI Documentation](#openapi-documentation)
+      - [Security](#security)
+      - [Logging](#logging)
+      - [Query Settings](#query-settings)
+      - [Discogs API Configuration](#discogs-api-configuration)
+  - [Development](#development)
+    - [Code Style](#code-style)
+    - [Running Tests](#running-tests)
 
 <!-- TOC -->
 
@@ -63,14 +63,15 @@ API interactions.
    ```bash
    git clone https://github.com/yourusername/discogs-query.git
    cd discogs-query
+   ```
 2. Install Backend Dependencies
-    ```bash
-    mvn clean install
-    ```
+   ```bash
+   mvn clean install
+   ```
 3. Install Frontend Dependencies
-    ```bash
-    npm install
-    ```
+   ```bash
+   npm install
+   ```
 
 ### Running Locally
 
@@ -133,8 +134,8 @@ show-actuator: true
 #### Security
 
 - **Default User Credentials:**
-    - Username: `username`
-    - Password: `password`
+  - Username: `username`
+  - Password: `password`
 
 ```yaml
 spring:
@@ -150,9 +151,9 @@ password: password
   Colored output is enabled in the console.
 
 - **Log Levels:**
-    - `INFO` for web requests.
-    - `WARN` for Hibernate.
-    - `DEBUG` for custom Discogs query logging.
+  - `INFO` for web requests.
+  - `WARN` for Hibernate.
+  - `DEBUG` for custom Discogs query logging.
 
 ```yaml
 spring:
@@ -188,14 +189,16 @@ filterForUk: false
   Discogs API URL: `https://api.discogs.com/`
 
 - **Endpoints:**
-    - Search: `database/search`
-    - Release: `releases/`
-    - Marketplace Check: `marketplace/stats/`
+
+  - Search: `database/search`
+  - Release: `releases/`
+  - Marketplace Check: `marketplace/stats/`
 
 - **Agent & Token:**  
   These are configured via environment variables:
-    - Agent: `${DISCOGS_AGENT}`
-    - Token: `${DISCOGS_TOKEN}`
+
+  - Agent: `${DISCOGS_AGENT}`
+  - Token: `${DISCOGS_TOKEN}`
 
 - **Page Size:**  
   Pagination is set to 20 items per page.
@@ -241,8 +244,3 @@ Both frontend and backend tests are crucial to maintain code quality and robustn
 
 This updated README reflects the new structure and provides additional details for Docker and deployment steps. Let me
 know if you'd like to add or modify anything!
-
-
-
-
-

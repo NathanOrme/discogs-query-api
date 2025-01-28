@@ -9,9 +9,9 @@ import lombok.ToString;
 
 /**
  * Represents the lowest price result for an item in the Discogs Marketplace.
- * <p>
- * This class contains information about the lowest price of an item,
- * including the currency and the price value.
+ *
+ * <p>This class contains information about the lowest price of an item, including the currency and
+ * the price value.
  */
 @Getter
 @Setter
@@ -21,18 +21,17 @@ import lombok.ToString;
 @AllArgsConstructor
 public class DiscogsLowestPriceResult {
 
-    /**
-     * The currency of the lowest price.
-     * <p>
-     * This field holds the currency code (e.g., "USD", "GBP") for the price.
-     */
-    private String currency;
+  /**
+   * The currency of the lowest price.
+   *
+   * <p>This field holds the currency code (e.g., "USD", "GBP") for the price.
+   */
+  private String currency;
 
-    /**
-     * The value of the lowest price.
-     * <p>
-     * This field holds the numerical value of the lowest price in the
-     * specified currency.
-     */
-    private Float value;
+  /**
+   * The value of the lowest price.
+   *
+   * <p>This field holds the numerical value of the lowest price in the specified currency.
+   */
+  private Float value;
 }

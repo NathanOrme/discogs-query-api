@@ -1,5 +1,15 @@
 package org.discogs.query.service.discogs;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Collections;
 import org.discogs.query.domain.api.DiscogsEntry;
 import org.discogs.query.domain.api.DiscogsResult;
 import org.discogs.query.exceptions.DiscogsSearchException;
@@ -17,94 +27,86 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
 class DiscogsQueryServiceImplTest {
 
-    @Mock
-    private DiscogsAPIClient discogsAPIClient;
+  @Mock private DiscogsAPIClient discogsAPIClient;
 
-    @Mock
-    private MappingService mappingService;
+  @Mock private MappingService mappingService;
 
-    @Mock
-    private DiscogsUrlBuilder discogsUrlBuilder;
+  @Mock private DiscogsUrlBuilder discogsUrlBuilder;
 
-    @Mock
-    private DiscogsFilterService discogsFilterService;
+  @Mock private DiscogsFilterService discogsFilterService;
 
-    @InjectMocks
-    private DiscogsQueryServiceImpl discogsQueryServiceImpl;
+  @InjectMocks private DiscogsQueryServiceImpl discogsQueryServiceImpl;
 
-    private DiscogsQueryDTO discogsQueryDTO;
+  private DiscogsQueryDTO discogsQueryDTO;
 
-    @BeforeEach
-    void setUp() {
-        // Initialize test data
-        discogsQueryDTO = new DiscogsQueryDTO("Test Artist", null, "Test Track",
-                null,
-                DiscogsFormats.COMP.getFormat(), null, null, null);
+  @BeforeEach
+  void setUp() {
+    // Initialize test data
+    discogsQueryDTO =
+        new DiscogsQueryDTO(
+            "Test Artist",
+            null,
+            "Test Track",
+            null,
+            DiscogsFormats.COMP.getFormat(),
+            null,
+            null,
+            null);
 
-        DiscogsEntry entry = new DiscogsEntry();
-        entry.setUri("/test-uri");
-        DiscogsResult discogsResult = new DiscogsResult();
-        discogsResult.setResults(Collections.singletonList(entry));
+    DiscogsEntry entry = new DiscogsEntry();
+    entry.setUri("/test-uri");
+    DiscogsResult discogsResult = new DiscogsResult();
+    discogsResult.setResults(Collections.singletonList(entry));
+  }
 
-    }
+  @Test
+  void testSearchBasedOnQuery_discogsSearchException() {
+    // Setup mock behaviors
+    when(discogsUrlBuilder.buildSearchUrl(discogsQueryDTO)).thenReturn("mocked-url");
+    doThrow(new DiscogsSearchException("API error"))
+        .when(discogsAPIClient)
+        .getResultsForQuery(anyString());
 
-    @Test
-    void testSearchBasedOnQuery_discogsSearchException() {
-        // Setup mock behaviors
-        when(discogsUrlBuilder.buildSearchUrl(discogsQueryDTO)).thenReturn(
-                "mocked-url");
-        doThrow(new DiscogsSearchException("API error")).when(discogsAPIClient).getResultsForQuery(anyString());
+    // Perform the search
+    DiscogsResultDTO result = discogsQueryServiceImpl.searchBasedOnQuery(discogsQueryDTO);
 
-        // Perform the search
-        DiscogsResultDTO result =
-                discogsQueryServiceImpl.searchBasedOnQuery(discogsQueryDTO);
+    // Verify behaviors
+    verify(discogsAPIClient, times(1)).getResultsForQuery(anyString());
 
-        // Verify behaviors
-        verify(discogsAPIClient, times(1)).getResultsForQuery(anyString());
+    // Validate results
+    assertEquals(new DiscogsResultDTO(null, null).toString(), result.toString());
+    // Empty DTO is expected on exception
+  }
 
-        // Validate results
-        assertEquals(new DiscogsResultDTO(null, null).toString(), result.toString());
-        // Empty DTO is expected on exception
-    }
+  @Test
+  void testSearchBasedOnQuery_unexpectedException() {
+    // Setup mock behaviors
+    when(discogsUrlBuilder.buildSearchUrl(discogsQueryDTO)).thenReturn("mocked-url");
+    doThrow(new RuntimeException("Unexpected error"))
+        .when(discogsAPIClient)
+        .getResultsForQuery(anyString());
 
-    @Test
-    void testSearchBasedOnQuery_unexpectedException() {
-        // Setup mock behaviors
-        when(discogsUrlBuilder.buildSearchUrl(discogsQueryDTO)).thenReturn(
-                "mocked-url");
-        doThrow(new RuntimeException("Unexpected error")).when(discogsAPIClient).getResultsForQuery(anyString());
-
-        // Perform the search and expect exception
-        assertThrows(DiscogsSearchException.class, () -> {
-            discogsQueryServiceImpl.searchBasedOnQuery(discogsQueryDTO);
+    // Perform the search and expect exception
+    assertThrows(
+        DiscogsSearchException.class,
+        () -> {
+          discogsQueryServiceImpl.searchBasedOnQuery(discogsQueryDTO);
         });
 
-        // Verify behaviors
-        verify(discogsAPIClient, times(1)).getResultsForQuery(anyString());
-    }
+    // Verify behaviors
+    verify(discogsAPIClient, times(1)).getResultsForQuery(anyString());
+  }
 
-    @Test
-    void testIsCompilationFormat() {
+  @Test
+  void testIsCompilationFormat() {
 
-        // When
-        boolean isCompilation =
-                DiscogsQueryServiceImpl.isCompilationFormat(discogsQueryDTO);
+    // When
+    boolean isCompilation = DiscogsQueryServiceImpl.isCompilationFormat(discogsQueryDTO);
 
-        // Then
-        assertTrue(isCompilation);
-    }
+    // Then
+    assertTrue(isCompilation);
+  }
 }

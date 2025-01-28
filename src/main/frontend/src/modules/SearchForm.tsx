@@ -93,7 +93,9 @@ const SearchForm: React.FC<SearchFormProps> = ({
         type="text"
         placeholder="Enter your username"
         value={username}
-        onChange={(e) => { setUsername(e.target.value); }} // Update username state
+        onChange={(e) => {
+          setUsername(e.target.value);
+        }} // Update username state
       />
       <button type="submit" disabled={loading}>
         {loading ? 'Loading...' : 'Search'}

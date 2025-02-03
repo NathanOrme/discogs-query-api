@@ -15,12 +15,23 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Security Configuration for the Discogs Query application.
+ */
 @Configuration
 public class SecurityConfig {
-    
+
+    /**
+     * Allowed origins property
+     */
     @Value("${spring.security.allowed-origins}")
     private String allowedOriginsProperty;
 
+    /**
+     * Main Security Config
+     *
+     * @return CorsConfigurationSource object
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -43,6 +54,13 @@ public class SecurityConfig {
         return source;
     }
 
+    /**
+     * Security Filter Chain
+     *
+     * @param http HttpSecurity object
+     * @return SecurityFilterChain object
+     * @throws Exception if an error occurs
+     */
     @Bean
     public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
         http.cors()

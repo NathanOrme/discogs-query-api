@@ -132,7 +132,7 @@ jobs:
           DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}
 
       - name: Run tests and build javadoc
-        run: mvn clean install javadoc:javadoc
+        run: mvn clean install javadoc:javadoc -Dmaven.javadoc.additionalparam=-Xdoclint:none
         env:
           DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
           DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}

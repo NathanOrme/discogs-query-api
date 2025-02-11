@@ -58,15 +58,8 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
    * Updates the given {@link DiscogsEntry} with the lowest price and number for sale from the
    * provided {@link DiscogsMarketplaceResult}.
    *
-   * <p>This method sets the number of items for sale and the lowest price from the {@code
-   * DiscogsMarketplaceResult} to the corresponding fields in the {@code DiscogsEntry}. It also logs
-   * a debug message if a lowest price is set.
-   *
-   * @param entry the {@link DiscogsEntry} object to be updated. It should be an instance where the
-   *     number of items for sale and the lowest price need to be set.
-   * @param discogsMarketplaceResult the {@link DiscogsMarketplaceResult} object containing the
-   *     number of items for sale and the lowest price result. It should not be {@code null}. The
-   *     lowest price is obtained from the result inside this object.
+   * @param entry the DiscogsEntry to be updated.
+   * @param discogsMarketplaceResult the marketplace result containing price info.
    */
   private static void setLowestPriceResultAndNumberForSale(
       final DiscogsEntry entry, final DiscogsMarketplaceResult discogsMarketplaceResult) {
@@ -107,10 +100,8 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
   public DiscogsResultDTO searchBasedOnQuery(final DiscogsQueryDTO discogsQueryDTO) {
     try {
       LogHelper.info(() -> "Starting search for query: {}", discogsQueryDTO);
-
       String searchUrl = discogsUrlBuilder.buildSearchUrl(discogsQueryDTO);
       LogHelper.debug(() -> "Built search URL: {}", searchUrl);
-
       DiscogsResult results = performSearch(searchUrl);
       LogHelper.info(() -> "Received {} results from Discogs API", results.getResults().size());
 
@@ -129,16 +120,12 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
 
       correctUriForResultEntries(results);
       LogHelper.debug(() -> "URIs for result entries corrected");
-
       filterAndSortResults(discogsQueryDTO, results);
-
       getLowestPriceOnMarketplace(results);
       discogsFilterService.filterOutEmptyLowestPrice(results);
-
       DiscogsResultDTO resultDTO = mappingService.mapObjectToDTO(results, discogsQueryDTO);
       LogHelper.info(
           () -> "Search processing completed successfully for query: {}", discogsQueryDTO);
-
       return resultDTO;
     } catch (final DiscogsSearchException e) {
       LogHelper.error(
@@ -190,18 +177,13 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
   private void processCompilationSearch(
       final DiscogsQueryDTO discogsQueryDTO, final DiscogsResult results) {
     LogHelper.debug(() -> "Generating compilation search URL for query: {}", discogsQueryDTO);
-
     String searchUrl = discogsUrlBuilder.generateCompilationSearchUrl(discogsQueryDTO);
     LogHelper.debug(() -> "Compilation search URL: {}", searchUrl);
-
     DiscogsResult compResults = discogsAPIClient.getResultsForQuery(searchUrl);
     LogHelper.info(
         () -> "Received {} compilation results from Discogs API", compResults.getResults().size());
-
-    List<DiscogsEntry> mergedResults = concatStreams(results, compResults).distinct().toList();
-
+    List<DiscogsEntry> mergedResults = concatStreams(results, compResults).toList();
     results.setResults(mergedResults);
-
     LogHelper.debug(
         () -> "Merged results with compilation results. Total results: {}",
         results.getResults().size());
@@ -240,8 +222,6 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
       LogHelper.warn(() -> "No results found in DiscogsResult.");
       return;
     }
-    // Filter out entries that don't have "United Kingdom" in the shipFromLocations and process
-    // valid ones
     List<DiscogsEntry> filteredResults =
         results.getResults().parallelStream()
             .map(
@@ -252,13 +232,11 @@ public class DiscogsQueryServiceImpl implements DiscogsQueryService {
                   } catch (final Exception e) {
                     LogHelper.error(
                         () -> "Failed to process entry: {} due to {}", entry, e.getMessage(), e);
-                    return null; // Exclude entries that encounter an error
+                    return null;
                   }
                 })
-            .filter(Objects::nonNull) // Remove entries that were filtered out or caused an error
+            .filter(Objects::nonNull)
             .toList();
-
-    // Update results with filtered list
     results.setResults(filteredResults);
   }
 

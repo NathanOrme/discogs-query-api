@@ -25,7 +25,9 @@ import org.springframework.stereotype.Service;
 public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
 
   public static final String ERROR_SCRAPING_THE_DISCOGS_MARKETPLACE_ATTEMPT =
-      "Error scraping the Discogs " + "Marketplace, attempt {}/{}";
+      "Error scraping the Discogs Marketplace, attempt {}/{}";
+  private static final String UK_FILTER = "?ev=rb&ships_from=United+Kingdom";
+
   private final HttpConfig httpConfig;
   private final JsoupHelper jsoupHelper;
 
@@ -38,23 +40,16 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
    */
   @Override
   public List<DiscogsWebsiteResult> getMarketplaceResultsForRelease(final String releaseId) {
-    // Construct the URL with the filter for United Kingdom
-    String url =
-        "https://www.discogs.com/sell/release/" + releaseId + "?ev=rb&ships_from=United+Kingdom";
+    String url = "https://www.discogs.com/sell/release/" + releaseId + UK_FILTER;
     LogHelper.info(() -> "Fetching marketplace data for release ID: {}", releaseId);
 
-    Document doc = fetchDocumentWithRetry(url); // Call the refactored retry logic for jsoupHelper
+    Document doc = fetchDocumentWithRetry(url);
 
-    // Process the document if it was fetched successfully
     Elements listings = doc.select(".shortcut_navigable");
-
-    // Check if any listings exist
     if (listings.isEmpty()) {
       LogHelper.info(() -> "No listings found for release ID: {}", releaseId);
-      return new ArrayList<>(); // Return empty list if no listings
+      return new ArrayList<>();
     }
-
-    // Process each listing
     return processListings(listings);
   }
 
@@ -65,12 +60,10 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
    * @return the fetched Document
    */
   private Document fetchDocumentWithRetry(final String url) {
-    int maxRetries = 3; // Number of retry attempts
-    int retryCount = 0; // Current retry count
-
+    int maxRetries = 3;
+    int retryCount = 0;
     while (retryCount < maxRetries) {
       try {
-        // Fetch and parse the HTML from the Discogs marketplace page using JsoupHelper
         return jsoupHelper.connect(url, httpConfig.buildHeaders().toSingleValueMap());
       } catch (final Exception e) {
         LogHelper.error(
@@ -79,7 +72,6 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
         waitBeforeRetry();
       }
     }
-
     String errorMessage =
         "Failed to scrape data from Discogs Marketplace after %s attempts".formatted(maxRetries);
     LogHelper.info(() -> errorMessage);
@@ -98,34 +90,57 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
   private List<DiscogsWebsiteResult> processListings(final Elements listings) {
     List<DiscogsWebsiteResult> results = new ArrayList<>();
     for (final Element listing : listings) {
-      checkSellerInfo(listing, results);
+      DiscogsWebsiteResult result = extractResultFromListing(listing);
+      if (result != null) {
+        results.add(result);
+      }
     }
     return results;
   }
 
-  private void checkSellerInfo(final Element listing, final List<DiscogsWebsiteResult> results) {
+  /**
+   * Processes a single listing element and returns a DiscogsWebsiteResult if the listing meets the
+   * criteria (i.e. it ships from the United Kingdom and contains seller info).
+   *
+   * @param listing the listing element
+   * @return a DiscogsWebsiteResult or null if the listing should be skipped
+   */
+  private DiscogsWebsiteResult extractResultFromListing(final Element listing) {
     Elements sellerItems = listing.select("ul > li");
 
     String sellerName = null;
     String sellerRating = "No rating";
     String ratingCount = "0 ratings";
-    String price = listing.selectFirst(".price").text();
-    String condition = listing.selectFirst(".item_condition span").text();
+    Element priceElement = listing.selectFirst(".price");
+    String price = priceElement != null ? priceElement.text() : "Unknown";
+    Element conditionElement = listing.selectFirst(".item_condition span");
+    String condition = conditionElement != null ? conditionElement.text() : "Unknown";
 
     for (final Element item : sellerItems) {
-      if (item.selectFirst("span.mplabel.seller_label") != null) {
-        sellerName = item.selectFirst("strong > a").text();
-        LogHelper.debug(() -> "Found seller name: {}", sellerName);
-      } else if (item.selectFirst(".star_rating") != null) {
-        sellerRating = item.selectFirst(".star_rating").attr("aria-label");
-        ratingCount = item.selectFirst("a.section_link").text();
-        LogHelper.debug(() -> "Found seller rating: {} with count: {}", sellerRating, ratingCount);
-      } else if (item.text().contains("Ships From:")) {
-        if (!item.text().contains("United Kingdom")) {
-          LogHelper.debug(() -> "No items shipping from the UK: {}", item.text());
-          return; // Exit if not shipping from the UK
-        } else {
-          LogHelper.debug(() -> "Item ships from the United Kingdom.");
+      Element sellerLabelElem = item.selectFirst("span.mplabel.seller_label");
+      if (sellerLabelElem != null) {
+        Element sellerNameElem = item.selectFirst("strong > a");
+        if (sellerNameElem != null) {
+          sellerName = sellerNameElem.text();
+          LogHelper.debug(() -> "Found seller name: {}", sellerName);
+        }
+      } else {
+        Element starRatingElem = item.selectFirst(".star_rating");
+        if (starRatingElem != null) {
+          sellerRating = starRatingElem.attr("aria-label");
+          Element ratingCountElem = item.selectFirst("a.section_link");
+          if (ratingCountElem != null) {
+            ratingCount = ratingCountElem.text();
+          }
+          LogHelper.debug(
+              () -> "Found seller rating: {} with count: {}", sellerRating, ratingCount);
+        } else if (item.text().contains("Ships From:")) {
+          if (!item.text().contains("United Kingdom")) {
+            LogHelper.debug(() -> "No items shipping from the UK: {}", item.text());
+            return null; // Skip this listing if it doesn't ship from the UK
+          } else {
+            LogHelper.debug(() -> "Item ships from the United Kingdom.");
+          }
         }
       }
     }
@@ -134,10 +149,11 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
       DiscogsWebsiteResult result =
           new DiscogsWebsiteResult(
               price, condition, "United Kingdom", sellerName, sellerRating, ratingCount);
-      results.add(result);
       LogHelper.info(() -> "Added result for seller: {}", sellerName);
+      return result;
     } else {
       LogHelper.debug(() -> "Seller information not found for listing.");
+      return null;
     }
   }
 }

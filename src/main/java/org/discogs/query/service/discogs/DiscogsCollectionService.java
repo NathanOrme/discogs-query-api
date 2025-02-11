@@ -26,7 +26,7 @@ public class DiscogsCollectionService {
   private final DiscogsAPIClient discogsAPIClient;
 
   /**
-   * Method that filters out all results already owned by the username in their Discogs collection.
+   * Filters out all results already owned by the username in their Discogs collection.
    *
    * @param username Username to search against.
    * @param entries List of Discogs search results to filter, using their IDs.
@@ -46,25 +46,16 @@ public class DiscogsCollectionService {
 
     for (int i = 0; i < mutableEntries.size(); i++) {
       final DiscogsResultDTO entry = mutableEntries.get(i);
-
       if (entry.results() == null || entry.results().isEmpty()) {
         LogHelper.warn(() -> "Skipping empty results for entry: {}", entry.searchQuery());
         continue;
       }
-
-      // Filter out owned releases from the current entry's results
       List<DiscogsEntryDTO> filteredResults =
           entry.results().stream()
               .filter(release -> !isReleaseOwnedByUser(username, release.id()))
               .toList();
-
-      // Log the index and the filtered results for debugging
-      LogHelper.info(
-          () -> "Updating entry at index {} with filtered results: {}", i, filteredResults);
-
-      // Update the results in-place with filtered results
+      LogHelper.info(() -> "Updating entry with filtered results: {}", filteredResults);
       mutableEntries.set(i, new DiscogsResultDTO(entry.searchQuery(), filteredResults));
-
       LogHelper.info(() -> "Filtered results for Result: {}", filteredResults);
     }
 
@@ -80,20 +71,15 @@ public class DiscogsCollectionService {
    */
   private boolean isReleaseOwnedByUser(final String username, final int releaseId) {
     try {
-      // Build the URL to check the specific release
       String collectionUrl =
           discogsUrlBuilder.buildCollectionSearchUrl(username, String.valueOf(releaseId));
       DiscogsCollectionRelease ownedRelease = discogsAPIClient.getCollectionReleases(collectionUrl);
-      Optional<Long> ownedReleaseID =
-          Optional.ofNullable(ownedRelease.releases()) // Safely wrap the releases
-              // list in an Optional
-              .stream()
-              .flatMap(List::stream)
+      var releases = Optional.ofNullable(ownedRelease.releases()).orElse(List.of());
+      boolean owned =
+          releases.stream()
               .map(DiscogsCollectionRelease.Release::id)
-              .filter(foundReleaseId -> isMatchingId(releaseId, foundReleaseId))
-              .findFirst();
-
-      if (ownedReleaseID.isPresent()) {
+              .anyMatch(foundId -> foundId != null && foundId == releaseId);
+      if (owned) {
         LogHelper.info(() -> "Release ID {} is owned by user {}", releaseId, username);
         return true;
       }
@@ -106,9 +92,5 @@ public class DiscogsCollectionService {
           e);
     }
     return false;
-  }
-
-  private static boolean isMatchingId(final int releaseId, final Long foundReleaseId) {
-    return foundReleaseId != null && releaseId == foundReleaseId;
   }
 }

@@ -2,7 +2,6 @@ package org.discogs.query.service;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -45,18 +44,20 @@ public class MappingService {
    */
   DiscogsMapResultDTO convertEntriesToMapByTitle(final DiscogsResultDTO discogsResultDTO) {
     Objects.requireNonNull(discogsResultDTO, "DiscogsResultDTO must not be null");
-
     LogHelper.info(() -> "Converting Discogs entries to map by title");
 
-    DiscogsEntryDTO cheapestItem =
-        discogsResultDTO.results().stream()
-            .min(Comparator.comparing(DiscogsEntryDTO::lowestPrice))
-            .orElse(null);
-
-    Map<String, List<DiscogsEntryDTO>> mapOfEntries =
-        discogsResultDTO.results().stream().collect(Collectors.groupingBy(DiscogsEntryDTO::title));
-
-    return new DiscogsMapResultDTO(discogsResultDTO.searchQuery(), mapOfEntries, cheapestItem);
+    // Cache the list of entries to avoid multiple iterations.
+    var entries = discogsResultDTO.results();
+    // Use the teeing collector (Java 12+) to group entries by title and determine the cheapest
+    // entry in one pass.
+    return entries.stream()
+        .collect(
+            Collectors.teeing(
+                Collectors.groupingBy(DiscogsEntryDTO::title),
+                Collectors.minBy(Comparator.comparing(DiscogsEntryDTO::lowestPrice)),
+                (groupMap, minOpt) ->
+                    new DiscogsMapResultDTO(
+                        discogsResultDTO.searchQuery(), groupMap, minOpt.orElse(null))));
   }
 
   /**
@@ -80,7 +81,6 @@ public class MappingService {
       final DiscogsResult discogsResult, final DiscogsQueryDTO discogsQueryDTO) {
     LogHelper.debug(
         () -> "Mapping DiscogsResult to DiscogsResultDTO for query: {}", discogsQueryDTO);
-
     try {
       var resultDTO =
           new DiscogsResultDTO(discogsQueryDTO, convertEntriesToDTOs(discogsResult.getResults()));

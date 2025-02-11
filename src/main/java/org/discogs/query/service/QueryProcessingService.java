@@ -78,21 +78,17 @@ public class QueryProcessingService {
             originalQuery -> {
               List<DiscogsQueryDTO> expandedQueries =
                   checkFormatOfQueryAndGenerateList(originalQuery);
-
+              // Precompute normalized queries once.
               List<DiscogsQueryDTO> normalizedQueries =
                   expandedQueries.stream().map(normalizationService::normalizeQuery).toList();
-
               List<CompletableFuture<DiscogsResultDTO>> futures =
                   createFuturesForQueries(normalizedQueries);
-
               List<DiscogsResultDTO> combinedResults =
                   handleFuturesWithTimeout(futures, timeoutInSeconds);
-
               Set<DiscogsEntryDTO> uniqueResults =
                   combinedResults.stream()
                       .flatMap(result -> result.results().stream())
                       .collect(Collectors.toSet());
-
               queryResultsMap.put(originalQuery, uniqueResults);
             });
 
@@ -132,13 +128,9 @@ public class QueryProcessingService {
                   discogsResultDTO.results().parallelStream()
                       .filter(this::isUKMarketplaceEntry)
                       .toList();
-
-              // Return a new DiscogsResultDTO with the filtered entries
               return new DiscogsResultDTO(discogsResultDTO.searchQuery(), filteredEntries);
             })
-        .filter(
-            discogsResultDTO ->
-                !discogsResultDTO.results().isEmpty()) // Filter out empty result DTOs
+        .filter(discogsResultDTO -> !discogsResultDTO.results().isEmpty())
         .toList();
   }
 
@@ -213,7 +205,7 @@ public class QueryProcessingService {
       return null;
     } catch (final TimeoutException e) {
       LogHelper.warn(() -> "Query processing timed out");
-      future.cancel(true); // Cancel the task if it times out
+      future.cancel(true);
       return null;
     }
   }

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  *
  * <ul>
  *   <li>Removing diacritical marks (accents, etc.) from characters.
- *   <li>Replacing occurrences of " and " with " ampersand".
+ *   <li>Replacing occurrences of " & " with " and ".
  *   <li>Removing apostrophes.
  *   <li>Replacing hyphens with spaces.
  *   <li>Replacing multiple whitespace characters with a single space.
@@ -45,12 +45,10 @@ public class NormalizationService {
     if (input == null) {
       return null;
     }
-
     // Step 1: Remove diacritical marks (accents)
     String cleaned =
         Normalizer.normalize(input, Normalizer.Form.NFD)
             .replaceAll("\\p{InCombiningDiacriticalMarks}", "");
-
     // Step 2: Perform specific character replacements and removals
     for (final Map.Entry<String, String> entry : replacements.entrySet()) {
       cleaned = cleaned.replace(entry.getKey(), entry.getValue());
@@ -70,7 +68,6 @@ public class NormalizationService {
     if (query == null) {
       return null;
     }
-
     return new DiscogsQueryDTO(
         normalizeString(query.artist()),
         normalizeString(query.album()),

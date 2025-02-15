@@ -5,7 +5,7 @@ We take the security of our project seriously. This document outlines the securi
 ## Supported Versions
 
 | Version | Supported          |
-|---------|--------------------|
+| ------- | ------------------ |
 | 1.x.x   | :white_check_mark: |
 | 1.x     | :x:                |
 | < 1.x   | :x:                |
@@ -24,6 +24,7 @@ If you discover a security vulnerability, please help us fix it by following the
 
 3. **Include Details:**  
    Provide as much detail as possible, including:
+
    - A description of the vulnerability
    - Steps to reproduce the issue
    - Impact of the vulnerability

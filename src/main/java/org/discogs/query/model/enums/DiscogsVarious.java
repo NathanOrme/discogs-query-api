@@ -11,12 +11,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum DiscogsVarious {
 
-  /** Represents the string "various." */
-  VARIOUS("various"),
+    /**
+     * Represents the string "various."
+     */
+    VARIOUS("various"),
 
-  /** Represents the string "various artists." */
-  VARIOUS_ARTIST("various artists");
+    /**
+     * Represents the string "various artists."
+     */
+    VARIOUS_ARTIST("various artists");
 
-  /** The name associated with the various artist string. */
-  private final String variousName;
+    /**
+     * The name associated with the various artist string.
+     */
+    private final String variousName;
 }

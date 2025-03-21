@@ -1,7 +1,5 @@
 package org.discogs.query.config;
 
-import java.util.Arrays;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,56 +12,63 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-/** Security Configuration for the Discogs Query application. */
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * Security Configuration for the Discogs Query application.
+ */
 @Configuration
 public class SecurityConfig {
 
-  /** Allowed origins property */
-  @Value("${spring.security.allowed-origins}")
-  private String allowedOriginsProperty;
+    /**
+     * Allowed origins property
+     */
+    @Value("${spring.security.allowed-origins}")
+    private String allowedOriginsProperty;
 
-  /**
-   * Main Security Config
-   *
-   * @return CorsConfigurationSource object
-   */
-  @Bean
-  public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
+    /**
+     * Main Security Config
+     *
+     * @return CorsConfigurationSource object
+     */
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
 
-    // Split the comma-separated string into a list.
-    List<String> allowedOrigins = Arrays.asList(allowedOriginsProperty.split(","));
-    configuration.setAllowedOrigins(allowedOrigins);
+        // Split the comma-separated string into a list.
+        List<String> allowedOrigins = Arrays.asList(allowedOriginsProperty.split(","));
+        configuration.setAllowedOrigins(allowedOrigins);
 
-    configuration.setAllowedMethods(
-        Arrays.asList(
-            HttpMethod.GET.name(),
-            HttpMethod.POST.name(),
-            HttpMethod.PUT.name(),
-            HttpMethod.DELETE.name()));
-    configuration.setAllowCredentials(true);
-    configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowedMethods(
+                Arrays.asList(
+                        HttpMethod.GET.name(),
+                        HttpMethod.POST.name(),
+                        HttpMethod.PUT.name(),
+                        HttpMethod.DELETE.name()));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
 
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-    return source;
-  }
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
-  /**
-   * Security Filter Chain
-   *
-   * @param http HttpSecurity object
-   * @return SecurityFilterChain object
-   * @throws Exception if an error occurs
-   */
-  @Bean
-  public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
-    http.cors()
-        .and()
-        .csrf(AbstractHttpConfigurer::disable)
-        .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
-        .sessionManagement(
-            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-    return http.build();
-  }
+    /**
+     * Security Filter Chain
+     *
+     * @param http HttpSecurity object
+     * @return SecurityFilterChain object
+     * @throws Exception if an error occurs
+     */
+    @Bean
+    public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
+        http.cors()
+                .and()
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
+                .sessionManagement(
+                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        return http.build();
+    }
 }

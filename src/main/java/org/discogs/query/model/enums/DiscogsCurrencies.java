@@ -14,12 +14,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum DiscogsCurrencies {
 
-  /** Represents the British Pound (GBP) currency. */
-  GBP("gbp"),
+    /**
+     * Represents the British Pound (GBP) currency.
+     */
+    GBP("gbp"),
 
-  /** Represents the US Dollar (USD) currency. */
-  USD("usd");
+    /**
+     * Represents the US Dollar (USD) currency.
+     */
+    USD("usd");
 
-  /** The currency code string associated with the enum constant. */
-  private final String currency;
+    /**
+     * The currency code string associated with the enum constant.
+     */
+    private final String currency;
 }

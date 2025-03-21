@@ -1,10 +1,11 @@
 package org.discogs.query.domain.api.release;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * Represents the format of a release, such as CD, vinyl, etc. It also includes descriptions related
@@ -16,12 +17,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Format {
 
-  /** A list of descriptions associated with the format (e.g., "Limited Edition", "Remastered"). */
-  private List<String> descriptions;
+    /**
+     * A list of descriptions associated with the format (e.g., "Limited Edition", "Remastered").
+     */
+    private List<String> descriptions;
 
-  /** The name of the format (e.g., "Vinyl", "CD"). */
-  private String name;
+    /**
+     * The name of the format (e.g., "Vinyl", "CD").
+     */
+    private String name;
 
-  /** The quantity of the format available in the release. */
-  private String qty;
+    /**
+     * The quantity of the format available in the release.
+     */
+    private String qty;
 }

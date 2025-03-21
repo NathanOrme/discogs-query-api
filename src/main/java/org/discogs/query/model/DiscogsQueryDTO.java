@@ -15,11 +15,12 @@ import org.discogs.query.model.enums.DiscogsTypes;
 @CompilationValidation
 @VariousArtistsValidation
 public record DiscogsQueryDTO(
-    @NotBlank String artist,
-    String album,
-    String track,
-    String title,
-    String format,
-    DiscogCountries country,
-    DiscogsTypes types,
-    String barcode) {}
+        @NotBlank String artist,
+        String album,
+        String track,
+        String title,
+        String format,
+        DiscogCountries country,
+        DiscogsTypes types,
+        String barcode) {
+}

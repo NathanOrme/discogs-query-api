@@ -16,12 +16,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAspectJAutoProxy
 public class DiscogsApplication {
 
-  /**
-   * Main method that serves as the entry point for the Spring Boot application.
-   *
-   * @param args command-line arguments passed to the application (if any)
-   */
-  public static void main(final String[] args) {
-    SpringApplication.run(DiscogsApplication.class, args);
-  }
+    /**
+     * Main method that serves as the entry point for the Spring Boot application.
+     *
+     * @param args command-line arguments passed to the application (if any)
+     */
+    public static void main(final String[] args) {
+        SpringApplication.run(DiscogsApplication.class, args);
+    }
 }

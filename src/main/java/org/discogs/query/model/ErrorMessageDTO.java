@@ -7,4 +7,5 @@ package org.discogs.query.model;
  * <p>It includes a single field {@code errorMessage} that stores the details of the error
  * encountered.
  */
-public record ErrorMessageDTO(String errorMessage) {}
+public record ErrorMessageDTO(String errorMessage) {
+}

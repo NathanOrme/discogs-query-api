@@ -9,23 +9,23 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 public class DiscogsMarketplaceException extends RuntimeException {
-  /**
-   * Constructs a new {@link DiscogsMarketplaceException} with the specified detail message.
-   *
-   * @param message the detail message for this exception
-   */
-  public DiscogsMarketplaceException(final String message) {
-    super(message);
-  }
+    /**
+     * Constructs a new {@link DiscogsMarketplaceException} with the specified detail message.
+     *
+     * @param message the detail message for this exception
+     */
+    public DiscogsMarketplaceException(final String message) {
+        super(message);
+    }
 
-  /**
-   * Constructs a new {@link DiscogsMarketplaceException} with the specified detail message and
-   * cause.
-   *
-   * @param message the detail message for this exception
-   * @param e the cause of this exception (a {@link Exception} that triggered this exception)
-   */
-  public DiscogsMarketplaceException(final String message, final Exception e) {
-    super(message, e);
-  }
+    /**
+     * Constructs a new {@link DiscogsMarketplaceException} with the specified detail message and
+     * cause.
+     *
+     * @param message the detail message for this exception
+     * @param e       the cause of this exception (a {@link Exception} that triggered this exception)
+     */
+    public DiscogsMarketplaceException(final String message, final Exception e) {
+        super(message, e);
+    }
 }

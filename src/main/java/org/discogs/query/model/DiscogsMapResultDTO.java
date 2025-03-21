@@ -8,6 +8,7 @@ import java.util.Map;
  * encapsulates a map of {@link DiscogsEntryDTO} objects that match the search criteria.
  */
 public record DiscogsMapResultDTO(
-    DiscogsQueryDTO searchQuery,
-    Map<String, List<DiscogsEntryDTO>> results,
-    DiscogsEntryDTO cheapestItem) {}
+        DiscogsQueryDTO searchQuery,
+        Map<String, List<DiscogsEntryDTO>> results,
+        DiscogsEntryDTO cheapestItem) {
+}

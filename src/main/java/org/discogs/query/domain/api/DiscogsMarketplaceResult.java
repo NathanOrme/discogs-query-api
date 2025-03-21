@@ -23,21 +23,21 @@ import lombok.ToString;
 @AllArgsConstructor
 public class DiscogsMarketplaceResult {
 
-  /**
-   * The lowest price result for an item.
-   *
-   * <p>This field contains details about the lowest price of the item, including the currency and
-   * the value.
-   */
-  @JsonProperty("lowest_price")
-  private DiscogsLowestPriceResult result;
+    /**
+     * The lowest price result for an item.
+     *
+     * <p>This field contains details about the lowest price of the item, including the currency and
+     * the value.
+     */
+    @JsonProperty("lowest_price")
+    private DiscogsLowestPriceResult result;
 
-  /**
-   * The number of items available for sale.
-   *
-   * <p>This field contains the total number of items currently listed for sale in the Discogs
-   * Marketplace.
-   */
-  @JsonProperty("num_for_sale")
-  private Integer numberForSale;
+    /**
+     * The number of items available for sale.
+     *
+     * <p>This field contains the total number of items currently listed for sale in the Discogs
+     * Marketplace.
+     */
+    @JsonProperty("num_for_sale")
+    private Integer numberForSale;
 }

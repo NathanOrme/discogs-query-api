@@ -33,13 +33,10 @@ import org.springframework.http.HttpHeaders;
 @ExtendWith(MockitoExtension.class)
 class DiscogsWebScraperClientImplTest {
 
-  @Mock private HttpConfig httpConfig;
-
-  @Mock private JsoupHelper jsoupHelper;
-
-  @InjectMocks private DiscogsWebScraperClientImpl discogsWebScraperClient;
-
   private final String releaseId = "123456";
+  @Mock private HttpConfig httpConfig;
+  @Mock private JsoupHelper jsoupHelper;
+  @InjectMocks private DiscogsWebScraperClientImpl discogsWebScraperClient;
 
   @BeforeEach
   void setUp() {

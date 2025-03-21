@@ -31,6 +31,38 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 class MappingServiceDiffblueTest {
   @Autowired private MappingService mappingService;
 
+  private static ArrayList<DiscogsResultDTO> getDiscogsResultDTOS(
+      final ArrayList<DiscogsEntryDTO> results) {
+    DiscogsResultDTO discogsResultDTO =
+        new DiscogsResultDTO(
+            new DiscogsQueryDTO(
+                "Artist",
+                "Album",
+                "Track",
+                "Dr",
+                "Format",
+                DiscogCountries.UK,
+                DiscogsTypes.RELEASE,
+                "Barcode"),
+            results);
+
+    ArrayList<DiscogsResultDTO> resultDTOList = new ArrayList<>();
+    resultDTOList.add(discogsResultDTO);
+    DiscogsQueryDTO searchQuery =
+        new DiscogsQueryDTO(
+            "Artist",
+            "Album",
+            "Track",
+            "Dr",
+            "Format",
+            DiscogCountries.UK,
+            DiscogsTypes.RELEASE,
+            "Barcode");
+
+    resultDTOList.add(new DiscogsResultDTO(searchQuery, new ArrayList<>()));
+    return resultDTOList;
+  }
+
   /**
    * Test {@link MappingService#convertEntriesToMapByTitle(DiscogsResultDTO)}.
    *
@@ -134,38 +166,6 @@ class MappingServiceDiffblueTest {
     assertEquals(1, resultsResult.size());
     assertEquals(results, resultsResult.get("Dr"));
     assertSame(discogsEntryDTO, getResult.cheapestItem());
-  }
-
-  private static ArrayList<DiscogsResultDTO> getDiscogsResultDTOS(
-      final ArrayList<DiscogsEntryDTO> results) {
-    DiscogsResultDTO discogsResultDTO =
-        new DiscogsResultDTO(
-            new DiscogsQueryDTO(
-                "Artist",
-                "Album",
-                "Track",
-                "Dr",
-                "Format",
-                DiscogCountries.UK,
-                DiscogsTypes.RELEASE,
-                "Barcode"),
-            results);
-
-    ArrayList<DiscogsResultDTO> resultDTOList = new ArrayList<>();
-    resultDTOList.add(discogsResultDTO);
-    DiscogsQueryDTO searchQuery =
-        new DiscogsQueryDTO(
-            "Artist",
-            "Album",
-            "Track",
-            "Dr",
-            "Format",
-            DiscogCountries.UK,
-            DiscogsTypes.RELEASE,
-            "Barcode");
-
-    resultDTOList.add(new DiscogsResultDTO(searchQuery, new ArrayList<>()));
-    return resultDTOList;
   }
 
   /**

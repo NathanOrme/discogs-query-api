@@ -19,11 +19,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DiscogsCollectionService {
 
-  @Value("${queries.searchCollection}")
-  private boolean searchCollection;
-
   private final DiscogsUrlBuilder discogsUrlBuilder;
   private final DiscogsAPIClient discogsAPIClient;
+
+  @Value("${queries.searchCollection}")
+  private boolean searchCollection;
 
   /**
    * Filters out all results already owned by the username in their Discogs collection.

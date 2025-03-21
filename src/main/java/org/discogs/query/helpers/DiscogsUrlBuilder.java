@@ -58,6 +58,20 @@ public class DiscogsUrlBuilder {
     return uriBuilder.encode().toUriString().replace("%20", "+").replace(" ", "+");
   }
 
+  private static DiscogsQueryDTO generateDTOForSearching(final DiscogsQueryDTO discogsQueryDTO) {
+    String track = discogsQueryDTO.track().replace(" ", "+");
+    String artist = discogsQueryDTO.artist().replace(" ", "+");
+    return new DiscogsQueryDTO(
+        null,
+        discogsQueryDTO.album(),
+        null,
+        artist.concat("+-+").concat(track),
+        discogsQueryDTO.format().replace(" ", "+"),
+        discogsQueryDTO.country(),
+        discogsQueryDTO.types(),
+        discogsQueryDTO.barcode());
+  }
+
   /**
    * Builds the search URL based on the provided query parameters.
    *
@@ -229,19 +243,5 @@ public class DiscogsUrlBuilder {
     compilationSearchUrl = compilationSearchUrl.replace(" ", "+");
     LogHelper.debug(() -> "Generated compilation search URL: {}", compilationSearchUrl);
     return compilationSearchUrl;
-  }
-
-  private static DiscogsQueryDTO generateDTOForSearching(final DiscogsQueryDTO discogsQueryDTO) {
-    String track = discogsQueryDTO.track().replace(" ", "+");
-    String artist = discogsQueryDTO.artist().replace(" ", "+");
-    return new DiscogsQueryDTO(
-        null,
-        discogsQueryDTO.album(),
-        null,
-        artist.concat("+-+").concat(track),
-        discogsQueryDTO.format().replace(" ", "+"),
-        discogsQueryDTO.country(),
-        discogsQueryDTO.types(),
-        discogsQueryDTO.barcode());
   }
 }

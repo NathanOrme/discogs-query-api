@@ -27,55 +27,47 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum DiscogsTypes {
 
-    /**
-     * Represents a "release" resource type in the Discogs API.
-     *
-     * <p>This is the default type used if no specific type is provided.
-     */
-    RELEASE("release"),
+  /**
+   * Represents a "release" resource type in the Discogs API.
+   *
+   * <p>This is the default type used if no specific type is provided.
+   */
+  RELEASE("release"),
 
-    /**
-     * Represents a "master" resource type in the Discogs API.
-     */
-    MASTER("master"),
+  /** Represents a "master" resource type in the Discogs API. */
+  MASTER("master"),
 
-    /**
-     * Represents an "artist" resource type in the Discogs API.
-     */
-    ARTIST("artist"),
+  /** Represents an "artist" resource type in the Discogs API. */
+  ARTIST("artist"),
 
-    /**
-     * Represents a "label" resource type in the Discogs API.
-     */
-    LABEL("label"),
+  /** Represents a "label" resource type in the Discogs API. */
+  LABEL("label"),
 
-    /**
-     * Represents an unknown or unspecified type.
-     *
-     * <p>This type is used when the input type string does not match any defined types.
-     */
-    UNKNOWN("");
+  /**
+   * Represents an unknown or unspecified type.
+   *
+   * <p>This type is used when the input type string does not match any defined types.
+   */
+  UNKNOWN("");
 
-    /**
-     * The type string associated with the enum constant.
-     */
-    private final String type;
+  /** The type string associated with the enum constant. */
+  private final String type;
 
-    /**
-     * Returns the {@link DiscogsTypes} constant associated with the given type string.
-     *
-     * <p>If the type string does not match any defined constant, {@link #UNKNOWN} is returned.
-     *
-     * @param type the type string to match
-     * @return the {@link DiscogsTypes} constant corresponding to the type string, or {@link #UNKNOWN}
-     * if no match is found
-     */
-    public static DiscogsTypes fromString(final String type) {
-        for (final DiscogsTypes t : values()) {
-            if (t.getType().equalsIgnoreCase(type)) {
-                return t;
-            }
-        }
-        return UNKNOWN;
+  /**
+   * Returns the {@link DiscogsTypes} constant associated with the given type string.
+   *
+   * <p>If the type string does not match any defined constant, {@link #UNKNOWN} is returned.
+   *
+   * @param type the type string to match
+   * @return the {@link DiscogsTypes} constant corresponding to the type string, or {@link #UNKNOWN}
+   *     if no match is found
+   */
+  public static DiscogsTypes fromString(final String type) {
+    for (final DiscogsTypes t : values()) {
+      if (t.getType().equalsIgnoreCase(type)) {
+        return t;
+      }
     }
+    return UNKNOWN;
+  }
 }

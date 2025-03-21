@@ -11,14 +11,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Artist {
-    private String anv;
-    private int id;
-    private String join;
-    private String name;
+  private String anv;
+  private int id;
+  private String join;
+  private String name;
 
-    @JsonProperty("resource_url")
-    private String resourceUrl;
+  @JsonProperty("resource_url")
+  private String resourceUrl;
 
-    private String role;
-    private String tracks;
+  private String role;
+  private String tracks;
 }

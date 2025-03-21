@@ -7,9 +7,9 @@ package org.discogs.query.interfaces;
  */
 public interface RateLimiterService {
 
-    /**
-     * Waits for the rate limiter to allow a request to proceed. This method blocks until the rate
-     * limiter permits a request.
-     */
-    void waitForRateLimit();
+  /**
+   * Waits for the rate limiter to allow a request to proceed. This method blocks until the rate
+   * limiter permits a request.
+   */
+  void waitForRateLimit();
 }

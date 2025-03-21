@@ -16,30 +16,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Label {
 
-    /**
-     * The catalog number assigned to the release by the label.
-     */
-    private String catno;
+  /** The catalog number assigned to the release by the label. */
+  private String catno;
 
-    /**
-     * The type of entity the label represents (e.g., "Label", "Company").
-     */
-    @JsonProperty("entity_type")
-    private String entityType;
+  /** The type of entity the label represents (e.g., "Label", "Company"). */
+  @JsonProperty("entity_type")
+  private String entityType;
 
-    /**
-     * The unique identifier of the label.
-     */
-    private int id;
+  /** The unique identifier of the label. */
+  private int id;
 
-    /**
-     * The name of the label.
-     */
-    private String name;
+  /** The name of the label. */
+  private String name;
 
-    /**
-     * The resource URL pointing to the label's page on Discogs.
-     */
-    @JsonProperty("resource_url")
-    private String resourceUrl;
+  /** The resource URL pointing to the label's page on Discogs. */
+  @JsonProperty("resource_url")
+  private String resourceUrl;
 }

@@ -28,24 +28,24 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class JacksonConfig {
 
-    /**
-     * Creates and configures an {@link ObjectMapper} bean with custom deserialization settings.
-     *
-     * <p>This method initializes an {@link ObjectMapper} and configures it with a {@link
-     * SimpleModule} that includes custom deserializers for {@link DiscogsTypes} and {@link
-     * DiscogsFormats}. The deserializers handle the conversion of JSON strings to their respective
-     * enum values.
-     *
-     * @return a configured {@link ObjectMapper} instance with the custom deserializers registered
-     */
-    @Bean
-    public ObjectMapper objectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        module.addDeserializer(DiscogsTypes.class, new DiscogsTypesDeserializer());
-        module.addDeserializer(DiscogsFormats.class, new DiscogsFormatsDeserializer());
-        module.addDeserializer(DiscogCountries.class, new DiscogsCountryDeserializer());
-        mapper.registerModule(module);
-        return mapper;
-    }
+  /**
+   * Creates and configures an {@link ObjectMapper} bean with custom deserialization settings.
+   *
+   * <p>This method initializes an {@link ObjectMapper} and configures it with a {@link
+   * SimpleModule} that includes custom deserializers for {@link DiscogsTypes} and {@link
+   * DiscogsFormats}. The deserializers handle the conversion of JSON strings to their respective
+   * enum values.
+   *
+   * @return a configured {@link ObjectMapper} instance with the custom deserializers registered
+   */
+  @Bean
+  public ObjectMapper objectMapper() {
+    ObjectMapper mapper = new ObjectMapper();
+    SimpleModule module = new SimpleModule();
+    module.addDeserializer(DiscogsTypes.class, new DiscogsTypesDeserializer());
+    module.addDeserializer(DiscogsFormats.class, new DiscogsFormatsDeserializer());
+    module.addDeserializer(DiscogCountries.class, new DiscogsCountryDeserializer());
+    mapper.registerModule(module);
+    return mapper;
+  }
 }

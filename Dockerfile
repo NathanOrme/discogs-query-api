@@ -18,7 +18,7 @@ RUN npm run build
 
 
 # Stage 2: Build the backend
-FROM maven:3-amazoncorretto-21 AS backend-builder
+FROM maven:3-amazoncorretto-24 AS backend-builder
 
 # Set the working directory for the backend build
 WORKDIR /app/backend

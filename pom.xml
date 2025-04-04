@@ -18,12 +18,13 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>21</java.version>
+        <java.version>24</java.version>
         <junit-jupiter.version>5.12.1</junit-jupiter.version>
         <frontend-src-dir>${project.basedir}/src/main/frontend</frontend-src-dir>
         <node.version>v20.9.0</node.version>
         <yarn.version>v1.22.22</yarn.version>
         <frontend-maven-plugin.version>1.7.6</frontend-maven-plugin.version>
+        <lombok.version>1.18.38</lombok.version>
     </properties>
 
     <dependencyManagement>
@@ -227,6 +228,13 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>

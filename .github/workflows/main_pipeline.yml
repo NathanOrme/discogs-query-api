@@ -109,11 +109,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Set up JDK 21
+      - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
-          distribution: 'temurin'
+          java-version: '24'
+          distribution: 'corretto'
           cache: maven
 
       - name: Set Version With Maven

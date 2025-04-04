@@ -18,7 +18,7 @@ RUN npm run build
 
 
 # Stage 2: Build the backend
-FROM maven:3-amazoncorretto-21 AS backend-builder
+FROM maven:3-amazoncorretto-24 AS backend-builder
 
 # Set the working directory for the backend build
 WORKDIR /app/backend
@@ -36,17 +36,23 @@ COPY src ./src
 RUN mvn clean package -DskipTests --no-transfer-progress
 
 
-# Stage 3: Create a lightweight runtime image
-FROM node:23-alpine AS runtime
+# Stage 3: Create a lightweight runtime image using Amazon Corretto 24
+FROM amazoncorretto:24 AS runtime
 
 # Set the working directory for the runtime environment
 WORKDIR /app
 
-# Install OpenJDK and serve globally, clean up package manager cache
-RUN apk add --no-cache openjdk21 && npm install -g serve
+# Install Node.js (v23) and Yarn, then install the "serve" package globally using yum
+RUN yum update -y && \
+    yum install -y --allowerasing curl gnupg2 && \
+    curl -fsSL https://rpm.nodesource.com/setup_23.x | bash - && \
+    yum install -y --allowerasing nodejs && \
+    npm install -g yarn && \
+    yarn global add serve && \
+    yum clean all
 
-# Create a non-root user for running the app
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+# Create a non-root user for running the app using groupadd and useradd
+RUN groupadd -r appgroup && useradd -r -g appgroup appuser
 USER appuser
 
 # Copy the built JAR file from the backend builder stage

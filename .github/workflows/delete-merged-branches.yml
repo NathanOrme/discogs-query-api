@@ -1,0 +1,72 @@
+name: Delete Merged Branches via GitHub API
+
+on:
+  schedule:
+    - cron: "0 0 * * *"   # Runs at midnight UTC every day; adjust as needed.
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gh
+
+      - name: Check GitHub CLI Authentication
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh auth status || echo "Authentication check returned a non-zero exit code, proceeding as GITHUB_TOKEN is active."
+
+      - name: Get list of merged PR branches
+        id: get_branches
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Fetching head branch names for merged pull requests..."
+          merged_branches=$(gh pr list --state merged --json headRefName --jq '.[].headRefName')
+          echo "Merged branch list:"
+          echo "$merged_branches"
+          # Write the multi-line value to the $GITHUB_OUTPUT file.
+          {
+            echo "branches<<EOF"
+            echo "$merged_branches"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+      - name: Delete merged branches
+        env:
+          PROTECTED_BRANCHES: "main develop"  # List branches you don't want to delete.
+        run: |
+          # Retrieve the output containing multi-line branch names.
+          branches="${{ steps.get_branches.outputs.branches }}"
+          echo "Raw branch output:"
+          echo "$branches"
+          
+          echo "Processing branches:"
+          echo "$branches" | while IFS= read -r branch; do
+            # Skip empty lines.
+            [ -z "$branch" ] && continue
+            
+            # Check against protected branches.
+            for protected in $PROTECTED_BRANCHES; do
+              if [ "$branch" = "$protected" ]; then
+                echo "Skipping protected branch: $branch"
+                continue 2
+              fi
+            done
+      
+            echo "Deleting merged branch: $branch"
+            if git push origin --delete "$branch"; then
+              echo "Successfully deleted: $branch"
+            else
+              echo "Failed to delete: $branch"
+            fi
+          done

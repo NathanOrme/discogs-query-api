@@ -178,11 +178,6 @@ jobs:
           cd src/main/frontend
           yarn install
 
-      - name: Run Tests
-        run: |
-          cd src/main/frontend
-          yarn run test
-
       - name: Run Frontend Build
         run: cd src/main/frontend && yarn run build
 

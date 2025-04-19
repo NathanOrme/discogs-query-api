@@ -19,7 +19,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
   onCheapestItemsChange,
 }) => {
   const [loading, setLoading] = useState(false);
-  const [username, setUsername] = useState(''); // New username state
+  const [username, setUsername] = useState('');
 
   const getApiUrl = (): string => {
     if (typeof window === 'undefined') {
@@ -28,8 +28,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
     const hostname = window.location.hostname;
     const urlMapping: Record<string, string> = {
       netlify: 'https://discogs-query-api.onrender.com/discogs-query/search',
-      'rgbnathan-discogs-api':
-        'https://discogs-query-api.onrender.com/discogs-query/search',
+      'rgbnathan-discogs-api': 'https://discogs-query-api.onrender.com/discogs-query/search',
     };
 
     for (const [key, url] of Object.entries(urlMapping)) {
@@ -41,50 +40,46 @@ const SearchForm: React.FC<SearchFormProps> = ({
     return 'http://localhost:9090/discogs-query/search';
   };
 
-  const handleSearchFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSearchFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
 
     const apiUrl = getApiUrl();
     const payload = {
-      username: username || undefined, // Only include username if provided
-      queries: queries,
+      username: username || undefined,
+      queries,
     };
 
-    fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          return response.text().then((errorMessage) => {
-            throw new Error(
-              `Server responded with status ${response.status}: ${errorMessage}`
-            );
-          });
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setResponse(data);
-        if (Array.isArray(data) && data.length > 0) {
-          const cheapestItemsList = data
-            .map((result: any) => result.cheapestItem)
-            .filter((item: any) => item !== null);
-          onCheapestItemsChange(cheapestItemsList);
-        } else {
-          onCheapestItemsChange([]);
-        }
-      })
-      .catch((error: any) => {
-        console.error('Error:', error);
-      })
-      .finally(() => {
-        setLoading(false);
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
       });
+
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(`Server responded with status ${response.status}: ${errorMessage}`);
+      }
+
+      const data = await response.json();
+      setResponse(data);
+
+      if (Array.isArray(data) && data.length > 0) {
+        const cheapestItemsList = data
+          .map((result: any) => result.cheapestItem)
+          .filter((item: any) => item !== null);
+        onCheapestItemsChange(cheapestItemsList);
+      } else {
+        onCheapestItemsChange([]);
+      }
+    } catch (error: any) {
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -93,9 +88,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
         type="text"
         placeholder="Enter your username"
         value={username}
-        onChange={(e) => {
-          setUsername(e.target.value);
-        }} // Update username state
+        onChange={(e) => setUsername(e.target.value)} // Update username state
       />
       <button type="submit" disabled={loading}>
         {loading ? 'Loading...' : 'Search'}

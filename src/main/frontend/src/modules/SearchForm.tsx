@@ -28,7 +28,8 @@ const SearchForm: React.FC<SearchFormProps> = ({
     const hostname = window.location.hostname;
     const urlMapping: Record<string, string> = {
       netlify: 'https://discogs-query-api.onrender.com/discogs-query/search',
-      'rgbnathan-discogs-api': 'https://discogs-query-api.onrender.com/discogs-query/search',
+      'rgbnathan-discogs-api':
+        'https://discogs-query-api.onrender.com/discogs-query/search',
     };
 
     for (const [key, url] of Object.entries(urlMapping)) {
@@ -61,7 +62,9 @@ const SearchForm: React.FC<SearchFormProps> = ({
 
       if (!response.ok) {
         const errorMessage = await response.text();
-        throw new Error(`Server responded with status ${response.status}: ${errorMessage}`);
+        throw new Error(
+          `Server responded with status ${response.status}: ${errorMessage}`
+        );
       }
 
       const data = await response.json();

@@ -14,12 +14,14 @@ interface SearchFormProps {
   }>;
   setResponse: (response: any) => void;
   onCheapestItemsChange: (cheapestItems: Array<any>) => void;
+  onStepComplete?: () => void;
 }
 
 const SearchForm: React.FC<SearchFormProps> = ({
   queries,
   setResponse,
   onCheapestItemsChange,
+  onStepComplete,
 }) => {
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState('');
@@ -81,6 +83,8 @@ const SearchForm: React.FC<SearchFormProps> = ({
       } else {
         onCheapestItemsChange([]);
       }
+      // Advance to next step if provided
+      onStepComplete?.();
     } catch (error: any) {
       console.error('Error:', error);
     } finally {

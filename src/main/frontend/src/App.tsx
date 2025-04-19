@@ -1,97 +1,72 @@
 // src/App.tsx
 
 import React, { useState, useCallback } from 'react';
-import './css/base.css';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import InstructionAccordion from './modules/InstructionAccordion';
 import QueryFields from './modules/QueryFields';
 import SearchForm from './modules/SearchForm';
-import DarkModeToggle from './modules/DarkModeToggle';
 import CheapestItem from './modules/CheapestItem';
 import Results from './modules/Results';
+import HeroBanner from './modules/HeroBanner';
 import { Query, QueryResult } from './modules/types';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import Button from '@mui/material/Button';
 
 const App: React.FC = () => {
   const [queries, setQueries] = useState<Query[]>([{ id: 1 }]);
   const [cheapestItems, setCheapestItems] = useState<any[]>([]);
   const [response, setResponse] = useState<QueryResult[]>([]);
+  const steps = ['Queries', 'Search', 'Results', 'Cheapest Items'];
+  const [activeStep, setActiveStep] = useState<number>(0);
+  const handleNext = () =>
+    setActiveStep((prev) => Math.min(prev + 1, steps.length - 1));
+  const handleBack = () => setActiveStep((prev) => Math.max(prev - 1, 0));
 
   const handleQueriesChange = useCallback((newQueries: Query[]) => {
     setQueries(newQueries);
   }, []);
 
   return (
-    <div className="App">
-      <header>
-        <h1>Discogs Query App</h1>
-        <DarkModeToggle />
-        <div className="instructions">
-          <h2>How to Use This Search Tool</h2>
-          <p>
-            This tool allows you to search for music releases from the Discogs
-            database. It will filter the results to show any that are sold in
-            the UK.
-          </p>
-          <p>Follow these steps to get started:</p>
-          <p>
-            <strong>
-              Note that you must supply at least the barcode or the artist
-            </strong>
-          </p>
-          <ol>
-            <li>
-              <strong>Barcode: </strong>Enter the barcode for the product you
-              are searching for.
-            </li>
-            <li>
-              <strong>Artist:</strong> Enter the name of the artist you are
-              searching for.
-            </li>
-            <li>
-              <strong>Track:</strong> Enter the name of the track. This is
-              optional, so you can leave it blank if not needed.
-            </li>
-            <li>
-              <strong>Album:</strong> Enter the name of the Album. This is
-              optional, so you can leave it blank if not needed.
-            </li>
-            <li>
-              <strong>Format:</strong> Select the format of the release (e.g.,
-              Vinyl, Compilation). This is optional.
-            </li>
-            <li>
-              Click the <strong>Add Another Query</strong> button to add more
-              search criteria. Each query will be processed separately.
-            </li>
-            <li>
-              Add your <strong>Username</strong> to the search, if your Discogs
-              collection is public, so that the API can cross reference it.
-            </li>
-            <li>
-              Click the <strong>Search</strong> button to submit your queries
-              and see the results.
-            </li>
-          </ol>
-        </div>
-      </header>
-      <main>
-        <div className="query-section">
+    <Container maxWidth="md" sx={{ py: 4 }}>
+      <HeroBanner />
+      <Box sx={{ my: 2 }}>
+        <InstructionAccordion />
+      </Box>
+      <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 3 }}>
+        {steps.map((label) => (
+          <Step key={label}>
+            <StepLabel>{label}</StepLabel>
+          </Step>
+        ))}
+      </Stepper>
+      <Box>
+        {activeStep === 0 && (
           <QueryFields onQueriesChange={handleQueriesChange} />
-        </div>
-        <div className="results-section">
+        )}
+        {activeStep === 1 && (
           <SearchForm
             queries={queries}
             setResponse={setResponse}
             onCheapestItemsChange={setCheapestItems}
+            onStepComplete={handleNext}
           />
-          {response.length > 0 && <Results response={response} />}
-        </div>
-        <div className="cheapest-item-section">
-          <CheapestItem items={cheapestItems} />
-        </div>
-        <div id="loading" style={{ display: 'none' }}>
-          Loading...
-        </div>
-      </main>
-    </div>
+        )}
+        {activeStep === 2 && <Results response={response} />}
+        {activeStep === 3 && <CheapestItem items={cheapestItems} />}
+      </Box>
+      <Box sx={{ display: 'flex', pt: 2 }}>
+        <Button disabled={activeStep === 0} onClick={handleBack}>
+          Back
+        </Button>
+        <Box sx={{ flex: '1 1 auto' }} />
+        <Button disabled={activeStep === steps.length - 1} onClick={handleNext}>
+          Next
+        </Button>
+      </Box>
+    </Container>
   );
 };
 

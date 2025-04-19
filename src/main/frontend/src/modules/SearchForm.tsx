@@ -1,4 +1,7 @@
 import React, { useState, FormEvent } from 'react';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 interface SearchFormProps {
   queries: Array<{
@@ -11,12 +14,14 @@ interface SearchFormProps {
   }>;
   setResponse: (response: any) => void;
   onCheapestItemsChange: (cheapestItems: Array<any>) => void;
+  onStepComplete?: () => void;
 }
 
 const SearchForm: React.FC<SearchFormProps> = ({
   queries,
   setResponse,
   onCheapestItemsChange,
+  onStepComplete,
 }) => {
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState('');
@@ -78,6 +83,8 @@ const SearchForm: React.FC<SearchFormProps> = ({
       } else {
         onCheapestItemsChange([]);
       }
+      // Advance to next step if provided
+      onStepComplete?.();
     } catch (error: any) {
       console.error('Error:', error);
     } finally {
@@ -86,17 +93,22 @@ const SearchForm: React.FC<SearchFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSearchFormSubmit}>
-      <input
-        type="text"
-        placeholder="Enter your username"
+    <Box
+      component="form"
+      onSubmit={handleSearchFormSubmit}
+      sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+    >
+      <TextField
+        label="Username"
         value={username}
-        onChange={(e) => setUsername(e.target.value)} // Update username state
+        onChange={(e) => setUsername(e.target.value)}
+        variant="outlined"
+        size="small"
       />
-      <button type="submit" disabled={loading}>
+      <Button variant="contained" type="submit" disabled={loading}>
         {loading ? 'Loading...' : 'Search'}
-      </button>
-    </form>
+      </Button>
+    </Box>
   );
 };
 

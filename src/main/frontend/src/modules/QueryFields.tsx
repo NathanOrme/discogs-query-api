@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { Query, QueryFieldsProps } from './queryFields/QueryFieldsTypes';
 import { renderQueryFields } from './queryFields/QueryFieldsRenderer';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
 /**
  * QueryFields component allows users to input multiple queries for searching Discogs.
@@ -51,7 +53,10 @@ const QueryFields: React.FC<QueryFieldsProps> = ({ onQueriesChange }) => {
   };
 
   return (
-    <form>
+    <Box
+      component="form"
+      sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+    >
       {queries.map((query, index) =>
         renderQueryFields(
           query,
@@ -61,10 +66,15 @@ const QueryFields: React.FC<QueryFieldsProps> = ({ onQueriesChange }) => {
           queries.length
         )
       )}
-      <button type="button" onClick={addQuery}>
+      <Button
+        variant="contained"
+        type="button"
+        onClick={addQuery}
+        sx={{ alignSelf: 'flex-start' }}
+      >
         Add Another Query
-      </button>
-    </form>
+      </Button>
+    </Box>
   );
 };
 

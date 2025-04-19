@@ -1,4 +1,7 @@
 import React, { useState, FormEvent } from 'react';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 interface SearchFormProps {
   queries: Array<{
@@ -86,17 +89,18 @@ const SearchForm: React.FC<SearchFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSearchFormSubmit}>
-      <input
-        type="text"
-        placeholder="Enter your username"
+    <Box component="form" onSubmit={handleSearchFormSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <TextField
+        label="Username"
         value={username}
-        onChange={(e) => setUsername(e.target.value)} // Update username state
+        onChange={(e) => setUsername(e.target.value)}
+        variant="outlined"
+        size="small"
       />
-      <button type="submit" disabled={loading}>
+      <Button variant="contained" type="submit" disabled={loading}>
         {loading ? 'Loading...' : 'Search'}
-      </button>
-    </form>
+      </Button>
+    </Box>
   );
 };
 

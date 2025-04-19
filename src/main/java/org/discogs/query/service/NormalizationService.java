@@ -34,7 +34,8 @@ public class NormalizationService {
           "*", "",
           "!", "");
 
-  private static final Pattern DIACRITICAL_PATTERN = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+  private static final Pattern DIACRITICAL_PATTERN =
+      Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
   private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s+");
 
   /**

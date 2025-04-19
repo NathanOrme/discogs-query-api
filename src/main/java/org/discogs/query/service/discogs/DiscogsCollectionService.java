@@ -39,20 +39,20 @@ public class DiscogsCollectionService {
       return entries;
     }
     return entries.stream()
-        .map(entry -> {
-          List<DiscogsEntryDTO> filtered =
-              Optional.ofNullable(entry.results())
-                  .orElse(List.of())
-                  .stream()
-                  .filter(release -> !isReleaseOwnedByUser(username, release.id()))
-                  .toList();
-          if (filtered.isEmpty()) {
-            LogHelper.warn(() -> "Skipping entry {}: no remaining results", entry.searchQuery());
-          } else {
-            LogHelper.info(() -> "Filtered results for {}: {}", entry.searchQuery(), filtered);
-          }
-          return new DiscogsResultDTO(entry.searchQuery(), filtered);
-        })
+        .map(
+            entry -> {
+              List<DiscogsEntryDTO> filtered =
+                  Optional.ofNullable(entry.results()).orElse(List.of()).stream()
+                      .filter(release -> !isReleaseOwnedByUser(username, release.id()))
+                      .toList();
+              if (filtered.isEmpty()) {
+                LogHelper.warn(
+                    () -> "Skipping entry {}: no remaining results", entry.searchQuery());
+              } else {
+                LogHelper.info(() -> "Filtered results for {}: {}", entry.searchQuery(), filtered);
+              }
+              return new DiscogsResultDTO(entry.searchQuery(), filtered);
+            })
         .toList();
   }
 

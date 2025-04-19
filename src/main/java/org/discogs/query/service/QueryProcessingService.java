@@ -77,9 +77,7 @@ public class QueryProcessingService {
                   List<DiscogsQueryDTO> expandedQueries =
                       checkFormatOfQueryAndGenerateList(originalQuery);
                   List<DiscogsQueryDTO> normalizedQueries =
-                      expandedQueries.stream()
-                          .map(normalizationService::normalizeQuery)
-                          .toList();
+                      expandedQueries.stream().map(normalizationService::normalizeQuery).toList();
                   List<CompletableFuture<DiscogsResultDTO>> futures =
                       createFuturesForQueries(normalizedQueries);
                   List<DiscogsResultDTO> combinedResults =

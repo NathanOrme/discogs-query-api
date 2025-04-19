@@ -3,9 +3,7 @@ package org.discogs.query.service;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -71,30 +69,27 @@ public class QueryProcessingService {
    */
   public List<DiscogsResultDTO> processQueries(
       final DiscogsRequestDTO discogsRequestDTO, final long timeoutInSeconds) {
-    Map<DiscogsQueryDTO, Set<DiscogsEntryDTO>> queryResultsMap = new HashMap<>();
-
-    discogsRequestDTO.queries().parallelStream()
-        .forEach(
-            originalQuery -> {
-              List<DiscogsQueryDTO> expandedQueries =
-                  checkFormatOfQueryAndGenerateList(originalQuery);
-              // Precompute normalized queries once.
-              List<DiscogsQueryDTO> normalizedQueries =
-                  expandedQueries.stream().map(normalizationService::normalizeQuery).toList();
-              List<CompletableFuture<DiscogsResultDTO>> futures =
-                  createFuturesForQueries(normalizedQueries);
-              List<DiscogsResultDTO> combinedResults =
-                  handleFuturesWithTimeout(futures, timeoutInSeconds);
-              Set<DiscogsEntryDTO> uniqueResults =
-                  combinedResults.stream()
-                      .flatMap(result -> result.results().stream())
-                      .collect(Collectors.toSet());
-              queryResultsMap.put(originalQuery, uniqueResults);
-            });
-
+    // Process each original query in parallel and collect unique results
     List<DiscogsResultDTO> discogsResultDTOS =
-        queryResultsMap.entrySet().stream()
-            .map(entry -> new DiscogsResultDTO(entry.getKey(), new ArrayList<>(entry.getValue())))
+        discogsRequestDTO.queries().parallelStream()
+            .map(
+                originalQuery -> {
+                  List<DiscogsQueryDTO> expandedQueries =
+                      checkFormatOfQueryAndGenerateList(originalQuery);
+                  List<DiscogsQueryDTO> normalizedQueries =
+                      expandedQueries.stream()
+                          .map(normalizationService::normalizeQuery)
+                          .toList();
+                  List<CompletableFuture<DiscogsResultDTO>> futures =
+                      createFuturesForQueries(normalizedQueries);
+                  List<DiscogsResultDTO> combinedResults =
+                      handleFuturesWithTimeout(futures, timeoutInSeconds);
+                  Set<DiscogsEntryDTO> uniqueResults =
+                      combinedResults.stream()
+                          .flatMap(result -> result.results().stream())
+                          .collect(Collectors.toSet());
+                  return new DiscogsResultDTO(originalQuery, new ArrayList<>(uniqueResults));
+                })
             .toList();
 
     if (discogsRequestDTO.username() != null && !discogsRequestDTO.username().isBlank()) {

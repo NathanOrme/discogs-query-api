@@ -2,6 +2,8 @@ package org.discogs.query.client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.config.HttpConfig;
@@ -88,14 +90,11 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
   }
 
   private List<DiscogsWebsiteResult> processListings(final Elements listings) {
-    List<DiscogsWebsiteResult> results = new ArrayList<>();
-    for (final Element listing : listings) {
-      DiscogsWebsiteResult result = extractResultFromListing(listing);
-      if (result != null) {
-        results.add(result);
-      }
-    }
-    return results;
+    // Process listings in parallel, filtering out null results
+    return listings.parallelStream()
+        .map(this::extractResultFromListing)
+        .filter(Objects::nonNull)
+        .collect(Collectors.toList());
   }
 
   /**

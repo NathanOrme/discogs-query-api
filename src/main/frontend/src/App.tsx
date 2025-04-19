@@ -3,7 +3,6 @@
 import React, { useState, useCallback } from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import Header from './modules/Header';
 import InstructionAccordion from './modules/InstructionAccordion';
 import QueryFields from './modules/QueryFields';
 import SearchForm from './modules/SearchForm';
@@ -32,7 +31,6 @@ const App: React.FC = () => {
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
       <HeroBanner />
-      <Header />
       <Box sx={{ my: 2 }}>
         <InstructionAccordion />
       </Box>

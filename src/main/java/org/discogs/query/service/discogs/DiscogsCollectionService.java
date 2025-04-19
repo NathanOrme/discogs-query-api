@@ -1,6 +1,5 @@
 package org.discogs.query.service.discogs;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -33,33 +32,28 @@ public class DiscogsCollectionService {
    */
   public List<DiscogsResultDTO> filterOwnedReleases(
       final String username, final List<DiscogsResultDTO> entries) {
-    if (!searchCollection) {
-      return entries;
-    }
-    if (entries == null || entries.isEmpty()) {
-      LogHelper.warn(() -> "No entries provided for filtering.");
-      return entries;
-    }
-
-    // Create a mutable copy of the list if it's immutable
-    List<DiscogsResultDTO> mutableEntries = new ArrayList<>(entries);
-
-    for (int i = 0; i < mutableEntries.size(); i++) {
-      final DiscogsResultDTO entry = mutableEntries.get(i);
-      if (entry.results() == null || entry.results().isEmpty()) {
-        LogHelper.warn(() -> "Skipping empty results for entry: {}", entry.searchQuery());
-        continue;
+    if (!searchCollection || entries == null || entries.isEmpty()) {
+      if (entries == null || entries.isEmpty()) {
+        LogHelper.warn(() -> "No entries provided for filtering.");
       }
-      List<DiscogsEntryDTO> filteredResults =
-          entry.results().stream()
-              .filter(release -> !isReleaseOwnedByUser(username, release.id()))
-              .toList();
-      LogHelper.info(() -> "Updating entry with filtered results: {}", filteredResults);
-      mutableEntries.set(i, new DiscogsResultDTO(entry.searchQuery(), filteredResults));
-      LogHelper.info(() -> "Filtered results for Result: {}", filteredResults);
+      return entries;
     }
-
-    return mutableEntries;
+    return entries.stream()
+        .map(
+            entry -> {
+              List<DiscogsEntryDTO> filtered =
+                  Optional.ofNullable(entry.results()).orElse(List.of()).stream()
+                      .filter(release -> !isReleaseOwnedByUser(username, release.id()))
+                      .toList();
+              if (filtered.isEmpty()) {
+                LogHelper.warn(
+                    () -> "Skipping entry {}: no remaining results", entry.searchQuery());
+              } else {
+                LogHelper.info(() -> "Filtered results for {}: {}", entry.searchQuery(), filtered);
+              }
+              return new DiscogsResultDTO(entry.searchQuery(), filtered);
+            })
+        .toList();
   }
 
   /**

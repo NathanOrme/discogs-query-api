@@ -1,6 +1,7 @@
 package org.discogs.query.service;
 
 import java.util.List;
+import java.util.Objects;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +16,10 @@ public class ResultCalculationService {
    * @return the total number of results
    */
   public int calculateSizeOfResults(final List<DiscogsResultDTO> resultDTOList) {
-    return resultDTOList.parallelStream()
-        .filter(discogsResultDTO -> discogsResultDTO.results() != null)
-        .mapToInt(discogsResultDTO -> discogsResultDTO.results().size())
+    return resultDTOList.stream()
+        .map(DiscogsResultDTO::results)
+        .filter(Objects::nonNull)
+        .mapToInt(List::size)
         .sum();
   }
 }

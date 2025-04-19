@@ -67,7 +67,7 @@ public class MappingService {
    * @return a list of {@link DiscogsMapResultDTO}
    */
   public List<DiscogsMapResultDTO> mapResultsToDTO(final List<DiscogsResultDTO> resultDTOList) {
-    return resultDTOList.parallelStream().map(this::convertEntriesToMapByTitle).toList();
+    return resultDTOList.stream().map(this::convertEntriesToMapByTitle).toList();
   }
 
   /**
@@ -96,6 +96,6 @@ public class MappingService {
   }
 
   private List<DiscogsEntryDTO> convertEntriesToDTOs(final List<DiscogsEntry> entries) {
-    return entries.parallelStream().map(MappingService::convertEntryToEntryDTO).toList();
+    return entries.stream().map(MappingService::convertEntryToEntryDTO).toList();
   }
 }

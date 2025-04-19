@@ -2,6 +2,7 @@ package org.discogs.query.service;
 
 import java.text.Normalizer;
 import java.util.Map;
+import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,9 @@ public class NormalizationService {
           "*", "",
           "!", "");
 
+  private static final Pattern DIACRITICAL_PATTERN = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+  private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s+");
+
   /**
    * Normalizes the input string by: - Removing diacritical marks (e.g., accents) - Removing forward
    * and backward slashes and other specific characters as per requirements - Trimming whitespace at
@@ -46,14 +50,13 @@ public class NormalizationService {
       return null;
     }
     // Step 1: Remove diacritical marks (accents)
-    String cleaned =
-        Normalizer.normalize(input, Normalizer.Form.NFD)
-            .replaceAll("\\p{InCombiningDiacriticalMarks}", "");
+    String cleaned = Normalizer.normalize(input, Normalizer.Form.NFD);
+    cleaned = DIACRITICAL_PATTERN.matcher(cleaned).replaceAll("");
     // Step 2: Perform specific character replacements and removals
     for (final Map.Entry<String, String> entry : replacements.entrySet()) {
       cleaned = cleaned.replace(entry.getKey(), entry.getValue());
     }
-    cleaned = cleaned.replaceAll("\\s+", " ").trim();
+    cleaned = WHITESPACE_PATTERN.matcher(cleaned).replaceAll(" ").trim();
     return cleaned;
   }
 

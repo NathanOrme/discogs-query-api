@@ -19,10 +19,22 @@ export const renderQueryFields = (
   queryCount: number
 ) => (
   <Box key={index} sx={{ border: 1, borderRadius: 1, p: 2, mb: 2 }}>
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        mb: 1,
+      }}
+    >
       <span>Query {index + 1}</span>
       {queryCount > 1 && (
-        <Button variant="outlined" color="error" size="small" onClick={() => removeQuery(index)}>
+        <Button
+          variant="outlined"
+          color="error"
+          size="small"
+          onClick={() => removeQuery(index)}
+        >
           Remove
         </Button>
       )}

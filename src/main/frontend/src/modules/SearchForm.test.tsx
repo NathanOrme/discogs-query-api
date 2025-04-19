@@ -20,6 +20,8 @@ test('renders search form and search button', () => {
       onCheapestItemsChange={mockOnCheapestItemsChange}
     />
   );
-  expect(screen.getByRole('textbox', { name: /Username/i })).toBeInTheDocument();
+  expect(
+    screen.getByRole('textbox', { name: /Username/i })
+  ).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /Search/i })).toBeInTheDocument();
 });

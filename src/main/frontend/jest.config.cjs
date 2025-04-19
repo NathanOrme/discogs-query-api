@@ -1,5 +1,4 @@
-// jest.config.js
-export default {
+module.exports = {
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   transform: {
@@ -9,4 +8,4 @@ export default {
   moduleNameMapper: {
     '^.+\\.(css|scss|sass)$': 'identity-obj-proxy'
   }
-}
+};

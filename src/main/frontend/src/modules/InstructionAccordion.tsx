@@ -1,12 +1,6 @@
 import React from 'react';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
+import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const steps = [
   { label: 'Barcode', description: 'Enter the barcode for the product you are searching for.' },
@@ -19,21 +13,18 @@ const steps = [
   { label: 'Search', description: 'Click "Search" to submit your queries and view results.' },
 ];
 
+// Simplified step rendering without MUI List for reliable tests
+// Removed List, ListItem, ListItemText to directly render with Typography
 const InstructionAccordion: React.FC = () => (
-  <Accordion defaultExpanded>
-    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-      <Typography variant="h6">How to Use This Search Tool</Typography>
-    </AccordionSummary>
-    <AccordionDetails>
-      <List>
-        {steps.map(step => (
-          <ListItem key={step.label} divider>
-            <ListItemText primary={step.label} secondary={step.description} />
-          </ListItem>
-        ))}
-      </List>
-    </AccordionDetails>
-  </Accordion>
+  <Box sx={{ my: 2 }}>
+    <Typography variant="h6">How to Use This Search Tool</Typography>
+    {steps.map(step => (
+      <Box key={step.label} sx={{ my: 1 }}>
+        <Typography variant="subtitle1">{step.label}</Typography>
+        <Typography variant="body2">{step.description}</Typography>
+      </Box>
+    ))}
+  </Box>
 );
 
 export default InstructionAccordion;

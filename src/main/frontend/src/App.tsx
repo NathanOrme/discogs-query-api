@@ -9,6 +9,7 @@ import QueryFields from './modules/QueryFields';
 import SearchForm from './modules/SearchForm';
 import CheapestItem from './modules/CheapestItem';
 import Results from './modules/Results';
+import HeroBanner from './modules/HeroBanner';
 import { Query, QueryResult } from './modules/types';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -30,6 +31,7 @@ const App: React.FC = () => {
 
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
+      <HeroBanner />
       <Header />
       <Box sx={{ my: 2 }}>
         <InstructionAccordion />

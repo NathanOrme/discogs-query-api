@@ -41,6 +41,7 @@
     "jest-environment-jsdom": "^29.5.0",
     "jsdoc": "^4.0.4",
     "prettier": "^3.5.1",
+    "ts-jest": "^29.3.2",
     "typescript": "^5.7.3",
     "vite": "^6.2.3",
     "vite-tsconfig-paths": "^5.1.4"
@@ -48,7 +49,7 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "test": "jest",
+    "test": "jest --config jest.config.cjs",
     "serve": "serve -s build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

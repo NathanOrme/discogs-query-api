@@ -93,7 +93,11 @@ const SearchForm: React.FC<SearchFormProps> = ({
   };
 
   return (
-    <Box component="form" onSubmit={handleSearchFormSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+    <Box
+      component="form"
+      onSubmit={handleSearchFormSubmit}
+      sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+    >
       <TextField
         label="Username"
         value={username}

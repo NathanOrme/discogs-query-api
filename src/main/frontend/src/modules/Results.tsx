@@ -21,7 +21,11 @@ const Results: React.FC<ResultsProps> = ({ response }) => {
 
   return (
     <Box id="results" sx={{ p: 2 }}>
-      <Button variant="contained" onClick={() => exportToJson(response, 'results')} sx={{ mb: 2 }}>
+      <Button
+        variant="contained"
+        onClick={() => exportToJson(response, 'results')}
+        sx={{ mb: 2 }}
+      >
         Export Results to JSON
       </Button>
       {response.map((queryResult, index) => (

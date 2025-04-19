@@ -9,13 +9,15 @@ test('renders header and no items message when items array is empty', () => {
 });
 
 test('renders item details when items array has data', () => {
-  const items = [{
-    title: 'Test Item',
-    lowestPrice: 5,
-    numberForSale: 10,
-    country: 'UK',
-    uri: 'http://example.com'
-  }];
+  const items = [
+    {
+      title: 'Test Item',
+      lowestPrice: 5,
+      numberForSale: 10,
+      country: 'UK',
+      uri: 'http://example.com',
+    },
+  ];
   render(<CheapestItem items={items} />);
   expect(screen.getByText(/Test Item/i)).toBeInTheDocument();
   expect(screen.getByText(/Price:/i)).toBeInTheDocument();

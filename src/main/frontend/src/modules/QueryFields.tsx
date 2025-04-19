@@ -53,7 +53,10 @@ const QueryFields: React.FC<QueryFieldsProps> = ({ onQueriesChange }) => {
   };
 
   return (
-    <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+    <Box
+      component="form"
+      sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+    >
       {queries.map((query, index) =>
         renderQueryFields(
           query,
@@ -63,7 +66,12 @@ const QueryFields: React.FC<QueryFieldsProps> = ({ onQueriesChange }) => {
           queries.length
         )
       )}
-      <Button variant="contained" type="button" onClick={addQuery} sx={{ alignSelf: 'flex-start' }}>
+      <Button
+        variant="contained"
+        type="button"
+        onClick={addQuery}
+        sx={{ alignSelf: 'flex-start' }}
+      >
         Add Another Query
       </Button>
     </Box>

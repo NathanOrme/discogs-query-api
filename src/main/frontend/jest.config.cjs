@@ -3,9 +3,9 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   transform: {
     '^.+\\.jsx?$': 'babel-jest',
-    '^.+\\.tsx?$': 'ts-jest'
+    '^.+\\.tsx?$': 'ts-jest',
   },
   moduleNameMapper: {
-    '^.+\\.(css|scss|sass)$': 'identity-obj-proxy'
-  }
+    '^.+\\.(css|scss|sass)$': 'identity-obj-proxy',
+  },
 };

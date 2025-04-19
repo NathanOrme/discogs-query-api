@@ -21,8 +21,9 @@ const App: React.FC = () => {
   const [response, setResponse] = useState<QueryResult[]>([]);
   const steps = ['Queries', 'Search', 'Results', 'Cheapest Items'];
   const [activeStep, setActiveStep] = useState<number>(0);
-  const handleNext = () => setActiveStep(prev => Math.min(prev + 1, steps.length - 1));
-  const handleBack = () => setActiveStep(prev => Math.max(prev - 1, 0));
+  const handleNext = () =>
+    setActiveStep((prev) => Math.min(prev + 1, steps.length - 1));
+  const handleBack = () => setActiveStep((prev) => Math.max(prev - 1, 0));
 
   const handleQueriesChange = useCallback((newQueries: Query[]) => {
     setQueries(newQueries);
@@ -35,14 +36,16 @@ const App: React.FC = () => {
         <InstructionAccordion />
       </Box>
       <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 3 }}>
-        {steps.map(label => (
+        {steps.map((label) => (
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
           </Step>
         ))}
       </Stepper>
       <Box>
-        {activeStep === 0 && <QueryFields onQueriesChange={handleQueriesChange} />}
+        {activeStep === 0 && (
+          <QueryFields onQueriesChange={handleQueriesChange} />
+        )}
         {activeStep === 1 && (
           <SearchForm
             queries={queries}

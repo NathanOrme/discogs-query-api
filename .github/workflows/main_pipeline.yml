@@ -196,49 +196,36 @@ jobs:
           name: jsdoc.zip
           path: src/main/frontend/docs.zip
 
-  dependabot:
-    needs: [ build-frontend ]
+  
+
+  auto_merge:
+    name: Auto approve & merge bot PRs
+    needs: [ build-frontend, build-backend, docker ]
+    # only run the job for pull_request events
+    if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
       contents: write
-    if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
+
+    strategy:
+      matrix:
+        bot:
+          - 'dependabot[bot]'
+          - 'deepsource-autofix[bot]'
+          - 'snyk-bot'
+          - 'renovate[bot]'
+
     steps:
-      - id: metadata
+      - name: Fetch Dependabot metadata
+        if: ${{ github.event.pull_request.user.login == matrix.bot && matrix.bot == 'dependabot[bot]' }}
         uses: dependabot/fetch-metadata@v2
         with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - run: |
-          gh pr review --approve "$PR_URL"
-          gh pr merge --squash --auto "$PR_URL"
-        env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-  deepsource:
-    needs: [ build-frontend ]
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-      contents: write
-    if: ${{ github.event.pull_request.user.login == 'deepsource-autofix[bot]' }}
-    steps:
-      - run: |
-          gh pr review --approve "$PR_URL"
-          gh pr merge --squash --auto "$PR_URL"
-        env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  renovate:
-    needs: [ build-frontend ]
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-      contents: write
-    if: ${{ github.event.pull_request.user.login == 'renovate[bot]' }}
-    steps:
-      - run: |
+      - name: Approve & merge PR
+        if: ${{ github.event.pull_request.user.login == matrix.bot }}
+        run: |
           gh pr review --approve "$PR_URL"
           gh pr merge --squash --auto "$PR_URL"
         env:

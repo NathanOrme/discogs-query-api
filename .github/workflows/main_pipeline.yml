@@ -200,9 +200,12 @@ jobs:
 
   auto_merge:
     name: Auto approve & merge bot PRs
-    needs: [ build-frontend, build-backend, docker ]
-    # only run the job for pull_request events
-    if: ${{ github.event_name == 'pull_request' }}
+    needs: [ docker, build-backend, build-frontend ]
+    if: >
+      github.event_name == 'pull_request' &&
+      (needs.docker.result == 'success' || needs.docker.result == 'skipped') &&
+      (needs.build-backend.result == 'success' || needs.build-backend.result == 'skipped') &&
+      (needs.build-frontend.result == 'success' || needs.build-frontend.result == 'skipped')
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write

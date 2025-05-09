@@ -14,35 +14,9 @@ env:
   DOCKER_IMAGE_NAME: discogs-query-api
 
 jobs:
-  detect-changes:
-    name: Detect File Changes
-    runs-on: ubuntu-latest
-    outputs:
-      backend_changed: ${{ steps.filter.outputs.backend }}
-      frontend_changed: ${{ steps.filter.outputs.frontend }}
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Detect Changes
-        id: filter
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-            backend:
-              - '**/*.java'
-              - '**/*.xml'
-              - 'pom.xml'
-            frontend:
-              - 'src/main/frontend/**'
-
   setup:
     runs-on: ubuntu-latest
-    needs: [ detect-changes ]
-    if: >
-      needs.detect-changes.outputs.backend_changed == 'true' || 
-      needs.detect-changes.outputs.frontend_changed == 'true' || 
-      github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     outputs:
       version: ${{ steps.set_output.outputs.version }}
     steps:
@@ -73,10 +47,7 @@ jobs:
     name: Build Docker Images
     runs-on: ubuntu-latest
     needs: [ setup, build-backend, build-frontend ]
-    if: >
-      needs.detect-changes.outputs.backend_changed == 'true' || 
-      needs.detect-changes.outputs.frontend_changed == 'true' || 
-      github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -102,9 +73,7 @@ jobs:
     name: Build Backend
     runs-on: ubuntu-latest
     needs: [ setup ]
-    if: >
-      needs.detect-changes.outputs.backend_changed == 'true' || 
-      github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -168,9 +137,7 @@ jobs:
     name: Build Frontend
     runs-on: ubuntu-latest
     needs: [ setup ]
-    if: >
-      needs.detect-changes.outputs.frontend_changed == 'true' || 
-      github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4

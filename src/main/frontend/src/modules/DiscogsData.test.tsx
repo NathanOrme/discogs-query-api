@@ -35,7 +35,7 @@ describe('DiscogsData', () => {
     });
 
     it('should include a default empty option', () => {
-      const emptyOption = discogFormats.find(format => format.value === '');
+      const emptyOption = discogFormats.find((format) => format.value === '');
       expect(emptyOption).toBeDefined();
       expect(emptyOption?.text).toBe('Any Format');
     });

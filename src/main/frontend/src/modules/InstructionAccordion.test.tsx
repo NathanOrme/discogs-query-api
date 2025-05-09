@@ -11,7 +11,7 @@ describe('InstructionAccordion', () => {
 
   it('contains all the expected steps', () => {
     render(<InstructionAccordion />);
-    
+
     // Check that all step labels are present
     expect(screen.getByText('Barcode')).toBeInTheDocument();
     expect(screen.getByText('Artist')).toBeInTheDocument();
@@ -25,30 +25,38 @@ describe('InstructionAccordion', () => {
 
   it('expands the main accordion when clicked', () => {
     render(<InstructionAccordion />);
-    
+
     // Initially, step descriptions should not be visible
-    expect(screen.queryByText('Enter the barcode for the product you are searching for.')).not.toBeVisible();
-    
+    expect(
+      screen.queryByText(
+        'Enter the barcode for the product you are searching for.'
+      )
+    ).not.toBeVisible();
+
     // Click the main accordion
     const mainAccordion = screen.getByText('How to Use This Search Tool');
     fireEvent.click(mainAccordion);
-    
+
     // Now the step labels should be visible
     expect(screen.getByText('Barcode')).toBeVisible();
   });
 
   it('expands a step accordion when clicked', () => {
     render(<InstructionAccordion />);
-    
+
     // First expand the main accordion
     const mainAccordion = screen.getByText('How to Use This Search Tool');
     fireEvent.click(mainAccordion);
-    
+
     // Click on a specific step
     const barcodeStep = screen.getByText('Barcode');
     fireEvent.click(barcodeStep);
-    
+
     // The description should now be visible
-    expect(screen.getByText('Enter the barcode for the product you are searching for.')).toBeVisible();
+    expect(
+      screen.getByText(
+        'Enter the barcode for the product you are searching for.'
+      )
+    ).toBeVisible();
   });
 });

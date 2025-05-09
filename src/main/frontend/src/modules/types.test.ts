@@ -16,9 +16,9 @@ describe('Types', () => {
         track: 'Test Track',
         format: 'vinyl',
         country: 'US',
-        types: 'RELEASE'
+        types: 'RELEASE',
       };
-      
+
       expect(query.id).toBe(1);
       expect(query.artist).toBe('Test Artist');
       expect(query.barcode).toBe('123456789');
@@ -40,9 +40,9 @@ describe('Types', () => {
         year: '2023',
         uri: 'https://example.com',
         numberForSale: 5,
-        lowestPrice: 19.99
+        lowestPrice: 19.99,
       };
-      
+
       expect(entry.id).toBe('123');
       expect(entry.title).toBe('Test Title');
       expect(entry.format).toEqual(['Vinyl', 'LP']);
@@ -56,9 +56,9 @@ describe('Types', () => {
     it('should allow null for lowestPrice', () => {
       const entry: Entry = {
         id: '123',
-        lowestPrice: null
+        lowestPrice: null,
       };
-      
+
       expect(entry.lowestPrice).toBeNull();
     });
   });
@@ -68,10 +68,10 @@ describe('Types', () => {
       const entry: Entry = { id: '123', title: 'Test' };
       const queryResult: QueryResult = {
         results: {
-          'query1': [entry]
-        }
+          query1: [entry],
+        },
       };
-      
+
       expect(queryResult.results.query1).toHaveLength(1);
       expect(queryResult.results.query1[0].id).toBe('123');
     });
@@ -82,14 +82,14 @@ describe('Types', () => {
       const entry: Entry = { id: '123', title: 'Test' };
       const queryResult: QueryResult = {
         results: {
-          'query1': [entry]
-        }
+          query1: [entry],
+        },
       };
-      
+
       const props: ResultsProps = {
-        response: [queryResult]
+        response: [queryResult],
       };
-      
+
       expect(props.response).toHaveLength(1);
       expect(props.response[0].results.query1[0].id).toBe('123');
     });

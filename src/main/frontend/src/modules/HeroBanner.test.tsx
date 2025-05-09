@@ -11,7 +11,9 @@ describe('HeroBanner', () => {
 
   it('renders the subheading correctly', () => {
     render(<HeroBanner />);
-    const subheadingElement = screen.getByText('Search and explore vinyl releases effortlessly');
+    const subheadingElement = screen.getByText(
+      'Search and explore vinyl releases effortlessly'
+    );
     expect(subheadingElement).toBeInTheDocument();
   });
 

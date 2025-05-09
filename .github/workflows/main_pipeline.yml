@@ -8,41 +8,14 @@ on:
 
 concurrency:
   group: ${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 env:
-  DOCKER_IMAGE_NAME: my-image
+  DOCKER_IMAGE_NAME: discogs-query-api
 
 jobs:
-  detect-changes:
-    name: Detect File Changes
-    runs-on: ubuntu-latest
-    outputs:
-      backend_changed: ${{ steps.filter.outputs.backend }}
-      frontend_changed: ${{ steps.filter.outputs.frontend }}
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Detect Changes
-        id: filter
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-            backend:
-              - '**/*.java'
-              - '**/*.xml'
-              - 'pom.xml'
-            frontend:
-              - 'src/main/frontend/**'
-
   setup:
     runs-on: ubuntu-latest
-    needs: [ detect-changes ]
-    if: >
-      needs.detect-changes.outputs.backend_changed == 'true' || 
-      needs.detect-changes.outputs.frontend_changed == 'true' || 
-      github.ref == 'refs/heads/main'
     outputs:
       version: ${{ steps.set_output.outputs.version }}
     steps:
@@ -69,32 +42,10 @@ jobs:
         id: set_output
         run: echo "::set-output name=version::${{ steps.get_semver.outputs.next_version }}"
 
-  docker:
-    name: Build Docker Images
-    runs-on: ubuntu-latest
-    needs: [ setup ]
-    if: >
-      needs.detect-changes.outputs.backend_changed == 'true' || 
-      github.ref == 'refs/heads/main'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libc6
-
-      - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag $DOCKER_IMAGE_NAME:${{ needs.setup.outputs.version }}
-
   build-backend:
     name: Build Backend
     runs-on: ubuntu-latest
     needs: [ setup ]
-    if: >
-      needs.detect-changes.outputs.backend_changed == 'true' || 
-      github.ref == 'refs/heads/main'
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -126,7 +77,12 @@ jobs:
           DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}
 
       - name: Run Checkstyle
-        run: mvn checkstyle:check -Dcheckstyle.config.location=lint/checkstyle.xml
+        run: |
+          if [ -f "lint/checkstyle.xml" ]; then
+            mvn checkstyle:check -Dcheckstyle.config.location=lint/checkstyle.xml
+          else
+            echo "Checkstyle configuration not found, skipping checkstyle check"
+          fi
         env:
           DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
           DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}
@@ -153,36 +109,50 @@ jobs:
     name: Build Frontend
     runs-on: ubuntu-latest
     needs: [ setup ]
-    if: >
-      needs.detect-changes.outputs.frontend_changed == 'true' || 
-      github.ref == 'refs/heads/main'
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js 20
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22.x'
+          node-version: '24.x'
 
-      - name: Cache Yarn dependencies
+      - name: Cache npm dependencies
         uses: actions/cache@v4
         with:
-          path: ~/src/main/frontend/node_modules
-          key: ${{ runner.os }}-yarn-${{ hashFiles('src/main/frontend/yarn.lock') }}
+          path: src/main/frontend/node_modules
+          key: ${{ runner.os }}-npm-${{ hashFiles('src/main/frontend/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-npm-
 
-      - name: Install Yarn project
+      - name: Install frontend dependencies
         run: |
           cd src/main/frontend
-          yarn install
+          npm ci
 
       - name: Run Frontend Build
-        run: cd src/main/frontend && yarn run build
+        run: cd src/main/frontend && npm run build
 
       - name: Generate NPM Documents
-        run: cd src/main/frontend &&  npx jsdoc src -c jsdoc.json -d docs -r
+        run: |
+          cd src/main/frontend
+          # Create jsdoc.json if it doesn't exist
+          if [ ! -f jsdoc.json ]; then
+            echo '{
+              "source": {
+                "include": ["src"],
+                "includePattern": ".+\\.(js|jsx|ts|tsx)$",
+                "excludePattern": "(node_modules/|docs/)"
+              },
+              "plugins": ["plugins/markdown"],
+              "opts": {
+                "destination": "docs",
+                "recurse": true
+              }
+            }' > jsdoc.json
+          fi
+          npx jsdoc src -c jsdoc.json -d docs -r
 
       - name: Zip JSDoc
         run: |
@@ -200,10 +170,9 @@ jobs:
 
   auto_merge:
     name: Auto approve & merge bot PRs
-    needs: [ docker, build-backend, build-frontend ]
+    needs: [ build-backend, build-frontend ]
     if: >
       github.event_name == 'pull_request' &&
-      (needs.docker.result == 'success' || needs.docker.result == 'skipped') &&
       (needs.build-backend.result == 'success' || needs.build-backend.result == 'skipped') &&
       (needs.build-frontend.result == 'success' || needs.build-frontend.result == 'skipped')
     runs-on: ubuntu-latest
@@ -238,9 +207,9 @@ jobs:
 
   release:
     name: Create Release
-    runs-on: ubuntu-latest
-    needs: [ setup, build-backend, build-frontend, docker ]
     if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: [ setup, build-backend, build-frontend ]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4

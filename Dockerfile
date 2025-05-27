@@ -8,13 +8,13 @@ WORKDIR /app/frontend
 COPY src/main/frontend/package*.json ./
 
 # Install dependencies
-RUN npm ci && npm install -g serve
+RUN yarn install --frozen-lockfile && yarn global add serve
 
 # Copy the rest of the frontend source code
 COPY src/main/frontend/ ./
 
 # Build the frontend application
-RUN npm run build
+RUN yarn run build
 
 
 # Stage 2: Build the backend

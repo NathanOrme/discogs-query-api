@@ -129,10 +129,10 @@ jobs:
       - name: Install frontend dependencies
         run: |
           cd src/main/frontend
-          npm ci --legacy-peer-deps
+          yarn install --frozen-lockfile
 
       - name: Run Frontend Build
-        run: cd src/main/frontend && npm run build
+        run: cd src/main/frontend && yarn run build
 
       - name: Generate NPM Documents
         run: |

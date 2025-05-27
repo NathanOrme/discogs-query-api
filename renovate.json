@@ -4,16 +4,25 @@
   "schedule": ["before 3am"],
   "automerge": true,
   "rebaseWhen": "always",
+
   "packageRules": [
     {
       "matchManagers": ["npm"],
       "matchDepTypes": ["dependencies"],
-      "groupName": "prod dependencies"
+      "groupName": "prod dependencies",
+      "postUpgradeTasks": {
+        "commands": ["npm install"],
+        "fileFilters": ["package.json"]
+      }
     },
     {
       "matchManagers": ["npm"],
       "matchDepTypes": ["devDependencies"],
-      "groupName": "dev dependencies"
+      "groupName": "dev dependencies",
+      "postUpgradeTasks": {
+        "commands": ["npm install"],
+        "fileFilters": ["package.json"]
+      }
     },
     {
       "matchManagers": ["github-actions"],
@@ -24,14 +33,15 @@
       "groupName": "docker images"
     },
     {
-      "matchUpdateTypes": ["major"],
-      "automerge": false
-    },
-    {
       "matchManagers": ["maven", "maven-wrapper"],
       "groupName": "maven dependencies"
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "automerge": false
     }
   ],
+
   "lockFileMaintenance": {
     "enabled": true,
     "schedule": ["before 3am"]

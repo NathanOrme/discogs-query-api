@@ -11,7 +11,7 @@
       "matchDepTypes": ["dependencies"],
       "groupName": "prod dependencies",
       "postUpgradeTasks": {
-        "commands": ["yarn install"],
+        "commands": ["npm install"],
         "fileFilters": ["package.json"]
       }
     },
@@ -20,7 +20,7 @@
       "matchDepTypes": ["devDependencies"],
       "groupName": "dev dependencies",
       "postUpgradeTasks": {
-        "commands": ["yarn install"],
+        "commands": ["npm install"],
         "fileFilters": ["package.json"]
       }
     },

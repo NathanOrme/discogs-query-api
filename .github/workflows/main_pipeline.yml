@@ -129,7 +129,7 @@ jobs:
       - name: Install frontend dependencies
         run: |
           cd src/main/frontend
-          npm ci
+          npm ci --legacy-peer-deps
 
       - name: Run Frontend Build
         run: cd src/main/frontend && npm run build

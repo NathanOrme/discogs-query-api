@@ -221,7 +221,7 @@
         <dependency>
             <groupId>com.diffblue.cover</groupId>
             <artifactId>cover-annotations</artifactId>
-            <version>1.4.0</version>
+            <version>1.5.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

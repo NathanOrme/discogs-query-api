@@ -9,20 +9,12 @@
     {
       "matchManagers": ["npm"],
       "matchDepTypes": ["dependencies"],
-      "groupName": "prod dependencies",
-      "postUpgradeTasks": {
-        "commands": ["npm install"],
-        "fileFilters": ["package.json"]
-      }
+      "groupName": "prod dependencies"
     },
     {
       "matchManagers": ["npm"],
       "matchDepTypes": ["devDependencies"],
-      "groupName": "dev dependencies",
-      "postUpgradeTasks": {
-        "commands": ["npm install"],
-        "fileFilters": ["package.json"]
-      }
+      "groupName": "dev dependencies"
     },
     {
       "matchManagers": ["github-actions"],

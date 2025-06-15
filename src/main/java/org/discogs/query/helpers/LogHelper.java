@@ -22,7 +22,8 @@ public class LogHelper {
    */
   public static void debug(final Supplier<String> messageSupplier, final Object... args) {
     if (log.isDebugEnabled()) {
-      log.debug(messageSupplier.get(), args);
+      String message = messageSupplier.get();
+      log.debug(message, args);
     }
   }
 
@@ -34,7 +35,8 @@ public class LogHelper {
    */
   public static void info(final Supplier<String> messageSupplier, final Object... args) {
     if (log.isInfoEnabled()) {
-      log.info(messageSupplier.get(), args);
+      String message = messageSupplier.get();
+      log.info(message, args);
     }
   }
 
@@ -46,7 +48,8 @@ public class LogHelper {
    */
   public static void warn(final Supplier<String> messageSupplier, final Object... args) {
     if (log.isWarnEnabled()) {
-      log.warn(messageSupplier.get(), args);
+      String message = messageSupplier.get();
+      log.warn(message, args);
     }
   }
 
@@ -58,7 +61,8 @@ public class LogHelper {
    */
   public static void error(final Supplier<String> messageSupplier, final Object... args) {
     if (log.isErrorEnabled()) {
-      log.error(messageSupplier.get(), args);
+      String message = messageSupplier.get();
+      log.error(message, args);
     }
   }
 }

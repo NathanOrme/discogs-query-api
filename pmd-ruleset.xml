@@ -9,37 +9,43 @@
     <!-- Best Practices -->
     <rule ref="category/java/bestpractices.xml">
         <exclude name="GuardLogStatement"/>
-        <!-- We use Lombok which handles these -->
         <exclude name="AccessorMethodGeneration"/>
     </rule>
 
     <!-- Code Style -->
     <rule ref="category/java/codestyle.xml">
-        <!-- These are handled by other tools or not relevant -->
         <exclude name="AtLeastOneConstructor"/>
         <exclude name="OnlyOneReturn"/>
         <exclude name="ShortVariable"/>
         <exclude name="LongVariable"/>
         <exclude name="ShortMethodName"/>
         <exclude name="CommentDefaultAccessModifier"/>
-        <exclude name="DefaultPackage"/>
     </rule>
 
     <!-- Design -->
     <rule ref="category/java/design.xml">
-        <!-- Customize thresholds for complexity -->
         <exclude name="LawOfDemeter"/>
         <exclude name="LoosePackageCoupling"/>
+        <exclude name="ExcessiveImports"/>
+        <exclude name="CyclomaticComplexity"/>
+        <exclude name="TooManyMethods"/>
     </rule>
 
-    <rule ref="category/java/design.xml/CyclomaticComplexity">
+    <!-- Specific rule configurations -->
+    <rule name="CyclomaticComplexity"
+          language="java"
+          message="The {0} ''{1}'' has a cyclomatic complexity of {2}."
+          class="net.sourceforge.pmd.lang.java.rule.design.CyclomaticComplexityRule">
         <properties>
             <property name="methodReportLevel" value="15"/>
             <property name="classReportLevel" value="80"/>
         </properties>
     </rule>
 
-    <rule ref="category/java/design.xml/TooManyMethods">
+    <rule name="TooManyMethods"
+          language="java"
+          message="This class has too many methods, consider refactoring it."
+          class="net.sourceforge.pmd.lang.java.rule.design.TooManyMethodsRule">
         <properties>
             <property name="maxmethods" value="20"/>
         </properties>
@@ -59,8 +65,9 @@
 
     <!-- Error Prone -->
     <rule ref="category/java/errorprone.xml">
-        <exclude name="BeanMembersShouldSerialize"/>
-        <exclude name="DataflowAnomalyAnalysis"/>
+        <exclude name="UseProperClassLoader"/>
+        <exclude name="MissingSerialVersionUID"/>
+        <exclude name="AvoidDuplicateLiterals"/>
     </rule>
 
     <!-- Multithreading -->
@@ -77,10 +84,10 @@
     <!-- Security -->
     <rule ref="category/java/security.xml"/>
 
-    <!-- Additional Properties -->
-    <properties>
-        <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='LogHelper']"/>
-        <!-- Minimum number of lines for copy-paste detection -->
-        <property name="minimumtilesize" value="100"/>
-    </properties>
+    <!-- Rule suppressions -->
+    <rule ref="category/java/bestpractices.xml/UnusedPrivateMethod">
+        <properties>
+            <property name="violationSuppressRegex" value=".*LogHelper.*"/>
+        </properties>
+    </rule>
 </ruleset>

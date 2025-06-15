@@ -26,26 +26,16 @@
     <rule ref="category/java/design.xml">
         <exclude name="LawOfDemeter"/>
         <exclude name="LoosePackageCoupling"/>
-        <exclude name="ExcessiveImports"/>
-        <exclude name="CyclomaticComplexity"/>
-        <exclude name="TooManyMethods"/>
     </rule>
 
-    <!-- Specific rule configurations -->
-    <rule name="CyclomaticComplexity"
-          language="java"
-          message="The {0} ''{1}'' has a cyclomatic complexity of {2}."
-          class="net.sourceforge.pmd.lang.java.rule.design.CyclomaticComplexityRule">
+    <rule ref="category/java/design.xml/CyclomaticComplexity">
         <properties>
             <property name="methodReportLevel" value="15"/>
             <property name="classReportLevel" value="80"/>
         </properties>
     </rule>
 
-    <rule name="TooManyMethods"
-          language="java"
-          message="This class has too many methods, consider refactoring it."
-          class="net.sourceforge.pmd.lang.java.rule.design.TooManyMethodsRule">
+    <rule ref="category/java/design.xml/TooManyMethods">
         <properties>
             <property name="maxmethods" value="20"/>
         </properties>

@@ -33,7 +33,7 @@
     "@babel/preset-env": "^7.27.2",
     "@svgr/core": "^8.1.0",
     "@svgr/plugin-jsx": "^8.1.0",
-    "@types/jest": "^29.5.14",
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.0.3",
     "@vitejs/plugin-react": "^4.5.2",
     "babel-jest": "^30.0.0",

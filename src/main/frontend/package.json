@@ -35,7 +35,7 @@
     "@svgr/plugin-jsx": "^8.1.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.0.3",
-    "@vitejs/plugin-react": "^4.5.2",
+    "@vitejs/plugin-react": "^4.6.0",
     "babel-jest": "^30.0.2",
     "docdash": "^2.0.2",
     "jest": "^30.0.2",

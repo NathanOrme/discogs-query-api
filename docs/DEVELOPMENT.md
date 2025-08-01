@@ -7,12 +7,14 @@ This guide provides comprehensive instructions for setting up a development envi
 ## System Requirements
 
 ### Hardware Requirements
+
 - **CPU**: Multi-core processor (4+ cores recommended)
 - **Memory**: 8GB RAM minimum (16GB recommended)
 - **Storage**: 10GB free disk space
 - **Network**: Stable internet connection for API calls and dependency downloads
 
 ### Operating System Support
+
 - **Windows 10/11** with WSL2 (recommended) or native
 - **macOS** 11.0 or later
 - **Linux** (Ubuntu 20.04+, CentOS 8+, or equivalent)
@@ -22,6 +24,7 @@ This guide provides comprehensive instructions for setting up a development envi
 ### 1. Java Development Kit (JDK)
 
 #### Amazon Corretto 24 (Recommended)
+
 ```bash
 # Windows (using Chocolatey)
 choco install corretto24jdk
@@ -39,6 +42,7 @@ sudo rpm -i amazon-corretto-24-x64-linux-jdk.rpm
 ```
 
 #### Verify Java Installation
+
 ```bash
 java -version
 # Expected output: openjdk version "24" 2024-09-17
@@ -49,6 +53,7 @@ javac -version
 ### 2. Apache Maven
 
 #### Installation
+
 ```bash
 # Windows (using Chocolatey)
 choco install maven
@@ -68,6 +73,7 @@ export PATH=/opt/maven/bin:$PATH
 ```
 
 #### Verify Maven Installation
+
 ```bash
 mvn -version
 # Expected output: Apache Maven 3.9.6 or higher
@@ -76,6 +82,7 @@ mvn -version
 ### 3. Node.js and Yarn
 
 #### Node.js Installation
+
 ```bash
 # Windows (using Chocolatey)
 choco install nodejs
@@ -94,6 +101,7 @@ nvm use 20
 ```
 
 #### Yarn Installation
+
 ```bash
 # Install Yarn globally
 npm install -g yarn
@@ -106,6 +114,7 @@ yarn --version  # Should be 1.22.x or higher
 ### 4. Git
 
 #### Installation
+
 ```bash
 # Windows (using Chocolatey)
 choco install git
@@ -121,6 +130,7 @@ sudo yum install git
 ```
 
 #### Git Configuration
+
 ```bash
 git config --global user.name "Your Name"
 git config --global user.email "your.email@example.com"
@@ -130,6 +140,7 @@ git config --global init.defaultBranch main
 ### 5. Docker (Optional but Recommended)
 
 #### Installation
+
 ```bash
 # Windows: Download Docker Desktop from docker.com
 # macOS: Download Docker Desktop from docker.com
@@ -145,6 +156,7 @@ sudo usermod -aG docker $USER
 ### 6. IDE Setup
 
 #### IntelliJ IDEA (Recommended)
+
 1. Download from [JetBrains website](https://www.jetbrains.com/idea/)
 2. Install required plugins:
    - Spring Boot
@@ -153,6 +165,7 @@ sudo usermod -aG docker $USER
    - React support
 
 #### VS Code Alternative
+
 ```bash
 # Install VS Code
 # Windows: choco install vscode
@@ -183,6 +196,7 @@ ls -la
 ### 2. Environment Configuration
 
 #### Create Environment File
+
 ```bash
 # Create .env file in project root
 cat > .env << EOF
@@ -205,6 +219,7 @@ EOF
 ```
 
 #### Load Environment Variables
+
 ```bash
 # Linux/macOS
 source .env
@@ -220,6 +235,7 @@ Get-Content .env | ForEach-Object {
 ### 3. Backend Setup
 
 #### Install Dependencies
+
 ```bash
 # Install Maven dependencies
 mvn clean install
@@ -231,6 +247,7 @@ mvn compile
 #### IDE Configuration
 
 ##### IntelliJ IDEA
+
 1. Open project in IntelliJ IDEA
 2. Configure Project SDK:
    - File → Project Structure → Project
@@ -247,6 +264,7 @@ mvn compile
      - Check "Enable annotation processing"
 
 ##### VS Code
+
 ```bash
 # Open project in VS Code
 code .
@@ -269,6 +287,7 @@ EOF
 ```
 
 #### Running Backend
+
 ```bash
 # Method 1: Maven Spring Boot plugin
 mvn spring-boot:run
@@ -282,6 +301,7 @@ java -jar target/discogs-query-1.0-SNAPSHOT.jar
 ```
 
 #### Verify Backend Setup
+
 ```bash
 # Check application health
 curl http://localhost:9090/actuator/health
@@ -296,11 +316,13 @@ open http://localhost:9090/swagger-ui.html
 ### 4. Frontend Setup
 
 #### Navigate to Frontend Directory
+
 ```bash
 cd src/main/frontend
 ```
 
 #### Install Dependencies
+
 ```bash
 # Install Node.js dependencies
 yarn install
@@ -312,6 +334,7 @@ yarn list --depth=0
 #### IDE Configuration for Frontend
 
 ##### VS Code Extensions
+
 ```bash
 # Install React/TypeScript extensions
 code --install-extension ms-vscode.typescript-hero
@@ -321,6 +344,7 @@ code --install-extension esbenp.prettier-vscode
 ```
 
 ##### Configure Prettier
+
 ```bash
 # Create .prettierrc
 cat > .prettierrc << EOF
@@ -336,6 +360,7 @@ EOF
 ```
 
 #### Running Frontend
+
 ```bash
 # Start development server
 yarn start
@@ -346,6 +371,7 @@ yarn dev
 ```
 
 #### Verify Frontend Setup
+
 1. Open http://localhost:3000 in browser
 2. Verify Material-UI components load correctly
 3. Test navigation between stepper steps
@@ -354,6 +380,7 @@ yarn dev
 ### 5. Development Workflow
 
 #### Running Full Application
+
 ```bash
 # Terminal 1: Start backend
 mvn spring-boot:run
@@ -366,6 +393,7 @@ yarn start
 ```
 
 #### Docker Development Setup
+
 ```bash
 # Build Docker image
 docker build -t discogs-query-api:dev .
@@ -384,12 +412,14 @@ docker run -d \
 ### 1. Code Quality Tools
 
 #### Maven Configuration
+
 ```xml
 <!-- Already configured in pom.xml -->
 <!-- Checkstyle, PMD, SpotBugs plugins -->
 ```
 
 #### Run Code Quality Checks
+
 ```bash
 # Run all checks
 mvn verify
@@ -401,6 +431,7 @@ mvn spotbugs:check
 ```
 
 #### Frontend Code Quality
+
 ```bash
 cd src/main/frontend
 
@@ -417,6 +448,7 @@ yarn lint
 ### 2. Testing Setup
 
 #### Backend Testing
+
 ```bash
 # Run all tests
 mvn test
@@ -432,6 +464,7 @@ mvn test -Dtest="**/*IT"
 ```
 
 #### Frontend Testing
+
 ```bash
 cd src/main/frontend
 
@@ -453,6 +486,7 @@ yarn test App.test.tsx
 #### Backend Debugging
 
 ##### IntelliJ IDEA
+
 1. Create Debug Configuration:
    - Run → Edit Configurations
    - Add Application configuration
@@ -461,27 +495,29 @@ yarn test App.test.tsx
    - Environment variables: Load from .env file
 
 ##### VS Code
+
 ```json
 // .vscode/launch.json
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "java",
-            "name": "Debug DiscogsApplication",
-            "request": "launch",
-            "mainClass": "org.discogs.query.DiscogsApplication",
-            "projectName": "discogs-query",
-            "env": {
-                "DISCOGS_TOKEN": "your_token_here",
-                "DISCOGS_AGENT": "debug-session"
-            }
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Debug DiscogsApplication",
+      "request": "launch",
+      "mainClass": "org.discogs.query.DiscogsApplication",
+      "projectName": "discogs-query",
+      "env": {
+        "DISCOGS_TOKEN": "your_token_here",
+        "DISCOGS_AGENT": "debug-session"
+      }
+    }
+  ]
 }
 ```
 
 #### Frontend Debugging
+
 - Chrome DevTools for React components
 - VS Code debugger with Chrome extension
 - React Developer Tools browser extension
@@ -489,6 +525,7 @@ yarn test App.test.tsx
 ### 4. Database and External Services
 
 #### H2 Database (Development)
+
 ```yaml
 # application-dev.yml (if using profiles)
 spring:
@@ -502,6 +539,7 @@ spring:
 ```
 
 #### Mock External Services
+
 ```java
 // For development, consider mocking Discogs API
 @Component
@@ -516,6 +554,7 @@ public class MockDiscogsAPIClient implements DiscogsAPIClient {
 ### 1. Adding New Features
 
 #### Backend Feature Development
+
 1. Create feature branch: `git checkout -b feature/new-feature`
 2. Add service interface and implementation
 3. Create controller endpoint
@@ -524,6 +563,7 @@ public class MockDiscogsAPIClient implements DiscogsAPIClient {
 6. Update OpenAPI documentation
 
 #### Frontend Feature Development
+
 1. Create new component in appropriate module
 2. Add TypeScript interfaces
 3. Implement component with Material-UI
@@ -534,6 +574,7 @@ public class MockDiscogsAPIClient implements DiscogsAPIClient {
 ### 2. Working with APIs
 
 #### Testing API Endpoints
+
 ```bash
 # Using curl
 curl -X POST "http://localhost:9090/discogs-query/search" \
@@ -555,6 +596,7 @@ curl -X POST "http://localhost:9090/discogs-query/search" \
 ### 3. Performance Testing
 
 #### Backend Performance
+
 ```bash
 # JProfiler, VisualVM, or other profiling tools
 # Memory analysis with heap dumps
@@ -567,6 +609,7 @@ ab -n 1000 -c 10 -H "Content-Type: application/json" \
 ```
 
 #### Frontend Performance
+
 ```bash
 # Bundle analysis
 cd src/main/frontend
@@ -579,6 +622,7 @@ npx vite-bundle-analyzer build/static/js/*.js
 ### 1. Build Issues
 
 #### Maven Build Failures
+
 ```bash
 # Clear Maven cache
 mvn dependency:purge-local-repository
@@ -591,6 +635,7 @@ mvn clean install -DskipTests
 ```
 
 #### Frontend Build Failures
+
 ```bash
 cd src/main/frontend
 
@@ -605,6 +650,7 @@ rm -rf node_modules/.vite
 ### 2. Runtime Issues
 
 #### Port Already in Use
+
 ```bash
 # Find process using port 9090
 lsof -i :9090
@@ -616,6 +662,7 @@ kill -9 <PID>
 ```
 
 #### Environment Variables Not Loading
+
 ```bash
 # Verify environment variables
 printenv | grep DISCOGS
@@ -627,11 +674,13 @@ curl http://localhost:9090/actuator/env
 ### 3. IDE Issues
 
 #### IntelliJ IDEA
+
 - Invalidate Caches and Restart
 - Reimport Maven project
 - Check Project Structure settings
 
 #### VS Code
+
 - Reload window: Ctrl+Shift+P → "Developer: Reload Window"
 - Check Java extension pack
 - Verify workspace settings
@@ -639,6 +688,7 @@ curl http://localhost:9090/actuator/env
 ## Git Workflow
 
 ### Branch Strategy
+
 ```bash
 # Feature development
 git checkout -b feature/feature-name
@@ -652,6 +702,7 @@ git push origin fix/bug-description
 ```
 
 ### Commit Message Convention
+
 ```
 type(scope): description
 
@@ -668,6 +719,7 @@ test(backend): add rate limiter unit tests
 ## Performance and Monitoring
 
 ### Local Monitoring
+
 ```bash
 # JVM monitoring
 jconsole
@@ -680,6 +732,7 @@ curl http://localhost:9090/actuator/health
 ```
 
 ### Memory Management
+
 ```bash
 # JVM options for development
 export JAVA_OPTS="-Xmx2g -Xms1g -XX:+UseG1GC"

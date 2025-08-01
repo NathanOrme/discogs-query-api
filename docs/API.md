@@ -13,6 +13,7 @@ http://localhost:9090
 ## Authentication
 
 The API uses Spring Security with basic authentication:
+
 - **Username**: `username`
 - **Password**: `password`
 
@@ -21,6 +22,7 @@ Include these credentials in your requests using HTTP Basic Authentication.
 ## Rate Limiting
 
 The API implements intelligent rate limiting:
+
 - **Default Limit**: 60 requests per minute
 - **Algorithm**: Token bucket with atomic counters
 - **Behavior**: Requests exceeding the limit will wait for available tokens
@@ -37,6 +39,7 @@ Execute batch queries against the Discogs database with marketplace integration.
 **Content-Type**: `application/json`
 
 **Request Body**:
+
 ```json
 {
   "queries": [
@@ -57,19 +60,20 @@ Execute batch queries against the Discogs database with marketplace integration.
 
 **Query Parameters**:
 
-| Field | Type | Required | Description | Example |
-|-------|------|----------|-------------|---------|
-| `artist` | String | Yes | Artist name to search for | "The Beatles" |
-| `album` | String | No | Album/release title | "Abbey Road" |
-| `track` | String | No | Track title | "Come Together" |
-| `title` | String | No | Title override for search | "Custom Title" |
-| `format` | String | No | Release format | "LP", "CD", "Cassette" |
-| `country` | Enum | No | Country of release | "UK", "US", "DE", etc. |
-| `types` | Enum | No | Release type | "release", "master", "artist", "label" |
-| `barcode` | String | No | Product barcode | "123456789" |
-| `username` | String | No | Discogs username for collection searches | "your_username" |
+| Field      | Type   | Required | Description                              | Example                                |
+| ---------- | ------ | -------- | ---------------------------------------- | -------------------------------------- |
+| `artist`   | String | Yes      | Artist name to search for                | "The Beatles"                          |
+| `album`    | String | No       | Album/release title                      | "Abbey Road"                           |
+| `track`    | String | No       | Track title                              | "Come Together"                        |
+| `title`    | String | No       | Title override for search                | "Custom Title"                         |
+| `format`   | String | No       | Release format                           | "LP", "CD", "Cassette"                 |
+| `country`  | Enum   | No       | Country of release                       | "UK", "US", "DE", etc.                 |
+| `types`    | Enum   | No       | Release type                             | "release", "master", "artist", "label" |
+| `barcode`  | String | No       | Product barcode                          | "123456789"                            |
+| `username` | String | No       | Discogs username for collection searches | "your_username"                        |
 
 **Response**:
+
 ```json
 [
   {
@@ -120,56 +124,57 @@ Execute batch queries against the Discogs database with marketplace integration.
 
 **Response Fields**:
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `originalQuery` | Object | The original query parameters |
-| `results` | Object | Results grouped by title |
-| `results[title]` | Array | Array of matching releases |
-| `cheapestItem` | Object | Cheapest available item from all results |
+| Field            | Type   | Description                              |
+| ---------------- | ------ | ---------------------------------------- |
+| `originalQuery`  | Object | The original query parameters            |
+| `results`        | Object | Results grouped by title                 |
+| `results[title]` | Array  | Array of matching releases               |
+| `cheapestItem`   | Object | Cheapest available item from all results |
 
 **Individual Release Fields**:
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | Integer | Discogs release ID |
-| `title` | String | Release title |
-| `artist` | String | Artist name |
-| `format` | String | Release format |
-| `year` | Integer | Release year |
-| `label` | String | Record label |
-| `catno` | String | Catalog number |
-| `country` | String | Country of release |
-| `uri` | String | Discogs URI path |
-| `resourceUrl` | String | Full API resource URL |
-| `type` | String | Resource type (release, master, etc.) |
-| `thumb` | String | Thumbnail image URL |
-| `coverImage` | String | Full cover image URL |
-| `genre` | Array | Music genres |
-| `style` | Array | Music styles |
-| `marketplace` | Object | Marketplace data (if available) |
+| Field         | Type    | Description                           |
+| ------------- | ------- | ------------------------------------- |
+| `id`          | Integer | Discogs release ID                    |
+| `title`       | String  | Release title                         |
+| `artist`      | String  | Artist name                           |
+| `format`      | String  | Release format                        |
+| `year`        | Integer | Release year                          |
+| `label`       | String  | Record label                          |
+| `catno`       | String  | Catalog number                        |
+| `country`     | String  | Country of release                    |
+| `uri`         | String  | Discogs URI path                      |
+| `resourceUrl` | String  | Full API resource URL                 |
+| `type`        | String  | Resource type (release, master, etc.) |
+| `thumb`       | String  | Thumbnail image URL                   |
+| `coverImage`  | String  | Full cover image URL                  |
+| `genre`       | Array   | Music genres                          |
+| `style`       | Array   | Music styles                          |
+| `marketplace` | Object  | Marketplace data (if available)       |
 
 **Marketplace Fields**:
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `lowestPrice` | Number | Lowest available price |
-| `numForSale` | Integer | Number of items for sale |
-| `currency` | String | Price currency |
-| `available` | Boolean | Item availability status |
-| `shipsFromUk` | Boolean | Ships from UK flag |
+| Field         | Type    | Description              |
+| ------------- | ------- | ------------------------ |
+| `lowestPrice` | Number  | Lowest available price   |
+| `numForSale`  | Integer | Number of items for sale |
+| `currency`    | String  | Price currency           |
+| `available`   | Boolean | Item availability status |
+| `shipsFromUk` | Boolean | Ships from UK flag       |
 
 **HTTP Status Codes**:
 
-| Code | Description |
-|------|-------------|
-| `200` | Success - Results found |
-| `204` | No Content - No results found |
-| `400` | Bad Request - Invalid query parameters |
-| `408` | Request Timeout - Query processing timeout |
-| `429` | Too Many Requests - Rate limit exceeded |
+| Code  | Description                                     |
+| ----- | ----------------------------------------------- |
+| `200` | Success - Results found                         |
+| `204` | No Content - No results found                   |
+| `400` | Bad Request - Invalid query parameters          |
+| `408` | Request Timeout - Query processing timeout      |
+| `429` | Too Many Requests - Rate limit exceeded         |
 | `500` | Internal Server Error - Server processing error |
 
 **Error Response**:
+
 ```json
 {
   "error": "Error message description",
@@ -185,6 +190,7 @@ Check application health status.
 **Endpoint**: `GET /actuator/health`
 
 **Response**:
+
 ```json
 {
   "status": "UP",
@@ -228,31 +234,37 @@ Returns detailed information about all controller mappings and endpoints.
 ## Advanced Features
 
 ### Batch Processing
+
 - Execute multiple queries in a single request
 - Concurrent processing with configurable timeouts
 - Automatic deduplication of results
 
 ### Marketplace Integration
+
 - Real-time price and availability data
 - Currency support (GBP, USD, EUR, etc.)
 - UK shipping filter option
 - Stock level information
 
 ### Caching Strategy
+
 - **Duration**: 10-minute TTL
 - **Capacity**: 1000 entries per cache namespace
-- **Namespaces**: 
+- **Namespaces**:
   - `discogsResults` - Search API responses
   - `stringResults` - Raw string responses
   - `marketplaceResults` - Marketplace data
   - `collectionReleases` - User collections
 
 ### Format Expansion
+
 Certain formats trigger automatic query expansion:
+
 - `ALL_VINYLS` → expands to `LP`, `VINYL_COMPILATION`, `VINYL`
 - Provides comprehensive results across format variations
 
 ### Error Handling
+
 - Comprehensive exception hierarchy
 - Retry logic with exponential backoff
 - Graceful degradation for marketplace failures
@@ -261,20 +273,23 @@ Certain formats trigger automatic query expansion:
 ## Configuration
 
 ### Query Settings
+
 ```yaml
 queries:
-  timeout: 59              # Query timeout in seconds
-  filterForUk: false       # Filter for UK shipping only
-  searchCollection: true   # Enable collection searching
+  timeout: 59 # Query timeout in seconds
+  filterForUk: false # Filter for UK shipping only
+  searchCollection: true # Enable collection searching
 ```
 
 ### Rate Limiting
+
 ```yaml
 discogs:
-  rate-limit: 60          # Requests per minute
+  rate-limit: 60 # Requests per minute
 ```
 
 ### Caching
+
 ```yaml
 spring:
   cache:
@@ -285,6 +300,7 @@ spring:
 ## Examples
 
 ### Basic Artist Search
+
 ```bash
 curl -X POST "http://localhost:9090/discogs-query/search" \
   -H "Content-Type: application/json" \
@@ -299,6 +315,7 @@ curl -X POST "http://localhost:9090/discogs-query/search" \
 ```
 
 ### Advanced Search with Multiple Criteria
+
 ```bash
 curl -X POST "http://localhost:9090/discogs-query/search" \
   -H "Content-Type: application/json" \
@@ -323,6 +340,7 @@ curl -X POST "http://localhost:9090/discogs-query/search" \
 ```
 
 ### Collection Search
+
 ```bash
 curl -X POST "http://localhost:9090/discogs-query/search" \
   -H "Content-Type: application/json" \
@@ -350,6 +368,7 @@ curl -X POST "http://localhost:9090/discogs-query/search" \
 ## Support
 
 For additional support:
+
 - Review the [Swagger UI](http://localhost:9090/swagger-ui.html) for interactive testing
 - Check the [Health endpoint](http://localhost:9090/actuator/health) for system status
 - Consult the [README.md](../README.md) for setup instructions

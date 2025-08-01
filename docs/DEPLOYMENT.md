@@ -7,6 +7,7 @@ The Discogs Query API supports multiple deployment strategies including containe
 ## Prerequisites
 
 ### System Requirements
+
 - **Java**: Amazon Corretto 24 or OpenJDK 24+
 - **Node.js**: Version 20 or higher with Yarn
 - **Memory**: Minimum 2GB RAM (4GB recommended for production)
@@ -14,6 +15,7 @@ The Discogs Query API supports multiple deployment strategies including containe
 - **Network**: Outbound HTTPS access to api.discogs.com
 
 ### Required Environment Variables
+
 ```bash
 DISCOGS_TOKEN=your_discogs_api_token      # Required: Discogs API authentication
 DISCOGS_AGENT=your_application_name       # Required: User agent for API requests
@@ -89,6 +91,7 @@ docker build \
 ### Running with Docker
 
 #### Basic Deployment
+
 ```bash
 docker run -d \
   --name discogs-query-api \
@@ -99,6 +102,7 @@ docker run -d \
 ```
 
 #### Production Deployment
+
 ```bash
 docker run -d \
   --name discogs-query-api \
@@ -119,6 +123,7 @@ docker run -d \
 ```
 
 #### Using Environment File
+
 ```bash
 # Create .env file
 cat > .env << EOF
@@ -146,7 +151,7 @@ docker run -d \
 
 ```yaml
 # docker-compose.yml
-version: '3.8'
+version: "3.8"
 
 services:
   discogs-api:
@@ -158,7 +163,14 @@ services:
       - DISCOGS_AGENT=${DISCOGS_AGENT}
       - SERVER_PORT=9090
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--spider", "http://localhost:9090/actuator/health"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--quiet",
+          "--spider",
+          "http://localhost:9090/actuator/health",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -168,16 +180,16 @@ services:
       resources:
         limits:
           memory: 3G
-          cpus: '2'
+          cpus: "2"
         reservations:
           memory: 1G
-          cpus: '1'
+          cpus: "1"
 ```
 
 ### Production Docker Compose with Monitoring
 
 ```yaml
-version: '3.8'
+version: "3.8"
 
 services:
   discogs-api:
@@ -194,7 +206,14 @@ services:
       - ./logs:/app/logs
       - ./heapdumps:/app/heapdumps
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--spider", "http://localhost:9090/actuator/health"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--quiet",
+          "--spider",
+          "http://localhost:9090/actuator/health",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -206,10 +225,10 @@ services:
       resources:
         limits:
           memory: 3G
-          cpus: '2'
+          cpus: "2"
         reservations:
           memory: 1G
-          cpus: '1'
+          cpus: "1"
     logging:
       driver: "json-file"
       options:
@@ -262,6 +281,7 @@ docker-compose down -v
 ### Manual Deployment
 
 #### 1. Prepare the Server
+
 ```bash
 # Install Java 24 (Amazon Corretto)
 wget https://corretto.aws/downloads/latest/amazon-corretto-24-x64-linux-jdk.rpm
@@ -281,6 +301,7 @@ sudo chown discogs-api:discogs-api /opt/discogs-api
 ```
 
 #### 2. Build the Application
+
 ```bash
 # Clone repository
 git clone https://github.com/your-org/discogs-query-api.git
@@ -302,6 +323,7 @@ sudo chown -R discogs-api:discogs-api /opt/discogs-api
 ```
 
 #### 3. Create Systemd Service
+
 ```bash
 # Create service file
 sudo tee /etc/systemd/system/discogs-api.service << EOF
@@ -337,19 +359,20 @@ sudo systemctl status discogs-api
 ```
 
 #### 4. Configure Reverse Proxy (Nginx)
+
 ```nginx
 # /etc/nginx/sites-available/discogs-api
 server {
     listen 80;
     server_name your-domain.com;
-    
+
     location / {
         proxy_pass http://localhost:9090;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-        
+
         # Health check endpoint
         location /actuator/health {
             proxy_pass http://localhost:9090/actuator/health;
@@ -369,6 +392,7 @@ sudo systemctl reload nginx
 ### AWS Deployment
 
 #### Using AWS ECS with Fargate
+
 ```yaml
 # task-definition.json
 {
@@ -379,52 +403,49 @@ sudo systemctl reload nginx
   "memory": "2048",
   "executionRoleArn": "arn:aws:iam::account:role/ecsTaskExecutionRole",
   "taskRoleArn": "arn:aws:iam::account:role/ecsTaskRole",
-  "containerDefinitions": [
-    {
-      "name": "discogs-api",
-      "image": "your-account.dkr.ecr.region.amazonaws.com/discogs-api:latest",
-      "portMappings": [
-        {
-          "containerPort": 9090,
-          "protocol": "tcp"
-        }
-      ],
-      "environment": [
-        {
-          "name": "SERVER_PORT",
-          "value": "9090"
-        }
-      ],
-      "secrets": [
-        {
-          "name": "DISCOGS_TOKEN",
-          "valueFrom": "arn:aws:secretsmanager:region:account:secret:discogs-token"
-        }
-      ],
-      "healthCheck": {
-        "command": [
-          "CMD-SHELL",
-          "wget --quiet --spider http://localhost:9090/actuator/health || exit 1"
-        ],
-        "interval": 30,
-        "timeout": 10,
-        "retries": 3,
-        "startPeriod": 60
+  "containerDefinitions":
+    [
+      {
+        "name": "discogs-api",
+        "image": "your-account.dkr.ecr.region.amazonaws.com/discogs-api:latest",
+        "portMappings": [{ "containerPort": 9090, "protocol": "tcp" }],
+        "environment": [{ "name": "SERVER_PORT", "value": "9090" }],
+        "secrets":
+          [
+            {
+              "name": "DISCOGS_TOKEN",
+              "valueFrom": "arn:aws:secretsmanager:region:account:secret:discogs-token",
+            },
+          ],
+        "healthCheck":
+          {
+            "command":
+              [
+                "CMD-SHELL",
+                "wget --quiet --spider http://localhost:9090/actuator/health || exit 1",
+              ],
+            "interval": 30,
+            "timeout": 10,
+            "retries": 3,
+            "startPeriod": 60,
+          },
+        "logConfiguration":
+          {
+            "logDriver": "awslogs",
+            "options":
+              {
+                "awslogs-group": "/ecs/discogs-api",
+                "awslogs-region": "us-east-1",
+                "awslogs-stream-prefix": "ecs",
+              },
+          },
       },
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "/ecs/discogs-api",
-          "awslogs-region": "us-east-1",
-          "awslogs-stream-prefix": "ecs"
-        }
-      }
-    }
-  ]
+    ],
 }
 ```
 
 #### Using AWS App Runner
+
 ```yaml
 # apprunner.yaml
 version: 1.0
@@ -448,27 +469,28 @@ run:
 ### Google Cloud Platform
 
 #### Using Cloud Run
+
 ```yaml
 # cloudbuild.yaml
 steps:
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/discogs-api:$COMMIT_SHA', '.']
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/discogs-api:$COMMIT_SHA']
-  - name: 'gcr.io/cloud-builders/gcloud'
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "gcr.io/$PROJECT_ID/discogs-api:$COMMIT_SHA", "."]
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/discogs-api:$COMMIT_SHA"]
+  - name: "gcr.io/cloud-builders/gcloud"
     args:
-      - 'run'
-      - 'deploy'
-      - 'discogs-api'
-      - '--image=gcr.io/$PROJECT_ID/discogs-api:$COMMIT_SHA'
-      - '--region=us-central1'
-      - '--platform=managed'
-      - '--allow-unauthenticated'
-      - '--port=9090'
-      - '--memory=2Gi'
-      - '--cpu=2'
-      - '--set-env-vars=SERVER_PORT=9090'
-      - '--set-secrets=DISCOGS_TOKEN=discogs-token:latest'
+      - "run"
+      - "deploy"
+      - "discogs-api"
+      - "--image=gcr.io/$PROJECT_ID/discogs-api:$COMMIT_SHA"
+      - "--region=us-central1"
+      - "--platform=managed"
+      - "--allow-unauthenticated"
+      - "--port=9090"
+      - "--memory=2Gi"
+      - "--cpu=2"
+      - "--set-env-vars=SERVER_PORT=9090"
+      - "--set-secrets=DISCOGS_TOKEN=discogs-token:latest"
 ```
 
 ### Kubernetes Deployment
@@ -510,35 +532,35 @@ spec:
         app: discogs-api
     spec:
       containers:
-      - name: discogs-api
-        image: discogs-api:latest
-        ports:
-        - containerPort: 9090
-        env:
-        - name: SERVER_PORT
-          value: "9090"
-        envFrom:
-        - secretRef:
-            name: discogs-secrets
-        resources:
-          requests:
-            memory: "1Gi"
-            cpu: "500m"
-          limits:
-            memory: "2Gi"
-            cpu: "1000m"
-        livenessProbe:
-          httpGet:
-            path: /actuator/health
-            port: 9090
-          initialDelaySeconds: 60
-          periodSeconds: 30
-        readinessProbe:
-          httpGet:
-            path: /actuator/health
-            port: 9090
-          initialDelaySeconds: 30
-          periodSeconds: 10
+        - name: discogs-api
+          image: discogs-api:latest
+          ports:
+            - containerPort: 9090
+          env:
+            - name: SERVER_PORT
+              value: "9090"
+          envFrom:
+            - secretRef:
+                name: discogs-secrets
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 9090
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 9090
+            initialDelaySeconds: 30
+            periodSeconds: 10
 
 ---
 # kubernetes/service.yaml
@@ -551,8 +573,8 @@ spec:
   selector:
     app: discogs-api
   ports:
-  - port: 80
-    targetPort: 9090
+    - port: 80
+      targetPort: 9090
   type: ClusterIP
 
 ---
@@ -567,25 +589,26 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   tls:
-  - hosts:
-    - your-domain.com
-    secretName: discogs-api-tls
+    - hosts:
+        - your-domain.com
+      secretName: discogs-api-tls
   rules:
-  - host: your-domain.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: discogs-api-service
-            port:
-              number: 80
+    - host: your-domain.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: discogs-api-service
+                port:
+                  number: 80
 ```
 
 ## Environment Configuration
 
 ### Production Environment Variables
+
 ```bash
 # Core Configuration
 DISCOGS_TOKEN=your_production_token
@@ -612,30 +635,33 @@ LOGGING_LEVEL_ROOT=WARN
 
 ### Development vs Production Settings
 
-| Setting | Development | Production |
-|---------|-------------|------------|
-| Log Level | DEBUG | INFO |
-| Memory | 1GB | 2-4GB |
-| Health Check | 30s | 10s |
-| Rate Limit | 60/min | 60/min |
-| Cache TTL | 10min | 10min |
-| Timeout | 59s | 59s |
+| Setting      | Development | Production |
+| ------------ | ----------- | ---------- |
+| Log Level    | DEBUG       | INFO       |
+| Memory       | 1GB         | 2-4GB      |
+| Health Check | 30s         | 10s        |
+| Rate Limit   | 60/min      | 60/min     |
+| Cache TTL    | 10min       | 10min      |
+| Timeout      | 59s         | 59s        |
 
 ## Monitoring and Health Checks
 
 ### Application Health Endpoints
+
 - **Health Check**: `GET /actuator/health`
 - **Info**: `GET /actuator/info`
 - **Metrics**: `GET /actuator/metrics`
 - **Mappings**: `GET /actuator/mappings`
 
 ### Docker Health Check
+
 ```dockerfile
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
   CMD wget --quiet --spider http://localhost:9090/actuator/health || exit 1
 ```
 
 ### Kubernetes Probes
+
 ```yaml
 livenessProbe:
   httpGet:
@@ -659,18 +685,21 @@ readinessProbe:
 ## Security Considerations
 
 ### Container Security
+
 - Non-root user execution
 - Minimal base images (Alpine)
 - Security scanning with tools like Trivy
 - Regular base image updates
 
 ### Network Security
+
 - HTTPS termination at load balancer
 - CORS configuration for allowed origins
 - Rate limiting at application and infrastructure level
 - API authentication and authorization
 
 ### Secrets Management
+
 - Environment variables for non-sensitive config
 - Secret management systems for tokens
 - Avoid secrets in container images
@@ -679,6 +708,7 @@ readinessProbe:
 ## Scaling and Load Balancing
 
 ### Horizontal Scaling
+
 ```bash
 # Docker Compose scaling
 docker-compose up -d --scale discogs-api=3
@@ -688,6 +718,7 @@ kubectl scale deployment discogs-api --replicas=5 -n discogs-api
 ```
 
 ### Load Balancer Configuration
+
 ```nginx
 upstream discogs_api {
     server localhost:9090;
@@ -725,6 +756,7 @@ server {
    - Monitor API usage
 
 ### Log Analysis
+
 ```bash
 # Docker logs
 docker logs discogs-query-api

@@ -30,6 +30,7 @@ A sophisticated full-stack application for querying the Discogs catalog with adv
 ## Features
 
 ### Backend Capabilities
+
 - **Batch Query Processing**: Execute multiple searches concurrently with configurable timeouts
 - **Advanced Search Types**: Support for artist, track, format, and compilation searches
 - **Marketplace Integration**: Real-time price and availability data from Discogs marketplace
@@ -40,6 +41,7 @@ A sophisticated full-stack application for querying the Discogs catalog with adv
 - **Comprehensive Error Handling**: Custom exceptions with detailed error responses
 
 ### Frontend Features
+
 - **Material-UI Interface**: Modern, responsive UI with stepper-based navigation
 - **Real-Time Search**: Instant search results with loading states and error handling
 - **Results Visualization**: Organized display of search results with cheapest item highlighting
@@ -47,6 +49,7 @@ A sophisticated full-stack application for querying the Discogs catalog with adv
 - **Progressive Web App**: Optimized for mobile and desktop experiences
 
 ### Infrastructure
+
 - **SpringDoc OpenAPI**: Comprehensive API documentation with Swagger UI
 - **Docker Support**: Multi-stage Dockerfile for optimized containerization
 - **Health Monitoring**: Spring Boot Actuator integration with health checks
@@ -56,6 +59,7 @@ A sophisticated full-stack application for querying the Discogs catalog with adv
 ## Architecture
 
 ### Backend Architecture (Spring Boot 3.5.4 + Java 24)
+
 - **Service Layer**: Interface-driven architecture with `DiscogsQueryService`, `QueryProcessingService`, and `MappingService`
 - **API Integration**: `DiscogsAPIClient` and `DiscogsWebScraperClient` for external service communication
 - **Rate Limiting**: Token bucket algorithm via `RateLimiterService` with configurable limits
@@ -65,6 +69,7 @@ A sophisticated full-stack application for querying the Discogs catalog with adv
 - **Security**: Spring Security with basic auth and CORS configuration
 
 ### Frontend Architecture (React 19 + Vite + Material-UI)
+
 - **Build System**: Vite for fast development and optimized production builds
 - **Component Architecture**: Modular components in `/modules` with dedicated testing
 - **State Management**: React hooks for local state with context for shared data
@@ -73,6 +78,7 @@ A sophisticated full-stack application for querying the Discogs catalog with adv
 - **Development**: TypeScript for type safety and better developer experience
 
 ### Infrastructure
+
 - **Containerization**: Multi-stage Docker build with Node 24 (frontend) and Amazon Corretto 24 (backend)
 - **Documentation**: SpringDoc OpenAPI with Swagger UI at `/swagger-ui.html`
 - **Monitoring**: Spring Boot Actuator with health checks and metrics endpoints
@@ -101,12 +107,14 @@ export SERVER_PORT=9090
 ### Installation
 
 1. **Clone the Repository**
+
    ```bash
    git clone https://github.com/yourusername/discogs-query-api.git
    cd discogs-query-api
    ```
 
 2. **Install Backend Dependencies**
+
    ```bash
    mvn clean install
    ```
@@ -123,9 +131,11 @@ export SERVER_PORT=9090
 #### Option 1: Separate Backend and Frontend
 
 1. **Start the Backend** (Terminal 1)
+
    ```bash
    mvn spring-boot:run
    ```
+
    Backend will be available at `http://localhost:9090`
 
 2. **Start the Frontend** (Terminal 2)
@@ -250,14 +260,12 @@ queries:
   Discogs API URL: `https://api.discogs.com/`
 
 - **Endpoints:**
-
   - Search: `database/search`
   - Release: `releases/`
   - Marketplace Check: `marketplace/stats/`
 
 - **Agent & Token:**  
   These are configured via environment variables:
-
   - Agent: `${DISCOGS_AGENT}`
   - Token: `${DISCOGS_TOKEN}`
 
@@ -290,6 +298,7 @@ token: ${DISCOGS_TOKEN}
 ### Running Tests
 
 #### Backend Tests
+
 ```bash
 # Run all backend tests (JUnit 5 + Mockito + Karate BDD)
 mvn test
@@ -305,6 +314,7 @@ mvn test -Dtest="**/*IT"
 ```
 
 #### Frontend Tests
+
 ```bash
 cd src/main/frontend
 
@@ -322,6 +332,7 @@ yarn format
 ```
 
 #### Test Coverage
+
 - **Backend**: JUnit 5 with Mockito for unit tests, Karate for BDD/API testing, Diffblue for additional coverage
 - **Frontend**: Jest with React Testing Library for component testing
 - **Integration**: Full API flow testing with mock Discogs responses
@@ -329,9 +340,11 @@ yarn format
 ## API Endpoints
 
 ### Primary Endpoint
+
 - **POST** `/discogs-query/search` - Execute batch queries with marketplace integration
 
 ### Documentation & Monitoring
+
 - **GET** `/swagger-ui.html` - Interactive API documentation
 - **GET** `/api-docs` - OpenAPI specification
 - **GET** `/actuator/health` - Application health check
@@ -352,6 +365,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Support
 
 For support and questions:
+
 - Check the [CLAUDE.md](CLAUDE.md) for development guidelines
 - Review the [SECURITY.md](SECURITY.md) for security policies
 - Open an issue on GitHub for bug reports or feature requests

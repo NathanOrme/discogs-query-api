@@ -7,6 +7,7 @@ This guide provides solutions to common issues encountered when developing, depl
 ## Quick Diagnostic Commands
 
 ### Health Check Commands
+
 ```bash
 # Application health
 curl http://localhost:9090/actuator/health
@@ -26,6 +27,7 @@ docker logs discogs-query-api
 ```
 
 ### System Information
+
 ```bash
 # Java version
 java -version
@@ -47,12 +49,14 @@ docker stats  # Docker containers
 ### Backend Won't Start
 
 #### Problem: Java Version Mismatch
+
 ```
 Error: A JNI error has occurred, please check your installation and try again
 Exception in thread "main" java.lang.UnsupportedClassVersionError
 ```
 
 **Solution:**
+
 ```bash
 # Check Java version
 java -version
@@ -67,11 +71,13 @@ export PATH=$JAVA_HOME/bin:$PATH
 ```
 
 #### Problem: Port Already in Use
+
 ```
 Web server failed to start. Port 9090 was already in use.
 ```
 
 **Solution:**
+
 ```bash
 # Find process using port 9090
 lsof -i :9090
@@ -89,11 +95,13 @@ mvn spring-boot:run
 ```
 
 #### Problem: Missing Environment Variables
+
 ```
 2024-01-01 12:00:00.000 ERROR --- [main] o.s.boot.SpringApplication: Application run failed
 ```
 
 **Solution:**
+
 ```bash
 # Check environment variables
 echo $DISCOGS_TOKEN
@@ -113,11 +121,13 @@ source .env
 ```
 
 #### Problem: Maven Build Failure
+
 ```
 [ERROR] Failed to execute goal on project discogs-query: Could not resolve dependencies
 ```
 
 **Solution:**
+
 ```bash
 # Clear Maven cache
 rm -rf ~/.m2/repository
@@ -135,11 +145,13 @@ ping repo1.maven.org
 ### Frontend Won't Start
 
 #### Problem: Node.js Version Incompatibility
+
 ```
 error engine-strict@undefined: The engine "node" is incompatible with this module
 ```
 
 **Solution:**
+
 ```bash
 # Check Node.js version
 node --version
@@ -155,11 +167,13 @@ nvm use 20
 ```
 
 #### Problem: Yarn Installation Issues
+
 ```
 error An unexpected error occurred: "EACCES: permission denied"
 ```
 
 **Solution:**
+
 ```bash
 # Fix npm permissions
 mkdir ~/.npm-global
@@ -174,11 +188,13 @@ npx yarn install
 ```
 
 #### Problem: Frontend Build Failures
+
 ```
 Module not found: Error: Can't resolve '@mui/material'
 ```
 
 **Solution:**
+
 ```bash
 cd src/main/frontend
 
@@ -200,11 +216,13 @@ yarn build
 ### API Integration Problems
 
 #### Problem: Discogs API Rate Limiting
+
 ```
 HTTP 429 Too Many Requests
 ```
 
 **Solution:**
+
 ```bash
 # Check rate limiter configuration
 curl http://localhost:9090/actuator/configprops | grep rate
@@ -218,11 +236,13 @@ curl http://localhost:9090/actuator/metrics/rate.limiter.requests
 ```
 
 #### Problem: Invalid Discogs Token
+
 ```
 HTTP 401 Unauthorized - Invalid consumer.
 ```
 
 **Solution:**
+
 ```bash
 # Verify token format
 echo $DISCOGS_TOKEN | wc -c  # Should be 40+ characters
@@ -235,11 +255,13 @@ curl -H "Authorization: Discogs token=$DISCOGS_TOKEN" \
 ```
 
 #### Problem: Network Connectivity Issues
+
 ```
 java.net.ConnectException: Connection refused
 ```
 
 **Solution:**
+
 ```bash
 # Test external connectivity
 curl -I https://api.discogs.com/
@@ -258,11 +280,13 @@ export HTTPS_PROXY=http://proxy:8080
 ### Performance Issues
 
 #### Problem: High Memory Usage
+
 ```
 java.lang.OutOfMemoryError: Java heap space
 ```
 
 **Solution:**
+
 ```bash
 # Increase heap size
 export JAVA_OPTS="-Xmx4g -Xms2g"
@@ -281,11 +305,13 @@ jhat heapdump.hprof
 ```
 
 #### Problem: Slow Response Times
+
 ```
 Request timeout after 59 seconds
 ```
 
 **Solution:**
+
 ```bash
 # Check cache hit rates
 curl http://localhost:9090/actuator/metrics/cache.gets
@@ -303,11 +329,13 @@ queries:
 ```
 
 #### Problem: Cache Issues
+
 ```
 Cache miss rate is too high
 ```
 
 **Solution:**
+
 ```bash
 # Check cache configuration
 curl http://localhost:9090/actuator/caches
@@ -328,11 +356,13 @@ spring:
 ### Container Won't Start
 
 #### Problem: Docker Build Failures
+
 ```
 ERROR [backend-builder 4/4] RUN mvn clean package -DskipTests
 ```
 
 **Solution:**
+
 ```bash
 # Check Docker daemon
 docker version
@@ -349,11 +379,13 @@ docker system prune  # Clean up space
 ```
 
 #### Problem: Container Exits Immediately
+
 ```
 Container discogs-query-api exited with code 1
 ```
 
 **Solution:**
+
 ```bash
 # Check container logs
 docker logs discogs-query-api
@@ -369,11 +401,13 @@ docker exec discogs-query-api ls -la /app/
 ```
 
 #### Problem: Health Check Failures
+
 ```
 Health check failed
 ```
 
 **Solution:**
+
 ```bash
 # Test health check manually
 docker exec discogs-query-api wget --quiet --spider http://localhost:9090/actuator/health
@@ -388,11 +422,13 @@ docker run --health-cmd='' discogs-query-api
 ### Network Issues
 
 #### Problem: Container Can't Connect to External APIs
+
 ```
 UnknownHostException: api.discogs.com
 ```
 
 **Solution:**
+
 ```bash
 # Test DNS resolution
 docker exec discogs-query-api nslookup api.discogs.com
@@ -413,11 +449,13 @@ docker run --dns 8.8.8.8 discogs-query-api
 ### H2 Database Problems
 
 #### Problem: Database Connection Failures
+
 ```
 Connection is not available, request timed out after 30000ms
 ```
 
 **Solution:**
+
 ```bash
 # Check H2 console (development)
 open http://localhost:9090/h2-console
@@ -430,11 +468,13 @@ rm -rf ~/discogs-query-db*
 ```
 
 #### Problem: Database Lock Issues
+
 ```
 Database may be already in use: "Locked by another process"
 ```
 
 **Solution:**
+
 ```bash
 # Find and kill processes holding database locks
 lsof | grep discogs-query-db
@@ -452,11 +492,13 @@ export SPRING_DATASOURCE_URL=jdbc:h2:mem:testdb
 ### Authentication Problems
 
 #### Problem: Basic Auth Not Working
+
 ```
 HTTP 401 Unauthorized
 ```
 
 **Solution:**
+
 ```bash
 # Check credentials
 curl -u username:password http://localhost:9090/actuator/health
@@ -470,11 +512,13 @@ curl -H "Authorization: Basic $(echo -n username:password | base64)" \
 ```
 
 #### Problem: CORS Issues
+
 ```
 CORS policy: No 'Access-Control-Allow-Origin' header
 ```
 
 **Solution:**
+
 ```bash
 # Check CORS configuration
 curl -H "Origin: http://localhost:3000" \
@@ -497,11 +541,13 @@ spring:
 ### Backend Test Failures
 
 #### Problem: Tests Failing Due to External Dependencies
+
 ```
 DiscogsAPIClientImplTest > testGetSearchResults() FAILED
 ```
 
 **Solution:**
+
 ```bash
 # Run tests with proper mocking
 mvn test -Dtest="DiscogsAPIClientImplTest" -Dspring.profiles.active=test
@@ -519,11 +565,13 @@ cat src/test/resources/application-test.yml
 ```
 
 #### Problem: Integration Tests Timing Out
+
 ```
 Test timed out after 30 seconds
 ```
 
 **Solution:**
+
 ```bash
 # Increase test timeout
 mvn test -Dtest.timeout=60000
@@ -542,11 +590,13 @@ public void testLongRunningOperation() {
 ### Frontend Test Issues
 
 #### Problem: React Testing Library Issues
+
 ```
 Unable to find an element with the text: "Expected Text"
 ```
 
 **Solution:**
+
 ```bash
 cd src/main/frontend
 
@@ -569,11 +619,13 @@ yarn test --verbose App.test.tsx
 ### Log Analysis
 
 #### Problem: Missing Log Output
+
 ```
 Application running but no logs visible
 ```
 
 **Solution:**
+
 ```bash
 # Check logging configuration
 curl http://localhost:9090/actuator/loggers
@@ -591,11 +643,13 @@ docker logs -f discogs-query-api
 ```
 
 #### Problem: Too Much Log Output
+
 ```
 Logs are flooding with DEBUG messages
 ```
 
 **Solution:**
+
 ```bash
 # Reduce log levels
 curl -X POST http://localhost:9090/actuator/loggers/org.springframework \
@@ -613,11 +667,13 @@ logging:
 ### Metrics Issues
 
 #### Problem: Metrics Not Available
+
 ```
 404 Not Found on /actuator/metrics
 ```
 
 **Solution:**
+
 ```bash
 # Check actuator configuration
 curl http://localhost:9090/actuator
@@ -639,11 +695,13 @@ grep -A5 -B5 micrometer pom.xml
 ### IntelliJ IDEA
 
 #### Problem: Hot Reload Not Working
+
 ```
 Changes not reflected without restart
 ```
 
 **Solution:**
+
 1. Enable automatic compilation:
    - Settings → Build → Compiler → Build project automatically
 2. Enable Run Dashboard:
@@ -652,11 +710,13 @@ Changes not reflected without restart
 4. Use Spring Boot DevTools dependency
 
 #### Problem: Maven Import Issues
+
 ```
 Cannot resolve org.springframework.boot:spring-boot-starter-web
 ```
 
 **Solution:**
+
 1. Invalidate Caches and Restart
 2. Reimport Maven project
 3. Check Maven settings: Settings → Build Tools → Maven
@@ -665,11 +725,13 @@ Cannot resolve org.springframework.boot:spring-boot-starter-web
 ### VS Code
 
 #### Problem: Java Extension Issues
+
 ```
 Java projects won't load properly
 ```
 
 **Solution:**
+
 ```bash
 # Reload VS Code window
 # Ctrl+Shift+P → "Developer: Reload Window"
@@ -691,6 +753,7 @@ rm -rf .vscode/
 ### Complete Environment Reset
 
 #### Backend Reset
+
 ```bash
 # Stop all Java processes
 pkill -f "spring-boot"
@@ -707,6 +770,7 @@ mvn clean install -U
 ```
 
 #### Frontend Reset
+
 ```bash
 cd src/main/frontend
 
@@ -722,6 +786,7 @@ yarn build
 ```
 
 #### Docker Reset
+
 ```bash
 # Stop all containers
 docker stop $(docker ps -aq)
@@ -736,6 +801,7 @@ docker build --no-cache -t discogs-query-api .
 ### Data Recovery
 
 #### Application State Recovery
+
 ```bash
 # Export current data (if applicable)
 curl http://localhost:9090/actuator/configprops > config-backup.json
@@ -750,12 +816,14 @@ cp data/discogs-db.mv.db data/discogs-db-backup-$(date +%Y%m%d).mv.db
 ## Getting Help
 
 ### Community Resources
+
 - **GitHub Issues**: Report bugs and request features
 - **Documentation**: Check docs/ directory for detailed guides
 - **Stack Overflow**: Tag questions with `discogs-api`, `spring-boot`, `react`
 - **Discord/Slack**: Join project communication channels
 
 ### Escalation Process
+
 1. **Self-service**: Use this troubleshooting guide
 2. **Documentation**: Check project documentation in docs/
 3. **Search**: Look for existing GitHub issues
@@ -763,6 +831,7 @@ cp data/discogs-db.mv.db data/discogs-db-backup-$(date +%Y%m%d).mv.db
 5. **Support**: Contact maintainers for critical issues
 
 ### Information to Include in Bug Reports
+
 - Operating System and version
 - Java version (`java -version`)
 - Node.js version (`node --version`)

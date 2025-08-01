@@ -26,30 +26,40 @@ This project is a backend-first full-stack application that queries the Discogs 
 
 ### Core Components
 
-1. **Backend (Spring Boot)**
+1. **Backend (Spring Boot 3.5.4 with Java 24)**
 
-   * REST API endpoints for searching by artist, track, format, etc.
-   * Integration with the Discogs API including authenticated requests and rate limiting.
-   * Global exception handling and structured error responses.
-   * API documentation via Swagger/OpenAPI.
-   * Caching layer (if present) to reduce redundant external calls.
-2. **Frontend (React)**
+   * **Main endpoint**: `/discogs-query/search` (POST) for batch query processing
+   * **Services**: `QueryProcessingService`, `MappingService`, `ResultCalculationService` for business logic
+   * **Clients**: `DiscogsAPIClientImpl` and `DiscogsWebScraperClientImpl` for external API calls  
+   * **Rate limiting**: `RateLimiterServiceImpl` with configurable thresholds (60 req/min default)
+   * **Caching**: Caffeine cache implementation via `CacheConfig`
+   * **Documentation**: SpringDoc OpenAPI (not SpringFox) with Swagger UI
+   * **Global exception handling**: `DiscogsQueryControllerAdvice` with custom exceptions
+   * **Security**: Spring Security with basic auth and CORS configuration
 
-   * Search UI (artist/track/format inputs) and result rendering.
-   * Feedback for loading, empty, and error states.
-   * Minimal dependencies to keep the surface lightweight; still subject to the UI verification flows when changes touch visible components.
+2. **Frontend (React 19 with Material-UI and Vite)**
+
+   * **Build tool**: Vite (not Create React App) with TypeScript support
+   * **UI Framework**: Material-UI (@mui/material) with stepper-based navigation
+   * **Components**: Modular architecture in `src/modules/` (QueryFields, SearchForm, Results, CheapestItem)
+   * **Testing**: Jest with React Testing Library, comprehensive test coverage
+   * **Styling**: Material-UI theming system with responsive design
+
 3. **Infrastructure**
 
-   * Dockerfiles for containerized development and deployment.
-   * Environment variable-driven configuration (tokens, ports, modes).
-   * Logging and observability (structured logs, optional metrics integration).
+   * **Multi-stage Dockerfile**: Separate frontend (Node 24) and backend (Maven + Corretto 24) build stages
+   * **Runtime**: Amazon Corretto 24 with non-root user for security
+   * **Health checks**: Spring Boot Actuator integration for container monitoring
+   * **Environment variables**: Comprehensive configuration via `application.yml` and Docker environment
 
 ## Priority API Endpoints & Flows
 
-* Identify the most-used or user-visible endpoints (e.g., `/api/search`, `/api/record/{id}`) and treat them as high priority when making changes, refactors, or adding features.
-* Ensure rate limiting logic is centralized and consistently applied to avoid Discogs throttling.
+* **Primary endpoint**: `/discogs-query/search` (POST) - handles all search operations with query batching
+* **Documentation**: Available at `/swagger-ui.html` and `/api-docs` endpoints  
+* **Health check**: `/actuator/health` for monitoring and container health checks
+* Ensure rate limiting logic is centralized and consistently applied to avoid Discogs throttling (configured via `RateLimiterServiceImpl`).
 * Response shape consistency: any change to public responses must preserve backward compatibility or be versioned with clear migration notes.
-* Swagger/OpenAPI definitions should reflect reality; updates to implementation that affect request/response schemas must also update the API docs.
+* SpringDoc OpenAPI definitions should reflect reality; updates to implementation that affect request/response schemas must also update the API docs.
 
 ## Development Commands
 
@@ -63,8 +73,22 @@ mvn test
 # Build for production
 mvn package
 
-# Frontend (if present)
-npm start
+# Frontend development server
+cd src/main/frontend && yarn start
+# or
+cd src/main/frontend && yarn dev
+
+# Frontend build
+cd src/main/frontend && yarn build
+
+# Frontend tests
+cd src/main/frontend && yarn test
+
+# Code formatting
+cd src/main/frontend && yarn format
+
+# Docker build (full application)
+docker build -t discogs-query-api .
 ```
 
 ## Architecture & Code Organization
@@ -81,22 +105,24 @@ npm start
 
 * **Branching**: For every new change, create a new descriptive git branch (e.g., `feature/search-caching`, `fix/record-endpoint-error-handling`). Keep all work, including TODO resolution and test/playwright validation, on that branch until the task is complete. Do not commit directly to main/trunk; merge only after passing validation.
 * **Before editing**: Run existing tests, review open TODOs near the area of change, and verify current behavior (for UI-affecting changes use Playwright MCP snapshots). Document any new concepts or deviations in the memory bank and expand this section accordingly.
-* **After editing**: Run `mvn test` to catch regressions. If frontend `.tsx` files are touched, run the React test suite or verify UI behavior and run Playwright MCP comparisons. Update Swagger if schema changes, and adjust documentation.
+* **After editing**: Run `mvn test` to catch regressions. If frontend `.tsx` files are touched, run `cd src/main/frontend && yarn test` or verify UI behavior and run Playwright MCP comparisons. Update SpringDoc annotations if schema changes, and adjust documentation.
 
 ## Common Development Tasks
 
-* **Adding new search parameters**: Extend controller/service, update Discogs client, validate inputs, adjust response DTOs, add unit tests, and update Swagger schema.
+* **Adding new search parameters**: Extend `DiscogsQueryController`/services, update `DiscogsAPIClientImpl`, validate inputs via Jakarta validation, adjust response DTOs, add unit tests, and update SpringDoc OpenAPI annotations.
 * **Improving rate limiting**: Locate centralized rate limit logic, adjust thresholds or backoff strategies, add metrics/logging for throttled calls, and validate with integration tests.
 * **Caching enhancements**: Identify cache keys, handle invalidation, and fall back gracefully if the cache layer fails. Document assumptions in memory bank.
 * **Error resolution**: Search for nearby TODOs and exceptions. Attempt to resolve or annotate with context; recursively validate with tests and, if applicable, UI snapshots.
 
 ## Testing & Verification
 
-* **Backend unit tests**: Cover services and controllers. Mock external Discogs calls.
-* **Integration tests**: Ensure full search flow works (from input to Discogs API proxy to output) with representative mock or sandbox data.
-* **Schema validation**: Verify that Swagger/OpenAPI definitions match actual runtime shapes.
-* **Frontend/visible changes**: Any change that affects the React UI should go through the Playwright MCP before/after snapshot comparison to catch regressions.
-* **Post-change validation**: Always run `mvn test` (and frontend test commands if relevant) after changes and ensure no test failures remain.
+* **Backend unit tests**: JUnit 5 with Mockito covering services and controllers. Mock external Discogs calls. Diffblue-generated tests provide additional coverage.
+* **BDD tests**: Karate framework for behavior-driven development and API contract testing.
+* **Integration tests**: Ensure full search flow works from `/discogs-query/search` endpoint through to Discogs API proxy with representative mock data.
+* **Schema validation**: Verify SpringDoc OpenAPI definitions match actual runtime request/response shapes.
+* **Frontend tests**: Jest with React Testing Library for component testing. Run with `yarn test` in frontend directory.
+* **Frontend/visible changes**: Any change affecting the React UI should go through Playwright MCP before/after snapshot comparison to catch regressions.
+* **Post-change validation**: Always run `mvn test` for backend and `cd src/main/frontend && yarn test` for frontend after changes. Ensure no test failures remain.
 
 ## Error Handling & Logging
 
@@ -143,12 +169,34 @@ SERVER_PORT=9090
 Local run steps:
 
 1. Export the required environment variables.
-2. Start backend: `mvn spring-boot:run`.
-3. Start frontend (if making UI changes): `npm start`.
-4. Visit Swagger UI to inspect/update documentation (typically at `http://localhost:9090/swagger-ui.html`).
+2. Start backend: `mvn spring-boot:run` (runs on port 9090).
+3. Start frontend (if making UI changes): `cd src/main/frontend && yarn start` (Vite dev server on port 3000).
+4. Visit SpringDoc Swagger UI at `http://localhost:9090/swagger-ui.html` to inspect/update API documentation.
+5. Access application health check at `http://localhost:9090/actuator/health`.
 
 ## Branch & Commit Practices
 
 * Branch naming should reflect intent, scope, and ticket (e.g., `feature/record-caching`, `fix/search-error-handling`).
-* Include in commit message: what was changed, what verification was done (tests, UI diffs, Swagger updates), TODOs resolved or deliberately deferred, and any memory bank updates.
-* Do not merge until all validation steps are green and any required approvals (e.g., UI framework migration) are documented.
+* Include in commit message: what was changed, what verification was done (tests, UI diffs, SpringDoc OpenAPI updates), TODOs resolved or deliberately deferred, and any memory bank updates.
+* Do not merge until all validation steps are green (mvn test, yarn test if frontend changes) and any required approvals (e.g., UI framework migration) are documented.
+
+## Additional Documentation
+
+### Comprehensive Project Documentation
+
+For detailed information about the project, refer to these comprehensive documentation files:
+
+* **[API Documentation](docs/API.md)** - Complete REST API reference with endpoints, request/response formats, authentication, and examples
+* **[Frontend Architecture](docs/FRONTEND.md)** - React application structure, component organization, state management, and development patterns
+* **[Testing Guide](docs/TESTING.md)** - Comprehensive testing strategy covering backend unit tests, frontend component tests, integration testing, and BDD with Karate
+* **[Deployment Guide](docs/DEPLOYMENT.md)** - Docker containerization, Kubernetes deployment, cloud platform setup, and production configuration
+* **[Development Setup](docs/DEVELOPMENT.md)** - Complete development environment setup, IDE configuration, debugging, and workflow guidelines
+* **[Troubleshooting Guide](docs/TROUBLESHOOTING.md)** - Common issues, diagnostic commands, performance problems, and emergency recovery procedures
+* **[Security Policy](SECURITY.md)** - Security architecture, vulnerability reporting, compliance standards, and secure development practices
+
+### Quick Reference Links
+
+- **Main README**: [README.md](README.md) - Project overview, features, and quick start guide
+* **API Documentation**: Interactive Swagger UI available at `http://localhost:9090/swagger-ui.html`
+* **Health Check**: Application status at `http://localhost:9090/actuator/health`
+* **Security Contact**: For security issues, see [SECURITY.md](SECURITY.md) for reporting procedures

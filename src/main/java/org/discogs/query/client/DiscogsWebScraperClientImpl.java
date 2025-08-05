@@ -1,5 +1,7 @@
 package org.discogs.query.client;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -40,6 +42,10 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
    * @param releaseId the Discogs release ID
    * @return a list of {@link DiscogsWebsiteResult} containing marketplace listings
    */
+  @CircuitBreaker(
+      name = "discogs-scraper",
+      fallbackMethod = "fallbackGetMarketplaceResultsForRelease")
+  @Retry(name = "discogs-scraper")
   @Override
   public List<DiscogsWebsiteResult> getMarketplaceResultsForRelease(final String releaseId) {
     String url = "https://www.discogs.com/sell/release/" + releaseId + UK_FILTER;
@@ -154,5 +160,21 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
       LogHelper.debug(() -> "Seller information not found for listing.");
       return null;
     }
+  }
+
+  /**
+   * Fallback method for getMarketplaceResultsForRelease when circuit breaker is open.
+   *
+   * @param releaseId the release ID that was being scraped
+   * @param ex the exception that triggered the fallback
+   * @return an empty list to gracefully handle scraper failures
+   */
+  public List<DiscogsWebsiteResult> fallbackGetMarketplaceResultsForRelease(
+      final String releaseId, final Exception ex) {
+    LogHelper.warn(
+        () -> "Circuit breaker fallback triggered for scraper release ID: {}. Error: {}",
+        releaseId,
+        ex.getMessage());
+    return new ArrayList<>(); // Return empty list instead of failing
   }
 }

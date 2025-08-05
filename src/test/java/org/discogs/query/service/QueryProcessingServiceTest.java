@@ -7,6 +7,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import org.discogs.query.interfaces.BatchMarketplaceService;
 import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.interfaces.DiscogsWebScraperClient;
 import org.discogs.query.model.DiscogsEntryDTO;
@@ -16,6 +18,7 @@ import org.discogs.query.model.DiscogsResultDTO;
 import org.discogs.query.model.enums.DiscogCountries;
 import org.discogs.query.model.enums.DiscogsFormats;
 import org.discogs.query.model.enums.DiscogsTypes;
+import org.discogs.query.service.discogs.DiscogsCollectionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +34,12 @@ class QueryProcessingServiceTest {
   @Mock private NormalizationService normalizationService;
 
   @Mock private DiscogsWebScraperClient discogsWebScraperClient;
+
+  @Mock private DiscogsCollectionService discogsCollectionService;
+
+  @Mock private BatchMarketplaceService batchMarketplaceService;
+
+  @Mock private AsyncQueryService asyncQueryService;
 
   @InjectMocks private QueryProcessingService queryProcessingService;
 
@@ -54,6 +63,7 @@ class QueryProcessingServiceTest {
   void processQueries_ShouldProcessEachQueryAndReturnResults() {
     // Mock normalizing queries
     when(normalizationService.normalizeQuery(any())).thenReturn(queryDTO);
+
     // Mock search results for each query
     DiscogsResultDTO resultDTO =
         new DiscogsResultDTO(
@@ -61,13 +71,16 @@ class QueryProcessingServiceTest {
             List.of(
                 new DiscogsEntryDTO(
                     1, "Title", List.of("Vinyl"), "url", "uri", "UK", "2023", true, 10.0f, 5)));
-    when(discogsQueryService.searchBasedOnQuery(any())).thenReturn(resultDTO);
+
+    // Mock the async service to return completed futures
+    when(asyncQueryService.createOptimizedFutures(any()))
+        .thenReturn(List.of(CompletableFuture.completedFuture(resultDTO)));
 
     List<DiscogsQueryDTO> queryDTOList = List.of(queryDTO);
     DiscogsRequestDTO discogsRequestDTO = new DiscogsRequestDTO(queryDTOList, null);
     List<DiscogsResultDTO> results = queryProcessingService.processQueries(discogsRequestDTO, 5);
 
     assertFalse(results.isEmpty());
-    verify(discogsQueryService, times(1)).searchBasedOnQuery(any());
+    verify(asyncQueryService, times(1)).createOptimizedFutures(any());
   }
 }

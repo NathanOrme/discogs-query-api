@@ -2,6 +2,7 @@ package org.discogs.query.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -35,7 +36,8 @@ class DiscogsQueryControllerAdviceTest {
     assertNotNull(response);
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     assertNotNull(response.getBody());
-    assertEquals("Marketplace error", response.getBody().errorMessage());
+    assertTrue(response.getBody().errorMessage().startsWith("Marketplace service error"));
+    assertTrue(response.getBody().errorMessage().contains("(ID:"));
   }
 
   @Test
@@ -50,7 +52,8 @@ class DiscogsQueryControllerAdviceTest {
     assertNotNull(response);
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     assertNotNull(response.getBody());
-    assertEquals("Search error", response.getBody().errorMessage());
+    assertTrue(response.getBody().errorMessage().startsWith("Search service error"));
+    assertTrue(response.getBody().errorMessage().contains("(ID:"));
   }
 
   @Test
@@ -65,7 +68,8 @@ class DiscogsQueryControllerAdviceTest {
     assertNotNull(response);
     assertEquals(HttpStatus.REQUEST_TIMEOUT, response.getStatusCode());
     assertNotNull(response.getBody());
-    assertEquals("Request took too long to process.", response.getBody().errorMessage());
+    assertTrue(response.getBody().errorMessage().startsWith("Request processing timeout"));
+    assertTrue(response.getBody().errorMessage().contains("(ID:"));
   }
 
   @Test
@@ -80,7 +84,8 @@ class DiscogsQueryControllerAdviceTest {
     assertNotNull(response);
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     assertNotNull(response.getBody());
-    assertEquals("IO error occurred", response.getBody().errorMessage());
+    assertTrue(response.getBody().errorMessage().startsWith("I/O operation failed"));
+    assertTrue(response.getBody().errorMessage().contains("(ID:"));
   }
 
   @Test
@@ -89,13 +94,13 @@ class DiscogsQueryControllerAdviceTest {
     Exception exception = new Exception("Generic error occurred");
 
     // Act
-    ResponseEntity<ErrorMessageDTO> response = controllerAdvice.handleException(exception);
+    ResponseEntity<ErrorMessageDTO> response = controllerAdvice.handleGenericException(exception);
 
     // Assert
     assertNotNull(response);
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     assertNotNull(response.getBody());
-    assertEquals(
-        "An unexpected error occurred: Generic error occurred", response.getBody().errorMessage());
+    assertTrue(response.getBody().errorMessage().startsWith("An unexpected error occurred"));
+    assertTrue(response.getBody().errorMessage().contains("(ID:"));
   }
 }

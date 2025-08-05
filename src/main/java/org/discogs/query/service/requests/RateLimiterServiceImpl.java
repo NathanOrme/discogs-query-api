@@ -17,18 +17,14 @@ public class RateLimiterServiceImpl implements RateLimiterService {
 
   @Override
   public void waitForRateLimit() {
-    LogHelper.debug(() -> "Starting to check rate limiter status...");
+    LogHelper.debug(() -> "Checking rate limiter status...");
 
-    while (!rateLimiter.tryAcquire()) {
-      try {
-        LogHelper.info(() -> "Rate limit reached. Waiting to acquire permit...");
-        TimeUnit.MILLISECONDS.sleep(100);
-      } catch (final InterruptedException e) {
-        Thread.currentThread().interrupt();
-        LogHelper.error(() -> "Thread interrupted while waiting for rate limit to reset", e);
-        return;
-      }
+    if (rateLimiter.tryAcquire()) {
+      LogHelper.debug(() -> "Acquired permit from rate limiter, proceeding with execution.");
+    } else {
+      LogHelper.warn(() -> "Rate limit exceeded. Request denied. Available tokens: {}", 
+          rateLimiter.getAvailableTokens());
+      throw new RuntimeException("Rate limit exceeded. Please retry later.");
     }
-    LogHelper.debug(() -> "Acquired permit from rate limiter, proceeding with execution.");
   }
 }

@@ -1,5 +1,7 @@
 package org.discogs.query.client;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import java.util.concurrent.Callable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +48,8 @@ public class DiscogsAPIClientImpl implements DiscogsAPIClient {
    * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API
    */
   @Cacheable(value = "discogsResults", key = "#searchUrl")
+  @CircuitBreaker(name = "discogs-api", fallbackMethod = "fallbackGetResultsForQuery")
+  @Retry(name = "discogs-api")
   @Override
   public DiscogsResult getResultsForQuery(final String searchUrl) {
     LogHelper.info(() -> CACHE_MISS_FOR_SEARCH_URL, searchUrl);
@@ -83,6 +87,8 @@ public class DiscogsAPIClientImpl implements DiscogsAPIClient {
    * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API
    */
   @Cacheable(value = "marketplaceResults", key = "#url")
+  @CircuitBreaker(name = "discogs-api", fallbackMethod = "fallbackGetMarketplaceResultForQuery")
+  @Retry(name = "discogs-api")
   @Override
   public DiscogsMarketplaceResult getMarketplaceResultForQuery(final String url) {
     LogHelper.info(() -> "Cache miss for url: {}", url);
@@ -156,5 +162,31 @@ public class DiscogsAPIClientImpl implements DiscogsAPIClient {
       }
       throw new DiscogsSearchException("Failed to fetch data from Discogs API", e);
     }
+  }
+
+  /**
+   * Fallback method for getResultsForQuery when circuit breaker is open.
+   *
+   * @param searchUrl the URL that was being queried
+   * @param ex the exception that triggered the fallback
+   * @return an empty DiscogsResult to gracefully handle failures
+   */
+  public DiscogsResult fallbackGetResultsForQuery(final String searchUrl, final Exception ex) {
+    LogHelper.warn(() -> "Circuit breaker fallback triggered for search URL: {}. Error: {}", 
+        searchUrl, ex.getMessage());
+    return new DiscogsResult(); // Return empty result instead of failing
+  }
+
+  /**
+   * Fallback method for getMarketplaceResultForQuery when circuit breaker is open.
+   *
+   * @param url the URL that was being queried
+   * @param ex the exception that triggered the fallback
+   * @return an empty DiscogsMarketplaceResult to gracefully handle failures
+   */
+  public DiscogsMarketplaceResult fallbackGetMarketplaceResultForQuery(final String url, final Exception ex) {
+    LogHelper.warn(() -> "Circuit breaker fallback triggered for marketplace URL: {}. Error: {}", 
+        url, ex.getMessage());
+    return new DiscogsMarketplaceResult(); // Return empty result instead of failing
   }
 }

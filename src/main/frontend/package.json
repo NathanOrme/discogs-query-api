@@ -26,7 +26,7 @@
     "rollup": "^4.45.1",
     "serve": "^14.2.4",
     "web-vitals": "^5.0.2",
-    "yaml": "2.8.0"
+    "yaml": "2.8.1"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",

@@ -46,49 +46,4 @@ discogs:
   agent: ${DISCOGS_AGENT}
   page-size: 20
   rate-limit: 60
-  rate-limit-burst: 10
   token: ${DISCOGS_TOKEN}
-  async:
-    api-pool-size: 8
-    scraper-pool-size: 4
-    queue-capacity: 100
-
-# Resilience4j Configuration
-resilience4j:
-  circuitbreaker:
-    instances:
-      discogs-api:
-        register-health-indicator: true
-        sliding-window-size: 10
-        minimum-number-of-calls: 5
-        permitted-number-of-calls-in-half-open-state: 3
-        wait-duration-in-open-state: 30s
-        failure-rate-threshold: 50
-        slow-call-rate-threshold: 50
-        slow-call-duration-threshold: 2s
-        record-exceptions:
-          - java.net.ConnectException
-          - java.net.SocketTimeoutException
-          - org.springframework.web.client.ResourceAccessException
-      discogs-scraper:
-        register-health-indicator: true
-        sliding-window-size: 8
-        minimum-number-of-calls: 3
-        permitted-number-of-calls-in-half-open-state: 2
-        wait-duration-in-open-state: 60s
-        failure-rate-threshold: 60
-        slow-call-rate-threshold: 60
-        slow-call-duration-threshold: 5s
-  retry:
-    instances:
-      discogs-api:
-        max-attempts: 3
-        wait-duration: 1s
-        exponential-backoff-multiplier: 2
-        retry-exceptions:
-          - java.net.ConnectException
-          - java.net.SocketTimeoutException
-      discogs-scraper:
-        max-attempts: 2
-        wait-duration: 2s
-        exponential-backoff-multiplier: 1.5

@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.helpers.LogHelper;
-import org.discogs.query.interfaces.BatchMarketplaceService;
 import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.interfaces.DiscogsWebScraperClient;
 import org.discogs.query.model.DiscogsEntryDTO;
@@ -38,8 +37,6 @@ public class QueryProcessingService {
   private final NormalizationService normalizationService;
   private final DiscogsWebScraperClient discogsWebScraperClient;
   private final DiscogsCollectionService discogsCollectionService;
-  private final BatchMarketplaceService batchMarketplaceService;
-  private final AsyncQueryService asyncQueryService;
 
   private List<DiscogsQueryDTO> generateQueriesBasedOnFormat(
       final @Valid DiscogsQueryDTO discogsQueryDTO) {
@@ -82,7 +79,7 @@ public class QueryProcessingService {
                   List<DiscogsQueryDTO> normalizedQueries =
                       expandedQueries.stream().map(normalizationService::normalizeQuery).toList();
                   List<CompletableFuture<DiscogsResultDTO>> futures =
-                      asyncQueryService.createOptimizedFutures(normalizedQueries);
+                      createFuturesForQueries(normalizedQueries);
                   List<DiscogsResultDTO> combinedResults =
                       handleFuturesWithTimeout(futures, timeoutInSeconds);
                   Set<DiscogsEntryDTO> uniqueResults =
@@ -108,8 +105,7 @@ public class QueryProcessingService {
   }
 
   /**
-   * Filters out Discogs entries that are not shipping from the UK marketplace. Now uses batch
-   * processing to eliminate N+1 API calls.
+   * Filters out Discogs entries that are not shipping from the UK marketplace.
    *
    * @param results the list of {@link DiscogsResultDTO} objects containing search results
    * @return a filtered list of {@link DiscogsResultDTO} objects where only UK-shipping entries
@@ -120,13 +116,50 @@ public class QueryProcessingService {
     return results.stream()
         .map(
             discogsResultDTO -> {
-              // Use batch marketplace service to optimize API calls
+              // Filter out DiscogsEntryDTOs that do not have UK marketplace listings
               List<DiscogsEntryDTO> filteredEntries =
-                  batchMarketplaceService.filterEntriesWithUKMarketplace(
-                      discogsResultDTO.results());
+                  discogsResultDTO.results().parallelStream()
+                      .filter(this::isUKMarketplaceEntry)
+                      .toList();
               return new DiscogsResultDTO(discogsResultDTO.searchQuery(), filteredEntries);
             })
         .filter(discogsResultDTO -> !discogsResultDTO.results().isEmpty())
+        .toList();
+  }
+
+  /**
+   * Checks if a {@link DiscogsEntryDTO} has marketplace listings in the UK.
+   *
+   * @param discogsEntryDTO the entry to check
+   * @return {@code true} if the entry has UK marketplace listings, {@code false} otherwise
+   */
+  private boolean isUKMarketplaceEntry(final DiscogsEntryDTO discogsEntryDTO) {
+    try {
+      return !discogsWebScraperClient
+          .getMarketplaceResultsForRelease(String.valueOf(discogsEntryDTO.id()))
+          .isEmpty();
+    } catch (final Exception e) {
+      LogHelper.error(e::getMessage);
+      return false;
+    }
+  }
+
+  /**
+   * Creates a list of asynchronous tasks (futures) for each query.
+   *
+   * @param discogsQueryDTOList the list of {@link DiscogsQueryDTO} objects to process
+   * @return a list of {@link CompletableFuture} objects for each query
+   */
+  private List<CompletableFuture<DiscogsResultDTO>> createFuturesForQueries(
+      final List<DiscogsQueryDTO> discogsQueryDTOList) {
+    return discogsQueryDTOList.stream()
+        .map(
+            query ->
+                CompletableFuture.supplyAsync(
+                    () -> {
+                      log.debug("Processing query: {}", query);
+                      return discogsQueryService.searchBasedOnQuery(query);
+                    }))
         .toList();
   }
 

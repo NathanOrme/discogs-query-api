@@ -1,5 +1,6 @@
 package org.discogs.query.service.requests;
 
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.helpers.LogHelper;
@@ -16,15 +17,18 @@ public class RateLimiterServiceImpl implements RateLimiterService {
 
   @Override
   public void waitForRateLimit() {
-    LogHelper.debug(() -> "Checking rate limiter status...");
+    LogHelper.debug(() -> "Starting to check rate limiter status...");
 
-    if (rateLimiter.tryAcquire()) {
-      LogHelper.debug(() -> "Acquired permit from rate limiter, proceeding with execution.");
-    } else {
-      LogHelper.warn(
-          () -> "Rate limit exceeded. Request denied. Available tokens: {}",
-          rateLimiter.getAvailableTokens());
-      throw new RuntimeException("Rate limit exceeded. Please retry later.");
+    while (!rateLimiter.tryAcquire()) {
+      try {
+        LogHelper.info(() -> "Rate limit reached. Waiting to acquire permit...");
+        TimeUnit.MILLISECONDS.sleep(100);
+      } catch (final InterruptedException e) {
+        Thread.currentThread().interrupt();
+        LogHelper.error(() -> "Thread interrupted while waiting for rate limit to reset", e);
+        return;
+      }
     }
+    LogHelper.debug(() -> "Acquired permit from rate limiter, proceeding with execution.");
   }
 }

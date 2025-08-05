@@ -17,8 +17,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
- * Implementation of BatchMarketplaceService that optimizes marketplace checking
- * by batching API calls and deduplicating requests.
+ * Implementation of BatchMarketplaceService that optimizes marketplace checking by batching API
+ * calls and deduplicating requests.
  */
 @Slf4j
 @Service
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 public class BatchMarketplaceServiceImpl implements BatchMarketplaceService {
 
   private final DiscogsWebScraperClient discogsWebScraperClient;
-  
+
   @Qualifier("discogsScraperExecutor")
   private final Executor scraperExecutor;
 
@@ -37,23 +37,27 @@ public class BatchMarketplaceServiceImpl implements BatchMarketplaceService {
     }
 
     // Extract unique release IDs to avoid duplicate API calls
-    Set<Integer> uniqueReleaseIds = entries.stream()
-        .map(DiscogsEntryDTO::id)
-        .collect(Collectors.toSet());
+    Set<Integer> uniqueReleaseIds =
+        entries.stream().map(DiscogsEntryDTO::id).collect(Collectors.toSet());
 
-    LogHelper.info(() -> "Batch checking marketplace availability for {} unique releases (from {} total entries)", 
-        uniqueReleaseIds.size(), entries.size());
+    LogHelper.info(
+        () ->
+            "Batch checking marketplace availability for {} unique releases (from {} total"
+                + " entries)",
+        uniqueReleaseIds.size(),
+        entries.size());
 
     // Batch check marketplace availability
     Set<Integer> availableReleaseIds = batchCheckMarketplaceAvailability(uniqueReleaseIds);
 
     // Filter entries based on marketplace availability
-    List<DiscogsEntryDTO> filteredEntries = entries.stream()
-        .filter(entry -> availableReleaseIds.contains(entry.id()))
-        .toList();
+    List<DiscogsEntryDTO> filteredEntries =
+        entries.stream().filter(entry -> availableReleaseIds.contains(entry.id())).toList();
 
-    LogHelper.info(() -> "Filtered {} entries with UK marketplace listings from {} original entries", 
-        filteredEntries.size(), entries.size());
+    LogHelper.info(
+        () -> "Filtered {} entries with UK marketplace listings from {} original entries",
+        filteredEntries.size(),
+        entries.size());
 
     return filteredEntries;
   }
@@ -67,29 +71,41 @@ public class BatchMarketplaceServiceImpl implements BatchMarketplaceService {
     Set<Integer> availableReleases = ConcurrentHashMap.newKeySet();
 
     // Process with dedicated thread pool for better resource control
-    List<CompletableFuture<Void>> futures = releaseIds.stream()
-        .map(releaseId -> CompletableFuture.runAsync(() -> {
-          try {
-            boolean hasMarketplaceListings = !discogsWebScraperClient
-                .getMarketplaceResultsForRelease(String.valueOf(releaseId))
-                .isEmpty();
-            
-            if (hasMarketplaceListings) {
-              availableReleases.add(releaseId);
-              LogHelper.debug(() -> "Release {} has UK marketplace listings", releaseId);
-            }
-          } catch (final Exception e) {
-            LogHelper.warn(() -> "Failed to check marketplace for release {}: {}", releaseId, e.getMessage());
-            // Don't include releases that fail the marketplace check
-          }
-        }, scraperExecutor))
-        .toList();
+    List<CompletableFuture<Void>> futures =
+        releaseIds.stream()
+            .map(
+                releaseId ->
+                    CompletableFuture.runAsync(
+                        () -> {
+                          try {
+                            boolean hasMarketplaceListings =
+                                !discogsWebScraperClient
+                                    .getMarketplaceResultsForRelease(String.valueOf(releaseId))
+                                    .isEmpty();
+
+                            if (hasMarketplaceListings) {
+                              availableReleases.add(releaseId);
+                              LogHelper.debug(
+                                  () -> "Release {} has UK marketplace listings", releaseId);
+                            }
+                          } catch (final Exception e) {
+                            LogHelper.warn(
+                                () -> "Failed to check marketplace for release {}: {}",
+                                releaseId,
+                                e.getMessage());
+                            // Don't include releases that fail the marketplace check
+                          }
+                        },
+                        scraperExecutor))
+            .toList();
 
     // Wait for all marketplace checks to complete
     CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
 
-    LogHelper.info(() -> "Batch marketplace check completed: {}/{} releases have UK listings", 
-        availableReleases.size(), releaseIds.size());
+    LogHelper.info(
+        () -> "Batch marketplace check completed: {}/{} releases have UK listings",
+        availableReleases.size(),
+        releaseIds.size());
 
     return availableReleases;
   }

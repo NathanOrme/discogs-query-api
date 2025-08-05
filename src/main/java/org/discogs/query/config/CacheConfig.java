@@ -12,8 +12,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Optimized cache configuration with different TTLs based on data volatility.
- * This replaces the previous one-size-fits-all cache configuration.
+ * Optimized cache configuration with different TTLs based on data volatility. This replaces the
+ * previous one-size-fits-all cache configuration.
  */
 @Slf4j
 @Configuration
@@ -21,66 +21,75 @@ public class CacheConfig {
 
   /**
    * Creates optimized cache configurations with different TTLs for different data types.
-   * 
-   * Cache Strategy:
-   * - Search results: 5 minutes (volatile, user queries change frequently)
-   * - Release details: 1 hour (stable, release info doesn't change often)
-   * - Marketplace data: 10 minutes (semi-volatile, prices change regularly)
-   * - Batch operations: 15 minutes (longer TTL for expensive batch operations)
+   *
+   * <p>Cache Strategy: - Search results: 5 minutes (volatile, user queries change frequently) -
+   * Release details: 1 hour (stable, release info doesn't change often) - Marketplace data: 10
+   * minutes (semi-volatile, prices change regularly) - Batch operations: 15 minutes (longer TTL for
+   * expensive batch operations)
    *
    * @return a configured CacheManager with optimized cache settings
    */
   @Bean
   public CacheManager cacheManager() {
     SimpleCacheManager cacheManager = new SimpleCacheManager();
-    
+
     // Search results cache - short TTL due to volatility
-    Cache searchResultsCache = new CaffeineCache("discogsResults",
-        Caffeine.newBuilder()
-            .expireAfterWrite(5, TimeUnit.MINUTES)
-            .maximumSize(500)
-            .recordStats()
-            .build());
+    Cache searchResultsCache =
+        new CaffeineCache(
+            "discogsResults",
+            Caffeine.newBuilder()
+                .expireAfterWrite(5, TimeUnit.MINUTES)
+                .maximumSize(500)
+                .recordStats()
+                .build());
 
     // String results cache - for raw API responses
-    Cache stringResultsCache = new CaffeineCache("stringResults",
-        Caffeine.newBuilder()
-            .expireAfterWrite(5, TimeUnit.MINUTES)
-            .maximumSize(300)
-            .recordStats()
-            .build());
+    Cache stringResultsCache =
+        new CaffeineCache(
+            "stringResults",
+            Caffeine.newBuilder()
+                .expireAfterWrite(5, TimeUnit.MINUTES)
+                .maximumSize(300)
+                .recordStats()
+                .build());
 
     // Marketplace results cache - medium TTL
-    Cache marketplaceCache = new CaffeineCache("marketplaceResults",
-        Caffeine.newBuilder()
-            .expireAfterWrite(10, TimeUnit.MINUTES)
-            .maximumSize(1000)
-            .recordStats()
-            .build());
+    Cache marketplaceCache =
+        new CaffeineCache(
+            "marketplaceResults",
+            Caffeine.newBuilder()
+                .expireAfterWrite(10, TimeUnit.MINUTES)
+                .maximumSize(1000)
+                .recordStats()
+                .build());
 
     // Collection releases cache - longer TTL as collection data is more stable
-    Cache collectionCache = new CaffeineCache("collectionReleases",
-        Caffeine.newBuilder()
-            .expireAfterWrite(1, TimeUnit.HOURS)
-            .maximumSize(200)
-            .recordStats()
-            .build());
+    Cache collectionCache =
+        new CaffeineCache(
+            "collectionReleases",
+            Caffeine.newBuilder()
+                .expireAfterWrite(1, TimeUnit.HOURS)
+                .maximumSize(200)
+                .recordStats()
+                .build());
 
     // Batch marketplace check cache - longer TTL for expensive operations
-    Cache batchMarketplaceCache = new CaffeineCache("batchMarketplaceCheck",
-        Caffeine.newBuilder()
-            .expireAfterWrite(15, TimeUnit.MINUTES)
-            .maximumSize(100)
-            .recordStats()
-            .build());
+    Cache batchMarketplaceCache =
+        new CaffeineCache(
+            "batchMarketplaceCheck",
+            Caffeine.newBuilder()
+                .expireAfterWrite(15, TimeUnit.MINUTES)
+                .maximumSize(100)
+                .recordStats()
+                .build());
 
-    cacheManager.setCaches(List.of(
-        searchResultsCache,
-        stringResultsCache, 
-        marketplaceCache,
-        collectionCache,
-        batchMarketplaceCache
-    ));
+    cacheManager.setCaches(
+        List.of(
+            searchResultsCache,
+            stringResultsCache,
+            marketplaceCache,
+            collectionCache,
+            batchMarketplaceCache));
 
     log.info("Configured optimized cache manager with {} cache instances", 5);
     log.info("Cache configurations:");

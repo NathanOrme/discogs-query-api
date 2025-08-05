@@ -10,9 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * Token bucket rate limiter implementation that provides smooth rate limiting
- * with burst capacity. This replaces the previous busy-wait approach with
- * an efficient token bucket algorithm.
+ * Token bucket rate limiter implementation that provides smooth rate limiting with burst capacity.
+ * This replaces the previous busy-wait approach with an efficient token bucket algorithm.
  */
 @Slf4j
 @Component
@@ -30,23 +29,26 @@ public class RateLimiter {
   @Value("${discogs.rate-limit-burst:10}")
   int burstSize;
 
-  /**
-   * Initializes the TokenBucket RateLimiter with the specified parameters.
-   */
+  /** Initializes the TokenBucket RateLimiter with the specified parameters. */
   public RateLimiter() {
     // Convert requests per minute to requests per second for smoother distribution
     this.refillRate = Math.max(1, maxRequestsPerMinute / 60);
     this.burstCapacity = Math.max(burstSize, refillRate * 2); // Allow some burst
     this.maxTokens = burstCapacity;
     this.tokens = new AtomicLong(maxTokens);
-    
-    LogHelper.info(() -> "TokenBucket RateLimiter initialized: {} requests/minute, {} burst capacity, {} refill rate/sec",
-        maxRequestsPerMinute, burstCapacity, refillRate);
+
+    LogHelper.info(
+        () ->
+            "TokenBucket RateLimiter initialized: {} requests/minute, {} burst capacity, {} refill"
+                + " rate/sec",
+        maxRequestsPerMinute,
+        burstCapacity,
+        refillRate);
   }
 
   /**
-   * Attempts to acquire a permit for a request using token bucket algorithm.
-   * This method is non-blocking and does not use busy-waiting.
+   * Attempts to acquire a permit for a request using token bucket algorithm. This method is
+   * non-blocking and does not use busy-waiting.
    *
    * @return true if a token was acquired, false if rate limit is exceeded
    */
@@ -70,24 +72,28 @@ public class RateLimiter {
     long currentTokens = tokens.get();
     while (currentTokens >= tokensRequested) {
       if (tokens.compareAndSet(currentTokens, currentTokens - tokensRequested)) {
-        LogHelper.debug(() -> "Acquired {} tokens. Remaining: {}", tokensRequested, currentTokens - tokensRequested);
+        LogHelper.debug(
+            () -> "Acquired {} tokens. Remaining: {}",
+            tokensRequested,
+            currentTokens - tokensRequested);
         return true;
       }
       currentTokens = tokens.get(); // Retry with updated value
     }
 
-    LogHelper.debug(() -> "Rate limit exceeded. Requested: {}, Available: {}", tokensRequested, currentTokens);
+    LogHelper.debug(
+        () -> "Rate limit exceeded. Requested: {}, Available: {}", tokensRequested, currentTokens);
     return false;
   }
 
   /**
-   * Refills the token bucket based on elapsed time since last refill.
-   * Uses atomic operations to ensure thread safety.
+   * Refills the token bucket based on elapsed time since last refill. Uses atomic operations to
+   * ensure thread safety.
    */
   private void refillTokens() {
     Instant now = Instant.now();
     Instant lastRefillTime = lastRefill.get();
-    
+
     if (lastRefill.compareAndSet(lastRefillTime, now)) {
       long elapsedSeconds = Duration.between(lastRefillTime, now).getSeconds();
       if (elapsedSeconds > 0) {
@@ -99,10 +105,13 @@ public class RateLimiter {
             currentTokens = tokens.get();
             newTokens = Math.min(currentTokens + tokensToAdd, maxTokens);
           } while (!tokens.compareAndSet(currentTokens, newTokens));
-          
+
           if (newTokens > currentTokens) {
-            LogHelper.debug(() -> "Refilled {} tokens after {} seconds. Total: {}", 
-                newTokens - currentTokens, elapsedSeconds, newTokens);
+            LogHelper.debug(
+                () -> "Refilled {} tokens after {} seconds. Total: {}",
+                newTokens - currentTokens,
+                elapsedSeconds,
+                newTokens);
           }
         }
       }
@@ -110,8 +119,7 @@ public class RateLimiter {
   }
 
   /**
-   * Returns the current number of available tokens.
-   * Useful for monitoring and debugging.
+   * Returns the current number of available tokens. Useful for monitoring and debugging.
    *
    * @return current token count
    */
@@ -130,8 +138,8 @@ public class RateLimiter {
   }
 
   /**
-   * No longer needs explicit shutdown as this implementation doesn't use threads.
-   * Kept for backward compatibility.
+   * No longer needs explicit shutdown as this implementation doesn't use threads. Kept for backward
+   * compatibility.
    */
   public void shutdown() {
     LogHelper.info(() -> "TokenBucket RateLimiter shutdown completed (no resources to cleanup).");

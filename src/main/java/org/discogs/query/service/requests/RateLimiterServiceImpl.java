@@ -1,6 +1,5 @@
 package org.discogs.query.service.requests;
 
-import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.helpers.LogHelper;
@@ -22,7 +21,8 @@ public class RateLimiterServiceImpl implements RateLimiterService {
     if (rateLimiter.tryAcquire()) {
       LogHelper.debug(() -> "Acquired permit from rate limiter, proceeding with execution.");
     } else {
-      LogHelper.warn(() -> "Rate limit exceeded. Request denied. Available tokens: {}", 
+      LogHelper.warn(
+          () -> "Rate limit exceeded. Request denied. Available tokens: {}",
           rateLimiter.getAvailableTokens());
       throw new RuntimeException("Rate limit exceeded. Please retry later.");
     }

@@ -10,9 +10,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
- * Configuration for dedicated thread pools to optimize async operations.
- * Replaces the default ForkJoinPool.commonPool() with properly sized
- * thread pools for different types of operations.
+ * Configuration for dedicated thread pools to optimize async operations. Replaces the default
+ * ForkJoinPool.commonPool() with properly sized thread pools for different types of operations.
  */
 @Slf4j
 @Configuration
@@ -29,8 +28,8 @@ public class AsyncConfig {
   private int queueCapacity;
 
   /**
-   * Dedicated thread pool for Discogs API calls.
-   * Optimized for I/O-bound operations with higher concurrency.
+   * Dedicated thread pool for Discogs API calls. Optimized for I/O-bound operations with higher
+   * concurrency.
    */
   @Bean("discogsApiExecutor")
   public Executor discogsApiExecutor() {
@@ -44,16 +43,19 @@ public class AsyncConfig {
     executor.setWaitForTasksToCompleteOnShutdown(true);
     executor.setAwaitTerminationSeconds(30);
     executor.initialize();
-    
-    log.info("Configured Discogs API thread pool: core={}, max={}, queue={}",
-        apiPoolSize, apiPoolSize * 2, queueCapacity);
-    
+
+    log.info(
+        "Configured Discogs API thread pool: core={}, max={}, queue={}",
+        apiPoolSize,
+        apiPoolSize * 2,
+        queueCapacity);
+
     return executor;
   }
 
   /**
-   * Dedicated thread pool for web scraping operations.
-   * Optimized for slower, resource-intensive operations.
+   * Dedicated thread pool for web scraping operations. Optimized for slower, resource-intensive
+   * operations.
    */
   @Bean("discogsScraperExecutor")
   public Executor discogsScraperExecutor() {
@@ -67,16 +69,17 @@ public class AsyncConfig {
     executor.setWaitForTasksToCompleteOnShutdown(true);
     executor.setAwaitTerminationSeconds(60);
     executor.initialize();
-    
-    log.info("Configured Discogs Scraper thread pool: core={}, max={}, queue={}",
-        scraperPoolSize, scraperPoolSize * 2, queueCapacity / 2);
-    
+
+    log.info(
+        "Configured Discogs Scraper thread pool: core={}, max={}, queue={}",
+        scraperPoolSize,
+        scraperPoolSize * 2,
+        queueCapacity / 2);
+
     return executor;
   }
 
-  /**
-   * General purpose thread pool for other async operations.
-   */
+  /** General purpose thread pool for other async operations. */
   @Bean("generalExecutor")
   public Executor generalExecutor() {
     ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -89,9 +92,9 @@ public class AsyncConfig {
     executor.setWaitForTasksToCompleteOnShutdown(true);
     executor.setAwaitTerminationSeconds(30);
     executor.initialize();
-    
+
     log.info("Configured General thread pool: core=4, max=8, queue={}", queueCapacity);
-    
+
     return executor;
   }
 }

@@ -108,8 +108,8 @@ public class QueryProcessingService {
   }
 
   /**
-   * Filters out Discogs entries that are not shipping from the UK marketplace.
-   * Now uses batch processing to eliminate N+1 API calls.
+   * Filters out Discogs entries that are not shipping from the UK marketplace. Now uses batch
+   * processing to eliminate N+1 API calls.
    *
    * @param results the list of {@link DiscogsResultDTO} objects containing search results
    * @return a filtered list of {@link DiscogsResultDTO} objects where only UK-shipping entries
@@ -122,14 +122,13 @@ public class QueryProcessingService {
             discogsResultDTO -> {
               // Use batch marketplace service to optimize API calls
               List<DiscogsEntryDTO> filteredEntries =
-                  batchMarketplaceService.filterEntriesWithUKMarketplace(discogsResultDTO.results());
+                  batchMarketplaceService.filterEntriesWithUKMarketplace(
+                      discogsResultDTO.results());
               return new DiscogsResultDTO(discogsResultDTO.searchQuery(), filteredEntries);
             })
         .filter(discogsResultDTO -> !discogsResultDTO.results().isEmpty())
         .toList();
   }
-
-
 
   /**
    * Handles the completion of asynchronous tasks, enforcing a timeout for each query. If a query

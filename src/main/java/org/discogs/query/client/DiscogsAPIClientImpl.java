@@ -172,8 +172,10 @@ public class DiscogsAPIClientImpl implements DiscogsAPIClient {
    * @return an empty DiscogsResult to gracefully handle failures
    */
   public DiscogsResult fallbackGetResultsForQuery(final String searchUrl, final Exception ex) {
-    LogHelper.warn(() -> "Circuit breaker fallback triggered for search URL: {}. Error: {}", 
-        searchUrl, ex.getMessage());
+    LogHelper.warn(
+        () -> "Circuit breaker fallback triggered for search URL: {}. Error: {}",
+        searchUrl,
+        ex.getMessage());
     return new DiscogsResult(); // Return empty result instead of failing
   }
 
@@ -184,9 +186,12 @@ public class DiscogsAPIClientImpl implements DiscogsAPIClient {
    * @param ex the exception that triggered the fallback
    * @return an empty DiscogsMarketplaceResult to gracefully handle failures
    */
-  public DiscogsMarketplaceResult fallbackGetMarketplaceResultForQuery(final String url, final Exception ex) {
-    LogHelper.warn(() -> "Circuit breaker fallback triggered for marketplace URL: {}. Error: {}", 
-        url, ex.getMessage());
+  public DiscogsMarketplaceResult fallbackGetMarketplaceResultForQuery(
+      final String url, final Exception ex) {
+    LogHelper.warn(
+        () -> "Circuit breaker fallback triggered for marketplace URL: {}. Error: {}",
+        url,
+        ex.getMessage());
     return new DiscogsMarketplaceResult(); // Return empty result instead of failing
   }
 }

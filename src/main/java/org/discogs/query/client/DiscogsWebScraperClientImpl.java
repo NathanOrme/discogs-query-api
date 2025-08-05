@@ -42,7 +42,9 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
    * @param releaseId the Discogs release ID
    * @return a list of {@link DiscogsWebsiteResult} containing marketplace listings
    */
-  @CircuitBreaker(name = "discogs-scraper", fallbackMethod = "fallbackGetMarketplaceResultsForRelease")
+  @CircuitBreaker(
+      name = "discogs-scraper",
+      fallbackMethod = "fallbackGetMarketplaceResultsForRelease")
   @Retry(name = "discogs-scraper")
   @Override
   public List<DiscogsWebsiteResult> getMarketplaceResultsForRelease(final String releaseId) {
@@ -167,9 +169,12 @@ public class DiscogsWebScraperClientImpl implements DiscogsWebScraperClient {
    * @param ex the exception that triggered the fallback
    * @return an empty list to gracefully handle scraper failures
    */
-  public List<DiscogsWebsiteResult> fallbackGetMarketplaceResultsForRelease(final String releaseId, final Exception ex) {
-    LogHelper.warn(() -> "Circuit breaker fallback triggered for scraper release ID: {}. Error: {}", 
-        releaseId, ex.getMessage());
+  public List<DiscogsWebsiteResult> fallbackGetMarketplaceResultsForRelease(
+      final String releaseId, final Exception ex) {
+    LogHelper.warn(
+        () -> "Circuit breaker fallback triggered for scraper release ID: {}. Error: {}",
+        releaseId,
+        ex.getMessage());
     return new ArrayList<>(); // Return empty list instead of failing
   }
 }

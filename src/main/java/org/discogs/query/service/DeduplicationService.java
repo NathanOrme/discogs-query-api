@@ -11,33 +11,37 @@ import org.discogs.query.model.DiscogsMapResultDTO;
 import org.springframework.stereotype.Service;
 
 /**
- * Service responsible for removing duplicate entries from Discogs search results.
- * Follows Single Responsibility Principle by handling only deduplication logic.
+ * Service responsible for removing duplicate entries from Discogs search results. Follows Single
+ * Responsibility Principle by handling only deduplication logic.
  */
 @Slf4j
 @Service
 public class DeduplicationService {
 
   /**
-   * Filters duplicate entries from a list of DiscogsMapResultDTO.
-   * This method mutates the input list by removing duplicates in-place.
+   * Filters duplicate entries from a list of DiscogsMapResultDTO. This method mutates the input
+   * list by removing duplicates in-place.
    *
    * @param discogsMapResultDTOS the list of DiscogsMapResultDTO to filter
    * @return the same list with duplicates removed for method chaining
    */
-  public List<DiscogsMapResultDTO> filterDuplicateEntries(final List<DiscogsMapResultDTO> discogsMapResultDTOS) {
-    LogHelper.debug(() -> "Starting deduplication process for {} result sets", discogsMapResultDTOS.size());
-    
+  public List<DiscogsMapResultDTO> filterDuplicateEntries(
+      final List<DiscogsMapResultDTO> discogsMapResultDTOS) {
+    LogHelper.debug(
+        () -> "Starting deduplication process for {} result sets", discogsMapResultDTOS.size());
+
     int totalEntriesBeforeDedup = countTotalEntries(discogsMapResultDTOS);
-    
+
     discogsMapResultDTOS.forEach(this::removeDuplicatesFromResultSet);
-    
+
     int totalEntriesAfterDedup = countTotalEntries(discogsMapResultDTOS);
     int duplicatesRemoved = totalEntriesBeforeDedup - totalEntriesAfterDedup;
-    
-    LogHelper.info(() -> "Deduplication complete. Removed {} duplicate entries from {} total entries", 
-        duplicatesRemoved, totalEntriesBeforeDedup);
-    
+
+    LogHelper.info(
+        () -> "Deduplication complete. Removed {} duplicate entries from {} total entries",
+        duplicatesRemoved,
+        totalEntriesBeforeDedup);
+
     return discogsMapResultDTOS;
   }
 
@@ -47,16 +51,16 @@ public class DeduplicationService {
    * @param discogsMapResultDTO the result set to deduplicate
    */
   private void removeDuplicatesFromResultSet(final DiscogsMapResultDTO discogsMapResultDTO) {
-    for (final Map.Entry<String, List<DiscogsEntryDTO>> resultEntry : 
-         discogsMapResultDTO.results().entrySet()) {
+    for (final Map.Entry<String, List<DiscogsEntryDTO>> resultEntry :
+        discogsMapResultDTO.results().entrySet()) {
       List<DiscogsEntryDTO> deduplicatedEntries = removeDuplicateEntries(resultEntry.getValue());
       resultEntry.setValue(deduplicatedEntries);
     }
   }
 
   /**
-   * Removes duplicate entries from a list of DiscogsEntryDTO based on their IDs.
-   * Uses a HashSet for O(1) lookup performance during deduplication.
+   * Removes duplicate entries from a list of DiscogsEntryDTO based on their IDs. Uses a HashSet for
+   * O(1) lookup performance during deduplication.
    *
    * @param entries the list of DiscogsEntryDTO to filter
    * @return a new list of unique DiscogsEntryDTO without duplicates
@@ -65,26 +69,21 @@ public class DeduplicationService {
     if (entries == null || entries.isEmpty()) {
       return entries;
     }
-    
+
     Set<Integer> seenIds = new HashSet<>();
-    return entries.stream()
-        .filter(entry -> entry != null && seenIds.add(entry.id())) 
-        .toList();
+    return entries.stream().filter(entry -> entry != null && seenIds.add(entry.id())).toList();
   }
 
   /**
-   * Counts the total number of entries across all result sets.
-   * Useful for monitoring and logging deduplication metrics.
+   * Counts the total number of entries across all result sets. Useful for monitoring and logging
+   * deduplication metrics.
    *
    * @param discogsMapResultDTOS the list of result sets
    * @return total number of entries
    */
   private int countTotalEntries(final List<DiscogsMapResultDTO> discogsMapResultDTOS) {
     return discogsMapResultDTOS.stream()
-        .mapToInt(resultDTO -> 
-            resultDTO.results().values().stream()
-                .mapToInt(List::size)
-                .sum())
+        .mapToInt(resultDTO -> resultDTO.results().values().stream().mapToInt(List::size).sum())
         .sum();
   }
 }

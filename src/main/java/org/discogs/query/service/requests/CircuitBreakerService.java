@@ -1,7 +1,5 @@
 package org.discogs.query.service.requests;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
@@ -11,15 +9,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * Circuit breaker implementation to handle persistent failures from external services.
- * Follows the circuit breaker pattern with CLOSED, OPEN, and HALF_OPEN states.
+ * Circuit breaker implementation to handle persistent failures from external services. Follows the
+ * circuit breaker pattern with CLOSED, OPEN, and HALF_OPEN states.
  */
 @Slf4j
 @Component
 public class CircuitBreakerService {
 
   public enum State {
-    CLOSED, OPEN, HALF_OPEN
+    CLOSED,
+    OPEN,
+    HALF_OPEN
   }
 
   public static class CircuitBreakerOpenException extends RuntimeException {
@@ -44,7 +44,7 @@ public class CircuitBreakerService {
 
   /**
    * Executes an operation within the circuit breaker.
-   * 
+   *
    * @param operation the operation to execute
    * @param <T> the return type of the operation
    * @return the result of the operation
@@ -52,7 +52,7 @@ public class CircuitBreakerService {
    */
   public <T> T execute(OperationWithException<T> operation) throws Exception {
     State currentState = state.get();
-    
+
     if (currentState == State.OPEN) {
       if (shouldAttemptReset()) {
         state.set(State.HALF_OPEN);
@@ -74,42 +74,37 @@ public class CircuitBreakerService {
     }
   }
 
-  /**
-   * Records a successful operation.
-   */
+  /** Records a successful operation. */
   private void onSuccess() {
     State currentState = state.get();
-    
+
     if (currentState == State.HALF_OPEN) {
       int successes = successCount.incrementAndGet();
       if (successes >= halfOpenMaxCalls) {
         reset();
-        LogHelper.info(() -> "Circuit breaker reset to CLOSED after {} successful calls", successes);
+        LogHelper.info(
+            () -> "Circuit breaker reset to CLOSED after {} successful calls", successes);
       }
     } else if (currentState == State.CLOSED) {
       failureCount.set(0);
     }
   }
 
-  /**
-   * Records a failed operation.
-   */
+  /** Records a failed operation. */
   private void onFailure() {
     lastFailureTime.set(System.currentTimeMillis());
     int failures = failureCount.incrementAndGet();
 
     State currentState = state.get();
-    
-    if (currentState == State.HALF_OPEN || 
-        (currentState == State.CLOSED && failures >= failureThreshold)) {
+
+    if (currentState == State.HALF_OPEN
+        || (currentState == State.CLOSED && failures >= failureThreshold)) {
       state.set(State.OPEN);
       LogHelper.warn(() -> "Circuit breaker opening after {} failures", failures);
     }
   }
 
-  /**
-   * Resets the circuit breaker to CLOSED state.
-   */
+  /** Resets the circuit breaker to CLOSED state. */
   private void reset() {
     state.set(State.CLOSED);
     failureCount.set(0);
@@ -118,7 +113,7 @@ public class CircuitBreakerService {
 
   /**
    * Determines if the circuit breaker should attempt to reset from OPEN to HALF_OPEN.
-   * 
+   *
    * @return true if timeout period has elapsed
    */
   private boolean shouldAttemptReset() {
@@ -127,7 +122,7 @@ public class CircuitBreakerService {
 
   /**
    * Gets the current state of the circuit breaker.
-   * 
+   *
    * @return the current state
    */
   public State getState() {
@@ -136,7 +131,7 @@ public class CircuitBreakerService {
 
   /**
    * Gets the current failure count.
-   * 
+   *
    * @return the failure count
    */
   public int getFailureCount() {
@@ -145,7 +140,7 @@ public class CircuitBreakerService {
 
   /**
    * Functional interface for operations that can throw exceptions.
-   * 
+   *
    * @param <T> the return type
    */
   @FunctionalInterface

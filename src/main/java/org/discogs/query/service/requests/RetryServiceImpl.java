@@ -29,7 +29,7 @@ public class RetryServiceImpl implements RetryService {
       throws Exception {
     int attempt = 1;
     Exception lastException = null;
-    
+
     while (isAttemptNumberLessThanMaximum(attempt)) {
       try {
         LogHelper.info(
@@ -37,13 +37,14 @@ public class RetryServiceImpl implements RetryService {
         return action.call();
       } catch (final Exception e) {
         lastException = e;
-        
+
         // Check if this is a non-retryable error
         if (!isRetryableException(e)) {
-          LogHelper.debug(() -> "Non-retryable exception encountered, exiting retry logic: {}", e.getMessage());
+          LogHelper.debug(
+              () -> "Non-retryable exception encountered, exiting retry logic: {}", e.getMessage());
           throw e;
         }
-        
+
         // Log the attempt
         LogHelper.warn(
             () -> "Error during {} on attempt {} of {}. Exception: {}",
@@ -51,19 +52,20 @@ public class RetryServiceImpl implements RetryService {
             attempt,
             RETRY_COUNT,
             e.getMessage());
-        
+
         // If this was the last attempt, throw the exception
         if (attempt == RETRY_COUNT) {
-          LogHelper.error(() -> "All {} retry attempts exhausted for {}", RETRY_COUNT, actionDescription);
+          LogHelper.error(
+              () -> "All {} retry attempts exhausted for {}", RETRY_COUNT, actionDescription);
           throw e;
         }
-        
+
         // Delay before retry
         delayThreadBasedOnException(e, attempt);
         attempt++;
       }
     }
-    
+
     // This should never be reached, but adding for safety
     if (lastException != null) {
       throw lastException;
@@ -73,7 +75,7 @@ public class RetryServiceImpl implements RetryService {
 
   /**
    * Determines if an exception should trigger a retry.
-   * 
+   *
    * @param e the exception to evaluate
    * @return true if the exception is transient and should be retried
    */
@@ -81,40 +83,42 @@ public class RetryServiceImpl implements RetryService {
     // Non-retryable client errors (4xx except 408, 429)
     if (e instanceof HttpClientErrorException clientException) {
       var statusCode = clientException.getStatusCode();
-      return statusCode.value() == HttpStatus.REQUEST_TIMEOUT.value() || 
-             statusCode.value() == HttpStatus.TOO_MANY_REQUESTS.value() ||
-             statusCode.value() == HttpStatus.LOCKED.value(); // 423 can sometimes be temporary
+      return statusCode.value() == HttpStatus.REQUEST_TIMEOUT.value()
+          || statusCode.value() == HttpStatus.TOO_MANY_REQUESTS.value()
+          || statusCode.value() == HttpStatus.LOCKED.value(); // 423 can sometimes be temporary
     }
-    
+
     // Server errors (5xx) are generally retryable
     if (e instanceof HttpServerErrorException) {
       return true;
     }
-    
+
     // Network-related exceptions are retryable
-    if (e instanceof ResourceAccessException || 
-        e instanceof SocketTimeoutException ||
-        e instanceof IOException) {
+    if (e instanceof ResourceAccessException
+        || e instanceof SocketTimeoutException
+        || e instanceof IOException) {
       return true;
     }
-    
+
     // Check for specific nested exceptions
     Throwable cause = e.getCause();
-    if (cause instanceof SocketTimeoutException ||
-        cause instanceof IOException ||
-        (cause instanceof HttpClientErrorException clientException && 
-         (clientException.getStatusCode().value() == HttpStatus.REQUEST_TIMEOUT.value() ||
-          clientException.getStatusCode().value() == HttpStatus.TOO_MANY_REQUESTS.value()))) {
+    if (cause instanceof SocketTimeoutException
+        || cause instanceof IOException
+        || (cause instanceof HttpClientErrorException clientException
+            && (clientException.getStatusCode().value() == HttpStatus.REQUEST_TIMEOUT.value()
+                || clientException.getStatusCode().value()
+                    == HttpStatus.TOO_MANY_REQUESTS.value()))) {
       return true;
     }
-    
+
     // Default to non-retryable for unknown exceptions
     return false;
   }
 
-  private void delayThreadBasedOnException(final Exception e, final int attempt) throws InterruptedException {
+  private void delayThreadBasedOnException(final Exception e, final int attempt)
+      throws InterruptedException {
     long delay = RETRY_DELAY;
-    
+
     if (is429StatusCodeException(e)) {
       LogHelper.info(() -> "429 Status Code Received - Using extended delay");
       delay = 30; // Long delay for rate limiting
@@ -125,7 +129,7 @@ public class RetryServiceImpl implements RetryService {
     } else {
       LogHelper.info(() -> "Using standard retry delay: {} seconds", delay);
     }
-    
+
     TimeUnit.SECONDS.sleep(delay);
   }
 
@@ -133,14 +137,14 @@ public class RetryServiceImpl implements RetryService {
     if (e instanceof HttpClientErrorException clientException) {
       return clientException.getStatusCode().value() == HttpStatus.TOO_MANY_REQUESTS.value();
     }
-    
+
     Throwable cause = e.getCause();
-    return cause instanceof HttpClientErrorException clientException &&
-           clientException.getStatusCode().value() == HttpStatus.TOO_MANY_REQUESTS.value();
+    return cause instanceof HttpClientErrorException clientException
+        && clientException.getStatusCode().value() == HttpStatus.TOO_MANY_REQUESTS.value();
   }
-  
+
   private boolean isServerErrorException(final Exception e) {
-    return e instanceof HttpServerErrorException ||
-           (e.getCause() instanceof HttpServerErrorException);
+    return e instanceof HttpServerErrorException
+        || (e.getCause() instanceof HttpServerErrorException);
   }
 }

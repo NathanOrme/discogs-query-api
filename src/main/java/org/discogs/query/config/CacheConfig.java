@@ -33,7 +33,12 @@ public class CacheConfig {
   public CacheManager cacheManager() {
     CaffeineCacheManager cacheManager = new CaffeineCacheManager();
     cacheManager.setCacheNames(
-        List.of("discogsResults", "stringResults", "marketplaceResults", "collectionReleases", "releaseResults"));
+        List.of(
+            "discogsResults",
+            "stringResults",
+            "marketplaceResults",
+            "collectionReleases",
+            "releaseResults"));
     cacheManager.setCaffeine(
         Caffeine.newBuilder()
             .expireAfterWrite(10, TimeUnit.MINUTES) // Configure cache

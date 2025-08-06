@@ -22,7 +22,8 @@ public class RateLimiter {
 
   private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
   private final AtomicInteger requestCount = new AtomicInteger(0);
-  private final LinkedBlockingQueue<CompletableFuture<Void>> waitingQueue = new LinkedBlockingQueue<>();
+  private final LinkedBlockingQueue<CompletableFuture<Void>> waitingQueue =
+      new LinkedBlockingQueue<>();
 
   @Value("${discogs.rate-limit}")
   int maxRequestsPerMinute;
@@ -42,7 +43,7 @@ public class RateLimiter {
   private void resetRequestCountAndProcessQueue() {
     requestCount.set(0);
     LogHelper.debug(() -> "Request count reset. Processing queued requests.");
-    
+
     // Process queued requests up to the rate limit
     int processed = 0;
     while (processed < maxRequestsPerMinute && !waitingQueue.isEmpty()) {
@@ -73,8 +74,8 @@ public class RateLimiter {
   }
 
   /**
-   * Acquires a permit for a request, queuing the request if the rate limit is exceeded.
-   * This method returns a CompletableFuture that completes when a permit is available.
+   * Acquires a permit for a request, queuing the request if the rate limit is exceeded. This method
+   * returns a CompletableFuture that completes when a permit is available.
    *
    * @return CompletableFuture that completes when a permit is acquired
    */
@@ -82,7 +83,7 @@ public class RateLimiter {
     if (tryAcquire()) {
       return CompletableFuture.completedFuture(null);
     }
-    
+
     CompletableFuture<Void> future = new CompletableFuture<>();
     waitingQueue.offer(future);
     LogHelper.debug(() -> "Request queued. Queue size: {}", waitingQueue.size());
@@ -92,11 +93,12 @@ public class RateLimiter {
   /** Shuts down the scheduler, releasing all resources. */
   public void shutdown() {
     log.info("Shutting down the RateLimiter scheduler...");
-    
+
     // Complete any remaining queued requests with interruption
-    waitingQueue.forEach(future -> future.completeExceptionally(new InterruptedException("Rate limiter shutdown")));
+    waitingQueue.forEach(
+        future -> future.completeExceptionally(new InterruptedException("Rate limiter shutdown")));
     waitingQueue.clear();
-    
+
     scheduler.shutdown();
     try {
       if (!scheduler.awaitTermination(1, TimeUnit.MINUTES)) {

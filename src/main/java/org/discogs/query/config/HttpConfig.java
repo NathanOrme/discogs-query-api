@@ -1,13 +1,12 @@
 package org.discogs.query.config;
 
-import java.time.Duration;
 import java.util.List;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
-import org.apache.hc.core5.util.Timeout;
 import org.apache.hc.core5.util.TimeValue;
+import org.apache.hc.core5.util.Timeout;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,10 +54,11 @@ public class HttpConfig {
    */
   @Bean
   public CloseableHttpClient httpClient() {
-    RequestConfig requestConfig = RequestConfig.custom()
-        .setConnectionRequestTimeout(Timeout.ofMilliseconds(connectionTimeout))
-        .setResponseTimeout(Timeout.ofMilliseconds(readTimeout))
-        .build();
+    RequestConfig requestConfig =
+        RequestConfig.custom()
+            .setConnectionRequestTimeout(Timeout.ofMilliseconds(connectionTimeout))
+            .setResponseTimeout(Timeout.ofMilliseconds(readTimeout))
+            .build();
 
     return HttpClients.custom()
         .setConnectionManager(connectionManager())
@@ -69,14 +69,14 @@ public class HttpConfig {
   }
 
   /**
-   * Creates a {@link RestTemplate} bean with connection pooling and timeout configuration.
-   * This bean is used to make HTTP requests to external services, such as the Discogs API.
+   * Creates a {@link RestTemplate} bean with connection pooling and timeout configuration. This
+   * bean is used to make HTTP requests to external services, such as the Discogs API.
    *
    * @return a {@link RestTemplate} instance configured for use in the application
    */
   @Bean
   public RestTemplate restTemplate() {
-    HttpComponentsClientHttpRequestFactory factory = 
+    HttpComponentsClientHttpRequestFactory factory =
         new HttpComponentsClientHttpRequestFactory(httpClient());
     return new RestTemplate(factory);
   }

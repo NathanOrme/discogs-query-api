@@ -148,11 +148,12 @@ public class DiscogsAPIClientImpl implements DiscogsAPIClient {
   private <T> T executeWithRateLimitAndRetry(
       final Callable<T> action, final String actionDescription) {
     try {
-      return circuitBreakerService.execute(() -> {
-        rateLimiterService.waitForRateLimit(); // Ensure rate limit
-        // before executing the action
-        return retryService.executeWithRetry(action, actionDescription);
-      });
+      return circuitBreakerService.execute(
+          () -> {
+            rateLimiterService.waitForRateLimit(); // Ensure rate limit
+            // before executing the action
+            return retryService.executeWithRetry(action, actionDescription);
+          });
     } catch (final CircuitBreakerService.CircuitBreakerOpenException e) {
       LogHelper.warn(() -> "Circuit breaker is open for {}", actionDescription);
       throw new DiscogsSearchException("Service temporarily unavailable due to circuit breaker", e);

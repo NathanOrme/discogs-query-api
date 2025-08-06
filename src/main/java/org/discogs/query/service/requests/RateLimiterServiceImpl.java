@@ -36,13 +36,15 @@ public class RateLimiterServiceImpl implements RateLimiterService {
   @Override
   public CompletableFuture<Void> acquireRateLimitAsync() {
     LogHelper.debug(() -> "Attempting to acquire rate limit asynchronously...");
-    return rateLimiter.acquireAsync()
-        .whenComplete((result, throwable) -> {
-          if (throwable == null) {
-            LogHelper.debug(() -> "Async rate limit permit acquired successfully.");
-          } else {
-            LogHelper.error(() -> "Failed to acquire async rate limit permit", throwable);
-          }
-        });
+    return rateLimiter
+        .acquireAsync()
+        .whenComplete(
+            (result, throwable) -> {
+              if (throwable == null) {
+                LogHelper.debug(() -> "Async rate limit permit acquired successfully.");
+              } else {
+                LogHelper.error(() -> "Failed to acquire async rate limit permit", throwable);
+              }
+            });
   }
 }

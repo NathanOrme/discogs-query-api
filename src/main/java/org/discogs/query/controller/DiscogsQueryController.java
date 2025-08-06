@@ -5,7 +5,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.helpers.LogHelper;
-import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsMapResultDTO;
 import org.discogs.query.model.DiscogsRequestDTO;
 import org.discogs.query.model.DiscogsResultDTO;
@@ -97,5 +96,4 @@ public class DiscogsQueryController {
   private boolean hasNoEntries(final List<DiscogsResultDTO> resultDTOList) {
     return resultDTOList.stream().allMatch(dto -> dto.results().isEmpty());
   }
-
 }

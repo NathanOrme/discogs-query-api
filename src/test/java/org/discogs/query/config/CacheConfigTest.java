@@ -16,7 +16,7 @@ class CacheConfigTest {
 
     assertInstanceOf(CaffeineCacheManager.class, cacheManager);
     CaffeineCacheManager caffeineCacheManager = (CaffeineCacheManager) cacheManager;
-    assertNotNull(caffeineCacheManager.getCache("default")); // Ensure
-    // default cache is configured
+    assertNotNull(caffeineCacheManager.getCache("discogsResults")); // Ensure
+    // discogsResults cache is configured
   }
 }

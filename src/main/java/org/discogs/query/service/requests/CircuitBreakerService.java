@@ -21,8 +21,11 @@ public class CircuitBreakerService {
      * Enum representing the states of the circuit breaker.
      */
     public enum State {
+        /** Circuit breaker allows all requests to pass through. */
         CLOSED,
+        /** Circuit breaker blocks all requests. */
         OPEN,
+        /** Circuit breaker allows limited requests to test if service has recovered. */
         HALF_OPEN
     }
 
@@ -30,6 +33,11 @@ public class CircuitBreakerService {
      * Exception thrown when the circuit breaker is open and a call is attempted.
      */
     public static class CircuitBreakerOpenException extends RuntimeException {
+        /**
+         * Creates a new CircuitBreakerOpenException with the specified message.
+         *
+         * @param message the exception message
+         */
         public CircuitBreakerOpenException(final String message) {
             super(message);
         }
@@ -180,6 +188,12 @@ public class CircuitBreakerService {
      */
     @FunctionalInterface
     public interface OperationWithException<T> {
+        /**
+         * Executes the operation that may throw an exception.
+         *
+         * @return the result of the operation
+         * @throws Exception if the operation fails
+         */
         T execute() throws Exception;
     }
 }

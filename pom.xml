@@ -164,6 +164,13 @@
             <artifactId>jsoup</artifactId>
             <version>1.21.1</version>
         </dependency>
+        
+        <!-- HTTP Client for connection pooling -->
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.4.2</version>
+        </dependency>
 
         <!--Testing-->
         <dependency>

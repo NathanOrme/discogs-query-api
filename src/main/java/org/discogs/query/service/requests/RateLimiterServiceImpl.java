@@ -1,5 +1,6 @@
 package org.discogs.query.service.requests;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,5 +31,18 @@ public class RateLimiterServiceImpl implements RateLimiterService {
       }
     }
     LogHelper.debug(() -> "Acquired permit from rate limiter, proceeding with execution.");
+  }
+
+  @Override
+  public CompletableFuture<Void> acquireRateLimitAsync() {
+    LogHelper.debug(() -> "Attempting to acquire rate limit asynchronously...");
+    return rateLimiter.acquireAsync()
+        .whenComplete((result, throwable) -> {
+          if (throwable == null) {
+            LogHelper.debug(() -> "Async rate limit permit acquired successfully.");
+          } else {
+            LogHelper.error(() -> "Failed to acquire async rate limit permit", throwable);
+          }
+        });
   }
 }

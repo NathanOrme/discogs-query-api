@@ -14,6 +14,7 @@ import org.discogs.query.interfaces.DiscogsAPIClient;
 import org.discogs.query.interfaces.HttpRequestService;
 import org.discogs.query.interfaces.RateLimiterService;
 import org.discogs.query.interfaces.RetryService;
+import org.discogs.query.service.requests.CircuitBreakerService;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,7 @@ public class DiscogsAPIClientImpl implements DiscogsAPIClient {
   private final HttpRequestService httpRequestService;
   private final RateLimiterService rateLimiterService;
   private final RetryService retryService;
+  private final CircuitBreakerService circuitBreakerService;
 
   /**
    * Retrieves results from the Discogs API for a given search URL.
@@ -119,7 +121,7 @@ public class DiscogsAPIClientImpl implements DiscogsAPIClient {
    * @return a {@link DiscogsRelease} object containing the details of the item on the marketplace
    * @throws DiscogsSearchException if an error occurs while fetching data from the Discogs API
    */
-  @Cacheable(value = "marketplaceResults", key = "#url")
+  @Cacheable(value = "releaseResults", key = "#url")
   @Override
   public DiscogsRelease getRelease(final String url) {
     LogHelper.info(() -> "Cache miss for url: {}", url);
@@ -146,9 +148,14 @@ public class DiscogsAPIClientImpl implements DiscogsAPIClient {
   private <T> T executeWithRateLimitAndRetry(
       final Callable<T> action, final String actionDescription) {
     try {
-      rateLimiterService.waitForRateLimit(); // Ensure rate limit
-      // before executing the action
-      return retryService.executeWithRetry(action, actionDescription);
+      return circuitBreakerService.execute(() -> {
+        rateLimiterService.waitForRateLimit(); // Ensure rate limit
+        // before executing the action
+        return retryService.executeWithRetry(action, actionDescription);
+      });
+    } catch (final CircuitBreakerService.CircuitBreakerOpenException e) {
+      LogHelper.warn(() -> "Circuit breaker is open for {}", actionDescription);
+      throw new DiscogsSearchException("Service temporarily unavailable due to circuit breaker", e);
     } catch (final Exception e) {
       if (DiscogsMarketplaceResult.class.isAssignableFrom(action.getClass())) {
         throw new DiscogsMarketplaceException(

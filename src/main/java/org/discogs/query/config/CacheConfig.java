@@ -1,6 +1,7 @@
 package org.discogs.query.config;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
@@ -31,6 +32,8 @@ public class CacheConfig {
   @Bean
   public CacheManager cacheManager() {
     CaffeineCacheManager cacheManager = new CaffeineCacheManager();
+    cacheManager.setCacheNames(
+        List.of("discogsResults", "stringResults", "marketplaceResults", "collectionReleases", "releaseResults"));
     cacheManager.setCaffeine(
         Caffeine.newBuilder()
             .expireAfterWrite(10, TimeUnit.MINUTES) // Configure cache

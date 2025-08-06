@@ -47,3 +47,19 @@ discogs:
   page-size: 20
   rate-limit: 60
   token: ${DISCOGS_TOKEN}
+
+# Circuit breaker configuration
+circuit-breaker:
+  failure-threshold: 5
+  timeout-duration: 60000 # milliseconds
+  half-open-max-calls: 3
+
+# HTTP client configuration
+http:
+  connection:
+    pool:
+      max-total: 100
+      max-per-route: 20
+    timeout: 30000 # milliseconds
+  read:
+    timeout: 60000 # milliseconds

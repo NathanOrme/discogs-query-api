@@ -1,5 +1,7 @@
 package org.discogs.query.interfaces;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * Service interface for managing rate limits.
  *
@@ -12,4 +14,12 @@ public interface RateLimiterService {
    * limiter permits a request.
    */
   void waitForRateLimit();
+
+  /**
+   * Asynchronously acquires a rate limit permit. This method returns a CompletableFuture that
+   * completes when a permit is available, allowing for non-blocking rate limit handling.
+   *
+   * @return CompletableFuture that completes when a rate limit permit is acquired
+   */
+  CompletableFuture<Void> acquireRateLimitAsync();
 }

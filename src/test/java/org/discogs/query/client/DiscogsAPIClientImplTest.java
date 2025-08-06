@@ -14,6 +14,7 @@ import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.interfaces.HttpRequestService;
 import org.discogs.query.interfaces.RateLimiterService;
 import org.discogs.query.interfaces.RetryService;
+import org.discogs.query.service.requests.CircuitBreakerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -28,6 +29,8 @@ class DiscogsAPIClientImplTest {
 
   @Mock private RetryService retryService;
 
+  @Mock private CircuitBreakerService circuitBreakerService;
+
   @InjectMocks private DiscogsAPIClientImpl client;
 
   @BeforeEach
@@ -40,20 +43,34 @@ class DiscogsAPIClientImplTest {
     String searchUrl = "http://example.com/search";
     DiscogsResult expectedResult = new DiscogsResult();
 
-    when(retryService.executeWithRetry(any(Callable.class), eq("Discogs " + "Search API Request")))
+    when(circuitBreakerService.execute(any(CircuitBreakerService.OperationWithException.class)))
+        .thenAnswer(
+            invocation -> {
+              CircuitBreakerService.OperationWithException<?> operation = invocation.getArgument(0);
+              return operation.execute();
+            });
+    when(retryService.executeWithRetry(any(Callable.class), eq("Discogs Search API Request")))
         .thenReturn(expectedResult);
 
     DiscogsResult result = client.getResultsForQuery(searchUrl);
 
+    verify(circuitBreakerService).execute(any(CircuitBreakerService.OperationWithException.class));
     verify(rateLimiterService).waitForRateLimit();
     verify(retryService).executeWithRetry(any(Callable.class), eq("Discogs Search API Request"));
-    assertSame(expectedResult, result, "The result should match the " + "expected result.");
+    assertSame(expectedResult, result, "The result should match the expected result.");
   }
 
   @Test
   void testGetResultsForQueryRetryFailure() throws Exception {
     String searchUrl = "http://example.com/search";
-    when(retryService.executeWithRetry(any(Callable.class), eq("Discogs " + "Search API Request")))
+
+    when(circuitBreakerService.execute(any(CircuitBreakerService.OperationWithException.class)))
+        .thenAnswer(
+            invocation -> {
+              CircuitBreakerService.OperationWithException<?> operation = invocation.getArgument(0);
+              return operation.execute();
+            });
+    when(retryService.executeWithRetry(any(Callable.class), eq("Discogs Search API Request")))
         .thenThrow(new RuntimeException("Simulated error"));
 
     try {
@@ -63,6 +80,7 @@ class DiscogsAPIClientImplTest {
       assertEquals("Failed to fetch data from Discogs API", e.getMessage());
     }
 
+    verify(circuitBreakerService).execute(any(CircuitBreakerService.OperationWithException.class));
     verify(rateLimiterService).waitForRateLimit();
     verify(retryService).executeWithRetry(any(Callable.class), eq("Discogs Search API Request"));
   }

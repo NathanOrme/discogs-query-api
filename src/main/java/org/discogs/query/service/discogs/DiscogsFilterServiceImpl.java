@@ -12,13 +12,13 @@ import org.discogs.query.domain.api.DiscogsResult;
 import org.discogs.query.domain.api.release.Artist;
 import org.discogs.query.domain.api.release.Track;
 import org.discogs.query.exceptions.DiscogsSearchException;
-import org.discogs.query.util.DiscogsUrlBuilder;
 import org.discogs.query.helpers.LogHelper;
-import org.discogs.query.util.StringHelper;
 import org.discogs.query.interfaces.DiscogsAPIClient;
 import org.discogs.query.interfaces.DiscogsFilterService;
-import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.interfaces.NormalizationService;
+import org.discogs.query.model.DiscogsQueryDTO;
+import org.discogs.query.util.DiscogsUrlBuilder;
+import org.discogs.query.util.StringHelper;
 import org.springframework.stereotype.Service;
 
 /**

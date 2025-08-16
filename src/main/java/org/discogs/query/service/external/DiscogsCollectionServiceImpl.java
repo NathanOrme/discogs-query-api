@@ -5,12 +5,12 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.domain.api.DiscogsCollectionRelease;
-import org.discogs.query.util.DiscogsUrlBuilder;
 import org.discogs.query.helpers.LogHelper;
 import org.discogs.query.interfaces.DiscogsAPIClient;
 import org.discogs.query.interfaces.DiscogsCollectionService;
 import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
+import org.discogs.query.util.DiscogsUrlBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

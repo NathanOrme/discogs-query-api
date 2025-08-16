@@ -1,4 +1,4 @@
-package org.discogs.query.service;
+package org.discogs.query.service.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -10,11 +10,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 
-class ResultCalculationServiceTest {
+class ResultCalculationServiceImplTest {
 
-  @InjectMocks private ResultCalculationService resultCalculationService;
+  @InjectMocks private ResultCalculationServiceImpl resultCalculationService;
 
-  public ResultCalculationServiceTest() {
+  public ResultCalculationServiceImplTest() {
     MockitoAnnotations.openMocks(this);
   }
 

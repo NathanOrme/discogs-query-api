@@ -1,4 +1,4 @@
-package org.discogs.query.service;
+package org.discogs.query.service.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -26,10 +26,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ContextConfiguration(classes = {MappingService.class})
+@ContextConfiguration(classes = {MappingServiceImpl.class})
 @ExtendWith(SpringExtension.class)
-class MappingServiceDiffblueTest {
-  @Autowired private MappingService mappingService;
+class MappingServiceImplDiffblueTest {
+  @Autowired private MappingServiceImpl mappingService;
 
   private static ArrayList<DiscogsResultDTO> getDiscogsResultDTOS(
       final ArrayList<DiscogsEntryDTO> results) {

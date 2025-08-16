@@ -1,4 +1,4 @@
-package org.discogs.query.service;
+package org.discogs.query.service.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -13,9 +13,9 @@ import org.discogs.query.model.DiscogsResultDTO;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-class MappingServiceTest {
+class MappingServiceImplTest {
 
-  private final MappingService mappingService = new MappingService();
+  private final MappingServiceImpl mappingService = new MappingServiceImpl();
 
   @Test
   void testConvertEntriesToMapByTitle() {
@@ -42,7 +42,7 @@ class MappingServiceTest {
     DiscogsResult result = createDiscogsResult(List.of(entry));
 
     // Mock the MappingService's mapToResultDTO method
-    MappingService mappingServiceSpy = Mockito.spy(mappingService);
+    MappingServiceImpl mappingServiceSpy = Mockito.spy(mappingService);
     Mockito.doReturn(resultDTO)
         .when(mappingServiceSpy)
         .mapObjectToDTO(result, createDiscogsQueryDTO());

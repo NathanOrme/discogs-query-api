@@ -11,10 +11,10 @@ import static org.mockito.Mockito.when;
 import java.util.concurrent.Callable;
 import org.discogs.query.domain.api.DiscogsResult;
 import org.discogs.query.exceptions.DiscogsSearchException;
+import org.discogs.query.interfaces.CircuitBreakerService;
 import org.discogs.query.interfaces.HttpRequestService;
 import org.discogs.query.interfaces.RateLimiterService;
 import org.discogs.query.interfaces.RetryService;
-import org.discogs.query.interfaces.CircuitBreakerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -44,10 +44,11 @@ class DiscogsAPIClientImplTest {
     DiscogsResult expectedResult = new DiscogsResult();
 
     when(circuitBreakerService.execute(any(CircuitBreakerService.OperationWithException.class)))
-        .thenAnswer(invocation -> {
-          CircuitBreakerService.OperationWithException<?> operation = invocation.getArgument(0);
-          return operation.execute();
-        });
+        .thenAnswer(
+            invocation -> {
+              CircuitBreakerService.OperationWithException<?> operation = invocation.getArgument(0);
+              return operation.execute();
+            });
     when(retryService.executeWithRetry(any(Callable.class), eq("Discogs Search API Request")))
         .thenReturn(expectedResult);
 
@@ -62,12 +63,13 @@ class DiscogsAPIClientImplTest {
   @Test
   void testGetResultsForQueryRetryFailure() throws Exception {
     String searchUrl = "http://example.com/search";
-    
+
     when(circuitBreakerService.execute(any(CircuitBreakerService.OperationWithException.class)))
-        .thenAnswer(invocation -> {
-          CircuitBreakerService.OperationWithException<?> operation = invocation.getArgument(0);
-          return operation.execute();
-        });
+        .thenAnswer(
+            invocation -> {
+              CircuitBreakerService.OperationWithException<?> operation = invocation.getArgument(0);
+              return operation.execute();
+            });
     when(retryService.executeWithRetry(any(Callable.class), eq("Discogs Search API Request")))
         .thenThrow(new RuntimeException("Simulated error"));
 

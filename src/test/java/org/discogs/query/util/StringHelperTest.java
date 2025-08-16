@@ -1,4 +1,4 @@
-package org.discogs.query.helpers;
+package org.discogs.query.util;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

@@ -14,7 +14,7 @@ import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.interfaces.HttpRequestService;
 import org.discogs.query.interfaces.RateLimiterService;
 import org.discogs.query.interfaces.RetryService;
-import org.discogs.query.service.requests.CircuitBreakerService;
+import org.discogs.query.interfaces.CircuitBreakerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

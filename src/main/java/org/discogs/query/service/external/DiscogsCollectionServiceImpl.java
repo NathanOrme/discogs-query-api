@@ -1,13 +1,14 @@
-package org.discogs.query.service.discogs;
+package org.discogs.query.service.external;
 
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.domain.api.DiscogsCollectionRelease;
-import org.discogs.query.helpers.DiscogsUrlBuilder;
+import org.discogs.query.util.DiscogsUrlBuilder;
 import org.discogs.query.helpers.LogHelper;
 import org.discogs.query.interfaces.DiscogsAPIClient;
+import org.discogs.query.interfaces.DiscogsCollectionService;
 import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class DiscogsCollectionService {
+public class DiscogsCollectionServiceImpl implements DiscogsCollectionService {
 
   private final DiscogsUrlBuilder discogsUrlBuilder;
   private final DiscogsAPIClient discogsAPIClient;
@@ -24,12 +25,7 @@ public class DiscogsCollectionService {
   @Value("${queries.searchCollection}")
   private boolean searchCollection;
 
-  /**
-   * Filters out all results already owned by the username in their Discogs collection.
-   *
-   * @param username Username to search against.
-   * @param entries List of Discogs search results to filter, using their IDs.
-   */
+  @Override
   public List<DiscogsResultDTO> filterOwnedReleases(
       final String username, final List<DiscogsResultDTO> entries) {
     if (!searchCollection || entries == null || entries.isEmpty()) {

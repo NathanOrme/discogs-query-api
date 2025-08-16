@@ -9,16 +9,16 @@ import org.discogs.query.domain.api.DiscogsEntry;
 import org.discogs.query.domain.api.DiscogsMarketplaceResult;
 import org.discogs.query.domain.api.DiscogsResult;
 import org.discogs.query.exceptions.DiscogsSearchException;
-import org.discogs.query.helpers.DiscogsUrlBuilder;
+import org.discogs.query.util.DiscogsUrlBuilder;
 import org.discogs.query.helpers.LogHelper;
-import org.discogs.query.helpers.StringHelper;
+import org.discogs.query.util.StringHelper;
 import org.discogs.query.interfaces.DiscogsAPIClient;
 import org.discogs.query.interfaces.DiscogsFilterService;
 import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.discogs.query.model.enums.DiscogsFormats;
-import org.discogs.query.service.MappingService;
+import org.discogs.query.interfaces.MappingService;
 import org.springframework.stereotype.Service;
 
 /**

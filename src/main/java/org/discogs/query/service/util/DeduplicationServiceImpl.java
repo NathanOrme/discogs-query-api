@@ -1,4 +1,4 @@
-package org.discogs.query.service;
+package org.discogs.query.service.util;
 
 import java.util.HashSet;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.helpers.LogHelper;
+import org.discogs.query.interfaces.DeduplicationService;
 import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsMapResultDTO;
 import org.springframework.stereotype.Service;
@@ -16,15 +17,9 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class DeduplicationService {
+public class DeduplicationServiceImpl implements DeduplicationService {
 
-  /**
-   * Filters duplicate entries from a list of DiscogsMapResultDTO. This method mutates the input
-   * list by removing duplicates in-place.
-   *
-   * @param discogsMapResultDTOS the list of DiscogsMapResultDTO to filter
-   * @return the same list with duplicates removed for method chaining
-   */
+  @Override
   public List<DiscogsMapResultDTO> filterDuplicateEntries(
       final List<DiscogsMapResultDTO> discogsMapResultDTOS) {
     LogHelper.debug(

@@ -1,7 +1,8 @@
-package org.discogs.query.helpers;
+package org.discogs.query.util;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.discogs.query.helpers.LogHelper;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 

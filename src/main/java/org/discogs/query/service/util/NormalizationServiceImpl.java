@@ -1,9 +1,10 @@
-package org.discogs.query.service;
+package org.discogs.query.service.util;
 
 import java.text.Normalizer;
 import java.util.Map;
 import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
+import org.discogs.query.interfaces.NormalizationService;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class NormalizationService {
+public class NormalizationServiceImpl implements NormalizationService {
 
   private static final Map<String, String> replacements =
       Map.of(
@@ -38,14 +39,7 @@ public class NormalizationService {
       Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
   private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s+");
 
-  /**
-   * Normalizes the input string by: - Removing diacritical marks (e.g., accents) - Removing forward
-   * and backward slashes and other specific characters as per requirements - Trimming whitespace at
-   * the ends
-   *
-   * @param input the string to be normalized
-   * @return the normalized string, or null if the input is null
-   */
+  @Override
   public String normalizeString(final String input) {
     if (input == null) {
       return null;
@@ -61,13 +55,7 @@ public class NormalizationService {
     return cleaned;
   }
 
-  /**
-   * Normalizes the fields of the given {@link DiscogsQueryDTO} object.
-   *
-   * @param query the {@link DiscogsQueryDTO} object to be normalized; if {@code null}, this method
-   *     returns {@code null}
-   * @return a new {@link DiscogsQueryDTO} object with normalized fields
-   */
+  @Override
   public DiscogsQueryDTO normalizeQuery(final DiscogsQueryDTO query) {
     if (query == null) {
       return null;

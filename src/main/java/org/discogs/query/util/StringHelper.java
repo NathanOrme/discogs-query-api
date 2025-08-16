@@ -1,4 +1,4 @@
-package org.discogs.query.helpers;
+package org.discogs.query.util;
 
 import lombok.NoArgsConstructor;
 import org.discogs.query.model.enums.DiscogsVarious;

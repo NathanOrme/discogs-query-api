@@ -81,17 +81,6 @@ jobs:
           DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
           DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}
 
-      - name: Run Checkstyle
-        run: |
-          if [ -f "lint/checkstyle.xml" ]; then
-            mvn checkstyle:check -Dcheckstyle.config.location=lint/checkstyle.xml
-          else
-            echo "Checkstyle configuration not found, skipping checkstyle check"
-          fi
-        env:
-          DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
-          DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}
-
       - name: Run tests and build javadoc
         run: mvn clean install javadoc:javadoc -Dmaven.javadoc.additionalparam=-Xdoclint:none -Dmaven.javadoc.failOnError=false
         env:

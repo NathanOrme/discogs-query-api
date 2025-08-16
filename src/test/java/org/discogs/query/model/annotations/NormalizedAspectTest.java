@@ -5,7 +5,7 @@ import static org.mockito.Mockito.when;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.discogs.query.service.NormalizationService;
+import org.discogs.query.interfaces.NormalizationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -13,7 +13,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 
-@SpringBootTest
+@SpringBootTest(
+    properties = {
+      "discogs.agent=test-agent",
+      "discogs.token=test-token",
+      "spring.security.allowed-origins="
+    })
 @ContextConfiguration(classes = {NormalizedAspect.class})
 class NormalizedAspectTest {
 

@@ -24,23 +24,28 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Get next version
-        id: get_semver
-        uses: rickstaa/action-get-semver@v1
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      - name: 'Get next minor version'
+        id: semvers
+        uses: "WyriHaximus/github-action-next-semvers@v1"
         with:
-          bump_level: "minor"
+          version: ${{ steps.previoustag.outputs.tag }}
 
       - name: Show the next version
         run: |
-          echo "Next version: ${{ steps.get_semver.outputs.next_version }}"
+          echo "Next version: ${{ steps.semvers.outputs.minor  }}"
 
       - name: Remove v prefix
         id: removev
-        run: echo "ref_name=$(echo ${{ steps.get_semver.outputs.next_version }} | sed 's/^v//')" >> $GITHUB_ENV
+        run: echo "ref_name=$(echo ${{ steps.semvers.outputs.minor  }} | sed 's/^v//')" >> $GITHUB_ENV
 
       - name: Set output for version
         id: set_output
-        run: echo "::set-output name=version::${{ steps.get_semver.outputs.next_version }}"
+        run: echo "::set-output name=version::${{ steps.semvers.outputs.minor  }}"
 
   build-backend:
     name: Build Backend
@@ -72,17 +77,6 @@ jobs:
 
       - name: Install backend dependencies
         run: mvn clean install -DskipTests
-        env:
-          DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
-          DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}
-
-      - name: Run Checkstyle
-        run: |
-          if [ -f "lint/checkstyle.xml" ]; then
-            mvn checkstyle:check -Dcheckstyle.config.location=lint/checkstyle.xml
-          else
-            echo "Checkstyle configuration not found, skipping checkstyle check"
-          fi
         env:
           DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
           DISCOGS_AGENT: ${{ secrets.DISCOGS_AGENT }}

@@ -1,4 +1,4 @@
-package org.discogs.query.service;
+package org.discogs.query.service.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -13,10 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ContextConfiguration(classes = {NormalizationService.class})
+@ContextConfiguration(classes = {NormalizationServiceImpl.class})
 @ExtendWith(SpringExtension.class)
-class NormalizationServiceDiffblueTest {
-  @Autowired private NormalizationService normalizationService;
+class NormalizationServiceImplDiffblueTest {
+  @Autowired private NormalizationServiceImpl normalizationService;
 
   /**
    * Test {@link NormalizationService#normalizeString(String)}.

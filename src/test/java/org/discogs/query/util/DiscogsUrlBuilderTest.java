@@ -1,4 +1,4 @@
-package org.discogs.query.helpers;
+package org.discogs.query.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -10,7 +10,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /** Unit tests for {@link DiscogsUrlBuilder}. */
-@SpringBootTest
+@SpringBootTest(
+    properties = {
+      "discogs.agent=test-agent",
+      "discogs.token=test-token",
+      "spring.security.allowed-origins="
+    })
 class DiscogsUrlBuilderTest {
 
   // Hardcoded values for testing

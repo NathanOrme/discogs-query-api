@@ -1,4 +1,4 @@
-package org.discogs.query.service;
+package org.discogs.query.service.core;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
@@ -7,8 +7,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import org.discogs.query.interfaces.DiscogsCollectionService;
 import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.interfaces.DiscogsWebScraperClient;
+import org.discogs.query.interfaces.NormalizationService;
 import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsRequestDTO;
@@ -24,7 +26,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class QueryProcessingServiceTest {
+class QueryProcessingServiceImplTest {
 
   @Mock private DiscogsQueryService discogsQueryService;
 
@@ -32,7 +34,9 @@ class QueryProcessingServiceTest {
 
   @Mock private DiscogsWebScraperClient discogsWebScraperClient;
 
-  @InjectMocks private QueryProcessingService queryProcessingService;
+  @Mock private DiscogsCollectionService discogsCollectionService;
+
+  @InjectMocks private QueryProcessingServiceImpl queryProcessingService;
 
   private DiscogsQueryDTO queryDTO;
 

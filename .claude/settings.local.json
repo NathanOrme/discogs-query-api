@@ -3,7 +3,14 @@
     "allow": [
       "Bash(mvn test:*)",
       "Bash(mvn checkstyle:*)",
-      "Bash(mvn:*)"
+      "Bash(mvn:*)",
+      "mcp__sequential-thinking__sequentialthinking",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "Bash(mkdir:*)",
+      "Bash(rm:*)",
+      "Bash(find:*)",
+      "Bash(mv:*)"
     ],
     "deny": []
   }

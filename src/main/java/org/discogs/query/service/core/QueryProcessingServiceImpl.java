@@ -1,4 +1,4 @@
-package org.discogs.query.service;
+package org.discogs.query.service.core;
 
 import jakarta.validation.Valid;
 import java.util.ArrayList;
@@ -14,14 +14,16 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.helpers.LogHelper;
+import org.discogs.query.interfaces.DiscogsCollectionService;
 import org.discogs.query.interfaces.DiscogsQueryService;
 import org.discogs.query.interfaces.DiscogsWebScraperClient;
+import org.discogs.query.interfaces.NormalizationService;
+import org.discogs.query.interfaces.QueryProcessingService;
 import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
 import org.discogs.query.model.DiscogsRequestDTO;
 import org.discogs.query.model.DiscogsResultDTO;
 import org.discogs.query.model.enums.DiscogsFormats;
-import org.discogs.query.service.discogs.DiscogsCollectionService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -31,7 +33,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class QueryProcessingService {
+public class QueryProcessingServiceImpl implements QueryProcessingService {
 
   private final DiscogsQueryService discogsQueryService;
   private final NormalizationService normalizationService;
@@ -59,14 +61,7 @@ public class QueryProcessingService {
         discogsQueryDTO.barcode());
   }
 
-  /**
-   * Processes each Discogs query asynchronously, normalizes the queries, and retrieves the results
-   * from the Discogs API.
-   *
-   * @param discogsRequestDTO the {@link DiscogsRequestDTO} objects to process
-   * @param timeoutInSeconds the timeout in seconds for each query to be processed
-   * @return a list of {@link DiscogsResultDTO} objects containing the query results
-   */
+  @Override
   public List<DiscogsResultDTO> processQueries(
       final DiscogsRequestDTO discogsRequestDTO, final long timeoutInSeconds) {
     // Process each original query in parallel and collect unique results
@@ -104,13 +99,7 @@ public class QueryProcessingService {
         : Collections.singletonList(discogsQueryDTO);
   }
 
-  /**
-   * Filters out Discogs entries that are not shipping from the UK marketplace.
-   *
-   * @param results the list of {@link DiscogsResultDTO} objects containing search results
-   * @return a filtered list of {@link DiscogsResultDTO} objects where only UK-shipping entries
-   *     remain
-   */
+  @Override
   public List<DiscogsResultDTO> filterOutEntriesNotShippingFromUk(
       final List<DiscogsResultDTO> results) {
     return results.stream()

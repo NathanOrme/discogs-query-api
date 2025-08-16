@@ -10,11 +10,11 @@ import org.discogs.query.domain.api.DiscogsResult;
 import org.discogs.query.exceptions.DiscogsMarketplaceException;
 import org.discogs.query.exceptions.DiscogsSearchException;
 import org.discogs.query.helpers.LogHelper;
+import org.discogs.query.interfaces.CircuitBreakerService;
 import org.discogs.query.interfaces.DiscogsAPIClient;
 import org.discogs.query.interfaces.HttpRequestService;
 import org.discogs.query.interfaces.RateLimiterService;
 import org.discogs.query.interfaces.RetryService;
-import org.discogs.query.service.requests.CircuitBreakerService;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 

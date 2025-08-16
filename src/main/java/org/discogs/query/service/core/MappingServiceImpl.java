@@ -1,4 +1,4 @@
-package org.discogs.query.service;
+package org.discogs.query.service.core;
 
 import java.util.Comparator;
 import java.util.List;
@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.domain.api.DiscogsEntry;
 import org.discogs.query.domain.api.DiscogsResult;
 import org.discogs.query.helpers.LogHelper;
+import org.discogs.query.interfaces.MappingService;
 import org.discogs.query.model.DiscogsEntryDTO;
 import org.discogs.query.model.DiscogsMapResultDTO;
 import org.discogs.query.model.DiscogsQueryDTO;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MappingService {
+public class MappingServiceImpl implements MappingService {
 
   private static DiscogsEntryDTO convertEntryToEntryDTO(final DiscogsEntry entry) {
     return new DiscogsEntryDTO(
@@ -60,23 +61,12 @@ public class MappingService {
                         discogsResultDTO.searchQuery(), groupMap, minOpt.orElse(null))));
   }
 
-  /**
-   * Maps a list of {@link DiscogsResultDTO} to a list of {@link DiscogsMapResultDTO}.
-   *
-   * @param resultDTOList the list of {@link DiscogsResultDTO}
-   * @return a list of {@link DiscogsMapResultDTO}
-   */
+  @Override
   public List<DiscogsMapResultDTO> mapResultsToDTO(final List<DiscogsResultDTO> resultDTOList) {
     return resultDTOList.stream().map(this::convertEntriesToMapByTitle).toList();
   }
 
-  /**
-   * Maps a {@link DiscogsResult} to a {@link DiscogsResultDTO}.
-   *
-   * @param discogsResult the {@link DiscogsResult} object
-   * @param discogsQueryDTO the {@link DiscogsQueryDTO} used for the query
-   * @return a {@link DiscogsResultDTO} corresponding to the {@link DiscogsResult}
-   */
+  @Override
   public DiscogsResultDTO mapObjectToDTO(
       final DiscogsResult discogsResult, final DiscogsQueryDTO discogsQueryDTO) {
     LogHelper.debug(
@@ -96,6 +86,6 @@ public class MappingService {
   }
 
   private List<DiscogsEntryDTO> convertEntriesToDTOs(final List<DiscogsEntry> entries) {
-    return entries.stream().map(MappingService::convertEntryToEntryDTO).toList();
+    return entries.stream().map(MappingServiceImpl::convertEntryToEntryDTO).toList();
   }
 }

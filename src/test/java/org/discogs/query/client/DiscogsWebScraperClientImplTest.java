@@ -17,7 +17,7 @@ import java.util.List;
 import org.discogs.query.config.HttpConfig;
 import org.discogs.query.domain.website.DiscogsWebsiteResult;
 import org.discogs.query.exceptions.NoMarketplaceListingsException;
-import org.discogs.query.helpers.JsoupHelper;
+import org.discogs.query.util.JsoupHelper;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;

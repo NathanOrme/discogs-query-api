@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.discogs.query.exceptions.NormalizedException;
-import org.discogs.query.service.NormalizationService;
+import org.discogs.query.interfaces.NormalizationService;
 import org.springframework.stereotype.Component;
 
 /**

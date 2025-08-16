@@ -1,0 +1,49 @@
+server:
+  port: 0  # Use random port for tests
+
+discogs:
+  url: https://api.discogs.com/
+  baseUrl: https://www.discogs.com
+  search: database/search
+  release: releases/
+  marketplaceCheck: marketplace/stats/
+  collection: /users/%s/collection/releases/%s
+  agent: test-agent  # Default test value instead of environment variable
+  page-size: 20
+  rate-limit: 60
+  token: test-token  # Default test value instead of environment variable
+
+spring:
+  security:
+    allowed-origins: ""  # Default empty value for tests
+    user:
+      name: username
+      password: password
+
+queries:
+  timeout: 59
+  filterForUk: false
+  searchCollection: true
+
+# Circuit breaker configuration
+circuit-breaker:
+  failure-threshold: 5
+  timeout-duration: 60000 # milliseconds
+  half-open-max-calls: 3
+
+# HTTP client configuration
+http:
+  connection:
+    pool:
+      max-total: 100
+      max-per-route: 20
+    timeout: 30000 # milliseconds
+  read:
+    timeout: 60000 # milliseconds
+
+logging:
+  level:
+    root: WARN  # Reduce logging during tests
+    org.springframework.web: WARN
+    org.hibernate: WARN
+    org.discogs.query: INFO

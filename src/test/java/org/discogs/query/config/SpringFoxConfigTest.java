@@ -7,7 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import springfox.documentation.spring.web.plugins.Docket;
 
-@SpringBootTest
+@SpringBootTest(
+    properties = {
+      "discogs.agent=test-agent",
+      "discogs.token=test-token",
+      "spring.security.allowed-origins="
+    })
 class SpringFoxConfigTest {
 
   @Autowired private Docket docket;

@@ -1,4 +1,4 @@
-package org.discogs.query.helpers;
+package org.discogs.query.util;
 
 import java.io.IOException;
 import java.util.Map;

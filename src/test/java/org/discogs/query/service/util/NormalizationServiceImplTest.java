@@ -1,4 +1,4 @@
-package org.discogs.query.service;
+package org.discogs.query.service.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -10,13 +10,13 @@ import org.discogs.query.model.enums.DiscogsTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class NormalizationServiceTest {
+class NormalizationServiceImplTest {
 
-  private NormalizationService normalizationService;
+  private NormalizationServiceImpl normalizationService;
 
   @BeforeEach
   void setUp() {
-    normalizationService = new NormalizationService();
+    normalizationService = new NormalizationServiceImpl();
   }
 
   @Test

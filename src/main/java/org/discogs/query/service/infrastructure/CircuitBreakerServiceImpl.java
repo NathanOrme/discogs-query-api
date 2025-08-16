@@ -1,42 +1,21 @@
-package org.discogs.query.service.requests;
+package org.discogs.query.service.infrastructure;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.extern.slf4j.Slf4j;
 import org.discogs.query.helpers.LogHelper;
+import org.discogs.query.interfaces.CircuitBreakerService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * Circuit breaker implementation to handle persistent failures from external services. Follows the
  * circuit breaker pattern with CLOSED, OPEN, and HALF_OPEN states.
  */
 @Slf4j
-@Component
-public class CircuitBreakerService {
-
-  /** Enum representing the states of the circuit breaker. */
-  public enum State {
-    /** Circuit breaker allows all requests to pass through. */
-    CLOSED,
-    /** Circuit breaker blocks all requests. */
-    OPEN,
-    /** Circuit breaker allows limited requests to test if service has recovered. */
-    HALF_OPEN
-  }
-
-  /** Exception thrown when the circuit breaker is open and a call is attempted. */
-  public static class CircuitBreakerOpenException extends RuntimeException {
-    /**
-     * Creates a new CircuitBreakerOpenException with the specified message.
-     *
-     * @param message the exception message
-     */
-    public CircuitBreakerOpenException(final String message) {
-      super(message);
-    }
-  }
+@Service
+public class CircuitBreakerServiceImpl implements CircuitBreakerService {
 
   /** Circuit breaker state management. */
   private final AtomicReference<State> state = new AtomicReference<>(State.CLOSED);
@@ -65,14 +44,7 @@ public class CircuitBreakerService {
   @Value("${circuit-breaker.half-open-max-calls:3}")
   private int halfOpenMaxCalls;
 
-  /**
-   * Executes an operation within the circuit breaker.
-   *
-   * @param operation the operation to execute
-   * @param <T> the return type of the operation
-   * @return the result of the operation
-   * @throws Exception if the operation fails or circuit is open
-   */
+  @Override
   public <T> T execute(final OperationWithException<T> operation) throws Exception {
     State currentState = state.get();
 
@@ -143,37 +115,13 @@ public class CircuitBreakerService {
     return System.currentTimeMillis() - lastFailureTime.get() >= timeoutDuration;
   }
 
-  /**
-   * Gets the current state of the circuit breaker.
-   *
-   * @return the current state
-   */
+  @Override
   public State getState() {
     return state.get();
   }
 
-  /**
-   * Gets the current failure count.
-   *
-   * @return the failure count
-   */
+  @Override
   public int getFailureCount() {
     return failureCount.get();
-  }
-
-  /**
-   * Functional interface for operations that can throw exceptions.
-   *
-   * @param <T> the return type
-   */
-  @FunctionalInterface
-  public interface OperationWithException<T> {
-    /**
-     * Executes the operation that may throw an exception.
-     *
-     * @return the result of the operation
-     * @throws Exception if the operation fails
-     */
-    T execute() throws Exception;
   }
 }

@@ -7,11 +7,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(properties = {
-    "discogs.agent=test-agent",
-    "discogs.token=test-token",
-    "spring.security.allowed-origins="
-})
+@SpringBootTest(
+    properties = {
+      "discogs.agent=test-agent",
+      "discogs.token=test-token",
+      "spring.security.allowed-origins="
+    })
 class DiscogsApplicationTest {
 
   private String originalDiscogsAgent;
@@ -24,7 +25,7 @@ class DiscogsApplicationTest {
     originalDiscogsAgent = System.getProperty("DISCOGS_AGENT");
     originalDiscogsToken = System.getProperty("DISCOGS_TOKEN");
     originalAllowedOrigins = System.getProperty("ALLOWED_ORIGINS");
-    
+
     // Set test values
     System.setProperty("DISCOGS_AGENT", "test-agent");
     System.setProperty("DISCOGS_TOKEN", "test-token");
@@ -39,13 +40,13 @@ class DiscogsApplicationTest {
     } else {
       System.clearProperty("DISCOGS_AGENT");
     }
-    
+
     if (originalDiscogsToken != null) {
       System.setProperty("DISCOGS_TOKEN", originalDiscogsToken);
     } else {
       System.clearProperty("DISCOGS_TOKEN");
     }
-    
+
     if (originalAllowedOrigins != null) {
       System.setProperty("ALLOWED_ORIGINS", originalAllowedOrigins);
     } else {

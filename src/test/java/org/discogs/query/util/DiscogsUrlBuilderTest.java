@@ -10,7 +10,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /** Unit tests for {@link DiscogsUrlBuilder}. */
-@SpringBootTest
+@SpringBootTest(properties = {
+    "discogs.agent=test-agent",
+    "discogs.token=test-token",
+    "spring.security.allowed-origins="
+})
 class DiscogsUrlBuilderTest {
 
   // Hardcoded values for testing

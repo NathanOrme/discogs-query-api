@@ -13,7 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 
-@SpringBootTest
+@SpringBootTest(properties = {
+    "discogs.agent=test-agent",
+    "discogs.token=test-token",
+    "spring.security.allowed-origins="
+})
 @ContextConfiguration(classes = {NormalizedAspect.class})
 class NormalizedAspectTest {
 

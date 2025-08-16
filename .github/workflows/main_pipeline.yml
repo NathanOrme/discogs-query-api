@@ -37,15 +37,15 @@ jobs:
 
       - name: Show the next version
         run: |
-          echo "Next version: ${{ steps.semvers.outputs.next_version }}"
+          echo "Next version: ${{ steps.semvers.outputs.minor  }}"
 
       - name: Remove v prefix
         id: removev
-        run: echo "ref_name=$(echo ${{ steps.semvers.outputs.next_version }} | sed 's/^v//')" >> $GITHUB_ENV
+        run: echo "ref_name=$(echo ${{ steps.semvers.outputs.minor  }} | sed 's/^v//')" >> $GITHUB_ENV
 
       - name: Set output for version
         id: set_output
-        run: echo "::set-output name=version::${{ steps.semvers.outputs.next_version }}"
+        run: echo "::set-output name=version::${{ steps.semvers.outputs.minor  }}"
 
   build-backend:
     name: Build Backend

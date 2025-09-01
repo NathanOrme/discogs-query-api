@@ -69,4 +69,4 @@ mailtrap:
   apiToken: ${MAILTRAP_API_TOKEN:}
   endpoint: https://send.api.mailtrap.io/api/send
   fromEmail: ${MAILTRAP_FROM_EMAIL:}
-  fromName: Discogs Query
+  fromName: ${MAILTRAP_FROM_NAME:}

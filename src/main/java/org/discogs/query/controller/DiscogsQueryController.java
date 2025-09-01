@@ -131,9 +131,11 @@ public class DiscogsQueryController {
     deduplicationService.filterDuplicateEntries(resultMapDTOList);
 
     // Fire-and-forget email send; controller still returns the results.
-    String subject = "Discogs search results" +
-        (request.username() != null && !request.username().isBlank() ?
-            (" for " + request.username()) : "");
+    String subject =
+        "Discogs search results"
+            + (request.username() != null && !request.username().isBlank()
+                ? (" for " + request.username())
+                : "");
     emailService.sendResults(request.email(), subject, resultMapDTOList);
 
     return ResponseEntity.ok().body(resultMapDTOList);

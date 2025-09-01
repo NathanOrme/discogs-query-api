@@ -23,8 +23,10 @@ class MailtrapEmailServiceTest {
   }
 
   private DiscogsMapResultDTO sampleMapDto() {
-    DiscogsQueryDTO q = new DiscogsQueryDTO("Artist", "Album", "Track", null, null, null, null, null);
-    DiscogsEntryDTO e = new DiscogsEntryDTO(1, "Title", List.of("Vinyl"), null, null, "UK", "1997", true, 10.0f, 1);
+    DiscogsQueryDTO q =
+        new DiscogsQueryDTO("Artist", "Album", "Track", null, null, null, null, null);
+    DiscogsEntryDTO e =
+        new DiscogsEntryDTO(1, "Title", List.of("Vinyl"), null, null, "UK", "1997", true, 10.0f, 1);
     return new DiscogsMapResultDTO(q, java.util.Map.of("matches", List.of(e)), e);
   }
 

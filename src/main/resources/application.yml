@@ -63,3 +63,10 @@ http:
     timeout: 30000 # milliseconds
   read:
     timeout: 60000 # milliseconds
+
+# Mailtrap configuration for email sending
+mailtrap:
+  apiToken: ${MAILTRAP_API_TOKEN:}
+  endpoint: https://send.api.mailtrap.io/api/send
+  fromEmail: ${MAILTRAP_FROM_EMAIL:}
+  fromName: ${MAILTRAP_FROM_NAME:}

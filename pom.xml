@@ -146,6 +146,12 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
+        <!-- Mailtrap official Java SDK -->
+        <dependency>
+            <groupId>io.mailtrap</groupId>
+            <artifactId>mailtrap-java</artifactId>
+            <version>1.0.0</version>
+        </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>

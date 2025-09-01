@@ -2,6 +2,7 @@ package org.discogs.query.service;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import freemarker.template.Configuration;
 import java.lang.reflect.Field;
 import java.util.List;
 import org.discogs.query.model.DiscogsEntryDTO;
@@ -30,10 +31,17 @@ class MailtrapEmailServiceTest {
     return new DiscogsMapResultDTO(q, java.util.Map.of("matches", List.of(e)), e);
   }
 
+  private Configuration fmConfig() {
+    Configuration cfg = new Configuration(Configuration.VERSION_2_3_33);
+    cfg.setDefaultEncoding("UTF-8");
+    cfg.setClassLoaderForTemplateLoading(getClass().getClassLoader(), "templates/email");
+    return cfg;
+  }
+
   @Test
   @DisplayName("sendResults: skips when recipient is blank")
   void sendResults_skips_whenRecipientBlank() {
-    MailtrapEmailService svc = new MailtrapEmailService();
+    MailtrapEmailService svc = new MailtrapEmailService(fmConfig());
     set(svc, "apiToken", "token");
     set(svc, "fromEmail", "from@example.com");
 
@@ -43,7 +51,7 @@ class MailtrapEmailServiceTest {
   @Test
   @DisplayName("sendResults: skips when apiToken missing")
   void sendResults_skips_whenTokenMissing() {
-    MailtrapEmailService svc = new MailtrapEmailService();
+    MailtrapEmailService svc = new MailtrapEmailService(fmConfig());
     set(svc, "apiToken", null);
     set(svc, "fromEmail", "from@example.com");
 
@@ -53,7 +61,7 @@ class MailtrapEmailServiceTest {
   @Test
   @DisplayName("sendResults: skips when fromEmail missing")
   void sendResults_skips_whenFromEmailMissing() {
-    MailtrapEmailService svc = new MailtrapEmailService();
+    MailtrapEmailService svc = new MailtrapEmailService(fmConfig());
     set(svc, "apiToken", "token");
     set(svc, "fromEmail", "");
 

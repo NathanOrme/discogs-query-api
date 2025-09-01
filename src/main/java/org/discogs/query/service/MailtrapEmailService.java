@@ -105,12 +105,16 @@ public class MailtrapEmailService implements EmailService {
 
         // metadata
         String meta = "";
-        if (cheapest.year() != null && !cheapest.year().isBlank()) meta += (meta.isEmpty()?"":" · ") + cheapest.year();
-        if (cheapest.country() != null && !cheapest.country().isBlank()) meta += (meta.isEmpty()?"":" · ") + cheapest.country();
-        if (cheapest.format() != null && !cheapest.format().isEmpty()) meta += (meta.isEmpty()?"":" · ") + String.join(", ", cheapest.format());
-        if (cheapest.numberForSale() != null) meta += (meta.isEmpty()?"":" · ") + cheapest.numberForSale() + " for sale";
+        if (cheapest.year() != null && !cheapest.year().isBlank())
+          meta += (meta.isEmpty() ? "" : " · ") + cheapest.year();
+        if (cheapest.country() != null && !cheapest.country().isBlank())
+          meta += (meta.isEmpty() ? "" : " · ") + cheapest.country();
+        if (cheapest.format() != null && !cheapest.format().isEmpty())
+          meta += (meta.isEmpty() ? "" : " · ") + String.join(", ", cheapest.format());
+        if (cheapest.numberForSale() != null)
+          meta += (meta.isEmpty() ? "" : " · ") + cheapest.numberForSale() + " for sale";
         if (!meta.isEmpty()) {
-          sb.append(" (" ).append(meta).append(")");
+          sb.append(" (").append(meta).append(")");
         }
 
         // link
@@ -128,11 +132,14 @@ public class MailtrapEmailService implements EmailService {
           for (DiscogsEntryDTO en : e.getValue()) {
             sb.append("    - ").append(safe(en.title()));
             String meta = "";
-            if (en.year() != null && !en.year().isBlank()) meta += (meta.isEmpty()?"":" · ") + en.year();
-            if (en.country() != null && !en.country().isBlank()) meta += (meta.isEmpty()?"":" · ") + en.country();
-            if (en.format() != null && !en.format().isEmpty()) meta += (meta.isEmpty()?"":" · ") + String.join(", ", en.format());
+            if (en.year() != null && !en.year().isBlank())
+              meta += (meta.isEmpty() ? "" : " · ") + en.year();
+            if (en.country() != null && !en.country().isBlank())
+              meta += (meta.isEmpty() ? "" : " · ") + en.country();
+            if (en.format() != null && !en.format().isEmpty())
+              meta += (meta.isEmpty() ? "" : " · ") + String.join(", ", en.format());
             if (!meta.isEmpty()) {
-              sb.append(" (" ).append(meta).append(")");
+              sb.append(" (").append(meta).append(")");
             }
             String link = resolveLink(en);
             if (link != null && !link.isBlank()) {
@@ -166,22 +173,38 @@ public class MailtrapEmailService implements EmailService {
     sb.append("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>\n");
     sb.append("  <title>Discogs Query Results</title>\n");
     sb.append("</head>\n");
-    sb.append("<body style=\"margin:0;padding:24px;background:#f9fafb;color:#1f2937;font-family:Arial,Helvetica,sans-serif;\">\n");
-    sb.append("  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n");
+    sb.append(
+        "<body"
+            + " style=\"margin:0;padding:24px;background:#f9fafb;color:#1f2937;font-family:Arial,Helvetica,sans-serif;\">\n");
+    sb.append(
+        "  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\""
+            + " border=\"0\">\n");
     sb.append("    <tr>\n");
     sb.append("      <td align=\"center\">\n");
-    sb.append("        <table role=\"presentation\" width=\"720\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"max-width:720px;width:100%;background:#ffffff;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 1px 2px rgba(0,0,0,0.06);overflow:hidden;\">\n");
+    sb.append(
+        "        <table role=\"presentation\" width=\"720\" cellpadding=\"0\" cellspacing=\"0\""
+            + " border=\"0\" style=\"max-width:720px;width:100%;background:#ffffff;border:1px solid"
+            + " #e5e7eb;border-radius:10px;box-shadow:0 1px 2px"
+            + " rgba(0,0,0,0.06);overflow:hidden;\">\n");
     sb.append("          <tr>\n");
-    sb.append("            <td style=\"background:#111827;color:#ffffff;padding:16px 20px;\"><h1 style=\"margin:0;font-size:20px;\">Discogs Query Results</h1></td>\n");
+    sb.append(
+        "            <td style=\"background:#111827;color:#ffffff;padding:16px 20px;\"><h1"
+            + " style=\"margin:0;font-size:20px;\">Discogs Query Results</h1></td>\n");
     sb.append("          </tr>\n");
     sb.append("          <tr>\n");
     sb.append("            <td style=\"padding:20px;\">\n");
 
     for (final DiscogsMapResultDTO mapDto : results) {
-      sb.append("              <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin:0 0 16px 0;\">\n");
+      sb.append(
+          "              <table role=\"presentation\" width=\"100%\" cellpadding=\"0\""
+              + " cellspacing=\"0\" border=\"0\" style=\"margin:0 0 16px 0;\">\n");
       sb.append("                <tr>\n");
-      sb.append("                  <td style=\"background:#f3f4f6;border-left:4px solid #3b82f6;border-radius:6px;padding:12px;\">\n");
-      sb.append("                    <div style=\"font-weight:700;color:#111827;margin:0 0 8px 0;\">Query: ")
+      sb.append(
+          "                  <td style=\"background:#f3f4f6;border-left:4px solid"
+              + " #3b82f6;border-radius:6px;padding:12px;\">\n");
+      sb.append(
+              "                    <div style=\"font-weight:700;color:#111827;margin:0 0 8px"
+                  + " 0;\">Query: ")
           .append(escapeHtml(buildQueryLabel(mapDto)))
           .append("</div>\n");
 
@@ -189,9 +212,14 @@ public class MailtrapEmailService implements EmailService {
       if (cheapest != null) {
         String cheapestTitle = escapeHtml(safe(cheapest.title()));
         String cheapestLink = resolveLink(cheapest);
-        sb.append("                    <div style=\"color:#065f46;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:6px;padding:8px 10px;margin:8px 0;display:inline-block;\">");
+        sb.append(
+            "                    <div style=\"color:#065f46;background:#ecfdf5;border:1px solid"
+                + " #a7f3d0;border-radius:6px;padding:8px 10px;margin:8px"
+                + " 0;display:inline-block;\">");
         if (!cheapestLink.isEmpty()) {
-          sb.append("<a href=\"").append(escapeHtml(cheapestLink)).append("\" style=\"color:#065f46;text-decoration:none;font-weight:600;\">")
+          sb.append("<a href=\"")
+              .append(escapeHtml(cheapestLink))
+              .append("\" style=\"color:#065f46;text-decoration:none;font-weight:600;\">")
               .append(cheapestTitle)
               .append("</a>");
         } else {
@@ -200,10 +228,17 @@ public class MailtrapEmailService implements EmailService {
         sb.append(" — ").append(escapeHtml(formatPrice(cheapest.lowestPrice())));
         // metadata line
         String meta = "";
-        if (cheapest.year() != null && !cheapest.year().isBlank()) meta += (meta.isEmpty()?"":" · ") + escapeHtml(cheapest.year());
-        if (cheapest.country() != null && !cheapest.country().isBlank()) meta += (meta.isEmpty()?"":" · ") + escapeHtml(cheapest.country());
-        if (cheapest.numberForSale() != null) meta += (meta.isEmpty()?"":" · ") + escapeHtml(cheapest.numberForSale().toString()) + " for sale";
-        if (cheapest.format() != null && !cheapest.format().isEmpty()) meta += (meta.isEmpty()?"":" · ") + escapeHtml(String.join(", ", cheapest.format()));
+        if (cheapest.year() != null && !cheapest.year().isBlank())
+          meta += (meta.isEmpty() ? "" : " · ") + escapeHtml(cheapest.year());
+        if (cheapest.country() != null && !cheapest.country().isBlank())
+          meta += (meta.isEmpty() ? "" : " · ") + escapeHtml(cheapest.country());
+        if (cheapest.numberForSale() != null)
+          meta +=
+              (meta.isEmpty() ? "" : " · ")
+                  + escapeHtml(cheapest.numberForSale().toString())
+                  + " for sale";
+        if (cheapest.format() != null && !cheapest.format().isEmpty())
+          meta += (meta.isEmpty() ? "" : " · ") + escapeHtml(String.join(", ", cheapest.format()));
         if (!meta.isEmpty()) {
           sb.append("<div style=\"font-size:12px;color:#065f46;opacity:0.9;margin-top:4px;\">")
               .append(meta)
@@ -216,7 +251,9 @@ public class MailtrapEmailService implements EmailService {
       if (grouped != null && !grouped.isEmpty()) {
         for (final Map.Entry<String, List<DiscogsEntryDTO>> e : grouped.entrySet()) {
           sb.append("                    <div style=\"margin-top:8px;\">\n");
-          sb.append("                      <div style=\"font-weight:600;color:#374151;margin-bottom:4px;\">")
+          sb.append(
+                  "                      <div"
+                      + " style=\"font-weight:600;color:#374151;margin-bottom:4px;\">")
               .append(escapeHtml(safe(e.getKey())))
               .append(":</div>\n");
           sb.append("                      <ul style=\"margin:6px 0 0 18px;padding:0;\">\n");
@@ -225,7 +262,9 @@ public class MailtrapEmailService implements EmailService {
             String link = resolveLink(en);
             sb.append("                        <li style=\"margin:2px 0;\">");
             if (!link.isEmpty()) {
-              sb.append("<a href=\"").append(escapeHtml(link)).append("\" style=\"color:#1d4ed8;text-decoration:none;\">")
+              sb.append("<a href=\"")
+                  .append(escapeHtml(link))
+                  .append("\" style=\"color:#1d4ed8;text-decoration:none;\">")
                   .append(title)
                   .append("</a>");
             } else {
@@ -233,11 +272,16 @@ public class MailtrapEmailService implements EmailService {
             }
             // small meta after title
             String meta = "";
-            if (en.year() != null && !en.year().isBlank()) meta += (meta.isEmpty()?"":" · ") + escapeHtml(en.year());
-            if (en.country() != null && !en.country().isBlank()) meta += (meta.isEmpty()?"":" · ") + escapeHtml(en.country());
-            if (en.format() != null && !en.format().isEmpty()) meta += (meta.isEmpty()?"":" · ") + escapeHtml(String.join(", ", en.format()));
+            if (en.year() != null && !en.year().isBlank())
+              meta += (meta.isEmpty() ? "" : " · ") + escapeHtml(en.year());
+            if (en.country() != null && !en.country().isBlank())
+              meta += (meta.isEmpty() ? "" : " · ") + escapeHtml(en.country());
+            if (en.format() != null && !en.format().isEmpty())
+              meta += (meta.isEmpty() ? "" : " · ") + escapeHtml(String.join(", ", en.format()));
             if (!meta.isEmpty()) {
-              sb.append(" <span style=\"color:#6b7280;font-size:12px;\">").append(meta).append("</span>");
+              sb.append(" <span style=\"color:#6b7280;font-size:12px;\">")
+                  .append(meta)
+                  .append("</span>");
             }
             sb.append("</li>\n");
           }
@@ -254,7 +298,9 @@ public class MailtrapEmailService implements EmailService {
     sb.append("            </td>\n");
     sb.append("          </tr>\n");
     sb.append("          <tr>\n");
-    sb.append("            <td style=\"font-size:12px;color:#6b7280;padding:16px 20px;border-top:1px solid #e5e7eb;background:#f9fafb;\">Sent by Discogs Query</td>\n");
+    sb.append(
+        "            <td style=\"font-size:12px;color:#6b7280;padding:16px 20px;border-top:1px"
+            + " solid #e5e7eb;background:#f9fafb;\">Sent by Discogs Query</td>\n");
     sb.append("          </tr>\n");
     sb.append("        </table>\n");
     sb.append("      </td>\n");
@@ -274,9 +320,7 @@ public class MailtrapEmailService implements EmailService {
     return s == null ? "" : s;
   }
 
-  /**
-   * Basic HTML escaping to avoid breaking markup in the email.
-   */
+  /** Basic HTML escaping to avoid breaking markup in the email. */
   private String escapeHtml(final String input) {
     if (input == null) {
       return "";
@@ -290,9 +334,7 @@ public class MailtrapEmailService implements EmailService {
     return out;
   }
 
-  /**
-   * Build a clickable link for an entry, preferring absolute URLs if present.
-   */
+  /** Build a clickable link for an entry, preferring absolute URLs if present. */
   private String resolveLink(final DiscogsEntryDTO en) {
     if (en == null) return "";
     String link = en.url();

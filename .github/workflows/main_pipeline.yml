@@ -209,13 +209,13 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Download Javadoc Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: javadoc.zip
           path: target/site
 
       - name: Download JSDoc Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: jsdoc.zip
           path: src/main/frontend

@@ -94,7 +94,7 @@ jobs:
           echo "Javadoc zip created."
 
       - name: Upload Javadoc Artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: javadoc.zip
           path: target/site/apidocs.zip
@@ -155,7 +155,7 @@ jobs:
           echo "JSDoc zip created."
 
       - name: Upload JSDoc Artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: jsdoc.zip
           path: src/main/frontend/docs.zip

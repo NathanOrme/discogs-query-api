@@ -146,6 +146,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents.core5</groupId>
+            <artifactId>httpcore5</artifactId>
+            <version>5.4</version>
+        </dependency>
         <!-- Mailtrap official Java SDK -->
         <dependency>
             <groupId>io.mailtrap</groupId>
@@ -176,7 +181,7 @@
             <artifactId>freemarker</artifactId>
             <version>2.3.34</version>
         </dependency>
-        
+
         <!-- HTTP Client for connection pooling -->
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>

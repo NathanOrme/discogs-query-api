@@ -8,6 +8,7 @@ import {
   transformWithEsbuild,
 } from 'vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 function setEnv(mode: string) {
@@ -203,6 +204,7 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [
       react(),
+      tailwindcss(),
       tsconfigPaths(),
       envPlugin(),
       devServerPlugin(),

@@ -1,0 +1,425 @@
+/**
+ * Discogs Page Theme - Vinyl Records & Catalog Aesthetic
+ *
+ * Design System:
+ * - Primary: Burnt orange (vinyl label aesthetic)
+ * - Secondary: Catalog gray (aged paper/text)
+ * - Accent: Vinyl black with groove effects
+ * - Surface: Glass-morphism with catalog paper texture
+ */
+
+/* ===================================
+   Color System
+   =================================== */
+
+:root {
+  /* Primary Palette - Warm vinyl tones */
+  --discogs-primary: #e65100; /* Burnt orange - vinyl label */
+  --discogs-primary-light: #ff8a50; /* Light orange */
+  --discogs-primary-dark: #bf360c; /* Deep burnt orange */
+
+  /* Secondary Palette - Catalog neutrals */
+  --discogs-secondary: #37474f; /* Catalog gray */
+  --discogs-secondary-light: #62727b;
+  --discogs-secondary-dark: #263238;
+
+  /* Accent Colors */
+  --discogs-vinyl-black: #212121; /* Vinyl record black */
+  --discogs-paper: #fff8e1; /* Aged paper */
+  --discogs-gold: #ffb300; /* Gold record accent */
+  --discogs-groove: #546e7a; /* Record groove detail */
+
+  /* Semantic Colors */
+  --discogs-success: #558b2f;
+  --discogs-warning: #f57c00;
+  --discogs-error: #d32f2f;
+  --discogs-info: #1976d2;
+}
+
+/* ===================================
+   Typography
+   =================================== */
+
+.discogs-heading-xl {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--discogs-vinyl-black);
+}
+
+.discogs-heading-lg {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  color: var(--discogs-secondary-dark);
+}
+
+.discogs-heading-md {
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  font-weight: 600;
+  color: var(--discogs-secondary);
+}
+
+.discogs-body {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--discogs-secondary);
+}
+
+.discogs-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--discogs-primary);
+}
+
+.discogs-caption {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--discogs-secondary-light);
+}
+
+/* ===================================
+   Surface Treatments
+   =================================== */
+
+.discogs-card {
+  background: linear-gradient(135deg, rgba(255, 248, 225, 0.95) 0%, rgba(255, 248, 225, 0.98) 100%);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(230, 81, 0, 0.2);
+  border-radius: 12px;
+  box-shadow:
+    0 4px 24px rgba(230, 81, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.discogs-card-dark {
+  background: linear-gradient(135deg, rgba(33, 33, 33, 0.95) 0%, rgba(38, 50, 56, 0.95) 100%);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Vinyl Record Effect */
+.discogs-vinyl-effect {
+  position: relative;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(230, 81, 0, 0.1) 0%, transparent 60%),
+    linear-gradient(135deg, #212121 0%, #263238 100%);
+  border-radius: inherit;
+}
+
+.discogs-vinyl-effect::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-conic-gradient(
+    from 0deg,
+    transparent 0deg 2deg,
+    rgba(255, 255, 255, 0.02) 2deg 4deg
+  );
+  border-radius: inherit;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Groove Rings (for vinyl disc indicators) */
+.discogs-groove-rings {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.discogs-groove {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: inherit;
+}
+
+.discogs-groove:nth-child(1) {
+  transform: scale(0.9);
+}
+
+.discogs-groove:nth-child(2) {
+  transform: scale(0.75);
+}
+
+.discogs-groove:nth-child(3) {
+  transform: scale(0.6);
+}
+
+/* ===================================
+   Animations
+   =================================== */
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+@keyframes vinyl-shimmer {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.vinyl-shimmer {
+  animation: vinyl-shimmer 2s ease-in-out infinite;
+}
+
+/* Pulse animation for loading states */
+@keyframes discogs-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.discogs-pulse {
+  animation: discogs-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ===================================
+   Interactive States
+   =================================== */
+
+.discogs-hover-lift {
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.discogs-hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(230, 81, 0, 0.15);
+}
+
+.discogs-hover-scale {
+  transition: transform 0.3s ease;
+}
+
+.discogs-hover-scale:hover {
+  transform: scale(1.05);
+}
+
+/* Focus styles for accessibility */
+.discogs-focus-ring:focus-visible {
+  outline: 2px solid var(--discogs-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ===================================
+   Vinyl Disc Component Styles
+   =================================== */
+
+.vinyl-disc {
+  position: relative;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #212121 0%, #263238 100%);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
+/* Vinyl grooves effect using pseudo-element */
+.vinyl-disc::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: repeating-conic-gradient(
+    from 0deg,
+    transparent 0deg 1deg,
+    rgba(255, 255, 255, 0.03) 1deg 2deg
+  );
+  pointer-events: none;
+}
+
+/* Center label on vinyl disc */
+.vinyl-disc::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30%;
+  height: 30%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--discogs-primary) 0%, var(--discogs-primary-dark) 100%);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    inset 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+/* ===================================
+   Badge & Chip Styles
+   =================================== */
+
+.discogs-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 9999px;
+  background: var(--discogs-primary);
+  color: white;
+  box-shadow: 0 2px 8px rgba(230, 81, 0, 0.3);
+}
+
+.discogs-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.discogs-chip:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(230, 81, 0, 0.5);
+  color: var(--discogs-primary);
+}
+
+/* ===================================
+   Gradient Overlays
+   =================================== */
+
+.discogs-gradient-primary {
+  background: linear-gradient(135deg, var(--discogs-primary) 0%, var(--discogs-primary-dark) 100%);
+}
+
+.discogs-gradient-vinyl {
+  background: linear-gradient(135deg, #212121 0%, #263238 100%);
+}
+
+.discogs-gradient-catalog {
+  background: linear-gradient(135deg, rgba(255, 248, 225, 0.1) 0%, rgba(255, 248, 225, 0.05) 100%);
+}
+
+/* ===================================
+   Utility Classes
+   =================================== */
+
+.discogs-text-primary {
+  color: var(--discogs-primary);
+}
+
+.discogs-text-secondary {
+  color: var(--discogs-secondary);
+}
+
+.discogs-text-vinyl-black {
+  color: var(--discogs-vinyl-black);
+}
+
+.discogs-bg-primary {
+  background-color: var(--discogs-primary);
+}
+
+.discogs-bg-vinyl-black {
+  background-color: var(--discogs-vinyl-black);
+}
+
+.discogs-border-primary {
+  border-color: var(--discogs-primary);
+}
+
+/* ===================================
+   Responsive Adjustments
+   =================================== */
+
+@media (max-width: 768px) {
+  .discogs-heading-xl {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  .discogs-heading-lg {
+    font-size: clamp(1.25rem, 3vw, 1.75rem);
+  }
+
+  .discogs-card {
+    border-radius: 8px;
+  }
+}
+
+/* ===================================
+   Dark Mode Support
+   =================================== */
+
+@media (prefers-color-scheme: dark) {
+  .discogs-card {
+    background: linear-gradient(135deg, rgba(33, 33, 33, 0.95) 0%, rgba(38, 50, 56, 0.95) 100%);
+    border-color: rgba(230, 81, 0, 0.3);
+  }
+}
+
+/* ===================================
+   Reduced Motion Support
+   =================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-spin-slow,
+  .vinyl-shimmer,
+  .discogs-pulse {
+    animation: none;
+  }
+
+  .discogs-hover-lift,
+  .discogs-hover-scale,
+  .discogs-chip {
+    transition: none;
+  }
+
+  .discogs-hover-lift:hover {
+    transform: none;
+  }
+
+  .discogs-hover-scale:hover {
+    transform: none;
+  }
+}
+
+/* ===================================
+   Print Styles
+   =================================== */
+
+@media print {
+  .discogs-card,
+  .discogs-card-dark {
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: none;
+  }
+
+  .vinyl-disc::before,
+  .vinyl-disc::after,
+  .discogs-vinyl-effect::after {
+    display: none;
+  }
+}

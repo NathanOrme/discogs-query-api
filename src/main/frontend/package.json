@@ -15,7 +15,7 @@
     "@types/react-dom": "^19.2.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.525.0",
+    "lucide-react": "^0.576.0",
     "motion": "^12.23.0",
     "nth-check": "^2.0.1",
     "path-to-regexp": "^8.2.0",

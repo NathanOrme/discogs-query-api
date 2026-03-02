@@ -16,7 +16,12 @@ interface ResultCardProps {
   className?: string;
 }
 
-export function ResultCard({ entry, onViewDetails, onAddToCollection, className }: ResultCardProps) {
+export function ResultCard({
+  entry,
+  onViewDetails,
+  onAddToCollection,
+  className,
+}: ResultCardProps) {
   const {
     title = 'Untitled',
     format,
@@ -46,7 +51,7 @@ export function ResultCard({ entry, onViewDetails, onAddToCollection, className 
         'transition-all duration-300',
         'hover:bg-white/10 hover:border-discogs-primary/50',
         'hover:shadow-lg hover:shadow-discogs-primary/20',
-        className,
+        className
       )}
       gradientColor="rgba(230, 81, 0, 0.15)"
     >
@@ -62,7 +67,10 @@ export function ResultCard({ entry, onViewDetails, onAddToCollection, className 
           </div>
 
           <div className="flex-1 min-w-0 space-y-2">
-            <h3 className="text-base font-semibold text-white line-clamp-2 leading-tight" title={title}>
+            <h3
+              className="text-base font-semibold text-white line-clamp-2 leading-tight"
+              title={title}
+            >
               {title}
             </h3>
 
@@ -77,13 +85,19 @@ export function ResultCard({ entry, onViewDetails, onAddToCollection, className 
                 </Badge>
               )}
               {primaryFormat && (
-                <Badge variant="secondary" className="bg-white/10 text-white border-white/20 text-xs">
+                <Badge
+                  variant="secondary"
+                  className="bg-white/10 text-white border-white/20 text-xs"
+                >
                   <Tag className="w-3 h-3 mr-1" />
                   {primaryFormat}
                 </Badge>
               )}
               {country !== 'Unknown' && (
-                <Badge variant="secondary" className="bg-white/10 text-white/80 border-white/20 text-xs">
+                <Badge
+                  variant="secondary"
+                  className="bg-white/10 text-white/80 border-white/20 text-xs"
+                >
                   <MapPin className="w-3 h-3 mr-1" />
                   {country}
                 </Badge>
@@ -107,7 +121,8 @@ export function ResultCard({ entry, onViewDetails, onAddToCollection, className 
                   <span className="text-white/50">None available</span>
                 ) : (
                   <>
-                    {numberForSale.toLocaleString()} {numberForSale === 1 ? 'copy' : 'copies'}
+                    {numberForSale.toLocaleString()}{' '}
+                    {numberForSale === 1 ? 'copy' : 'copies'}
                   </>
                 )}
               </span>
@@ -117,7 +132,9 @@ export function ResultCard({ entry, onViewDetails, onAddToCollection, className 
           {lowestPrice !== undefined && lowestPrice !== null && (
             <div className="flex items-start gap-2">
               <span className="text-white/60 min-w-[80px]">Price from:</span>
-              <span className="text-green-400 font-semibold">£{lowestPrice.toFixed(2)}</span>
+              <span className="text-green-400 font-semibold">
+                £{lowestPrice.toFixed(2)}
+              </span>
             </div>
           )}
         </div>
@@ -154,7 +171,7 @@ export function ResultCard({ entry, onViewDetails, onAddToCollection, className 
           'absolute inset-0 opacity-0 group-hover:opacity-100',
           'bg-gradient-to-br from-discogs-primary/5 to-transparent',
           'transition-opacity duration-300',
-          'pointer-events-none',
+          'pointer-events-none'
         )}
       />
     </MagicCard>

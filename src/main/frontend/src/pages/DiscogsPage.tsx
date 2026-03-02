@@ -13,14 +13,7 @@ import { cn } from '@/lib/utils';
 import type { Query, QueryResult } from '@/types/DiscogsTypes';
 import { logger } from '@/utils/logger';
 import { Disc, RotateCcw, Search, User } from 'lucide-react';
-import {
-  memo,
-  useCallback,
-  useMemo,
-  useState,
-  type FC,
-  type JSX,
-} from 'react';
+import { memo, useCallback, useMemo, useState, type FC, type JSX } from 'react';
 
 const API_URL = 'https://discogs-query-api.onrender.com/discogs-query/search';
 
@@ -51,13 +44,14 @@ const DiscogsPage: FC = (): JSX.Element => {
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
   const allEntries = useMemo<EntryType[]>(
-    () => response.flatMap((qr) => Object.values(qr.results).flat() as EntryType[]),
-    [response],
+    () =>
+      response.flatMap((qr) => Object.values(qr.results).flat() as EntryType[]),
+    [response]
   );
 
   const uniqueTitleCount = useMemo(
     () => new Set(response.flatMap((qr) => Object.keys(qr.results))).size,
-    [response],
+    [response]
   );
 
   const handleQueriesChange = useCallback((newQueries: Query[]) => {
@@ -84,7 +78,9 @@ const DiscogsPage: FC = (): JSX.Element => {
       setHasSearched(true);
       setResponse([]);
       try {
-        const payloadQueries = searchQueries.map(({ id: _id, ...rest }) => rest);
+        const payloadQueries = searchQueries.map(
+          ({ id: _id, ...rest }) => rest
+        );
         const res = await fetch(API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -102,13 +98,13 @@ const DiscogsPage: FC = (): JSX.Element => {
       } catch (err) {
         logger.error(err);
         setError(
-          err instanceof Error ? err.message : 'An unexpected error occurred.',
+          err instanceof Error ? err.message : 'An unexpected error occurred.'
         );
       } finally {
         setLoading(false);
       }
     },
-    [],
+    []
   );
 
   const handleSearch = useCallback(() => {
@@ -127,7 +123,7 @@ const DiscogsPage: FC = (): JSX.Element => {
       };
       performSearch([presetQuery]).catch(logger.error);
     },
-    [performSearch],
+    [performSearch]
   );
 
   const handleRetry = useCallback(() => {
@@ -137,7 +133,13 @@ const DiscogsPage: FC = (): JSX.Element => {
   const resultsPanel = (): JSX.Element => {
     if (loading) return <ResultsSkeleton />;
     if (error)
-      return <EmptyState variant="error" errorMessage={error} onRetry={handleRetry} />;
+      return (
+        <EmptyState
+          variant="error"
+          errorMessage={error}
+          onRetry={handleRetry}
+        />
+      );
     if (!hasSearched) return <EmptyState variant="initial" />;
     if (allEntries.length === 0) return <EmptyState variant="no-results" />;
 
@@ -155,7 +157,7 @@ const DiscogsPage: FC = (): JSX.Element => {
             'grid gap-4',
             viewMode === 'grid'
               ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3'
-              : 'grid-cols-1',
+              : 'grid-cols-1'
           )}
         >
           {allEntries.map((entry, i) => (
@@ -175,7 +177,9 @@ const DiscogsPage: FC = (): JSX.Element => {
       >
         <Disc className="w-5 h-5 flex-shrink-0" style={{ color: '#e65100' }} />
         <div>
-          <h1 className="text-sm font-bold text-white/85 tracking-wide">Discogs Search</h1>
+          <h1 className="text-sm font-bold text-white/85 tracking-wide">
+            Discogs Search
+          </h1>
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
             Search millions of music releases
           </p>
@@ -183,7 +187,10 @@ const DiscogsPage: FC = (): JSX.Element => {
       </div>
 
       {/* Two-panel layout */}
-      <div className="flex flex-col md:flex-row" style={{ minHeight: 'calc(100vh - 57px)' }}>
+      <div
+        className="flex flex-col md:flex-row"
+        style={{ minHeight: 'calc(100vh - 57px)' }}
+      >
         {/* LEFT: Search form panel */}
         <div
           className="md:w-80 lg:w-96 flex-shrink-0 p-5 space-y-5 overflow-y-auto"
@@ -206,14 +213,20 @@ const DiscogsPage: FC = (): JSX.Element => {
                   key={p.label}
                   onClick={() => handlePreset(p)}
                   className="px-2.5 py-1 rounded text-xs border transition-all duration-150"
-                  style={{ borderColor: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.45)' }}
+                  style={{
+                    borderColor: 'rgba(255,255,255,0.1)',
+                    color: 'rgba(255,255,255,0.45)',
+                  }}
                   onMouseEnter={(e) => {
                     (e.currentTarget as HTMLElement).style.color = '#e65100';
-                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(230,81,0,0.4)';
+                    (e.currentTarget as HTMLElement).style.borderColor =
+                      'rgba(230,81,0,0.4)';
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.45)';
-                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.1)';
+                    (e.currentTarget as HTMLElement).style.color =
+                      'rgba(255,255,255,0.45)';
+                    (e.currentTarget as HTMLElement).style.borderColor =
+                      'rgba(255,255,255,0.1)';
                   }}
                   aria-label={`Quick search: ${p.label}`}
                 >
@@ -285,14 +298,21 @@ const DiscogsPage: FC = (): JSX.Element => {
             <button
               onClick={handleReset}
               className="px-3 h-9 rounded-lg text-sm border transition-all duration-200"
-              style={{ borderColor: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.3)' }}
+              style={{
+                borderColor: 'rgba(255,255,255,0.1)',
+                color: 'rgba(255,255,255,0.3)',
+              }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.6)';
-                (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.2)';
+                (e.currentTarget as HTMLElement).style.color =
+                  'rgba(255,255,255,0.6)';
+                (e.currentTarget as HTMLElement).style.borderColor =
+                  'rgba(255,255,255,0.2)';
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.3)';
-                (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.1)';
+                (e.currentTarget as HTMLElement).style.color =
+                  'rgba(255,255,255,0.3)';
+                (e.currentTarget as HTMLElement).style.borderColor =
+                  'rgba(255,255,255,0.1)';
               }}
               aria-label="Reset form"
             >

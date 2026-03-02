@@ -17,7 +17,7 @@ export const CustomLink: FC<CustomLinkProps> = ({
     <a
       className={cn(
         'text-cyan-400 hover:text-cyan-300 underline font-bold transition-colors duration-200 break-all',
-        className,
+        className
       )}
       {...props}
     >

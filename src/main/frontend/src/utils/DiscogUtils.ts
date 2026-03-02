@@ -132,10 +132,7 @@ export function computeCheapestItem(results: {
  * const data = { key: 'value' };
  * exportToJson(data, 'my-data'); // Downloads 'my-data.json'
  */
-export default function exportToJson(
-  data: unknown,
-  filename: string,
-): void {
+export default function exportToJson(data: unknown, filename: string): void {
   const fileData = JSON.stringify(data, null, 2);
   const blob = new Blob([fileData], { type: 'application/json' });
   const url = URL.createObjectURL(blob);

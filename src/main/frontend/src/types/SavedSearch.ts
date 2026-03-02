@@ -71,7 +71,10 @@ export interface SavedSearchesState {
 export interface SavedSearchesActions {
   saveSearch: (search: SavedSearchInput) => Promise<SavedSearch>;
   loadSearch: (id: string) => Promise<SavedSearch | null>;
-  updateSearch: (id: string, updates: SavedSearchUpdate) => Promise<SavedSearch | null>;
+  updateSearch: (
+    id: string,
+    updates: SavedSearchUpdate
+  ) => Promise<SavedSearch | null>;
   deleteSearch: (id: string) => Promise<void>;
   getAllSearches: () => Promise<SavedSearch[]>;
   exportSearches: () => Promise<string>;

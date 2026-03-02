@@ -59,18 +59,21 @@ export function ResultsHeader({
         'flex flex-col sm:flex-row items-start sm:items-center justify-between',
         'gap-4 p-4 rounded-lg',
         'bg-white/5 backdrop-blur-sm border border-white/10',
-        className,
+        className
       )}
     >
       {/* Stats */}
       <div className="flex flex-col gap-1">
         <h3 className="text-xl font-bold text-white">
           {totalResults.toLocaleString()}{' '}
-          <span className="text-white/70">{totalResults === 1 ? 'Result' : 'Results'}</span>
+          <span className="text-white/70">
+            {totalResults === 1 ? 'Result' : 'Results'}
+          </span>
         </h3>
         {uniqueTitles !== undefined && uniqueTitles > 0 && (
           <p className="text-sm text-white/60">
-            {uniqueTitles.toLocaleString()} unique {uniqueTitles === 1 ? 'title' : 'titles'}
+            {uniqueTitles.toLocaleString()} unique{' '}
+            {uniqueTitles === 1 ? 'title' : 'titles'}
           </p>
         )}
       </div>
@@ -93,7 +96,7 @@ export function ResultsHeader({
               'h-8 w-8 p-0',
               viewMode === 'grid'
                 ? 'bg-discogs-primary hover:bg-discogs-primary-dark text-white'
-                : 'text-white/70 hover:text-white hover:bg-white/10',
+                : 'text-white/70 hover:text-white hover:bg-white/10'
             )}
           >
             <Grid3x3 className="h-4 w-4" />
@@ -108,7 +111,7 @@ export function ResultsHeader({
               'h-8 w-8 p-0',
               viewMode === 'list'
                 ? 'bg-discogs-primary hover:bg-discogs-primary-dark text-white'
-                : 'text-white/70 hover:text-white hover:bg-white/10',
+                : 'text-white/70 hover:text-white hover:bg-white/10'
             )}
           >
             <List className="h-4 w-4" />
@@ -129,7 +132,10 @@ export function ResultsHeader({
                 Export
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-black/95 border-white/10 text-white">
+            <DropdownMenuContent
+              align="end"
+              className="bg-black/95 border-white/10 text-white"
+            >
               {onExportJSON && (
                 <DropdownMenuItem
                   onClick={onExportJSON}
@@ -160,7 +166,7 @@ export function ResultsHeader({
             onClick={handleCopyUrl}
             className={cn(
               'bg-white/5 border-white/10 text-white hover:bg-white/10 hover:text-white transition-all',
-              isCopied && 'bg-green-500/20 border-green-500/50 text-green-400',
+              isCopied && 'bg-green-500/20 border-green-500/50 text-green-400'
             )}
             aria-label={isCopied ? 'URL copied' : 'Share search'}
           >

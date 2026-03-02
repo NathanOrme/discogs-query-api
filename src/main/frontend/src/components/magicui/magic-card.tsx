@@ -1,14 +1,5 @@
-import {
-  motion,
-  useMotionTemplate,
-  useMotionValue,
-} from 'motion/react';
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { motion, useMotionTemplate, useMotionValue } from 'motion/react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { cn } from '@/lib/utils';
 
@@ -59,7 +50,7 @@ export function MagicCard({
         mouseY.set(e.clientY - top);
       }
     },
-    [mouseX, mouseY],
+    [mouseX, mouseY]
   );
 
   const handleMouseOut = useCallback(
@@ -70,7 +61,7 @@ export function MagicCard({
         mouseY.set(-gradientSize);
       }
     },
-    [handleMouseMove, mouseX, gradientSize, mouseY],
+    [handleMouseMove, mouseX, gradientSize, mouseY]
   );
 
   const handleMouseEnter = useCallback(() => {
@@ -102,7 +93,7 @@ export function MagicCard({
         'group relative rounded-[inherit] transition-all duration-300',
         'bg-gradient-to-br from-black/40 via-black/60 to-black/80',
         'backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/50',
-        className,
+        className
       )}
       {...props}
     >

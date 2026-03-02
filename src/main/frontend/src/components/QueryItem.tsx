@@ -21,11 +21,10 @@ const QueryItem: FC<QueryItemProps> = ({
   removeQuery,
 }) => {
   const handleTextChange = useCallback(
-    (field: keyof typeof query) =>
-      (e: ChangeEvent<HTMLInputElement>) => {
-        onInputChange(index, field, e.target.value);
-      },
-    [index, onInputChange],
+    (field: keyof typeof query) => (e: ChangeEvent<HTMLInputElement>) => {
+      onInputChange(index, field, e.target.value);
+    },
+    [index, onInputChange]
   );
 
   const handleSelectChange = useCallback(
@@ -33,7 +32,7 @@ const QueryItem: FC<QueryItemProps> = ({
       const actualValue = value === 'none' ? '' : value;
       onInputChange(index, 'format', actualValue);
     },
-    [index, onInputChange],
+    [index, onInputChange]
   );
 
   const handleRemove = useCallback(() => {
@@ -62,10 +61,12 @@ const QueryItem: FC<QueryItemProps> = ({
             className="flex items-center gap-1 text-xs transition-colors duration-150"
             style={{ color: 'rgba(255,80,80,0.5)' }}
             onMouseEnter={(e) =>
-              ((e.currentTarget as HTMLElement).style.color = 'rgba(255,80,80,0.9)')
+              ((e.currentTarget as HTMLElement).style.color =
+                'rgba(255,80,80,0.9)')
             }
             onMouseLeave={(e) =>
-              ((e.currentTarget as HTMLElement).style.color = 'rgba(255,80,80,0.5)')
+              ((e.currentTarget as HTMLElement).style.color =
+                'rgba(255,80,80,0.5)')
             }
             aria-label={`Remove query ${index + 1}`}
           >

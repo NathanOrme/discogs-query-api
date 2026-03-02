@@ -24,10 +24,19 @@ interface EmptyStateProps {
 }
 
 const EXAMPLE_SEARCHES: ExampleSearch[] = [
-  { label: 'Miles Davis - Kind of Blue', query: 'artist:Miles Davis album:Kind of Blue' },
+  {
+    label: 'Miles Davis - Kind of Blue',
+    query: 'artist:Miles Davis album:Kind of Blue',
+  },
   { label: 'Daft Punk on Vinyl', query: 'artist:Daft Punk format:Vinyl' },
-  { label: '90s Hip-Hop Albums', query: 'genre:Hip Hop format:Album year:1990-1999' },
-  { label: 'UK Electronic EPs', query: 'genre:Electronic format:EP country:UK' },
+  {
+    label: '90s Hip-Hop Albums',
+    query: 'genre:Hip Hop format:Album year:1990-1999',
+  },
+  {
+    label: 'UK Electronic EPs',
+    query: 'genre:Electronic format:EP country:UK',
+  },
   { label: 'Blue Note Records', query: 'label:Blue Note' },
 ];
 
@@ -51,7 +60,11 @@ export function EmptyState({
 
   return (
     <div
-      className={cn('flex flex-col items-center justify-center', 'py-16 px-4 text-center', className)}
+      className={cn(
+        'flex flex-col items-center justify-center',
+        'py-16 px-4 text-center',
+        className
+      )}
       role="status"
       aria-live="polite"
     >
@@ -60,7 +73,9 @@ export function EmptyState({
   );
 }
 
-function InitialState({ onExampleSearchClick }: Pick<EmptyStateProps, 'onExampleSearchClick'>) {
+function InitialState({
+  onExampleSearchClick,
+}: Pick<EmptyStateProps, 'onExampleSearchClick'>) {
   return (
     <>
       <div className="relative mb-6">
@@ -70,19 +85,28 @@ function InitialState({ onExampleSearchClick }: Pick<EmptyStateProps, 'onExample
         <div className="absolute inset-0 bg-discogs-primary/10 blur-2xl rounded-full" />
       </div>
 
-      <h3 className="text-2xl font-bold text-white mb-2">Start Your Vinyl Journey</h3>
+      <h3 className="text-2xl font-bold text-white mb-2">
+        Start Your Vinyl Journey
+      </h3>
       <p className="text-white/70 mb-8 max-w-md">
-        Search millions of releases from the world's largest music database. Try an example search below or create your own.
+        Search millions of releases from the world's largest music database. Try
+        an example search below or create your own.
       </p>
 
       <div className="space-y-3">
-        <p className="text-sm font-semibold text-white/60 uppercase tracking-wide">Popular Searches</p>
+        <p className="text-sm font-semibold text-white/60 uppercase tracking-wide">
+          Popular Searches
+        </p>
         <div className="flex flex-wrap gap-2 justify-center max-w-2xl">
           {EXAMPLE_SEARCHES.map((example) => (
             <button
               key={example.label}
               onClick={() => onExampleSearchClick?.(example.query)}
-              className={cn('discogs-chip', 'text-white hover:text-discogs-primary', 'transition-all duration-200')}
+              className={cn(
+                'discogs-chip',
+                'text-white hover:text-discogs-primary',
+                'transition-all duration-200'
+              )}
               aria-label={`Search for ${example.label}`}
             >
               <Search className="w-4 h-4" />
@@ -94,14 +118,17 @@ function InitialState({ onExampleSearchClick }: Pick<EmptyStateProps, 'onExample
 
       <div className="mt-8 p-4 rounded-lg bg-white/5 border border-white/10 max-w-lg">
         <p className="text-sm text-white/60">
-          <strong className="text-white/80">Pro tip:</strong> Use filters like artist, format, year, and label to narrow down your search.
+          <strong className="text-white/80">Pro tip:</strong> Use filters like
+          artist, format, year, and label to narrow down your search.
         </p>
       </div>
     </>
   );
 }
 
-function NoResultsState({ onExampleSearchClick }: Pick<EmptyStateProps, 'onExampleSearchClick'>) {
+function NoResultsState({
+  onExampleSearchClick,
+}: Pick<EmptyStateProps, 'onExampleSearchClick'>) {
   return (
     <>
       <div className="relative mb-6">
@@ -112,7 +139,8 @@ function NoResultsState({ onExampleSearchClick }: Pick<EmptyStateProps, 'onExamp
 
       <h3 className="text-2xl font-bold text-white mb-2">No Results Found</h3>
       <p className="text-white/70 mb-6 max-w-md">
-        We couldn't find any releases matching your search criteria. Try adjusting your filters or broadening your search.
+        We couldn't find any releases matching your search criteria. Try
+        adjusting your filters or broadening your search.
       </p>
 
       <div className="mb-8 p-6 rounded-lg bg-white/5 border border-white/10 max-w-lg text-left">
@@ -138,13 +166,18 @@ function NoResultsState({ onExampleSearchClick }: Pick<EmptyStateProps, 'onExamp
       </div>
 
       <div className="space-y-3">
-        <p className="text-sm font-semibold text-white/60 uppercase tracking-wide">Try These Instead</p>
+        <p className="text-sm font-semibold text-white/60 uppercase tracking-wide">
+          Try These Instead
+        </p>
         <div className="flex flex-wrap gap-2 justify-center max-w-2xl">
           {EXAMPLE_SEARCHES.slice(0, 3).map((example) => (
             <button
               key={example.label}
               onClick={() => onExampleSearchClick?.(example.query)}
-              className={cn('discogs-chip', 'text-white hover:text-discogs-primary')}
+              className={cn(
+                'discogs-chip',
+                'text-white hover:text-discogs-primary'
+              )}
               aria-label={`Try searching for ${example.label}`}
             >
               <Search className="w-4 h-4" />
@@ -177,7 +210,8 @@ function ErrorState({
 
       <div className="mb-8 p-4 rounded-lg bg-red-500/10 border border-red-500/20 max-w-lg">
         <p className="text-sm text-red-200">
-          If this problem persists, check your internet connection or try again later.
+          If this problem persists, check your internet connection or try again
+          later.
         </p>
       </div>
 

@@ -50,10 +50,10 @@ const QueryFields: FC<QueryFieldsProps> = ({ onQueriesChange }) => {
   const handleInputChange = useCallback(
     (index: number, field: keyof Query, value: string) => {
       setQueries((prev) =>
-        prev.map((q, i) => (i === index ? { ...q, [field]: value } : q)),
+        prev.map((q, i) => (i === index ? { ...q, [field]: value } : q))
       );
     },
-    [],
+    []
   );
 
   return (
@@ -77,14 +77,18 @@ const QueryFields: FC<QueryFieldsProps> = ({ onQueriesChange }) => {
           background: 'rgba(230,81,0,0.05)',
         }}
         onMouseEnter={(e) => {
-          (e.currentTarget as HTMLElement).style.borderColor = 'rgba(230,81,0,0.6)';
+          (e.currentTarget as HTMLElement).style.borderColor =
+            'rgba(230,81,0,0.6)';
           (e.currentTarget as HTMLElement).style.color = '#e65100';
-          (e.currentTarget as HTMLElement).style.background = 'rgba(230,81,0,0.1)';
+          (e.currentTarget as HTMLElement).style.background =
+            'rgba(230,81,0,0.1)';
         }}
         onMouseLeave={(e) => {
-          (e.currentTarget as HTMLElement).style.borderColor = 'rgba(230,81,0,0.3)';
+          (e.currentTarget as HTMLElement).style.borderColor =
+            'rgba(230,81,0,0.3)';
           (e.currentTarget as HTMLElement).style.color = 'rgba(230,81,0,0.7)';
-          (e.currentTarget as HTMLElement).style.background = 'rgba(230,81,0,0.05)';
+          (e.currentTarget as HTMLElement).style.background =
+            'rgba(230,81,0,0.05)';
         }}
         aria-label="Add another search query"
       >

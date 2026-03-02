@@ -51,7 +51,9 @@ const EntryCard: FC<EntryProps> = ({ entry }) => {
             )}
           </p>
           <p className="text-white/90">
-            <span className="font-medium text-purple-400">Number For Sale:</span>{' '}
+            <span className="font-medium text-purple-400">
+              Number For Sale:
+            </span>{' '}
             <span className="text-white/80">{numberForSale ?? 'N/A'}</span>
           </p>
           <p className="text-white/90">

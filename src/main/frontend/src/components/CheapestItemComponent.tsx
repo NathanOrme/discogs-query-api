@@ -18,12 +18,18 @@ const CheapestItemComponent: FC<CheapestItemProps> = ({ item }) => {
         <div className="space-y-2 text-sm">
           <p className="text-white/90">
             <span className="font-medium text-green-400">Title:</span>{' '}
-            <span className="text-white font-medium">{item.title ?? 'Untitled'}</span>
+            <span className="text-white font-medium">
+              {item.title ?? 'Untitled'}
+            </span>
           </p>
           <p className="text-white/90 break-all">
             <span className="font-medium text-green-400">URL:</span>{' '}
             {item.uri ? (
-              <CustomLink href={item.uri} target="_blank" rel="noopener noreferrer">
+              <CustomLink
+                href={item.uri}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {item.uri}
               </CustomLink>
             ) : (
@@ -33,7 +39,9 @@ const CheapestItemComponent: FC<CheapestItemProps> = ({ item }) => {
           <p className="text-white/90">
             <span className="font-medium text-green-400">Price:</span>{' '}
             <span className="text-green-300 font-bold text-lg">
-              {item.lowestPrice !== null ? `£${item.lowestPrice?.toFixed(2)}` : 'N/A'}
+              {item.lowestPrice !== null
+                ? `£${item.lowestPrice?.toFixed(2)}`
+                : 'N/A'}
             </span>
           </p>
         </div>

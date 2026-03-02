@@ -25,7 +25,10 @@ interface ResultsSkeletonProps {
   className?: string;
 }
 
-export function ResultsSkeleton({ count = 6, className }: ResultsSkeletonProps) {
+export function ResultsSkeleton({
+  count = 6,
+  className,
+}: ResultsSkeletonProps) {
   const [messageIndex, setMessageIndex] = useState(0);
 
   useEffect(() => {
@@ -47,15 +50,23 @@ export function ResultsSkeleton({ count = 6, className }: ResultsSkeletonProps) 
         aria-label="Loading search results"
       >
         <div className="relative">
-          <Disc className="w-16 h-16 text-discogs-primary animate-spin" aria-hidden="true" />
+          <Disc
+            className="w-16 h-16 text-discogs-primary animate-spin"
+            aria-hidden="true"
+          />
           <div className="absolute inset-0 bg-discogs-primary/20 blur-xl rounded-full animate-pulse" />
         </div>
 
         <div className="text-center space-y-2">
-          <h3 className="text-lg font-semibold text-white">Searching Discogs...</h3>
+          <h3 className="text-lg font-semibold text-white">
+            Searching Discogs...
+          </h3>
           <p className="text-sm text-white/70 max-w-md">
             Exploring{' '}
-            <span className="text-discogs-primary font-semibold transition-all duration-500" key={messageIndex}>
+            <span
+              className="text-discogs-primary font-semibold transition-all duration-500"
+              key={messageIndex}
+            >
               {currentMessage}
             </span>{' '}
             through millions of releases
@@ -76,7 +87,11 @@ export function ResultsSkeleton({ count = 6, className }: ResultsSkeletonProps) 
 function SkeletonResultCard({ delay = 0 }: { delay?: number }) {
   return (
     <MagicCard
-      className={cn('p-4 space-y-4', 'bg-white/5 backdrop-blur-sm border border-white/10', 'animate-pulse')}
+      className={cn(
+        'p-4 space-y-4',
+        'bg-white/5 backdrop-blur-sm border border-white/10',
+        'animate-pulse'
+      )}
       style={{ animationDelay: `${delay}ms` }}
     >
       <div className="flex items-center gap-4">

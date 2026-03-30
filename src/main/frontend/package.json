@@ -22,7 +22,7 @@
     "postcss": "^8.5.6",
     "react": "^19.2.3",
     "react-dom": "^19.2.1",
-    "rollup": "^4.60.0",
+    "rollup": "^4.60.1",
     "serve": "^14.2.6",
     "tailwind-merge": "^3.3.1",
     "web-vitals": "^5.2.0",

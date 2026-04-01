@@ -45,7 +45,7 @@
     "jsdoc": "^4.0.5",
     "prettier": "^3.8.1",
     "tailwindcss": "^4.2.2",
-    "ts-jest": "^29.4.5",
+    "ts-jest": "^29.4.9",
     "typescript": "^6.0.0",
     "vite": "^8.0.3",
     "vite-tsconfig-paths": "^6.0.2"

@@ -20,7 +20,7 @@
     "nth-check": "^3.0.1",
     "path-to-regexp": "^8.4.1",
     "postcss": "^8.5.6",
-    "react": "^19.2.3",
+    "react": "^19.2.5",
     "react-dom": "^19.2.1",
     "rollup": "^4.60.1",
     "serve": "^14.2.6",

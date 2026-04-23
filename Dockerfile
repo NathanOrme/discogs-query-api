@@ -37,7 +37,7 @@ RUN mvn clean package -DskipTests --no-transfer-progress
 
 
 # Stage 3: Create a lightweight runtime image using Amazon Corretto 24
-FROM amazoncorretto:26.0.0 AS runtime
+FROM amazoncorretto:26.0.1 AS runtime
 
 # Set the working directory for the runtime environment
 WORKDIR /app
